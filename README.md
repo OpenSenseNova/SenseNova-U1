@@ -48,6 +48,12 @@ Last but not least, preliminary evidence displays that our models extend beyond 
 
 ## 🛠️ Quick Start
 
+### Use with SenseNova-Skills (zero-config, recommended)
+
+The easiest way to try SenseNova-U1 is through our companion repository **[SenseNova-Skills](https://github.com/OpenSenseNova/SenseNova-Skills)**, which ships SenseNova-U1 as a ready-to-use skill. No extra environment setup, dependency pinning, or model-loading boilerplate is required — install the skills package and call into SenseNova-U1 directly.
+
+Refer to the [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills) for installation and usage details.
+
 ### Run with transformers + diffusers
 
 We recommend [**uv**](https://docs.astral.sh/uv/) to manage the Python environment.
