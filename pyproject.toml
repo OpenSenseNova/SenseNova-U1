@@ -1,0 +1,79 @@
+[project]
+name = "sensenova-u1"
+version = "0.1.0"
+description = "SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-Unify Architecture."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "OpenSenseNova" },
+]
+keywords = [
+    "multimodal",
+    "vision-language-model",
+    "unified-model",
+    "understanding-and-generation",
+    "native-vlm",
+]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: POSIX :: Linux",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Core dependencies. Keep this list minimal; heavy / CUDA-specific deps live in
+# optional-dependencies below so users can pick the right wheel for their GPU.
+dependencies = []
+
+# CUDA-specific extras so users can run `uv sync --extra cu124` etc.
+# TODO: pin real versions of torch / torchvision / transformers / accelerate, etc.
+[project.optional-dependencies]
+cu118 = []
+cu121 = []
+cu124 = []
+cu126 = []
+cu128 = []
+cu129 = []
+cpu = []
+dev = [
+    "ruff",
+    "pytest",
+    "pre-commit",
+]
+
+[project.urls]
+Homepage = "https://github.com/OpenSenseNova/SenseNova-U1"
+Repository = "https://github.com/OpenSenseNova/SenseNova-U1"
+
+[project.scripts]
+sensenova-u1 = "sensenova_u1:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sensenova_u1"]
+
+# TODO: once torch wheels are added, declare the PyTorch index URLs here, e.g.:
+# [tool.uv.sources]
+# torch = [
+#     { index = "pytorch-cu124", extra = "cu124" },
+# ]
+#
+# [[tool.uv.index]]
+# name = "pytorch-cu124"
+# url = "https://download.pytorch.org/whl/cu124"
+# explicit = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.uv.workspace]
+members = [
+    "u1",
+]
