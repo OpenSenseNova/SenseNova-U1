@@ -155,7 +155,22 @@ python examples/t2i/inference.py \
 
 Run `python examples/t2i/inference.py --help` for the full flag list.
 
-###### Prompt Enhancement (optional, recommended for infographics)
+
+For batched inference, pass a JSONL file via `--jsonl` (see [`examples/t2i/data/samples.jsonl`](./examples/t2i/data/samples.jsonl)). Each line is `{"prompt": ...}` and optionally `{"width": W, "height": H, "seed": S}`:
+
+```bash
+python examples/t2i/inference.py \
+    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --jsonl examples/t2i/data/samples.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 4.0 \
+    --cfg_norm none \
+    --timestep_shift 3.0 \
+    --num_steps 50 \
+    --profile
+```
+
+##### Prompt Enhancement for Infographics Generation
 
 Short user prompts — especially for **infographic** generation — can be rewritten by a strong LLM before T2I inference,
 which noticeably lifts information density, typography fidelity, and layout adherence.
@@ -178,20 +193,6 @@ python examples/t2i/inference.py \
 ```
 
 Refer to [`docs/prompt_enhancement.md`](./docs/prompt_enhancement.md) for more details.
-
-For batched inference, pass a JSONL file via `--jsonl` (see [`examples/t2i/data/samples.jsonl`](./examples/t2i/data/samples.jsonl)). Each line is `{"prompt": ...}` and optionally `{"width": W, "height": H, "seed": S}`:
-
-```bash
-python examples/t2i/inference.py \
-    --model_path OpenSenseNova/SenseNova-U1-Mini \
-    --jsonl examples/t2i/data/samples.jsonl \
-    --output_dir outputs/ \
-    --cfg_scale 4.0 \
-    --cfg_norm none \
-    --timestep_shift 3.0 \
-    --num_steps 50 \
-    --profile
-```
 
 ##### Image Editing
 
