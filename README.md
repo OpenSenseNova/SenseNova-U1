@@ -26,11 +26,11 @@ The key pillars are:
 We launch two native unified variants, **SenseNova-U1-Mini** and **SenseNova-U1-Flash**, built on dense (8B) and mixture-of-expert (30B-A3B) understanding baselines, respectively. Designed from first principles, they rival top-tier understanding-only VLMs across text understanding, vision–language perception, knowledge reasoning, agentic decision-making, and spatial intelligence. Meanwhile, they deliver strong semantic consistency and visual fidelity, excelling in conventional or knowledge-intensive any-to-image (X2I) synthesis, complex text-rich infographic generation, and interleaved vision–language generation, with or without think patterns. Beyond performance, we provide a comprehensive analysis of model design, data preprocessing, pre-/post-training, and inference strategies to support community research.
 Last but not least, preliminary evidence displays that our models extend beyond perception and generation, performing strongly in vision–language–action (VLA) and world model (WM) scenarios. This points toward a broader roadmap where models do not translate between modalities, but think-and-act across them natively. Multimodal AI is no longer about connecting disparate systems. It is about building one that was never divided, and trusting the necessary capabilities to emerge from within.
 
-## News
+## 📣 News
 
 - `[TBD]` Initial release of SenseNova-U1 (code, weights, and technical report).
 
-## Model Zoo
+## 🦁 Model Zoo
 
 <!-- TODO: fill in the table once weights are released -->
 
@@ -182,7 +182,7 @@ TBA
 ```
 
 
-## Evaluation
+## 📊 Evaluation
 
 <!-- TODO: link to evaluation guide once available -->
 Evaluation scripts and benchmark reproduction guides will be released in `evaluation/`.
@@ -195,6 +195,6 @@ Evaluation scripts and benchmark reproduction guides will be released in `evalua
 
 ```
 
-## License
+## ⚖️ License
 
 This project is released under the [Apache 2.0 License](./LICENSE).
