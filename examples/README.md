@@ -112,7 +112,7 @@ three-mode launcher covering every usage pattern below.
 ```bash
 python examples/interleave/inference.py \
   --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --prompt "请用图文结合的方式介绍 4 种常见猫咪品种（布偶猫、英国短毛猫、美国短毛猫、缅因猫）。每种品种先给出一段简短介绍，再生成一张代表性插画。" \
+  --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
   --resolution "16:9" \
   --output_dir outputs/interleave/text \
   --stem demo_text
@@ -123,7 +123,7 @@ python examples/interleave/inference.py \
 ```bash
 python examples/interleave/inference.py \
   --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --prompt "<image>\n生成多样化风格的小猫图片：素描、达利、梵高、水墨画、卡通。" \
+  --prompt "<image>\n图文交错生成小猫游览故宫的场景" \
   --image examples/interleave/data/images/image0.jpg \
   --output_dir outputs/interleave/text_image \
   --stem demo_text_image
