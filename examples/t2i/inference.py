@@ -270,9 +270,11 @@ def _build_enhancer(args: argparse.Namespace):
     if not args.enhance:
         return None, None
     import asyncio
+    from dotenv import load_dotenv
 
     from sensenova_u1.prompt_enhance import PromptEnhancer
 
+    load_dotenv()
     enhancer = PromptEnhancer.from_env(style="infographic")
     loop = asyncio.new_event_loop()
     return enhancer, loop
