@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.4
+    hooks:
+      # Mirrors: ruff check . --select I --output-format=github
+      # Locally we also auto-fix + exit non-zero so the dev sees the patch
+      # and just has to `git add` + re-commit. CI keeps running without
+      # --fix and stays strict.
+      - id: ruff
+        name: ruff check (import sorting)
+        args: ["--select", "I", "--fix", "--exit-non-zero-on-fix"]
+      # Mirrors: ruff format . --check
+      # The hook auto-formats in-place locally; CI still runs `--check`.
+      - id: ruff-format
+        name: ruff format

@@ -65,8 +65,8 @@ class PromptEnhancer:
     Both entry points call the adapter with ``images=[]`` so this works with
     any text-only chat-style LLM; vision-capable backends simply ignore the
     empty image list.
-    The enhancer does not own the adapter's HTTP client's lifecycle – 
-    call :meth:`aclose` explicitly (or rely on the sync :meth:`enhance` path 
+    The enhancer does not own the adapter's HTTP client's lifecycle –
+    call :meth:`aclose` explicitly (or rely on the sync :meth:`enhance` path
     which spins up / tears down a fresh event loop and closes the client for you).
     """
 

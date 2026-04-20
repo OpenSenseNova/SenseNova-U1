@@ -206,11 +206,22 @@ TBA
 TBA
 ```
 
-
 ## 📊 Evaluation
 
 <!-- TODO: link to evaluation guide once available -->
 Evaluation scripts and benchmark reproduction guides will be released in `evaluation/`.
+
+
+## 🛠️ Development
+
+To catch lint / formatting issues locally before they fail CI, install the
+pre-commit hook once after cloning:
+
+```bash
+uv pip install pre-commit   # or: pip install pre-commit
+pre-commit install
+pre-commit run --all-files  # optional: check the whole repo now
+```
 
 
 ## 🖊️ Citation

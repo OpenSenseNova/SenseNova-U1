@@ -270,6 +270,7 @@ def _build_enhancer(args: argparse.Namespace):
     if not args.enhance:
         return None, None
     import asyncio
+
     from dotenv import load_dotenv
 
     from sensenova_u1.prompt_enhance import PromptEnhancer
