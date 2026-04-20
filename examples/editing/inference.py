@@ -14,30 +14,25 @@ from transformers import AutoConfig, AutoModel, AutoTokenizer
 import sensenova_u1
 from sensenova_u1 import check_checkpoint_compatibility
 from sensenova_u1.models.neo_unify.utils import smart_resize
-from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
+from sensenova_u1.utils import (
+    DEFAULT_IMAGE_PATCH_SIZE,
+    InferenceProfiler,
+    save_compare,
+)
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
 
 DEFAULT_SEED = 42
 
-# Output H and W must be divisible by this factor so the model's image-token
-# grid has integer dimensions. It is the architectural ``patch_size *
-# merge_size`` constant of the image-generation head and is NOT tunable; we
-# pull the same value the profiler uses to count tokens.
+# Output H / W must be divisible by this (= patch_size * merge_size).
 _IMAGE_GRID_FACTOR = DEFAULT_IMAGE_PATCH_SIZE
 
-# Pixel-budget defaults for the fallback "derive output resolution from the
-# input image" path (only used when --width / --height are not given).
-# They mirror the values the editing model was trained / evaluated at – see
-# ``it2i_generate`` -> ``load_image_native`` in
-# ``sensenova_u1/models/neo_unify/modeling_neo_chat.py``.
 DEFAULT_MIN_PIXELS = 512 * 512
 DEFAULT_MAX_PIXELS = 2048 * 2048
 
 
 def _set_seed(seed: int) -> None:
-    """Make sampling reproducible across python / numpy / torch (+ all CUDA devices)."""
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -46,21 +41,19 @@ def _set_seed(seed: int) -> None:
 
 
 def _denorm(x: torch.Tensor) -> torch.Tensor:
-    """Invert the (img - mean) / std normalization back to [0, 1]."""
     mean = torch.tensor(NORM_MEAN, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
     std = torch.tensor(NORM_STD, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
     return (x * std + mean).clamp(0, 1)
 
 
 def _to_pil(batch: torch.Tensor) -> list[Image.Image]:
-    """Convert a [B, 3, H, W] float tensor in normalized space to a list of PIL images."""
     arr = _denorm(batch.float()).permute(0, 2, 3, 1).cpu().numpy()
     arr = (arr * 255.0).round().astype(np.uint8)
     return [Image.fromarray(a) for a in arr]
 
 
 def _load_input_image(path: str | Path) -> Image.Image:
-    """Load a PIL RGB image, compositing RGBA onto an opaque white canvas."""
+    """Load as RGB; flatten RGBA onto white so the generator sees a clean canvas."""
     img = Image.open(path)
     if img.mode == "RGBA":
         bg = Image.new("RGB", img.size, (255, 255, 255))
@@ -70,19 +63,12 @@ def _load_input_image(path: str | Path) -> Image.Image:
 
 
 def _coerce_image_paths(value: object) -> list[str]:
-    """Normalize the JSONL ``image`` field to a list of string paths."""
     if isinstance(value, list):
         return [str(v) for v in value]
     return [str(value)]
 
 
 def _check_grid_divisible(width: int, height: int) -> None:
-    """Fail fast if (W, H) is not a multiple of the image-token grid factor.
-
-    The editing model's generation head slices the output canvas into
-    ``(H / _IMAGE_GRID_FACTOR, W / _IMAGE_GRID_FACTOR)`` tokens; non-integer
-    grids silently corrupt the sampling loop.
-    """
     if width % _IMAGE_GRID_FACTOR or height % _IMAGE_GRID_FACTOR:
         raise SystemExit(
             f"[editing] output resolution ({width}x{height}) must be a multiple "
@@ -97,19 +83,7 @@ def _resolve_output_size(
     min_pixels: int,
     max_pixels: int,
 ) -> tuple[int, int]:
-    """Pick the output (W, H) for this edit.
-
-    The editing model generates at whatever resolution the caller asks for
-    in ``image_size`` (it is decoupled from the input image – the VLM tower
-    reshapes the input independently via ``load_image_native``). Two
-    caller-side strategies are supported:
-
-    * ``explicit`` is ``(W, H)``: honor it verbatim (after a %factor check).
-    * ``explicit`` is ``None``: match the first input image's aspect ratio
-      and pixel budget via ``smart_resize``. This is the natural default
-      for "edit in place" flows and keeps the generation grid inside the
-      range the model saw during training.
-    """
+    """Explicit (W, H) wins; else track the first input via smart_resize."""
     if explicit is not None:
         width, height = explicit
         _check_grid_divisible(width, height)
@@ -127,23 +101,13 @@ def _resolve_output_size(
 
 
 def _explicit_size_from_sample(sample: dict) -> tuple[int, int] | None:
-    """Per-sample output-size override for JSONL mode.
-
-    If the line supplies both ``width`` and ``height`` use them (mirrors
-    the t2i script's ``_resolve_size``). Otherwise ``None`` = fall back to
-    the CLI / smart_resize default.
-    """
     if "width" in sample and "height" in sample:
         return int(sample["width"]), int(sample["height"])
     return None
 
 
 class SenseNovaU1Editing:
-    """Thin wrapper around ``AutoModel.from_pretrained`` for image editing.
-
-    Because ``sensenova_u1`` has already registered the config / model with
-    transformers at import time, no ``trust_remote_code=True`` is needed.
-    """
+    """Thin wrapper calling ``model.it2i_generate`` on top of ``AutoModel``."""
 
     def __init__(
         self,
@@ -171,9 +135,6 @@ class SenseNovaU1Editing:
         num_steps: int = 50,
         batch_size: int = 1,
     ) -> list[Image.Image]:
-        # The model auto-prepends ``<image>\n`` placeholders when the prompt
-        # has fewer ``<image>`` tags than there are input images, so no
-        # client-side prompt massaging is needed here.
         output = self.model.it2i_generate(
             self.tokenizer,
             prompt,
@@ -287,11 +248,7 @@ def parse_args() -> argparse.Namespace:
         "--img_cfg_scale",
         type=float,
         default=1.0,
-        help=(
-            "Image CFG weight (default: 1.0 = image CFG disabled). Raise above 1.0 "
-            "to keep the output closer to the input reference; useful when edits "
-            "drift too far from the source. Typical tuning range: 1.0 - 2.0."
-        ),
+        help=("Image CFG weight (default: 1.0 = image CFG disabled)."),
     )
     p.add_argument(
         "--cfg_norm",
@@ -349,6 +306,16 @@ def parse_args() -> argparse.Namespace:
             f"{DEFAULT_IMAGE_PATCH_SIZE})."
         ),
     )
+    p.add_argument(
+        "--compare",
+        action="store_true",
+        help=(
+            "Also save a side-by-side ``[inputs... | output]`` montage with the "
+            "prompt rendered below, written next to the plain output as "
+            "``<stem>_compare.png``. Useful for eyeballing edits without an "
+            "external image viewer."
+        ),
+    )
 
     args = p.parse_args()
     if args.prompt is not None and not args.image:
@@ -403,7 +370,10 @@ def main() -> None:
                 num_steps=args.num_steps,
                 batch_size=args.batch_size,
             )
-        _save_images(outputs, Path(args.output))
+        out_path = Path(args.output)
+        _save_images(outputs, out_path)
+        if args.compare:
+            save_compare(out_path, images, outputs[0], args.prompt)
         profiler.report()
         return
 
@@ -444,7 +414,10 @@ def main() -> None:
             )
         tag = sample.get("type")
         stem = f"{i + 1:04d}" + (f"_{tag}" if tag else "") + f"_{w}x{h}.png"
-        outputs[0].save(out_dir / stem)
+        sample_out = out_dir / stem
+        outputs[0].save(sample_out)
+        if args.compare:
+            save_compare(sample_out, images, outputs[0], sample["prompt"])
 
     profiler.report()
 

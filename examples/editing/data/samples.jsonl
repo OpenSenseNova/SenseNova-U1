@@ -1,0 +1,2 @@
+{"prompt": "把人物服装更换为绣有墨竹暗纹的宋制圆领袍，姿态调整为双手背在身后站立，面部表情改为柔和的浅笑，整体画面调整为淡雅国风工笔画风格。", "image": "./examples/editing/data/images/image1.png", "type": "attribute_edit"}
+{"prompt": "Change the character's hair color from blonde to white, and add a hard side light coming from the right side of the image, so the shadows on the left half of the face become more pronounced.", "image": "./examples/editing/data/images/image2.png", "type": "attribute_edit"}
