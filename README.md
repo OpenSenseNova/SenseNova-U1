@@ -61,7 +61,7 @@ To efficiently serve a unified model that jointly handles understanding and gene
 
 - **Disaggregated serving & transfer design** — understanding and generation workloads are served on separate engines with a low-overhead KV / feature transfer channel.
 - **Understanding-side optimizations** — tailored kernels, scheduling, and KV management for the VLM path.
-- **Generation-side optimizations** — kernel fusion, CFG parallelism, Ulysses parallelism, and improved memory management for KV cache.
+- **Generation-side optimizations** — Kernel fusion, CFG parallelism, Ulysses parallelism, and improved memory management for KV cache.
 
 We observe competitive end-to-end latency and throughput across understanding, generation, and interleaved workloads.
 
