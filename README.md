@@ -155,6 +155,7 @@ python examples/t2i/inference.py \
 
 Run `python examples/t2i/inference.py --help` for the full flag list.
 
+
 For batched inference, pass a JSONL file via `--jsonl` (see [`examples/t2i/data/samples.jsonl`](./examples/t2i/data/samples.jsonl)). Each line is `{"prompt": ...}` and optionally `{"width": W, "height": H, "seed": S}`:
 
 ```bash
@@ -169,6 +170,30 @@ python examples/t2i/inference.py \
     --profile
 ```
 
+##### Prompt Enhancement for Infographics Generation
+
+Short user prompts — especially for **infographic** generation — can be enhanced by a strong LLM before T2I inference,
+which noticeably lifts information density, typography fidelity, and layout adherence.
+Flip it on with `--enhance`:
+
+```bash
+# export U1_ENHANCE_API_KEY=sk-...                # required
+# defaults target Gemini 3.1 Pro via its OpenAI-compatible endpoint;
+# override any of these to point at SenseNova / Claude / Kimi 2.5 etc.:
+# export U1_ENHANCE_BACKEND=chat_completions   # or 'anthropic'
+# export U1_ENHANCE_ENDPOINT=https://...chat/completions
+# export U1_ENHANCE_MODEL=gemini-3.1-pro
+
+python examples/t2i/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "如何制作咖啡的教程" \
+  --enhance \
+  --print_enhance \
+  --output output.png
+```
+
+Refer to [`docs/prompt_enhancement.md`](./docs/prompt_enhancement.md) for more details.
+
 ##### Image Editing
 
 
@@ -181,11 +206,22 @@ TBA
 TBA
 ```
 
-
 ## 📊 Evaluation
 
 <!-- TODO: link to evaluation guide once available -->
 Evaluation scripts and benchmark reproduction guides will be released in `evaluation/`.
+
+
+## 🛠️ Development
+
+To catch lint / formatting issues locally before they fail CI, install the
+pre-commit hook once after cloning:
+
+```bash
+uv pip install pre-commit   # or: pip install pre-commit
+pre-commit install
+pre-commit run --all-files  # optional: check the whole repo now
+```
 
 
 ## 🖊️ Citation

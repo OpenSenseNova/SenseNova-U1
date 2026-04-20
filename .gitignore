@@ -16,6 +16,7 @@ dist/
 venv/
 env/
 ENV/
+.env
 
 # uv
 .uv/

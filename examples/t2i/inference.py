@@ -234,7 +234,62 @@ def parse_args() -> argparse.Namespace:
             f"{DEFAULT_IMAGE_PATCH_SIZE})."
         ),
     )
+
+    p.add_argument(
+        "--enhance",
+        action="store_true",
+        help=(
+            "Run the user prompt through an LLM enhancer before T2I inference. "
+            "Helpful for short / loose prompts, especially infographic-style "
+            "generation. Configure via U1_ENHANCE_{BACKEND,ENDPOINT,API_KEY,MODEL} "
+            "env vars; defaults target Gemini 3.1 Pro. "
+            "See docs/prompt_enhancement.md for details."
+        ),
+    )
+    p.add_argument(
+        "--print_enhance",
+        action="store_true",
+        help="With --enhance: also print the enhanced prompt for debugging.",
+    )
+
     return p.parse_args()
+
+
+def _build_enhancer(args: argparse.Namespace):
+    """Instantiate :class:`PromptEnhancer` + a dedicated event loop iff
+    ``--enhance`` was passed.
+
+    We keep a single event loop for the whole run so the underlying
+    :class:`httpx.AsyncClient` inside the adapter can actually pool
+    connections across samples – spawning a fresh ``asyncio.run`` per
+    sample would otherwise tear the pool down every time.
+
+    Returns:
+        ``(enhancer, loop)`` or ``(None, None)``.
+    """
+    if not args.enhance:
+        return None, None
+    import asyncio
+
+    from dotenv import load_dotenv
+
+    from sensenova_u1.prompt_enhance import PromptEnhancer
+
+    load_dotenv()
+    enhancer = PromptEnhancer.from_env(style="infographic")
+    loop = asyncio.new_event_loop()
+    return enhancer, loop
+
+
+def _maybe_enhance(enhancer, loop, prompt: str, *, verbose: bool) -> str:
+    """Send ``prompt`` through the enhancer (if configured) and return the result."""
+    if enhancer is None:
+        return prompt
+    enhanced = loop.run_until_complete(enhancer.aenhance(prompt))
+    if verbose:
+        print(f"[enhance] original : {prompt}")
+        print(f"[enhance] enhanced : {enhanced}")
+    return enhanced
 
 
 def main() -> None:
@@ -246,62 +301,72 @@ def main() -> None:
     print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
 
     profiler = InferenceProfiler(enabled=args.profile, device=args.device)
-
-    with profiler.time_load():
-        engine = SenseNovaU1T2I(args.model_path, device=args.device, dtype=dtype)
-
-    cfg_interval = tuple(args.cfg_interval)
-
-    if args.prompt is not None:
-        _warn_if_unsupported(args.width, args.height)
-        _set_seed(args.seed)
-        with profiler.time_generate(args.width, args.height, args.batch_size):
-            images = engine.generate(
-                args.prompt,
-                image_size=(args.width, args.height),
-                cfg_scale=args.cfg_scale,
-                cfg_norm=args.cfg_norm,
-                timestep_shift=args.timestep_shift,
-                cfg_interval=cfg_interval,
-                num_steps=args.num_steps,
-                batch_size=args.batch_size,
-            )
-        _save_images(images, Path(args.output))
-        profiler.report()
-        return
-
-    out_dir = Path(args.output_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    with open(args.jsonl) as f:
-        samples = [json.loads(line) for line in f if line.strip()]
+    enhancer, loop = _build_enhancer(args)
 
     try:
-        from tqdm import tqdm
-    except ImportError:
+        with profiler.time_load():
+            engine = SenseNovaU1T2I(args.model_path, device=args.device, dtype=dtype)
 
-        def tqdm(x, **_kw):  # type: ignore[no-redef]
-            return x
+        cfg_interval = tuple(args.cfg_interval)
 
-    for i, sample in enumerate(tqdm(samples, desc="T2I")):
-        w, h = _resolve_size(sample, args.width, args.height)
-        _warn_if_unsupported(w, h)
-        _set_seed(int(sample.get("seed", args.seed)))
-        with profiler.time_generate(w, h, 1):
-            images = engine.generate(
-                sample["prompt"],
-                image_size=(w, h),
-                cfg_scale=args.cfg_scale,
-                cfg_norm=args.cfg_norm,
-                timestep_shift=args.timestep_shift,
-                cfg_interval=cfg_interval,
-                num_steps=args.num_steps,
-                batch_size=1,
-            )
-        tag = sample.get("type")
-        stem = f"{i + 1:04d}" + (f"_{tag}" if tag else "") + f"_{w}x{h}.png"
-        images[0].save(out_dir / stem)
+        if args.prompt is not None:
+            prompt = _maybe_enhance(enhancer, loop, args.prompt, verbose=args.print_enhance)
+            _warn_if_unsupported(args.width, args.height)
+            _set_seed(args.seed)
+            with profiler.time_generate(args.width, args.height, args.batch_size):
+                images = engine.generate(
+                    prompt,
+                    image_size=(args.width, args.height),
+                    cfg_scale=args.cfg_scale,
+                    cfg_norm=args.cfg_norm,
+                    timestep_shift=args.timestep_shift,
+                    cfg_interval=cfg_interval,
+                    num_steps=args.num_steps,
+                    batch_size=args.batch_size,
+                )
+            _save_images(images, Path(args.output))
+            profiler.report()
+            return
 
-    profiler.report()
+        out_dir = Path(args.output_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        with open(args.jsonl) as f:
+            samples = [json.loads(line) for line in f if line.strip()]
+
+        try:
+            from tqdm import tqdm
+        except ImportError:
+
+            def tqdm(x, **_kw):  # type: ignore[no-redef]
+                return x
+
+        for i, sample in enumerate(tqdm(samples, desc="T2I")):
+            w, h = _resolve_size(sample, args.width, args.height)
+            _warn_if_unsupported(w, h)
+            _set_seed(int(sample.get("seed", args.seed)))
+            prompt = _maybe_enhance(enhancer, loop, sample["prompt"], verbose=args.print_enhance)
+            with profiler.time_generate(w, h, 1):
+                images = engine.generate(
+                    prompt,
+                    image_size=(w, h),
+                    cfg_scale=args.cfg_scale,
+                    cfg_norm=args.cfg_norm,
+                    timestep_shift=args.timestep_shift,
+                    cfg_interval=cfg_interval,
+                    num_steps=args.num_steps,
+                    batch_size=1,
+                )
+            tag = sample.get("type")
+            stem = f"{i + 1:04d}" + (f"_{tag}" if tag else "") + f"_{w}x{h}.png"
+            images[0].save(out_dir / stem)
+
+        profiler.report()
+    finally:
+        if enhancer is not None:
+            try:
+                loop.run_until_complete(enhancer.aclose())
+            finally:
+                loop.close()
 
 
 if __name__ == "__main__":
