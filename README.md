@@ -172,23 +172,23 @@ python examples/t2i/inference.py \
 
 ##### Prompt Enhancement for Infographics Generation
 
-Short user prompts — especially for **infographic** generation — can be rewritten by a strong LLM before T2I inference,
+Short user prompts — especially for **infographic** generation — can be enhanced by a strong LLM before T2I inference,
 which noticeably lifts information density, typography fidelity, and layout adherence.
-Flip it on with `--rewrite`:
+Flip it on with `--enhance`:
 
 ```bash
-# export U1_REWRITE_API_KEY=sk-...                # required
+# export U1_ENHANCE_API_KEY=sk-...                # required
 # defaults target Gemini 3.1 Pro via its OpenAI-compatible endpoint;
 # override any of these to point at SenseNova / Claude / Kimi 2.5 etc.:
-# export U1_REWRITE_BACKEND=chat_completions   # or 'anthropic'
-# export U1_REWRITE_ENDPOINT=https://...chat/completions
-# export U1_REWRITE_MODEL=gemini-3.1-pro
+# export U1_ENHANCE_BACKEND=chat_completions   # or 'anthropic'
+# export U1_ENHANCE_ENDPOINT=https://...chat/completions
+# export U1_ENHANCE_MODEL=gemini-3.1-pro
 
 python examples/t2i/inference.py \
   --model_path OpenSenseNova/SenseNova-U1-Mini \
   --prompt "如何制作咖啡的教程" \
-  --rewrite \
-  --print_rewrite \
+  --enhance \
+  --print_enhance \
   --output output.png
 ```
 

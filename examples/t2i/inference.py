@@ -236,28 +236,28 @@ def parse_args() -> argparse.Namespace:
     )
 
     p.add_argument(
-        "--rewrite",
+        "--enhance",
         action="store_true",
         help=(
-            "Run the user prompt through an LLM rewriter before T2I inference. "
+            "Run the user prompt through an LLM enhancer before T2I inference. "
             "Helpful for short / loose prompts, especially infographic-style "
-            "generation. Configure via U1_REWRITE_{BACKEND,ENDPOINT,API_KEY,MODEL} "
+            "generation. Configure via U1_ENHANCE_{BACKEND,ENDPOINT,API_KEY,MODEL} "
             "env vars; defaults target Gemini 3.1 Pro. "
             "See docs/prompt_enhancement.md for details."
         ),
     )
     p.add_argument(
-        "--print_rewrite",
+        "--print_enhance",
         action="store_true",
-        help="With --rewrite: also print the rewritten prompt for debugging.",
+        help="With --enhance: also print the enhanced prompt for debugging.",
     )
 
     return p.parse_args()
 
 
-def _build_rewriter(args: argparse.Namespace):
-    """Instantiate :class:`PromptRewriter` + a dedicated event loop iff
-    ``--rewrite`` was passed.
+def _build_enhancer(args: argparse.Namespace):
+    """Instantiate :class:`PromptEnhancer` + a dedicated event loop iff
+    ``--enhance`` was passed.
 
     We keep a single event loop for the whole run so the underlying
     :class:`httpx.AsyncClient` inside the adapter can actually pool
@@ -265,28 +265,28 @@ def _build_rewriter(args: argparse.Namespace):
     sample would otherwise tear the pool down every time.
 
     Returns:
-        ``(rewriter, loop)`` or ``(None, None)``.
+        ``(enhancer, loop)`` or ``(None, None)``.
     """
-    if not args.rewrite:
+    if not args.enhance:
         return None, None
     import asyncio
 
-    from sensenova_u1.prompt_rewrite import PromptRewriter
+    from sensenova_u1.prompt_enhance import PromptEnhancer
 
-    rewriter = PromptRewriter.from_env(style="infographic")
+    enhancer = PromptEnhancer.from_env(style="infographic")
     loop = asyncio.new_event_loop()
-    return rewriter, loop
+    return enhancer, loop
 
 
-def _maybe_rewrite(rewriter, loop, prompt: str, *, verbose: bool) -> str:
-    """Send ``prompt`` through the rewriter (if configured) and return the result."""
-    if rewriter is None:
+def _maybe_enhance(enhancer, loop, prompt: str, *, verbose: bool) -> str:
+    """Send ``prompt`` through the enhancer (if configured) and return the result."""
+    if enhancer is None:
         return prompt
-    rewritten = loop.run_until_complete(rewriter.arewrite(prompt))
+    enhanced = loop.run_until_complete(enhancer.aenhance(prompt))
     if verbose:
-        print(f"[rewrite] original : {prompt}")
-        print(f"[rewrite] rewritten: {rewritten}")
-    return rewritten
+        print(f"[enhance] original : {prompt}")
+        print(f"[enhance] enhanced : {enhanced}")
+    return enhanced
 
 
 def main() -> None:
@@ -298,7 +298,7 @@ def main() -> None:
     print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
 
     profiler = InferenceProfiler(enabled=args.profile, device=args.device)
-    rewriter, loop = _build_rewriter(args)
+    enhancer, loop = _build_enhancer(args)
 
     try:
         with profiler.time_load():
@@ -307,7 +307,7 @@ def main() -> None:
         cfg_interval = tuple(args.cfg_interval)
 
         if args.prompt is not None:
-            prompt = _maybe_rewrite(rewriter, loop, args.prompt, verbose=args.print_rewrite)
+            prompt = _maybe_enhance(enhancer, loop, args.prompt, verbose=args.print_enhance)
             _warn_if_unsupported(args.width, args.height)
             _set_seed(args.seed)
             with profiler.time_generate(args.width, args.height, args.batch_size):
@@ -341,7 +341,7 @@ def main() -> None:
             w, h = _resolve_size(sample, args.width, args.height)
             _warn_if_unsupported(w, h)
             _set_seed(int(sample.get("seed", args.seed)))
-            prompt = _maybe_rewrite(rewriter, loop, sample["prompt"], verbose=args.print_rewrite)
+            prompt = _maybe_enhance(enhancer, loop, sample["prompt"], verbose=args.print_enhance)
             with profiler.time_generate(w, h, 1):
                 images = engine.generate(
                     prompt,
@@ -359,9 +359,9 @@ def main() -> None:
 
         profiler.report()
     finally:
-        if rewriter is not None:
+        if enhancer is not None:
             try:
-                loop.run_until_complete(rewriter.aclose())
+                loop.run_until_complete(enhancer.aclose())
             finally:
                 loop.close()
 

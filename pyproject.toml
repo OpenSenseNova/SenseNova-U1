@@ -44,7 +44,7 @@ dependencies = [
     "pillow==12.0.0",
     "tqdm==4.67.1",
     "packaging==25.0",
-    # HTTP client used by `sensenova_u1.prompt_rewrite.adapters`. Version is left
+    # HTTP client used by `sensenova_u1.prompt_enhance.adapters`. Version is left
     # open because only the high-level AsyncClient is used and the API has been
     # stable since 0.24.
     "httpx>=0.27,<1",
@@ -106,5 +106,5 @@ target-version = "py311"
 extend-exclude = [
     "src/sensenova_u1/models/neo_unify",
     # Vendored verbatim from SenseNova-Skills; keep diff-clean for easy uprev.
-    "src/sensenova_u1/prompt_rewrite/adapters",
+    "src/sensenova_u1/prompt_enhance/adapters",
 ]
