@@ -33,7 +33,6 @@ SUPPORTED_RESOLUTIONS: dict[str, tuple[int, int]] = {
     "2:1": (2144, 1088),
     "1:3": (864, 2592),
     "3:1": (2592, 864),
-
 }
 
 DEFAULT_RESOLUTION = "16:9"
@@ -343,8 +342,7 @@ def parse_args() -> argparse.Namespace:
         default="auto",
         choices=["auto", "flash", "sdpa"],
         help=(
-            "Attention kernel used by the Qwen3 layers. "
-            "'auto' picks flash-attn when importable and falls back to SDPA."
+            "Attention kernel used by the Qwen3 layers. 'auto' picks flash-attn when importable and falls back to SDPA."
         ),
     )
     p.add_argument(
@@ -382,7 +380,7 @@ def main() -> None:
 
     # Single-sample inference: --prompt + optional --image (repeatable).
     if args.prompt is not None:
-        print('prompt:', args.prompt)
+        print("prompt:", args.prompt)
         input_images = _load_input_images(args.image)
         w, h = _resolve_image_size(input_images, fallback_w, fallback_h)
         _set_seed(args.seed)
