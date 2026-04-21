@@ -10,8 +10,8 @@ from transformers import AutoConfig, AutoModel, AutoTokenizer
 
 import sensenova_u1
 from sensenova_u1 import check_checkpoint_compatibility
-from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
 from sensenova_u1.models.neo_unify.utils import load_image_native
+from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
 
 
 class SenseNovaU1VQA:
