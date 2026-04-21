@@ -56,14 +56,14 @@ debugging.
 | Gemini 3.1 Flash-Lite (Third-party service) | `chat_completions` | `https://aigateway.edgecloudapp.com/v1/f194fd69361cd590f1fa136c9c90eca1/senseai` | The overall quality of the information chart is high and its generation speed is fast. |
 | Kimi 2.5/Qwen3.6-Plus (Third-party service) | `chat_completions` | `https://coding.dashscope.aliyuncs.com/v1/chat/completions` | Good Chinese enhancements. Different models can be flexibly selected. |
 
-## 4. Qualitative comparison (TODO – fill after release benchmarks)
+## 4. Qualitative comparison
 
 > The table below will be populated with side-by-side samples from the same
 > handful of base prompts, rendered at `2048×2048` with identical sampler
 > knobs. PRs with new backends welcome.
 
 | Base prompt | No enhance | Gemini 3.1 Pro | SenseNova | Qwen3.6-Plus | Kimi 2.5 |
-| :---------- | :--------- | :------------- | :--------------- | :----- | :------- |
+| :---------- | :------------- | :------------- | :------------- | :------------- | :------------- |
 | 生成一副西红柿炒鸡蛋的教程图 | <img src="assets/showcases/prompt_enhancement/case1.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case1_gemini_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case1_sensenova_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case1_qwen_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case1_kimi_enhanced.webp" width="200"> |
 | 生成一张介绍乒乓球比赛规则的图片 | <img src="assets/showcases/prompt_enhancement/case2.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case2_gemini_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case2_sensenova_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case2_qwen_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case2_kimi_enhanced.webp" width="200"> |
 | Popularizing the importance of three meals a day | <img src="assets/showcases/prompt_enhancement/case3.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case3_gemini_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case3_sensenova_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case3_qwen_enhanced.webp" width="200"> | <img src="assets/showcases/prompt_enhancement/case3_kimi_enhanced.webp" width="200"> |
