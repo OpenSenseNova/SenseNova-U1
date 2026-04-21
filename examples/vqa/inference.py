@@ -39,6 +39,8 @@ class SenseNovaU1VQA:
         do_sample: bool = False,
         temperature: float = 0.7,
         top_p: float = 0.9,
+        top_k: int | None = None,
+        repetition_penalty: float | None = None,
     ) -> tuple[str, list]:
         pixel_values, grid_hw = load_image_native(image)
         pixel_values = pixel_values.to(self.device, dtype=self.model.dtype)
@@ -51,6 +53,10 @@ class SenseNovaU1VQA:
         if do_sample:
             generation_config["temperature"] = temperature
             generation_config["top_p"] = top_p
+            if top_k is not None:
+                generation_config["top_k"] = top_k
+        if repetition_penalty is not None:
+            generation_config["repetition_penalty"] = repetition_penalty
 
         response, updated_history = self.model.chat(
             self.tokenizer,
@@ -88,6 +94,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--do_sample", action="store_true", help="Enable sampling (default: greedy).")
     p.add_argument("--temperature", type=float, default=0.7)
     p.add_argument("--top_p", type=float, default=0.9)
+    p.add_argument("--top_k", type=int, default=None, help="Top-k sampling (default: None).")
+    p.add_argument("--repetition_penalty", type=float, default=None, help="Repetition penalty (default: None).")
 
     p.add_argument("--device", default="cuda")
     p.add_argument(
@@ -143,6 +151,8 @@ def main() -> None:
                 do_sample=args.do_sample,
                 temperature=args.temperature,
                 top_p=args.top_p,
+                top_k=args.top_k,
+                repetition_penalty=args.repetition_penalty,
             )
         if args.output:
             out = Path(args.output)
@@ -179,6 +189,8 @@ def main() -> None:
                 do_sample=args.do_sample,
                 temperature=args.temperature,
                 top_p=args.top_p,
+                top_k=args.top_k,
+                repetition_penalty=args.repetition_penalty,
             )
         result = {"id": sample.get("id", ""), "image": str(img_path), "question": question, "answer": response}
         results.append(result)

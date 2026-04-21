@@ -25,10 +25,12 @@ examples/
 │   └── data/
 │       ├── sample.jsonl
 │       └── images/
-└── vqa/                       # visual understanding / VQA  (TBA)
+└── vqa/                       # visual understanding / VQA
     ├── inference.py
+    ├── run.sh
     └── data/
-        └── questions.jsonl
+        ├── questions.jsonl
+        └── images/
 ```
 
 ## Text-to-Image
@@ -149,3 +151,44 @@ python examples/interleave/inference.py \
 
 See [`interleave/data/sample.jsonl`](./interleave/data/sample.jsonl) for a
 two-sample starter (one text-only, one image-conditioned).
+
+## Visual Understanding (VQA)
+
+Single image, with sampling enabled:
+
+```bash
+python examples/vqa/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --image examples/vqa/data/images/menu.jpg \
+  --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." \
+  --output outputs/menu_answer.txt \
+  --max_new_tokens 8192 \
+  --do_sample \
+  --temperature 0.6 \
+  --top_p 0.95 \
+  --top_k 20 \
+  --repetition_penalty 1.05 \
+  --profile
+```
+
+Omit `--do_sample` (and the sampling flags) for deterministic greedy decoding.
+
+Batched questions from a JSONL file (each line must contain `image` and `question`; `id` is optional):
+
+```bash
+python examples/vqa/inference.py \
+    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --jsonl examples/vqa/data/questions.jsonl \
+    --output_dir outputs/vqa/ \
+    --max_new_tokens 8192 \
+    --do_sample \
+    --temperature 0.6 \
+    --top_p 0.95 \
+    --top_k 20 \
+    --repetition_penalty 1.05 \
+    --profile
+```
+
+Results are written to `outputs/vqa/answers.jsonl`, one JSON object per line with `id`, `image`, `question`, and `answer` fields.
+
+See [`vqa/data/questions.jsonl`](./vqa/data/questions.jsonl) for a starter file.
