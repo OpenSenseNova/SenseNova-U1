@@ -19,11 +19,13 @@ examples/
 │   ├── inference.py
 │   └── data/
 │       └── samples.jsonl
-├── interleave/                # interleaved generation
+├── interleave/                # interleaved text+image gen  (runnable)
 │   ├── inference.py
+│   ├── run.sh
 │   └── data/
-│       └── samples.jsonl
-└── vqa/                       # visual understanding / VQA
+│       ├── sample.jsonl
+│       └── images/
+└── vqa/                       # visual understanding / VQA  (TBA)
     ├── inference.py
     └── data/
         └── questions.jsonl
@@ -96,3 +98,54 @@ JSONL mode additionally honors per-sample `width` + `height` fields when
 both are present; they override the CLI default for that line.
 
 CFG defaults: `--cfg_scale 4.0` (text guidance), `--img_cfg_scale 1.0` (image CFG **off** by default).
+
+
+## Interleave
+
+`examples/interleave/inference.py` drives `model.interleave_gen`, which produces
+**interleaved text and images in a single response**. The model can emit a
+`<think>...</think>` reasoning block that generates intermediate images, followed
+by a concise final answer. See [`interleave/run.sh`](./interleave/run.sh) for a
+three-mode launcher covering every usage pattern below.
+
+### 1) Single sample, text prompt only
+```bash
+python examples/interleave/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
+  --resolution "16:9" \
+  --output_dir outputs/interleave/text \
+  --stem demo_text
+```
+
+### 2) Single sample, text prompt + input image
+
+```bash
+python examples/interleave/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "<image>\n图文交错生成小猫游览故宫的场景" \
+  --image examples/interleave/data/images/image0.jpg \
+  --output_dir outputs/interleave/text_image \
+  --stem demo_text_image
+```
+
+### 3) Batched samples from JSONL
+
+Each line is one sample:
+
+```json
+{"prompt": "..."}
+{"prompt": "...", "image": ["a.jpg"]}
+```
+
+```bash
+python examples/interleave/inference.py \
+    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --jsonl examples/interleave/data/sample.jsonl \
+    --image_root examples/interleave/data/images\
+    --resolution "16:9" \
+    --output_dir outputs/interleave/jsonl
+```
+
+See [`interleave/data/sample.jsonl`](./interleave/data/sample.jsonl) for a
+two-sample starter (one text-only, one image-conditioned).

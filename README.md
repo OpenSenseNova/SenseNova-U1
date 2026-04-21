@@ -261,9 +261,47 @@ Run `python examples/editing/inference.py --help` for the full flag list.
 
 #### Interleaved Generation
 
+[`examples/interleave/inference.py`](./examples/interleave/inference.py) drives `model.interleave_gen` — the model emits **interleaved text and generated images in a single response**, optionally preceded by a `<think></think>` block whose intermediate images guide the final answer. See [`examples/interleave/run.sh`](./examples/interleave/run.sh) for a three-mode launcher and [`examples/README.md#interleave`](./examples/README.md#interleave) for the full walkthrough.
+
+When input images are provided (either via `--image` or a JSONL sample's `image` field), the output resolution follows the first input image (snapped to 32-aligned buckets via `smart_resize`), overriding `--resolution` / `--width` / `--height`.
+
+Every sample writes `<stem>.txt` (generated text) plus `<stem>_image_<i>.png` for each generated image; `--jsonl` mode also emits a `results.jsonl` manifest.
+
+Single prompt, text only:
+
 ```bash
-TBA
+python examples/interleave/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
+  --resolution "16:9" \
+  --output_dir outputs/interleave/text \
+  --stem demo_text
 ```
+
+Single prompt with an input image — each `<image>` placeholder binds to one `--image` path, in order (repeatable):
+
+```bash
+python examples/interleave/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "<image>\n图文交错生成小猫游览故宫的场景" \
+  --image examples/interleave/data/images/image0.jpg \
+  --output_dir outputs/interleave/text_image \
+  --stem demo_text_image
+```
+
+Batched inference from a JSONL file. Each line is `{"prompt": ...}` and optionally `{"image": [...], "width": W, "height": H, "seed": S, "think_mode": bool}`. Relative `image` paths resolve against `--image_root`:
+
+```bash
+python examples/interleave/inference.py \
+    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --jsonl examples/interleave/data/sample.jsonl \
+    --image_root examples/interleave/data/images \
+    --resolution "16:9" \
+    --output_dir outputs/interleave/jsonl
+```
+
+Run `python examples/interleave/inference.py --help` for the full flag list.
+
 
 ## 📊 Evaluation
 
