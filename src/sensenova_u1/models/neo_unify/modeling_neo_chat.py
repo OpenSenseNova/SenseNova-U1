@@ -991,7 +991,7 @@ class NEOChatModel(PreTrainedModel):
         if generation_config and hasattr(generation_config, 'max_new_tokens') and generation_config.max_new_tokens is not None:
             max_new_tokens = generation_config.max_new_tokens
         else:
-            max_new_tokens = 1024
+            max_new_tokens = 8192
 
         current_generated_tokens = 0
 
@@ -1027,8 +1027,6 @@ class NEOChatModel(PreTrainedModel):
 
         if not think_mode:
             query_cond = query_cond + '<think>\n\n</think>\n\n'
-        else:
-            query_cond = query_cond + '<think>\n'
 
         def replace_image_tokens(query, grid_hw_list):
             for i in range(len(grid_hw_list)):

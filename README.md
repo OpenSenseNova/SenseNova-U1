@@ -61,7 +61,7 @@ To efficiently serve a unified model that jointly handles understanding and gene
 
 - **Disaggregated serving & transfer design** — understanding and generation workloads are served on separate engines with a low-overhead KV / feature transfer channel.
 - **Understanding-side optimizations** — tailored kernels, scheduling, and KV management for the VLM path.
-- **Generation-side optimizations** — step / sampler / cache optimizations for the X2I generation path.
+- **Generation-side optimizations** — Kernel fusion, CFG parallelism, Ulysses parallelism, and improved memory management for KV cache.
 
 We observe competitive end-to-end latency and throughput across understanding, generation, and interleaved workloads.
 
@@ -186,6 +186,7 @@ python examples/t2i/inference.py \
 
 Run `python examples/t2i/inference.py --help` for the full flag list.
 
+
 For batched inference, pass a JSONL file via `--jsonl` (see [`examples/t2i/data/samples.jsonl`](./examples/t2i/data/samples.jsonl)). Each line is `{"prompt": ...}` and optionally `{"width": W, "height": H, "seed": S}`:
 
 ```bash
@@ -200,23 +201,135 @@ python examples/t2i/inference.py \
     --profile
 ```
 
+##### Prompt Enhancement for Infographics Generation
+
+Short user prompts — especially for **infographic** generation — can be enhanced by a strong LLM before T2I inference,
+which noticeably lifts information density, typography fidelity, and layout adherence.
+Flip it on with `--enhance`:
+
+```bash
+# export U1_ENHANCE_API_KEY=sk-...                # required
+# defaults target Gemini 3.1 Pro via its OpenAI-compatible endpoint;
+# override any of these to point at SenseNova / Claude / Kimi 2.5 etc.:
+# export U1_ENHANCE_BACKEND=chat_completions   # or 'anthropic'
+# export U1_ENHANCE_ENDPOINT=https://...chat/completions
+# export U1_ENHANCE_MODEL=gemini-3.1-pro
+
+python examples/t2i/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "如何制作咖啡的教程" \
+  --enhance \
+  --print_enhance \
+  --output output.png
+```
+
+Refer to [`docs/prompt_enhancement.md`](./docs/prompt_enhancement.md) for more details.
+
 ##### Image Editing
 
+[`examples/editing/inference.py`](./examples/editing/inference.py) demonstrates the image editing capability of SenseNova-U1.
 
-TBA
+Output resolution is derived via `smart_resize` on the first input image — aspect ratio preserved, total pixels normalized to `--target_pixels` (default `2048 * 2048`). Pass `--width W --height H` (both multiples of 32) to override.
+
+Single edit:
+
+```bash
+python examples/editing/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "Change the animal's fur color to a darker shade." \
+  --image examples/editing/data/images/1.jpg \
+  --cfg_scale 4.0 \
+  --img_cfg_scale 1.0 \
+  --cfg_norm none \
+  --timestep_shift 3.0 \
+  --num_steps 50 \
+  --output output_edited.png \
+  --profile --compare
+```
+
+For batched inference, pass a JSONL file via `--jsonl` (see
+[`examples/editing/data/samples.jsonl`](./examples/editing/data/samples.jsonl)).
+Each line is `{"prompt": ..., "image": ...}` where `image` can be a single
+path or a list of paths for multi-reference editing; `width` + `height`,
+`seed`, and `type` are optional. A per-sample `width` + `height` pair
+overrides the CLI default for that line:
+
+```bash
+python examples/editing/inference.py \
+    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --jsonl examples/editing/data/samples.jsonl \
+    --output_dir outputs/editing/ \
+    --cfg_scale 4.0 \
+    --img_cfg_scale 1.0 \
+    --cfg_norm none \
+    --timestep_shift 3.0 \
+    --num_steps 50 \    
+    --profile --compare
+```
+
+Run `python examples/editing/inference.py --help` for the full flag list.
 
 
 #### Interleaved Generation
 
+[`examples/interleave/inference.py`](./examples/interleave/inference.py) drives `model.interleave_gen` — the model emits **interleaved text and generated images in a single response**, optionally preceded by a `<think></think>` block whose intermediate images guide the final answer. See [`examples/interleave/run.sh`](./examples/interleave/run.sh) for a three-mode launcher and [`examples/README.md#interleave`](./examples/README.md#interleave) for the full walkthrough.
+
+When input images are provided (either via `--image` or a JSONL sample's `image` field), the output resolution follows the first input image (snapped to 32-aligned buckets via `smart_resize`), overriding `--resolution` / `--width` / `--height`.
+
+Every sample writes `<stem>.txt` (generated text) plus `<stem>_image_<i>.png` for each generated image; `--jsonl` mode also emits a `results.jsonl` manifest.
+
+Single prompt, text only:
+
 ```bash
-TBA
+python examples/interleave/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
+  --resolution "16:9" \
+  --output_dir outputs/interleave/text \
+  --stem demo_text
 ```
+
+Single prompt with an input image — each `<image>` placeholder binds to one `--image` path, in order (repeatable):
+
+```bash
+python examples/interleave/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --prompt "<image>\n图文交错生成小猫游览故宫的场景" \
+  --image examples/interleave/data/images/image0.jpg \
+  --output_dir outputs/interleave/text_image \
+  --stem demo_text_image
+```
+
+Batched inference from a JSONL file. Each line is `{"prompt": ...}` and optionally `{"image": [...], "width": W, "height": H, "seed": S, "think_mode": bool}`. Relative `image` paths resolve against `--image_root`:
+
+```bash
+python examples/interleave/inference.py \
+    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --jsonl examples/interleave/data/sample.jsonl \
+    --image_root examples/interleave/data/images \
+    --resolution "16:9" \
+    --output_dir outputs/interleave/jsonl
+```
+
+Run `python examples/interleave/inference.py --help` for the full flag list.
 
 
 ## 📊 Evaluation
 
 <!-- TODO: link to evaluation guide once available -->
 Evaluation scripts and benchmark reproduction guides will be released in `evaluation/`.
+
+
+## 🛠️ Development
+
+To catch lint / formatting issues locally before they fail CI, install the
+pre-commit hook once after cloning:
+
+```bash
+uv pip install pre-commit   # or: pip install pre-commit
+pre-commit install
+pre-commit run --all-files  # optional: check the whole repo now
+```
 
 
 ## 🖊️ Citation

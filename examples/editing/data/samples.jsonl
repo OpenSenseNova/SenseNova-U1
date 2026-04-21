@@ -1,0 +1,3 @@
+{"prompt": "Change the animal's fur color to a darker shade.", "image": "examples/editing/data/images/1.jpg"}
+{"prompt": "Transfer the image into a traditional ukiyo-e woodblock-print style.", "image": "examples/editing/data/images/2.jpg"}
+{"prompt": "Change the beach and ocean environment in the picture to a snowy mountain.", "image": "examples/editing/data/images/3.jpg"}
