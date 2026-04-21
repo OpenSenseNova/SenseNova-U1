@@ -108,8 +108,7 @@ def parse_args() -> argparse.Namespace:
         default="auto",
         choices=["auto", "flash", "sdpa"],
         help=(
-            "Attention kernel used by the Qwen3 layers. "
-            "'auto' picks flash-attn when importable and falls back to SDPA."
+            "Attention kernel used by the Qwen3 layers. 'auto' picks flash-attn when importable and falls back to SDPA."
         ),
     )
     p.add_argument(
