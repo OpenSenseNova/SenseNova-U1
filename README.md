@@ -63,8 +63,6 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 
 ## 🎨 Showcases
 
-> 📸 **More text-to-image samples:** see [Text-to-Image gallery](./docs/showcases.md#text-to-image).
-
 <details>
 <summary>🖼️ Text-to-Image (General)</summary>
 
@@ -92,16 +90,17 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 
 </details>     
 
-
-> 📸 **More editing samples:** see [Image Editing gallery](./docs/showcases.md#image-editing).  
+> 📸 **More text-to-image samples:** see [Text-to-Image gallery](./docs/showcases.md#text-to-image). 
 
 
 <details>
 <summary>✏️ Image Editing (General)</summary>
 
-| | | |
-| :---: | :---: | :---: |
-| [<img alt="editing sample 0001" src="./docs/assets/showcases/editing/0001_2048x2048_compare.webp">](./docs/assets/showcases/editing/0001_2048x2048_compare.webp) | [<img alt="editing sample 0002" src="./docs/assets/showcases/editing/0002_2048x2048_compare.webp">](./docs/assets/showcases/editing/0002_2048x2048_compare.webp) | [<img alt="editing sample 0003" src="./docs/assets/showcases/editing/0003_2048x2048_compare.webp">](./docs/assets/showcases/editing/0003_2048x2048_compare.webp) |
+| | |
+| :---: | :---: |
+| <div align="center"><a href="./examples/editing/data/images/1.webp"><img width="180" alt="editing input 1" src="./examples/editing/data/images/1.webp"></a> <a href="./examples/editing/data/images/1_out.webp"><img width="180" alt="editing output 1" src="./examples/editing/data/images/1_out.webp"></a><br><sub>Change the jacket of the person on the left to bright yellow.</sub></div> | <div align="center"><a href="./examples/editing/data/images/3.webp"><img width="180" alt="editing input 3" src="./examples/editing/data/images/3.webp"></a> <a href="./examples/editing/data/images/3_out.webp"><img width="180" alt="editing output 3" src="./examples/editing/data/images/3_out.webp"></a><br><sub>在小狗头上放一个花环，并且把图片变为吉卜力风格。</sub></div> |
+| <div align="center"><a href="./examples/editing/data/images/2.webp"><img width="180" alt="editing input 2" src="./examples/editing/data/images/2.webp"></a> <a href="./examples/editing/data/images/2_out.webp"><img width="180" alt="editing output 2" src="./examples/editing/data/images/2_out.webp"></a><br><sub>Make the person in the image smile.</sub></div> | <div align="center"><a href="./examples/editing/data/images/4.webp"><img width="180" alt="editing input 4" src="./examples/editing/data/images/4.webp"></a> <a href="./examples/editing/data/images/4_out.webp"><img width="180" alt="editing output 4" src="./examples/editing/data/images/4_out.webp"></a><br><sub>Add a bouquet of flowers.</sub></div> |
+| <div align="center"><a href="./examples/editing/data/images/8.webp"><img width="180" alt="editing input 8" src="./examples/editing/data/images/8.webp"></a> <a href="./examples/editing/data/images/8_out.webp"><img width="180" alt="editing output 8" src="./examples/editing/data/images/8_out.webp"></a><br><sub>Replace the man with a woman.</sub></div> | <div align="center"><a href="./examples/editing/data/images/6.webp"><img width="180" alt="editing input 6" src="./examples/editing/data/images/6.webp"></a> <a href="./examples/editing/data/images/6_out.webp"><img width="180" alt="editing output 6" src="./examples/editing/data/images/6_out.webp"></a><br><sub>Replace the text "WARFIGHTER" to "BATTLEFIELD" in the bold orange-red font.</sub></div> | 
 
 </details>
 
@@ -112,8 +111,7 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 
 </details>    
 
-
-> 📸 **More interleaved samples:** see [Interleaved Generation gallery](./docs/showcases.md#interleaved-generation).
+> 📸 **More editing samples:** see [Image Editing gallery](./docs/showcases.md#image-editing). 
 
 <details>
 <summary>♻️ Interleaved Generation</summary>
@@ -124,6 +122,8 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 | [<img alt="interleave case 03" src="./docs/assets/showcases/interleave/case_03.webp">](./docs/assets/showcases/interleave/case_03.webp) |
 
 </details>
+
+> 📸 **More interleaved samples:** see [Interleaved Generation gallery](./docs/showcases.md#interleaved-generation).
 
 <details>
 <summary>📝 Visual Understanding</summary>
@@ -138,26 +138,35 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 
 ## 📊 Key Benchmarks
 
-### 📝 *Understanding*
+<details>
+<summary>📝 Visual Understanding</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/understanding.webp" alt="Understanding Benchmarks">
 </p>
 
-### 🖼️ *Generation*
+</details>
+
+<details>
+<summary>🖼️ Visual Generation</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
 </p>
 
-### ♻️ *Interleaved*
+
+</details>
+
+<details>
+<summary>♻️ Interleaved Generation</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/interleaved.webp" alt="Interleaved Benchmarks">
 </p>
 
-Evaluation scripts and benchmark reproduction guides will be added in `evaluation/`.
+</details>
 
+> Evaluation scripts and benchmark reproduction guides are added in [`evaluation`](./evaluation/README.md).
 
 
 ## 🛠️ Quick Start
