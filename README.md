@@ -49,6 +49,9 @@ Last but not least, preliminary evidence displays that our models extend beyond 
 | [<img width="300" alt="t2i square 0004" src="./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp) |
 | [<img width="200" alt="t2i portrait 0007" src="./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp) |
 
+> 📸 **More text-to-image samples:** see [Text-to-Image gallery](./docs/showcases.md#text-to-image).
+
+
 ### Image Editing
 
 | | | |
@@ -84,24 +87,19 @@ Evaluation scripts and benchmark reproduction guides will be added in `evaluatio
 ## 🛠️ Quick Start
 
 
-### Use with SenseNova-Studio
+### 🌐 Use with SenseNova-Studio
 
-The fastest way to experience SenseNova-U1 is through **[SenseNova-Studio](https://unify.light-ai.top/)** — a free online playground where you can try the model directly in your browser, no installation or GPU required.
-
-- 🌐 **Zero setup** — just open [unify.light-ai.top](https://unify.light-ai.top/) and start chatting.
-- 🎨 **Full-stack capabilities** — visual understanding (VQA), text-to-image generation, image editing, and interleaved vision–language generation, all in one interface.
-- ⚡ **Always up to date** — the platform is backed by the latest SenseNova-U1 checkpoints with optimized inference (LightLLM + LightX2V).
-- 💸 **Free to use** — ideal for quick exploration, prompt iteration, and sharing results with collaborators.
+The fastest way to experience SenseNova-U1 is through **[SenseNova-Studio](https://unify.light-ai.top/)** — a 🆓 free online playground where you can try the model directly in your browser, no installation or GPU required.
 
 
-### Use with SenseNova-Skills
+### 🦞 Use with SenseNova-Skills (OpenClaw)
 
-The easiest way to try SenseNova-U1 is through our companion repository **[SenseNova-Skills](https://github.com/OpenSenseNova/SenseNova-Skills)**, which ships SenseNova-U1 as a ready-to-use skill.
+The easiest way to integrate SenseNova-U1 into your own agent or application is through our companion repository **[SenseNova-Skills (OpenClaw) 🦞](https://github.com/OpenSenseNova/SenseNova-Skills)**, which ships SenseNova-U1 as a ready-to-use skill with a unified tool-calling interface.
 
-Refer to the [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills) for installation and usage details.
+> Refer to the [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills) for installation and usage details.
 
 
-### Run with transformers
+### 🤗 Run with transformers
 
 > **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with uv.
 
@@ -140,7 +138,7 @@ python examples/interleave/inference.py --model_path OpenSenseNova/SenseNova-U1-
 > See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
 
 
-### Run with LightLLM + LightX2V
+### ⚡ Run with LightLLM + LightX2V
 
 To efficiently serve a unified model that jointly handles understanding and generation, we co-design a dedicated inference stack on top of **[LightLLM](https://github.com/ModelTC/lightllm)** and **[LightX2V](https://github.com/ModelTC/lightx2v)**, featuring:
 
