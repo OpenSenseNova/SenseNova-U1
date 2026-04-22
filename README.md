@@ -116,9 +116,57 @@ uv pip install /path/to/flash_attn-2.8.3+cu12torch28cxx11abitrue-cp311-cp311-*.w
 
 #### Visual Understanding
 
+[`examples/vqa/inference.py`](./examples/vqa/inference.py) is a minimal visual question answering (VQA) inference script for SenseNova-U1.
+
+**Single image mode:**
+
 ```bash
-TBA
+python examples/vqa/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --image examples/vqa/data/images/menu.jpg \
+  --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." \
+  --output outputs/answer.txt \
+  --max_new_tokens 8192 \
+  --do_sample \
+  --temperature 0.6 \
+  --top_p 0.95 \
+  --top_k 20 \
+  --repetition_penalty 1.05 \
+  --profile
 ```
+
+Omit `--do_sample` (and the sampling flags) for deterministic greedy decoding.
+
+**Batched inference with JSONL:**
+
+For batched inference, pass a JSONL file via `--jsonl` (see [`examples/vqa/data/questions.jsonl`](./examples/vqa/data/questions.jsonl)). Each line requires `{"image": ..., "question": ...}` and optionally `{"id": ...}`:
+
+```bash
+python examples/vqa/inference.py \
+  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --jsonl examples/vqa/data/questions.jsonl \
+  --output_dir outputs/vqa/ \
+  --max_new_tokens 8192 \
+  --do_sample \
+  --temperature 0.6 \
+  --top_p 0.95 \
+  --top_k 20 \
+  --repetition_penalty 1.05 \
+  --profile
+```
+
+Results are written to `outputs/vqa/answers.jsonl`, one JSON object per line with `id`, `image`, `question`, and `answer` fields.
+
+**Generation parameters:**
+
+- `--max_new_tokens` — maximum response length (default: 1024)
+- `--do_sample` — enable sampling (default: greedy decoding)
+- `--temperature` — sampling temperature (default: 0.7, used when `--do_sample`)
+- `--top_p` — nucleus sampling threshold (default: 0.9, used when `--do_sample`)
+- `--top_k` — top-k sampling (default: None, used when `--do_sample`)
+- `--repetition_penalty` — repetition penalty (default: None)
+
+Run `python examples/vqa/inference.py --help` for the full flag list.
 
 #### Visual Generation
 
