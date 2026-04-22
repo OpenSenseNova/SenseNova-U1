@@ -13,6 +13,9 @@ open the full-resolution render.
 
 The main table presents the complete n × 3 grid layouts, covering landscape, square, and portrait formats at different resolutions.    
 
+
+#### 🖼️ *Text-to-Image (General)*
+
 Reproducible prompts are in
 [`examples/t2i/data/samples.jsonl`](../examples/t2i/data/samples.jsonl).
 
@@ -36,6 +39,11 @@ Reproducible prompts are in
 | [<img width="300" alt="t2i square 0004" src="./assets/showcases/t2i_infographic/0004_2048x2048.webp">](./assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./assets/showcases/t2i_infographic/0005_2048x2048.webp">](./assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./assets/showcases/t2i_infographic/0006_2048x2048.webp">](./assets/showcases/t2i_infographic/0006_2048x2048.webp) |
 | [<img width="200" alt="t2i portrait 0007" src="./assets/showcases/t2i_infographic/0007_1536x2720.webp">](./assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./assets/showcases/t2i_infographic/0008_1536x2720.webp">](./assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./assets/showcases/t2i_infographic/0009_1536x2720.webp">](./assets/showcases/t2i_infographic/0009_1536x2720.webp) |
 
+#### 🖼️ *Text-to-Image (Reasoning)*
+
+Reproducible prompts are in
+[`examples/t2i/data/samples_xxxx.jsonl`](../examples/t2i/data/samples_xxxx.jsonl).
+
 ---
 
 ## Image Editing
@@ -44,6 +52,8 @@ Side-by-side compare montages below show `input(s) | output`, with the
 edit instruction rendered along the bottom of each compare tile. The same
 unified model handles single-image attribute / style / relighting edits
 and multi-reference (subject + accessory + pose) composition.
+
+#### ✏️ *Image Editing (General)*
 
 Reproducible prompts are in
 [`examples/editing/data/samples.jsonl`](../examples/editing/data/samples.jsonl).
@@ -54,6 +64,13 @@ Reproducible prompts are in
 | <div align="center"><a href="../examples/editing/data/images/2.webp"><img width="180" alt="editing input 2" src="../examples/editing/data/images/2.webp"></a> <a href="../examples/editing/data/images/2_out.webp"><img width="180" alt="editing output 2" src="../examples/editing/data/images/2_out.webp"></a><br><sub>Make the person in the image smile.</sub></div> | <div align="center"><a href="../examples/editing/data/images/4.webp"><img width="180" alt="editing input 4" src="../examples/editing/data/images/4.webp"></a> <a href="../examples/editing/data/images/4_out.webp"><img width="180" alt="editing output 4" src="../examples/editing/data/images/4_out.webp"></a><br><sub>Add a bouquet of flowers.</sub></div> |
 | <div align="center"><a href="../examples/editing/data/images/5.webp"><img width="180" alt="editing input 5" src="../examples/editing/data/images/5.webp"></a> <a href="../examples/editing/data/images/5_out.webp"><img width="180" alt="editing output 5" src="../examples/editing/data/images/5_out.webp"></a><br><sub>Turn the image into an American comic style.</sub></div> | <div align="center"><a href="../examples/editing/data/images/8.webp"><img width="180" alt="editing input 8" src="../examples/editing/data/images/8.webp"></a> <a href="../examples/editing/data/images/8_out.webp"><img width="180" alt="editing output 8" src="../examples/editing/data/images/8_out.webp"></a><br><sub>Replace the man with a woman.</sub></div> |
 | <div align="center"><a href="../examples/editing/data/images/6.webp"><img width="180" alt="editing input 6" src="../examples/editing/data/images/6.webp"></a> <a href="../examples/editing/data/images/6_out.webp"><img width="180" alt="editing output 6" src="../examples/editing/data/images/6_out.webp"></a><br><sub>Replace the text "WARFIGHTER" to "BATTLEFIELD" in the bold orange-red font.</sub></div> | <div align="center"><a href="../examples/editing/data/images/7.webp"><img width="180" alt="editing input 7" src="../examples/editing/data/images/7.webp"></a> <a href="../examples/editing/data/images/7_out.webp"><img width="180" alt="editing output 7" src="../examples/editing/data/images/7_out.webp"></a><br><sub>Remove the person on the far right wearing a green skirt and a green top.</sub></div> |
+
+
+#### ✏️ *Image Editing (Reasoning)*
+
+Reproducible prompts are in
+[`examples/editing/data/samples_reasoning.jsonl`](../examples/editing/data/samples_reasoning.jsonl).
+
 
 ---
 
