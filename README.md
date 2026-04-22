@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="#"><img src="https://img.shields.io/badge/arXiv-TBD-b31b1b.svg" alt="arXiv"></a>
-  <a href="#"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
+  <a href="#"><img src="https://img.shields.io/badge/arXiv-Coming-b31b1b.svg" alt="arXiv"></a>
+  <a href="https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
 </p>
@@ -45,9 +45,9 @@
 
 ## 📣 News
 
-- Initial release of the weights for [SenseNova-U1-Mini-SFT]([TBD]) and [SenseNova-U1-Mini-Beta]([TBD]).  
+- `[2026.04.23]` Initial release of the weights for [SenseNova-U1-Mini-SFT]([TBD]) and [SenseNova-U1-Mini-Beta]([TBD]).  
 
-- Initial release of the [inference code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README.md) for SenseNova-U1.   
+- `[2026.04.23]` Initial release of the [inference code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README.md) for SenseNova-U1.   
 
 ## 📋 ToDo
 
@@ -58,17 +58,15 @@
 
 ## 🦁 Model Zoo
 
-<!-- TODO: fill in the table once weights are released -->
-
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
-| SenseNova-U1-Mini-SFT | 8B MoT | [🤗 link (TBD)](#) |
-| SenseNova-U1-Flash-Beta | A3B MoT | [🤗 link (TBD)](#) |
+| SenseNova-U1-Mini-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-Mini-SFT) |
+| SenseNova-U1-Flash-Beta | A3B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta) |
 
 ## 🎨 Showcases
 
-A quick tour below; see [`docs/showcases.md`](./docs/showcases.md) for
-additional editing and visual understanding samples.
+### Text-to-Image (General Case)
+
 
 ### Text-to-Image (Infographics)
 
@@ -77,6 +75,9 @@ additional editing and visual understanding samples.
 | [<img width="300" alt="t2i landscape 0001" src="./docs/assets/showcases/t2i_infographic/0001_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./docs/assets/showcases/t2i_infographic/0002_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./docs/assets/showcases/t2i_infographic/0003_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0003_2720x1536.webp) |
 | [<img width="300" alt="t2i square 0004" src="./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp) |
 | [<img width="200" alt="t2i portrait 0007" src="./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp) |
+
+> 📸 **More text-to-image samples:** see [Text-to-Image gallery](./docs/showcases.md#text-to-image).
+
 
 ### Image Editing
 
@@ -102,7 +103,8 @@ additional editing and visual understanding samples.
 | [<img alt="vqa agentic case" src="./docs/assets/showcases/vqa/agentic_case.webp">](./docs/assets/showcases/vqa/agentic_case.webp) |
 | [<img alt="vqa general cases" src="./docs/assets/showcases/vqa/general_case.webp">](./docs/assets/showcases/vqa/general_case.webp) |
 
-## 📊 Benchmarks
+
+## 📊 Key Benchmarks
 
 > TODO: Add Benchmark Chart
 
@@ -111,30 +113,20 @@ Evaluation scripts and benchmark reproduction guides will be added in `evaluatio
 
 ## 🛠️ Quick Start
 
-### Use with SenseNova-Skills (zero-config, recommended)
 
-The easiest way to try SenseNova-U1 is through our companion repository **[SenseNova-Skills](https://github.com/OpenSenseNova/SenseNova-Skills)**, which ships SenseNova-U1 as a ready-to-use skill.
+### 🌐 Use with SenseNova-Studio
 
-Refer to the [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills) for installation and usage details.
-
-
-### Run with LightLLM + LightX2V
-
-To efficiently serve a unified model that jointly handles understanding and generation, we co-design a dedicated inference stack on top of **[LightLLM](https://github.com/ModelTC/lightllm)** and **[LightX2V](https://github.com/ModelTC/lightx2v)**, featuring:
-
-- **Disaggregated serving & transfer design** — understanding and generation workloads are served on separate engines with a low-overhead KV / feature transfer channel.
-- **Understanding-side optimizations** — tailored kernels, scheduling, and KV management for the VLM path.
-- **Generation-side optimizations** — Kernel fusion, CFG parallelism, Ulysses parallelism, and improved memory management for KV cache.
-
-We observe competitive end-to-end latency and throughput across understanding, generation, and interleaved workloads.
-
-> 📖 **Full design, benchmarking protocol, and performance numbers:** see [`docs/inference_infrastructure.md`](./docs/inference_infrastructure.md).
+The fastest way to experience SenseNova-U1 is through **[SenseNova-Studio](https://unify.light-ai.top/)** — a 🆓 free online playground where you can try the model directly in your browser, no installation or GPU required.
 
 
-TBA: run with lightx2v
+### 🦞 Use with SenseNova-Skills (OpenClaw)
+
+The easiest way to integrate SenseNova-U1 into your own agent or application is through our companion repository **[SenseNova-Skills (OpenClaw) 🦞](https://github.com/OpenSenseNova/SenseNova-Skills)**, which ships SenseNova-U1 as a ready-to-use skill with a unified tool-calling interface.
+
+> Refer to the [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills) for installation and usage details.
 
 
-### Run with transformers
+### 🤗 Run with transformers
 
 > **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with uv.
 
@@ -173,24 +165,24 @@ python examples/interleave/inference.py --model_path OpenSenseNova/SenseNova-U1-
 > See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
 
 
-## 🛠️ Development
+### ⚡ Run with LightLLM + LightX2V
 
-To catch lint / formatting issues locally before they fail CI, install the
-pre-commit hook once after cloning:
+To efficiently serve a unified model that jointly handles understanding and generation, we co-design a dedicated inference stack on top of **[LightLLM](https://github.com/ModelTC/lightllm)** and **[LightX2V](https://github.com/ModelTC/lightx2v)**, featuring:
 
-```bash
-uv pip install pre-commit   # or: pip install pre-commit
-pre-commit install
-pre-commit run --all-files  # optional: check the whole repo now
-```
+- **Disaggregated serving & transfer design** — understanding and generation workloads are served on separate engines with a low-overhead KV / feature transfer channel.
+- **Understanding-side optimizations** — tailored kernels, scheduling, and KV management for the VLM path.
+- **Generation-side optimizations** — Kernel fusion, CFG parallelism, Ulysses parallelism, and improved memory management for KV cache.
+
+We observe competitive end-to-end latency and throughput across understanding, generation, and interleaved workloads.
+
+> 📖 **Full design, benchmarking protocol, and performance numbers:** see [`docs/inference_infrastructure.md`](./docs/inference_infrastructure.md).
 
 
-## 🖊️ Citation
+<!-- ## 🖊️ Citation
 
-<!-- TODO: fill in once the paper is released -->
 ```bibtex
 
-```
+``` -->
 
 ## ⚖️ License
 
