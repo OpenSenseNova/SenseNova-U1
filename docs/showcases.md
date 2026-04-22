@@ -99,6 +99,7 @@ Reproducible prompts are in
 
 General visual understanding across spatial reasoning, multi-image comparison, OCR, geometry, and knowledge-intensive QA:
 
-| | |
-| :---: | :---: |
-| [<img alt="vqa general cases" src="./assets/showcases/vqa/general_case.webp">](./assets/showcases/vqa/general_case.webp) | [<img alt="vqa agentic case" src="./assets/showcases/vqa/agentic_case.webp">](./assets/showcases/vqa/agentic_case.webp) |
+| |
+| :---: |
+| [<img alt="vqa agentic case" src="./assets/showcases/vqa/agentic_case.webp">](./assets/showcases/vqa/agentic_case.webp) |
+| [<img alt="vqa general cases" src="./assets/showcases/vqa/general_case.webp">](./assets/showcases/vqa/general_case.webp) |
