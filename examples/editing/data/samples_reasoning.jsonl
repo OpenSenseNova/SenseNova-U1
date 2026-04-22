@@ -1,0 +1,6 @@
+{"prompt": "Draw what it will look like one hour later.", "image": "examples/editing/data/images_reasoning/034_temporal_reasoning_draw_what_it_will_look_like.png"}
+{"prompt": "Draw what it will look like immediately after someone stands up from sitting on it for a long time.", "image": "examples/editing/data/images_reasoning/036_causal_reasoning_draw_what_it_will_look_like.png"}
+{"prompt": "Draw an image showing the side view of the provided traffic cone.", "image": "examples/editing/data/images_reasoning/039_spatial_reasoning_draw_an_image_showing_the_si.png"}
+{"prompt": "Change the water to high-concentration saltwater", "image": "/mnt/afs/diaohaiwen/workspace/Neo/SenseNova-U1/examples/editing/data/images_reasoning/042_physics_change_the_water_to_high-con.jpg"}
+{"prompt": "What the fruit looks like when ripe in the picture", "image": "/mnt/afs/diaohaiwen/workspace/Neo/SenseNova-U1/examples/editing/data/images_reasoning/044_biology_what_the_fruit_looks_like_wh.jpg"}
+{"prompt": "Correct the unreasonable part in the image.", "image": "/mnt/afs/diaohaiwen/workspace/Neo/SenseNova-U1/examples/editing/data/images_reasoning/046_anomaly_correction_correct_the_unreasonable_par.jpg"}
