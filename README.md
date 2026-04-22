@@ -12,16 +12,16 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="720">
+  <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
 </p>
 
 ## 🌟 Overview 🌟
 
-🚀 **SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) toward a broader roadmap where models no longer translate between modalities, but think and act across them natively. 
+🚀 **SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) where models no longer translate between modalities, but think and act across them natively. 
 Multimodal AI is no longer about connecting separate systems, but about building a unified one and trusting the necessary capabilities to emerge from within.
 
 
-#### 🏗️ Key Pillars :      
+#### 🏗️ *Key Pillars :*      
 
 - 🖼️ Near-Lossless Visual Interface: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
 
@@ -30,7 +30,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 - 🔗 Unified End-to-End Learning: Modeling directly on pixels + text from the first principles !   
   
 
-#### 🌍 Beyond Multimodality : 
+#### 🌍 *Beyond Multimodality :* 
 
 - 🤖 Vision–Language–Action (VLA)      
 
@@ -61,10 +61,10 @@ Multimodal AI is no longer about connecting separate systems, but about building
 
 ## 🎨 Showcases 🎨
 
-#### Text-to-Image (General Case)
+#### 🖼️ *Text-to-Image (General Case)*
 
 
-#### Text-to-Image (Infographics)
+#### 🖼️ *Text-to-Image (Infographics)*
 
 | | | |
 | :---: | :---: | :---: |
@@ -75,7 +75,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 > 📸 **More text-to-image samples:** see [Text-to-Image gallery](./docs/showcases.md#text-to-image).
 
 
-#### Image Editing
+#### ✏️ *Image Editing*
 
 | | | |
 | :---: | :---: | :---: |
@@ -83,7 +83,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 
 > 📸 **More editing samples:** see [Image Editing gallery](./docs/showcases.md#image-editing).
 
-#### Interleaved Generation
+#### ♻️ *Interleaved Generation*
 
 | |
 | :---: |
@@ -92,7 +92,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 
 > 📸 **More interleaved samples:** see [Interleaved Generation gallery](./docs/showcases.md#interleaved-generation).
 
-#### Visual Understanding
+#### 📝 *Visual Understanding*
 
 | |
 | :---: |
@@ -105,6 +105,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 > TODO: Add Benchmark Chart
 
 Evaluation scripts and benchmark reproduction guides will be added in `evaluation/`.
+
 
 
 ## 🛠️ Quick Start
@@ -126,7 +127,7 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 
 > **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with uv.
 
-#### Visual Understanding
+#### 📝 *Visual Understanding*
 
 ```bash
 python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
@@ -134,9 +135,7 @@ python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta -
 
 > See [`examples/README.md`](./examples/README.md#visual-understanding-vqa) for batched inference, generation parameters, and JSONL format.
 
-#### Visual Generation
-
-##### Text-to-Image
+#### 🖼️ *Text-to-Image*
 
 ```bash
 python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "一个咖啡店门口有一个黑板，上面写着日日新咖啡，2元一杯，旁边有个霓虹灯，写着商汤科技，旁边有个海报，海报上面是一只小浣熊，海报下方写着SenseNova newbee。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
@@ -144,7 +143,7 @@ python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta -
 
 > Default resolution is 2048×2048 (1:1). See [supported resolution buckets](./examples/README.md#supported-resolution-buckets) for other aspect ratios.
 
-##### Image Editing
+#### ✏️ *Image Editing*
 
 > 💡 Pre-resize inputs to ~2048×2048 before inference for best quality (see [`examples/editing/resize_inputs.py`](./examples/editing/resize_inputs.py)).
 
@@ -152,7 +151,7 @@ python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta -
 python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.jpg --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
 ```
 
-##### Interleaved Generation
+#### ♻️ *Interleaved Generation*
 
 ```bash
 python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
