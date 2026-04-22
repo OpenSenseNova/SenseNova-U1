@@ -101,6 +101,7 @@ class SenseNovaU1T2I:
         cfg_interval: tuple[float, float] = (0.0, 1.0),
         num_steps: int = 50,
         batch_size: int = 1,
+        seed: int = 0,
     ) -> list[Image.Image]:
         output = self.model.t2i_generate(
             self.tokenizer,
@@ -112,6 +113,7 @@ class SenseNovaU1T2I:
             cfg_interval=cfg_interval,
             num_steps=num_steps,
             batch_size=batch_size,
+            seed=seed,
         )
         return _to_pil(output)
 
@@ -312,7 +314,7 @@ def main() -> None:
         if args.prompt is not None:
             prompt = _maybe_enhance(enhancer, loop, args.prompt, verbose=args.print_enhance)
             _warn_if_unsupported(args.width, args.height)
-            _set_seed(args.seed)
+            # _set_seed(args.seed)
             with profiler.time_generate(args.width, args.height, args.batch_size):
                 images = engine.generate(
                     prompt,
@@ -323,6 +325,7 @@ def main() -> None:
                     cfg_interval=cfg_interval,
                     num_steps=args.num_steps,
                     batch_size=args.batch_size,
+                    seed=args.seed,
                 )
             _save_images(images, Path(args.output))
             profiler.report()
@@ -343,7 +346,7 @@ def main() -> None:
         for i, sample in enumerate(tqdm(samples, desc="T2I")):
             w, h = _resolve_size(sample, args.width, args.height)
             _warn_if_unsupported(w, h)
-            _set_seed(int(sample.get("seed", args.seed)))
+            # _set_seed(int(sample.get("seed", args.seed)))
             prompt = _maybe_enhance(enhancer, loop, sample["prompt"], verbose=args.print_enhance)
             with profiler.time_generate(w, h, 1):
                 images = engine.generate(
@@ -355,6 +358,7 @@ def main() -> None:
                     cfg_interval=cfg_interval,
                     num_steps=args.num_steps,
                     batch_size=1,
+                    seed=args.seed,
                 )
             tag = sample.get("type")
             stem = f"{i + 1:04d}" + (f"_{tag}" if tag else "") + f"_{w}x{h}.png"

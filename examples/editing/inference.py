@@ -167,6 +167,7 @@ class SenseNovaU1Editing:
         cfg_interval: tuple[float, float] = (0.0, 1.0),
         num_steps: int = 50,
         batch_size: int = 1,
+        seed: int = 0,
     ) -> list[Image.Image]:
         output = self.model.it2i_generate(
             self.tokenizer,
@@ -180,6 +181,7 @@ class SenseNovaU1Editing:
             cfg_interval=cfg_interval,
             num_steps=num_steps,
             batch_size=batch_size,
+            seed=seed,
         )
         return _to_pil(output)
 
@@ -381,7 +383,7 @@ def main() -> None:
             explicit=cli_explicit_size,
             target_pixels=args.target_pixels,
         )
-        _set_seed(args.seed)
+        # _set_seed(args.seed)
         with profiler.time_generate(w, h, args.batch_size):
             outputs = engine.edit(
                 args.prompt,
@@ -394,6 +396,7 @@ def main() -> None:
                 cfg_interval=cfg_interval,
                 num_steps=args.num_steps,
                 batch_size=args.batch_size,
+                seed=args.seed,
             )
         out_path = Path(args.output)
         _save_images(outputs, out_path)
@@ -423,7 +426,7 @@ def main() -> None:
             explicit=_explicit_size_from_sample(sample) or cli_explicit_size,
             target_pixels=args.target_pixels,
         )
-        _set_seed(int(sample.get("seed", args.seed)))
+        # _set_seed(int(sample.get("seed", args.seed)))
         with profiler.time_generate(w, h, 1):
             outputs = engine.edit(
                 sample["prompt"],
@@ -436,6 +439,7 @@ def main() -> None:
                 cfg_interval=cfg_interval,
                 num_steps=args.num_steps,
                 batch_size=1,
+                seed=args.seed,
             )
         tag = sample.get("type")
         stem = f"{i + 1:04d}" + (f"_{tag}" if tag else "") + f"_{w}x{h}.png"
