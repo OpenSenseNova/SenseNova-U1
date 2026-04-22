@@ -144,6 +144,14 @@ def _save_images(
         print(f"[saved] {p}")
 
 
+def _sample_output_stem(sample: dict, index: int, width: int, height: int) -> str:
+    sample_id = sample.get("id")
+    if sample_id:
+        return str(sample_id)
+    tag = sample.get("type")
+    return f"{index + 1:04d}" + (f"_{tag}" if tag else "") + f"_{width}x{height}"
+
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="T2I inference for SenseNova-U1.")
     p.add_argument(
@@ -360,9 +368,10 @@ def main() -> None:
                     batch_size=1,
                     seed=args.seed,
                 )
-            tag = sample.get("type")
-            stem = f"{i + 1:04d}" + (f"_{tag}" if tag else "") + f"_{w}x{h}.png"
-            images[0].save(out_dir / stem)
+            stem = _sample_output_stem(sample, i, w, h)
+            out_path = out_dir / f"{stem}.png"
+            images[0].save(out_path)
+            print(f"[saved] {out_path}")
 
         profiler.report()
     finally:
