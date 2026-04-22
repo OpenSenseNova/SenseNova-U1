@@ -109,7 +109,23 @@ Multimodal AI is no longer about connecting separate systems, but about building
 
 ## 📊 Key Benchmarks
 
-> TODO: Add Benchmark Chart
+### 📝 *Understanding*
+
+<p align="center">
+  <img src="docs/assets/benchmarks/understanding.webp" alt="Understanding Benchmarks">
+</p>
+
+### 🖼️ *Generation*
+
+<p align="center">
+  <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
+</p>
+
+### ♻️ *Interleaved*
+
+<p align="center">
+  <img src="docs/assets/benchmarks/interleaved.webp" alt="Interleaved Benchmarks">
+</p>
 
 Evaluation scripts and benchmark reproduction guides will be added in `evaluation/`.
 
