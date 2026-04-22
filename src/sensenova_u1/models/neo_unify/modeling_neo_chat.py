@@ -1294,7 +1294,7 @@ class NEOChatModel(PreTrainedModel):
         return generated_text, generated_images
 
     @torch.no_grad()
-    def it2i_generate(self, tokenizer, prompt, images, cfg_scale=1, img_cfg_scale=1, cfg_norm='none', enable_timestep_shift=True, timestep_shift=1, image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False):
+    def it2i_generate(self, tokenizer, prompt, images, cfg_scale=1, img_cfg_scale=1, cfg_norm='none', enable_timestep_shift=True, timestep_shift=1, image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False, seed=0):
         assert cfg_norm in ['none', 'global', 'channel']
 
         self.img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
@@ -1440,15 +1440,15 @@ class NEOChatModel(PreTrainedModel):
 
         noise_scale = self.noise_scale
         if self.noise_scale_mode in ("resolution", "dynamic", "dynamic_sqrt"):
-            noise_scale = math.sqrt((grid_h * grid_w) / (merge_size**2) / self.noise_scale_base_image_seq_len)
             base = float(self.noise_scale_base_image_seq_len)
             scale = math.sqrt((grid_h * grid_w) / (merge_size**2) / base)
             noise_scale = scale * float(self.noise_scale)
             if self.noise_scale_mode == 'dynamic_sqrt':
                 noise_scale = math.sqrt(noise_scale)
         noise_scale = min(noise_scale, self.noise_scale_max_value)
+        generator = torch.Generator(device).manual_seed(seed)
         image_prediction = noise_scale * torch.randn(
-            (batch_size, 3, image_size[1], image_size[0]), device=device, dtype=dtype
+            (batch_size, 3, image_size[1], image_size[0]), device=device, dtype=dtype, generator=generator
         )
 
         attention_mask_condition = {"full_attention": None}
@@ -1574,7 +1574,7 @@ class NEOChatModel(PreTrainedModel):
         return image_prediction
 
     @torch.no_grad()
-    def t2i_generate(self, tokenizer, prompt, cfg_scale=1, timestep_shift=1, enable_timestep_shift=True, cfg_norm='none', image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False):
+    def t2i_generate(self, tokenizer, prompt, cfg_scale=1, timestep_shift=1, enable_timestep_shift=True, cfg_norm='none', image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False, seed=0):
         assert self.concat_time_token_num == 0
         assert cfg_norm in ['cfg_zero_star', 'global', 'none', 'channel']
         merge_size = int(1 / self.downsample_ratio)
@@ -1654,17 +1654,14 @@ class NEOChatModel(PreTrainedModel):
 
         noise_scale = self.noise_scale
         if self.noise_scale_mode in ("resolution", "dynamic", 'dynamic_sqrt'):
-            noise_scale = math.sqrt((grid_h*grid_w)/(merge_size**2) / self.noise_scale_base_image_seq_len)
             base = float(self.noise_scale_base_image_seq_len)
             scale = math.sqrt((grid_h*grid_w)/(merge_size**2)/base)
             noise_scale = scale * float(self.noise_scale)
             if self.noise_scale_mode == 'dynamic_sqrt':
                 noise_scale = math.sqrt(noise_scale)
         noise_scale = min(noise_scale, self.noise_scale_max_value)
-        image_prediction = noise_scale * torch.randn((batch_size, 3, image_size[1], image_size[0]), device=device, dtype=dtype)
-
-        # attention_mask_condition = {"full_attention": torch.zeros(batch_size, 1, token_h*token_w, input_ids_condition.shape[1]+token_h*token_w, device=device)}
-        # attention_mask_uncondition = {"full_attention": torch.zeros(batch_size, 1, token_h*token_w, input_ids_uncondition.shape[1]+token_h*token_w, device=device)}
+        generator = torch.Generator(device).manual_seed(seed)
+        image_prediction = noise_scale * torch.randn((batch_size, 3, image_size[1], image_size[0]), device=device, dtype=dtype, generator=generator)
 
         attention_mask_condition = {"full_attention": None}
         attention_mask_uncondition = {"full_attention": None}
