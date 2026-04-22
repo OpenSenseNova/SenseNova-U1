@@ -11,10 +11,38 @@ open the full-resolution render.
 
 ## Text-to-Image
 
-The full 3 × 3 infographic grid (landscape / square / portrait) lives in
-the main [README § Text-to-Image](../README.md#text-to-image-infographics)
-to keep things in one place. Source prompts are in
+The main table presents the complete n × 3 grid layouts, covering landscape, square, and portrait formats at different resolutions.    
+
+
+#### 🖼️ *Text-to-Image (General)*
+
+Reproducible prompts are in
+[`examples/t2i/data/samples.jsonl`](../examples/t2i/data/samples.jsonl).
+
+
+| | | |
+| :---: | :---: | :---: |
+| [<img width="300" alt="t2i general dense face hd 07" src="./assets/showcases/t2i_general/16_9_dense_face_hd_07.webp">](./assets/showcases/t2i_general/16_9_dense_face_hd_07.webp) | [<img width="300" alt="t2i general dense text rendering 18" src="./assets/showcases/t2i_general/16_9_dense_text_rendering_18.webp">](./assets/showcases/t2i_general/16_9_dense_text_rendering_18.webp) | [<img width="300" alt="t2i general dense text rendering 12" src="./assets/showcases/t2i_general/16_9_dense_text_rendering_12.webp">](./assets/showcases/t2i_general/16_9_dense_text_rendering_12.webp) |
+| [<img width="260" alt="t2i general face hd 13" src="./assets/showcases/t2i_general/1_1_face_hd_13.webp">](./assets/showcases/t2i_general/1_1_face_hd_13.webp) | [<img width="260" alt="t2i general face hd 17" src="./assets/showcases/t2i_general/1_1_face_hd_17.webp">](./assets/showcases/t2i_general/1_1_face_hd_17.webp) | [<img width="260" alt="t2i general face hd 07" src="./assets/showcases/t2i_general/1_1_dense_artistic_10.webp">](./assets/showcases/t2i_general/1_1_dense_artistic_10.webp) |
+| [<img width="260" alt="t2i general landscape 06" src="./assets/showcases/t2i_general/1_1_landscape_06.webp">](./assets/showcases/t2i_general/1_1_landscape_06.webp) | [<img width="260" alt="t2i general dense landscape 12" src="./assets/showcases/t2i_general/1_1_dense_landscape_12.webp">](./assets/showcases/t2i_general/1_1_dense_landscape_12.webp) | [<img width="260" alt="t2i general landscape 07" src="./assets/showcases/t2i_general/1_1_landscape_07.webp">](./assets/showcases/t2i_general/1_1_landscape_07.webp) |
+| [<img width="200" alt="t2i general portrait artistic 02 a" src="./assets/showcases/t2i_general/9_16_dense_face_hd_10.webp">](./assets/showcases/t2i_general/9_16_dense_face_hd_10.webp) | [<img width="200" alt="t2i general portrait artistic 02 b" src="./assets/showcases/t2i_general/9_16_human_pose_11.webp">](./assets/showcases/t2i_general/9_16_human_pose_11.webp) | [<img width="200" alt="t2i general portrait artistic 07" src="./assets/showcases/t2i_general/9_16_artistic_07.webp">](./assets/showcases/t2i_general/9_16_artistic_07.webp) |
+| [<img width="200" alt="t2i general portrait text rendering 02" src="./assets/showcases/t2i_general/9_16_sensenova_u1_31.webp">](./assets/showcases/t2i_general/9_16_sensenova_u1_31.webp) | [<img width="200" alt="t2i general portrait dense landscape 05" src="./assets/showcases/t2i_general/9_16_dense_landscape_05.webp">](./assets/showcases/t2i_general/9_16_dense_landscape_05.webp) | [<img width="200" alt="t2i general portrait dense artistic 11" src="./assets/showcases/t2i_general/9_16_dense_artistic_11.webp">](./assets/showcases/t2i_general/9_16_dense_artistic_11.webp) |
+
+#### 🖼️ *Text-to-Image (Infographics)*
+
+Reproducible prompts are in
 [`examples/t2i/data/samples_infographic.jsonl`](../examples/t2i/data/samples_infographic.jsonl).
+
+| | | |
+| :---: | :---: | :---: |
+| [<img width="300" alt="t2i landscape 0001" src="./assets/showcases/t2i_infographic/0001_2720x1536.webp">](./assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./assets/showcases/t2i_infographic/0002_2720x1536.webp">](./assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./assets/showcases/t2i_infographic/0003_2720x1536.webp">](./assets/showcases/t2i_infographic/0003_2720x1536.webp) |
+| [<img width="300" alt="t2i square 0004" src="./assets/showcases/t2i_infographic/0004_2048x2048.webp">](./assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./assets/showcases/t2i_infographic/0005_2048x2048.webp">](./assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./assets/showcases/t2i_infographic/0006_2048x2048.webp">](./assets/showcases/t2i_infographic/0006_2048x2048.webp) |
+| [<img width="200" alt="t2i portrait 0007" src="./assets/showcases/t2i_infographic/0007_1536x2720.webp">](./assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./assets/showcases/t2i_infographic/0008_1536x2720.webp">](./assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./assets/showcases/t2i_infographic/0009_1536x2720.webp">](./assets/showcases/t2i_infographic/0009_1536x2720.webp) |
+
+#### 🖼️ *Text-to-Image (Reasoning)*
+
+Reproducible prompts are in
+[`examples/t2i/data/samples_xxxx.jsonl`](../examples/t2i/data/samples_xxxx.jsonl).
 
 ---
 
@@ -25,13 +53,24 @@ edit instruction rendered along the bottom of each compare tile. The same
 unified model handles single-image attribute / style / relighting edits
 and multi-reference (subject + accessory + pose) composition.
 
+#### ✏️ *Image Editing (General)*
+
 Reproducible prompts are in
 [`examples/editing/data/samples.jsonl`](../examples/editing/data/samples.jsonl).
 
-| | | |
-| :---: | :---: | :---: |
-| [<img alt="editing compare 0001" src="./assets/showcases/editing/0001_2048x2048_compare.webp">](./assets/showcases/editing/0001_2048x2048_compare.webp) | [<img alt="editing compare 0002" src="./assets/showcases/editing/0002_2048x2048_compare.webp">](./assets/showcases/editing/0002_2048x2048_compare.webp) | [<img alt="editing compare 0003" src="./assets/showcases/editing/0003_2048x2048_compare.webp">](./assets/showcases/editing/0003_2048x2048_compare.webp) |
-| [<img alt="editing compare 0004" src="./assets/showcases/editing/0004_2048x2048_compare.webp">](./assets/showcases/editing/0004_2048x2048_compare.webp) | [<img alt="editing compare 0005" src="./assets/showcases/editing/0005_2400x1696_compare.webp">](./assets/showcases/editing/0005_2400x1696_compare.webp) | |
+| | |
+| :---: | :---: |
+| <div align="center"><a href="../examples/editing/data/images/1.webp"><img width="180" alt="editing input 1" src="../examples/editing/data/images/1.webp"></a> <a href="../examples/editing/data/images/1_out.webp"><img width="180" alt="editing output 1" src="../examples/editing/data/images/1_out.webp"></a><br><sub>Change the jacket of the person on the left to bright yellow.</sub></div> | <div align="center"><a href="../examples/editing/data/images/3.webp"><img width="180" alt="editing input 3" src="../examples/editing/data/images/3.webp"></a> <a href="../examples/editing/data/images/3_out.webp"><img width="180" alt="editing output 3" src="../examples/editing/data/images/3_out.webp"></a><br><sub>在小狗头上放一个花环，并且把图片变为吉卜力风格。</sub></div> |
+| <div align="center"><a href="../examples/editing/data/images/2.webp"><img width="180" alt="editing input 2" src="../examples/editing/data/images/2.webp"></a> <a href="../examples/editing/data/images/2_out.webp"><img width="180" alt="editing output 2" src="../examples/editing/data/images/2_out.webp"></a><br><sub>Make the person in the image smile.</sub></div> | <div align="center"><a href="../examples/editing/data/images/4.webp"><img width="180" alt="editing input 4" src="../examples/editing/data/images/4.webp"></a> <a href="../examples/editing/data/images/4_out.webp"><img width="180" alt="editing output 4" src="../examples/editing/data/images/4_out.webp"></a><br><sub>Add a bouquet of flowers.</sub></div> |
+| <div align="center"><a href="../examples/editing/data/images/5.webp"><img width="180" alt="editing input 5" src="../examples/editing/data/images/5.webp"></a> <a href="../examples/editing/data/images/5_out.webp"><img width="180" alt="editing output 5" src="../examples/editing/data/images/5_out.webp"></a><br><sub>Turn the image into an American comic style.</sub></div> | <div align="center"><a href="../examples/editing/data/images/8.webp"><img width="180" alt="editing input 8" src="../examples/editing/data/images/8.webp"></a> <a href="../examples/editing/data/images/8_out.webp"><img width="180" alt="editing output 8" src="../examples/editing/data/images/8_out.webp"></a><br><sub>Replace the man with a woman.</sub></div> |
+| <div align="center"><a href="../examples/editing/data/images/6.webp"><img width="180" alt="editing input 6" src="../examples/editing/data/images/6.webp"></a> <a href="../examples/editing/data/images/6_out.webp"><img width="180" alt="editing output 6" src="../examples/editing/data/images/6_out.webp"></a><br><sub>Replace the text "WARFIGHTER" to "BATTLEFIELD" in the bold orange-red font.</sub></div> | <div align="center"><a href="../examples/editing/data/images/7.webp"><img width="180" alt="editing input 7" src="../examples/editing/data/images/7.webp"></a> <a href="../examples/editing/data/images/7_out.webp"><img width="180" alt="editing output 7" src="../examples/editing/data/images/7_out.webp"></a><br><sub>Remove the person on the far right wearing a green skirt and a green top.</sub></div> |
+
+
+#### ✏️ *Image Editing (Reasoning)*
+
+Reproducible prompts are in
+[`examples/editing/data/samples_reasoning.jsonl`](../examples/editing/data/samples_reasoning.jsonl).
+
 
 ---
 
@@ -40,7 +79,10 @@ Reproducible prompts are in
 Each case below is a single rendered response from `model.interleave_gen`:
 the model first runs a `<think>...</think>` reasoning block that produces
 intermediate images, then emits the final interleaved text-and-image
-answer
+answer.     
+
+Reproducible prompts are in
+[`examples/interleave/data/samples.jsonl`](../examples/interleave/data/sample.jsonl).
 
 
 | |
