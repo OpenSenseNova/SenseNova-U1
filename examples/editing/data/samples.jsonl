@@ -1,3 +1,5 @@
 {"prompt": "Change the animal's fur color to a darker shade.", "image": "examples/editing/data/images/1.jpg"}
 {"prompt": "Transfer the image into a traditional ukiyo-e woodblock-print style.", "image": "examples/editing/data/images/2.jpg"}
 {"prompt": "Change the beach and ocean environment in the picture to a snowy mountain.", "image": "examples/editing/data/images/3.jpg"}
+{"prompt": "将图中的人物改为日漫风格，并给图片添加文字“使用Neo-Unify生成信息图”。", "image": "examples/editing/data/images/4.webp"}
+{"prompt": "Generate an image that matches the depth map, following this description: A dilapidated red bicycle is parked on a muddy path with a dense primeval forest in the background.", "image": "examples/editing/data/images/5.webp"}

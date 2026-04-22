@@ -14,11 +14,14 @@ examples/
 ├── t2i/                       # text-to-image
 │   ├── inference.py
 │   └── data/
-│       └── samples.jsonl
+│       ├── samples.jsonl
+│       └── samples_infographic.jsonl
 ├── editing/                   # image editing (it2i)
 │   ├── inference.py
+│   ├── resize_inputs.py       # offline pre-resize helper (recommended)
 │   └── data/
-│       └── samples.jsonl
+│       ├── samples.jsonl
+│       └── images/
 ├── interleave/                # interleaved text+image gen  (runnable)
 │   ├── inference.py
 │   ├── run.sh
@@ -62,13 +65,27 @@ top-level [README](../README.md#text-to-image).
 
 ## Image Editing (it2i)
 
+> 💡 **Pre-resize your inputs for best results.**
+> Before running inference, down-/up-sample each source image **offline**
+> so that `width * height ≈ 2048 * 2048` (aspect ratio preserved)
+> — use [`editing/resize_inputs.py`](./editing/resize_inputs.py):
+>
+> ```bash
+> python examples/editing/resize_inputs.py \
+>   --src examples/editing/data/images \
+>   --dst examples/editing/data/images_2048
+> ```
+>
+> Then point `--image` / the JSONL manifest at the resized folder. The
+> examples below assume you have already done this.
+
 Single edit:
 
 ```bash
 python examples/editing/inference.py \
   --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --prompt "Turn the background into a starry night sky." \
-  --image path/to/input.jpg \
+  --prompt "Change the animal's fur color to a darker shade." \
+  --image examples/editing/data/images/1.jpg \
   --output edited.png \
   --profile
 ```
@@ -94,9 +111,6 @@ Output resolution is decoupled from the input and has two modes:
   image-token grid factor). Useful for re-aspecting / resizing during the
   edit; **2048 × 2048** is a good general-purpose choice and matches the
   t2i recommendation.
-
-JSONL mode additionally honors per-sample `width` + `height` fields when
-both are present; they override the CLI default for that line.
 
 CFG defaults: `--cfg_scale 4.0` (text guidance), `--img_cfg_scale 1.0` (image CFG **off** by default).
 
