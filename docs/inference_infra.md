@@ -30,15 +30,15 @@ The same architecture can be deployed in two modes, depending on your hardware b
 
 In most production setups, `Separate` is the default choice because it gives clearer bottleneck control and independent scaling. `Colocate` is useful for quick validation, generation-heave scenes, or smaller GPU setups.
 
-### Attention for Multimodal Prefill of Neo
+### Attention for Multimodal Prefill of NEO-Unify
 
-Neo's prefill attention is not standard causal attention. Text tokens remain causal, while image tokens attend to the full text prefix together with the entire image span. To support this hybrid masking pattern, we modified both attention implementations in our stack: the Triton kernel and the official FA3 codebase. Our FA3 branch is available at [WANDY666/flash-attention](https://github.com/WANDY666/flash-attention).
+NEO-Unify's prefill attention is not standard causal attention. Text tokens remain causal, while image tokens attend to the full text prefix together with the entire image span. To support this hybrid masking pattern, we modified both attention implementations in our stack: the Triton kernel and the official FA3 codebase. Our FA3 branch is available at [WANDY666/flash-attention](https://github.com/WANDY666/flash-attention).
 
 Concretely, we introduced an optional image_token_tag argument that adjusts the mask row by row. Text rows keep the standard causal mask. Image rows, instead of using plain causal truncation, are allowed to attend to all preceding text tokens and all image tokens within the image span.
 
 To preserve the causal-triangle speedup whenever possible, the kernel makes the decision per M-block. It OR-reduces the image_token_tag values inside the current block: if the block contains no image token, it keeps the standard causal K-range; if the block contains image tokens, it extends the K-range to cover the required image span. As a result, pure-text blocks still follow the normal causal path, while only the relevant blocks pay the extra work needed by the hybrid mask.
 
-![Neo multimodal attention behavior](./assets/att.png)
+![NEO-Unify multimodal attention behavior](./assets/attn.png)
 
 The overhead therefore does not depend on a fixed ratio, but on how image tokens are distributed across the sequence and across M-block boundaries. When image rows are concentrated in only part of the sequence, the extra work is correspondingly localized. For text-only requests, image_token_tag is empty, and the kernel falls back to vanilla FA3 with no additional overhead.
 The benchmark below compares two implementations for Neo-style multimodal prefill:

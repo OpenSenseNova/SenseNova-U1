@@ -297,7 +297,7 @@ python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-Mini
 
 For production serving, we co-design a dedicated inference stack on top of **[LightLLM](https://github.com/ModelTC/lightllm)** (understanding) and **[LightX2V](https://github.com/ModelTC/lightx2v)** (generation). The two engines are disaggregated so that each path can use its own parallelism and resource budget, with a low-overhead transfer channel in between.
 
-On a single node with `TP2 + CFG2`, this stack delivers roughly **~0.15 s/step** and **~9 s end-to-end** for a **2048×2048** image on H100 / H200, with a ~**2.4–3.2×** prefill speedup from our FA3-based hybrid-mask attention over the Triton baseline. Full per-GPU numbers are reported in [`docs/inference_infrastructure.md`](./docs/inference_infrastructure.md).
+On a single node with `TP2 + CFG2`, this stack delivers roughly **~0.15 s/step** and **~9 s end-to-end** for a **2048×2048** image on H100 / H200, with a ~**2.4–3.2×** prefill speedup from our FA3-based hybrid-mask attention over the Triton baseline. Full per-GPU numbers are reported in [`docs/inference_infra.md`](./docs/inference_infra.md).
 
 An official docker image is provided for one-command deployment:
 
@@ -307,7 +307,8 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 
 > ⚙️ **Deployment guide (Docker, launch flags, modes, quantization, API test):** see [`docs/deployment.md`](./docs/deployment.md).
 >
-> 📖 **Full design, benchmarking protocol, and performance numbers:** see [`docs/inference_infrastructure.md`](./docs/inference_infrastructure.md).
+> 📖 **Full design and performance profiling:** see [`docs/inference_infra.md`](./docs/inference_infra.md).
+
 <!-- ## 🖊️ Citation
 
 ```bibtex
