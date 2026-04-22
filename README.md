@@ -110,275 +110,41 @@ TBA: run with lightx2v
 
 ### Run with transformers
 
-We recommend [**uv**](https://docs.astral.sh/uv/) to manage the Python environment.
-
-> uv installation guide: <https://docs.astral.sh/uv/getting-started/installation/>
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/OpenSenseNova/SenseNova-U1.git
-cd SenseNova-U1
-```
-
-### 2. Install dependencies with uv
-
-```bash
-uv sync
-source .venv/bin/activate
-```
-
-The `sensenova_u1` package is installed in
-editable mode, so the canonical [NEO-Unify model](src/sensenova_u1/models/neo_unify/) is automatically registered with `transformers.Auto*` at import time.
-
-> **Older NVIDIA drivers:** the default index is CUDA 12.8. If your driver
-> does not support cu128, change `[tool.uv.sources]` / `[[tool.uv.index]]`
-> in `pyproject.toml` to e.g. `https://download.pytorch.org/whl/cu126` (and
-> adjust the pinned torch / torchvision versions accordingly) before
-> running `uv sync`.
-
-#### Optional: flash-attn
-
-`flash-attn` is declared as an optional extra;
-without it the model transparently falls back to torch SDPA;
-once flash-attn is importable the runtime picks it automatically (`--attn_backend auto`).
-
-```bash
-# (a) Build from source via PyPI
-uv sync --extra flash
-
-# (b) Install a prebuilt CUDA wheel matching your torch + Python
-uv pip install /path/to/flash_attn-2.8.3+cu12torch28cxx11abitrue-cp311-cp311-*.whl
-```
+> **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with uv.
 
 #### Visual Understanding
 
-[`examples/vqa/inference.py`](./examples/vqa/inference.py) is a minimal visual question answering (VQA) inference script for SenseNova-U1.
-
-**Single image mode:**
-
 ```bash
-python examples/vqa/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --image examples/vqa/data/images/menu.jpg \
-  --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." \
-  --output outputs/answer.txt \
-  --max_new_tokens 8192 \
-  --do_sample \
-  --temperature 0.6 \
-  --top_p 0.95 \
-  --top_k 20 \
-  --repetition_penalty 1.05 \
-  --profile
+python examples/vqa/inference.py --model_path OpenSenseNova/SenseNova-U1-Mini --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
 ```
 
-Omit `--do_sample` (and the sampling flags) for deterministic greedy decoding.
-
-**Batched inference with JSONL:**
-
-For batched inference, pass a JSONL file via `--jsonl` (see [`examples/vqa/data/questions.jsonl`](./examples/vqa/data/questions.jsonl)). Each line requires `{"image": ..., "question": ...}` and optionally `{"id": ...}`:
-
-```bash
-python examples/vqa/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --jsonl examples/vqa/data/questions.jsonl \
-  --output_dir outputs/vqa/ \
-  --max_new_tokens 8192 \
-  --do_sample \
-  --temperature 0.6 \
-  --top_p 0.95 \
-  --top_k 20 \
-  --repetition_penalty 1.05 \
-  --profile
-```
-
-Results are written to `outputs/vqa/answers.jsonl`, one JSON object per line with `id`, `image`, `question`, and `answer` fields.
-
-**Generation parameters:**
-
-- `--max_new_tokens` — maximum response length (default: 1024)
-- `--do_sample` — enable sampling (default: greedy decoding)
-- `--temperature` — sampling temperature (default: 0.7, used when `--do_sample`)
-- `--top_p` — nucleus sampling threshold (default: 0.9, used when `--do_sample`)
-- `--top_k` — top-k sampling (default: None, used when `--do_sample`)
-- `--repetition_penalty` — repetition penalty (default: None)
-
-Run `python examples/vqa/inference.py --help` for the full flag list.
+> See [`examples/README.md`](./examples/README.md#visual-understanding-vqa) for batched inference, generation parameters, and JSONL format.
 
 #### Visual Generation
 
 ##### Text-to-Image
 
-[`examples/t2i/inference.py`](./examples/t2i/inference.py) is a minimal text-to-image inference script for SenseNova-U1.
-
-By default the model renders at **2048 × 2048** (1:1). You can override with `--width` / `--height`. SenseNova-U1 is trained on a set of resolution buckets (~2K total pixels) covering the following aspect ratios:
-
-| Aspect ratio | Width × Height |
-| :----------- | :------------- |
-| 1:1          | 2048 × 2048    |
-| 16:9 / 9:16  | 2720 × 1536 / 1536 × 2720 |
-| 3:2 / 2:3    | 2496 × 1664 / 1664 × 2496 |
-| 4:3 / 3:4    | 2368 × 1760 / 1760 × 2368 |
-| 2:1 / 1:2    | 2880 × 1440 / 1440 × 2880 |
-| 3:1 / 1:3    | 3456 × 1152 / 1152 × 3456 |
-
-The script accepts arbitrary `--width` / `--height` and only emits a warning when they fall outside this table; quality may degrade for untrained shapes.
-
 ```bash
-python examples/t2i/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --prompt "一个咖啡店门口有一个黑板，上面写着日日新咖啡，2元一杯，旁边有个霓虹灯，写着商汤科技，旁边有个海报，海报上面是一只小浣熊，海报下方写着SenseNova newbee。" \
-  --width 2048 \
-  --height 2048 \
-  --cfg_scale 4.0 \
-  --cfg_norm none \
-  --timestep_shift 3.0 \
-  --num_steps 50 \
-  --output output.png \
-  --profile
+python examples/t2i/inference.py --model_path OpenSenseNova/SenseNova-U1-Mini --prompt "一个咖啡店门口有一个黑板，上面写着日日新咖啡，2元一杯，旁边有个霓虹灯，写着商汤科技，旁边有个海报，海报上面是一只小浣熊，海报下方写着SenseNova newbee。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
 ```
 
-Run `python examples/t2i/inference.py --help` for the full flag list.
-
-
-For batched inference, pass a JSONL file via `--jsonl` (see [`examples/t2i/data/samples.jsonl`](./examples/t2i/data/samples.jsonl)). Each line is `{"prompt": ...}` and optionally `{"width": W, "height": H, "seed": S}`:
-
-```bash
-python examples/t2i/inference.py \
-    --model_path OpenSenseNova/SenseNova-U1-Mini \
-    --jsonl examples/t2i/data/samples.jsonl \
-    --output_dir outputs/ \
-    --cfg_scale 4.0 \
-    --cfg_norm none \
-    --timestep_shift 3.0 \
-    --num_steps 50 \
-    --profile
-```
-
-##### Prompt Enhancement for Infographics Generation
-
-Short user prompts — especially for **infographic** generation — can be enhanced by a strong LLM before T2I inference,
-which noticeably lifts information density, typography fidelity, and layout adherence.
-Flip it on with `--enhance`:
-
-```bash
-# export U1_ENHANCE_API_KEY=sk-...                # required
-# defaults target Gemini 3.1 Pro via its OpenAI-compatible endpoint;
-# override any of these to point at SenseNova / Claude / Kimi 2.5 etc.:
-# export U1_ENHANCE_BACKEND=chat_completions   # or 'anthropic'
-# export U1_ENHANCE_ENDPOINT=https://...chat/completions
-# export U1_ENHANCE_MODEL=gemini-3.1-pro
-
-python examples/t2i/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --prompt "如何制作咖啡的教程" \
-  --enhance \
-  --print_enhance \
-  --output output.png
-```
-
-Refer to [`docs/prompt_enhancement.md`](./docs/prompt_enhancement.md) for more details.
+> Default resolution is 2048×2048 (1:1). See [supported resolution buckets](./examples/README.md#supported-resolution-buckets) for other aspect ratios.
 
 ##### Image Editing
 
-[`examples/editing/inference.py`](./examples/editing/inference.py) demonstrates the image editing capability of SenseNova-U1.
-
-Output resolution is derived via `smart_resize` on the first input image — aspect ratio preserved, total pixels normalized to `--target_pixels` (default `2048 * 2048`). Pass `--width W --height H` (both multiples of 32) to override.
-
-> 💡 **Best practice — pre-resize inputs offline.**
-> For best quality, down-/up-sample each source image **offline**
-> so its total pixels match `--target_pixels` (aspect ratio preserved) before running inference.
-> A reference helper is provided at [`examples/editing/resize_inputs.py`](./examples/editing/resize_inputs.py):
->
-> ```bash
-> python examples/editing/resize_inputs.py \
->   --src examples/editing/data/images \
->   --dst examples/editing/data/images_2048
-> ```
->
-> Then point `--image` / the JSONL manifest at the resized folder.
-
-Single edit:
+> 💡 Pre-resize inputs to ~2048×2048 before inference for best quality (see [`examples/editing/resize_inputs.py`](./examples/editing/resize_inputs.py)).
 
 ```bash
-python examples/editing/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --prompt "Change the animal's fur color to a darker shade." \
-  --image examples/editing/data/images/1.jpg \
-  --cfg_scale 4.0 \
-  --img_cfg_scale 1.0 \
-  --cfg_norm none \
-  --timestep_shift 3.0 \
-  --num_steps 50 \
-  --output output_edited.png \
-  --profile --compare
+python examples/editing/inference.py --model_path OpenSenseNova/SenseNova-U1-Mini --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.jpg --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
 ```
 
-For batched inference, pass a JSONL file via `--jsonl` (see
-[`examples/editing/data/samples.jsonl`](./examples/editing/data/samples.jsonl)).
-Each line is `{"prompt": ..., "image": ...}` where `image` can be a single
-path or a list of paths for multi-reference editing; `width` + `height`,
-`seed`, and `type` are optional. A per-sample `width` + `height` pair
-overrides the CLI default for that line:
+##### Interleaved Generation
 
 ```bash
-python examples/editing/inference.py \
-    --model_path OpenSenseNova/SenseNova-U1-Mini \
-    --jsonl examples/editing/data/samples.jsonl \
-    --output_dir outputs/editing/ \
-    --cfg_scale 4.0 \
-    --img_cfg_scale 1.0 \
-    --cfg_norm none \
-    --timestep_shift 3.0 \
-    --num_steps 50 \    
-    --profile --compare
+python examples/interleave/inference.py --model_path OpenSenseNova/SenseNova-U1-Mini --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
 ```
 
-Run `python examples/editing/inference.py --help` for the full flag list.
-
-
-#### Interleaved Generation
-
-[`examples/interleave/inference.py`](./examples/interleave/inference.py) drives `model.interleave_gen` — the model emits **interleaved text and generated images in a single response**, optionally preceded by a `<think></think>` block whose intermediate images guide the final answer. See [`examples/interleave/run.sh`](./examples/interleave/run.sh) for a three-mode launcher and [`examples/README.md#interleave`](./examples/README.md#interleave) for the full walkthrough.
-
-When input images are provided (either via `--image` or a JSONL sample's `image` field), the output resolution follows the first input image (snapped to 32-aligned buckets via `smart_resize`), overriding `--resolution` / `--width` / `--height`.
-
-Every sample writes `<stem>.txt` (generated text) plus `<stem>_image_<i>.png` for each generated image; `--jsonl` mode also emits a `results.jsonl` manifest.
-
-Single prompt, text only:
-
-```bash
-python examples/interleave/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
-  --resolution "16:9" \
-  --output_dir outputs/interleave/text \
-  --stem demo_text
-```
-
-Single prompt with an input image — each `<image>` placeholder binds to one `--image` path, in order (repeatable):
-
-```bash
-python examples/interleave/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
-  --prompt "<image>\n图文交错生成小猫游览故宫的场景" \
-  --image examples/interleave/data/images/image0.jpg \
-  --output_dir outputs/interleave/text_image \
-  --stem demo_text_image
-```
-
-Batched inference from a JSONL file. Each line is `{"prompt": ...}` and optionally `{"image": [...], "width": W, "height": H, "seed": S, "think_mode": bool}`. Relative `image` paths resolve against `--image_root`:
-
-```bash
-python examples/interleave/inference.py \
-    --model_path OpenSenseNova/SenseNova-U1-Mini \
-    --jsonl examples/interleave/data/sample.jsonl \
-    --image_root examples/interleave/data/images \
-    --resolution "16:9" \
-    --output_dir outputs/interleave/jsonl
-```
-
-Run `python examples/interleave/inference.py --help` for the full flag list.
+> See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
 
 
 ## 🛠️ Development
