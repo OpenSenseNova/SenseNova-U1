@@ -15,7 +15,7 @@
   <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
 </p>
 
-## 🌟 Overview 🌟
+## 🌟 Overview
 
 🚀 **SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) where models no longer translate between modalities, but think and act across them natively. 
 Multimodal AI is no longer about connecting separate systems, but about building a unified one and trusting the necessary capabilities to emerge from within.
@@ -37,20 +37,20 @@ Multimodal AI is no longer about connecting separate systems, but about building
 - 🌐 World Modeling (WM)
 
 
-## 📣 Updated News 📣
+## 📣 Updated News
 
 - `[2026.04.23]` Initial release of the weights for [SenseNova-U1-Mini-SFT](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta) and [SenseNova-U1-Mini-Beta](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta).  
 
 - `[2026.04.23]` Initial release of the [inference code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README.md) for SenseNova-U1.   
 
-## 📋 ToDo List 📋
+## 📋 ToDo List
 
 - [ ] Training code of SenseNova-U1 
 
 - [ ] Final weights and technical report of SenseNova-U1
 
 
-## 🦁 Model Zoo 🦁
+## 🦁 Model Zoo
 
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
@@ -59,7 +59,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 | SenseNova-U1-Flash-SFT | A3B MoT | 🤗 link |
 | SenseNova-U1-Flash-Beta | A3B MoT | 🤗 link |
 
-## 🎨 Showcases 🎨
+## 🎨 Showcases
 
 #### 🖼️ *Text-to-Image (General Case)*
 
