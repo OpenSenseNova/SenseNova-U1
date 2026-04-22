@@ -1,3 +1,3 @@
-{"id": "image1", "image": "/mnt/afs/denghanming/Major/projects/neo/SenseNova-U1/examples/vqa/data/images/image1.jpg", "question": "Describe the image content."}
-{"id": "image2", "image": "/mnt/afs/denghanming/Major/projects/neo/SenseNova-U1/examples/vqa/data/images/image2.jpg", "question": "How many dogs are there in this image?"}
-{"id": "image3", "image": "/mnt/afs/denghanming/Major/projects/neo/SenseNova-U1/examples/vqa/data/images/image3.jpg", "question": "Which pill do you choose?"}
+{"id": "image1", "image": "./examples/vqa/data/images/image1.jpg", "question": "Describe the image content."}
+{"id": "image2", "image": "./examples/vqa/data/images/image2.jpg", "question": "How many dogs are there in this image?"}
+{"id": "image3", "image": "./examples/vqa/data/images/image3.jpg", "question": "Which pill do you choose?"}

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 
-repo_root=/mnt/afs/tongwenwen1/workspace/neo/SenseNova-U1
+repo_root=path/to/SenseNova-U1
 
-model_path=${MODEL_PATH:-/mnt/afs/wupenghao/workspace/Neo_plus_train/RUN/d20260415_Neo_unify_9B_mot_SFT_fromMT84K_ce01_res2k_lr2e-5_wd0_acc1_img128_seq27648_zs-1_wp16_sp1_gpu512/hf_step9000_ema_rl_ocr_penalty_joint_3200}
+model_path=${MODEL_PATH}
 example_dir=${repo_root}/examples/interleave
 output_dir=${OUTPUT_DIR:-${example_dir}/output}
 
