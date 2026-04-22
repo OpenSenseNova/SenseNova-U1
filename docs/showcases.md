@@ -11,10 +11,31 @@ open the full-resolution render.
 
 ## Text-to-Image
 
-The full 3 × 3 infographic grid (landscape / square / portrait) lives in
-the main [README § Text-to-Image](../README.md#text-to-image-infographics)
-to keep things in one place. Source prompts are in
+The main table presents the complete n × 3 grid layouts, covering landscape, square, and portrait formats at different resolutions.    
+
+Source prompts are in
+[`examples/t2i/data/samples.jsonl`](../examples/t2i/data/samples.jsonl).
+
+
+| | | |
+| :---: | :---: | :---: |
+| [<img width="260" alt="t2i general face hd 13" src="./assets/showcases/t2i_general/1_1_face_hd_13.webp">](./assets/showcases/t2i_general/1_1_face_hd_13.webp) | [<img width="260" alt="t2i general face hd 17" src="./assets/showcases/t2i_general/1_1_face_hd_17.webp">](./assets/showcases/t2i_general/1_1_face_hd_17.webp) | [<img width="260" alt="t2i general face hd 07" src="./assets/showcases/t2i_general/1_1_face_hd_07.webp">](./assets/showcases/t2i_general/1_1_face_hd_07.webp) |
+| [<img width="260" alt="t2i general landscape 06" src="./assets/showcases/t2i_general/1_1_landscape_06.webp">](./assets/showcases/t2i_general/1_1_landscape_06.webp) | [<img width="260" alt="t2i general dense landscape 12" src="./assets/showcases/t2i_general/1_1_dense_landscape_12.webp">](./assets/showcases/t2i_general/1_1_dense_landscape_12.webp) | [<img width="260" alt="t2i general landscape 07" src="./assets/showcases/t2i_general/1_1_landscape_07.webp">](./assets/showcases/t2i_general/1_1_landscape_07.webp) |
+| [<img width="260" alt="t2i general dense artistic 09" src="./assets/showcases/t2i_general/1_1_dense_artistic_09.webp">](./assets/showcases/t2i_general/1_1_dense_artistic_09.webp) | [<img width="260" alt="t2i general artistic 02" src="./assets/showcases/t2i_general/1_1_artistic_02.webp">](./assets/showcases/t2i_general/1_1_artistic_02.webp) | [<img width="260" alt="t2i general dense artistic 19" src="./assets/showcases/t2i_general/1_1_dense_artistic_19.webp">](./assets/showcases/t2i_general/1_1_dense_artistic_19.webp) |
+| [<img width="200" alt="t2i general portrait artistic 02 a" src="./assets/showcases/t2i_general/9_16_artistic_02.webp">](./assets/showcases/t2i_general/9_16_artistic_02.webp) | [<img width="200" alt="t2i general portrait artistic 02 b" src="./assets/showcases/t2i_general/9_16_human_pose_11.webp">](./assets/showcases/t2i_general/9_16_human_pose_11.webp) | [<img width="200" alt="t2i general portrait artistic 07" src="./assets/showcases/t2i_general/9_16_artistic_07.webp">](./assets/showcases/t2i_general/9_16_artistic_07.webp) |
+| [<img width="200" alt="t2i general portrait text rendering 02" src="./assets/showcases/t2i_general/9_16_text_rendering_02.webp">](./assets/showcases/t2i_general/9_16_text_rendering_02.webp) | [<img width="200" alt="t2i general portrait dense landscape 05" src="./assets/showcases/t2i_general/9_16_dense_landscape_05.webp">](./assets/showcases/t2i_general/9_16_dense_landscape_05.webp) | [<img width="200" alt="t2i general portrait dense artistic 11" src="./assets/showcases/t2i_general/9_16_dense_artistic_11.webp">](./assets/showcases/t2i_general/9_16_dense_artistic_11.webp) |
+| [<img width="300" alt="t2i general dense face hd 07" src="./assets/showcases/t2i_general/16_9_dense_face_hd_07.webp">](./assets/showcases/t2i_general/16_9_dense_face_hd_07.webp) | [<img width="300" alt="t2i general dense text rendering 18" src="./assets/showcases/t2i_general/16_9_dense_text_rendering_18.webp">](./assets/showcases/t2i_general/16_9_dense_text_rendering_18.webp) | [<img width="300" alt="t2i general dense text rendering 12" src="./assets/showcases/t2i_general/16_9_dense_text_rendering_12.webp">](./assets/showcases/t2i_general/16_9_dense_text_rendering_12.webp) |
+
+#### 🖼️ *Text-to-Image (Infographics)*
+
+Reproducible prompts are in
 [`examples/t2i/data/samples_infographic.jsonl`](../examples/t2i/data/samples_infographic.jsonl).
+
+| | | |
+| :---: | :---: | :---: |
+| [<img width="300" alt="t2i landscape 0001" src="./assets/showcases/t2i_infographic/0001_2720x1536.webp">](./assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./assets/showcases/t2i_infographic/0002_2720x1536.webp">](./assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./assets/showcases/t2i_infographic/0003_2720x1536.webp">](./assets/showcases/t2i_infographic/0003_2720x1536.webp) |
+| [<img width="300" alt="t2i square 0004" src="./assets/showcases/t2i_infographic/0004_2048x2048.webp">](./assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./assets/showcases/t2i_infographic/0005_2048x2048.webp">](./assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./assets/showcases/t2i_infographic/0006_2048x2048.webp">](./assets/showcases/t2i_infographic/0006_2048x2048.webp) |
+| [<img width="200" alt="t2i portrait 0007" src="./assets/showcases/t2i_infographic/0007_1536x2720.webp">](./assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./assets/showcases/t2i_infographic/0008_1536x2720.webp">](./assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./assets/showcases/t2i_infographic/0009_1536x2720.webp">](./assets/showcases/t2i_infographic/0009_1536x2720.webp) |
 
 ---
 
@@ -40,7 +61,10 @@ Reproducible prompts are in
 Each case below is a single rendered response from `model.interleave_gen`:
 the model first runs a `<think>...</think>` reasoning block that produces
 intermediate images, then emits the final interleaved text-and-image
-answer
+answer.     
+
+Reproducible prompts are in
+[`examples/interleave/data/samples.jsonl`](../examples/interleave/data/sample.jsonl).
 
 
 | |
