@@ -148,6 +148,7 @@ class SenseNovaU1Interleave:
         num_steps: int = 50,
         think_mode: bool = True,
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
+        seed: int = 0,
     ) -> tuple[str, list[Image.Image]]:
         text, image_tensors = self.model.interleave_gen(
             self.tokenizer,
@@ -161,6 +162,7 @@ class SenseNovaU1Interleave:
             num_steps=num_steps,
             system_message=system_message,
             think_mode=think_mode,
+            seed=seed,
         )
         return text, [_to_pil(img) for img in image_tensors]
 
@@ -383,7 +385,7 @@ def main() -> None:
         print("prompt:", args.prompt)
         input_images = _load_input_images(args.image)
         w, h = _resolve_image_size(input_images, fallback_w, fallback_h)
-        _set_seed(args.seed)
+        # _set_seed(args.seed)
         with profiler.time_generate(w, h, 1):
             text, images = engine.generate(
                 args.prompt,
@@ -396,6 +398,7 @@ def main() -> None:
                 num_steps=args.num_steps,
                 think_mode=args.think_mode,
                 system_message=args.system_message,
+                seed=args.seed,
             )
         print(f"[text] {text}")
         _save_outputs(text, images, out_dir, args.stem)
@@ -430,7 +433,7 @@ def main() -> None:
             else:
                 w, h = fallback_w, fallback_h
             think_mode = bool(sample.get("think_mode", args.think_mode))
-            _set_seed(int(sample.get("seed", args.seed)))
+            # _set_seed(int(sample.get("seed", args.seed)))
 
             with profiler.time_generate(w, h, 1):
                 text, images = engine.generate(
@@ -444,6 +447,7 @@ def main() -> None:
                     num_steps=args.num_steps,
                     think_mode=think_mode,
                     system_message=args.system_message,
+                    seed=args.seed,
                 )
 
             stem = f"{i + 1:04d}" + ("_think" if think_mode else "_no_think")

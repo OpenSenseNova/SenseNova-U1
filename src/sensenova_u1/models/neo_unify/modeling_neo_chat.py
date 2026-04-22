@@ -973,7 +973,8 @@ class NEOChatModel(PreTrainedModel):
             t_eps=0.02,
             verbose=False,
             system_message='',
-            think_mode=False
+            think_mode=False,
+            seed=0,
     ):
         self.img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
         self.img_start_token_id = tokenizer.convert_tokens_to_ids(IMG_START_TOKEN)
@@ -1070,6 +1071,7 @@ class NEOChatModel(PreTrainedModel):
 
         next_token = torch.argmax(outputs_cond.logits[:, -1, :], dim=-1)
 
+        generator = torch.Generator(self.device).manual_seed(seed)
         while True:
             # text generation
             gen_tokens = []
@@ -1139,13 +1141,12 @@ class NEOChatModel(PreTrainedModel):
 
                 noise_scale = self.noise_scale
                 if self.noise_scale_mode in ("resolution", "dynamic", 'dynamic_sqrt'):
-                    noise_scale = math.sqrt((grid_h*grid_w)/(merge_size**2) / self.noise_scale_base_image_seq_len)
                     base = float(self.noise_scale_base_image_seq_len)
                     noise_scale = math.sqrt((grid_h*grid_w)/(merge_size**2)/base) * float(self.noise_scale)
                     if self.noise_scale_mode == 'dynamic_sqrt':
                         noise_scale = math.sqrt(noise_scale)
                 noise_scale = min(noise_scale, self.noise_scale_max_value)
-                image_prediction = noise_scale * torch.randn((1, 3, image_size[1], image_size[0]), device=device, dtype=outputs_cond.logits.dtype)
+                image_prediction = noise_scale * torch.randn((1, 3, image_size[1], image_size[0]), device=device, dtype=outputs_cond.logits.dtype, generator=generator)
 
                 past_key_values_cond_cfg = past_key_values_cond
                 past_key_values_tu_cfg = past_key_values_tu
