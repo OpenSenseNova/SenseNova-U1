@@ -28,7 +28,7 @@ classifiers = [
 # Core dependencies.
 #
 # Versions here are pinned to match the internal reference environment
-# (`/mnt/afs/wupenghao/miniconda3/envs/lmms_engine`, Python 3.11, CUDA 12.8)
+# (`miniconda3/envs/lmms_engine`, Python 3.11, CUDA 12.8)
 # so that checkpoints trained there can be loaded and run bit-exactly. When
 # bumping any of these, please re-verify inference on a reference checkpoint.
 dependencies = [

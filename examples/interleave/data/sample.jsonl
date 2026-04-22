@@ -1,2 +1,2 @@
 {"prompt": "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial."}
-{"prompt": "<image>\n图文交错生成小猫游览故宫的场景", "image": ["image0.jpg"]}
+{"prompt": "<image>\n图文交错生成小猫游览故宫的场景", "image": ["./examples/interleave/data/images/image0.jpg"]}
