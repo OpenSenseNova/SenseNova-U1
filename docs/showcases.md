@@ -28,6 +28,45 @@ Reproducible prompts are in
 | [<img width="200" alt="t2i general portrait artistic 02 a" src="./assets/showcases/t2i_general/9_16_dense_face_hd_10.webp">](./assets/showcases/t2i_general/9_16_dense_face_hd_10.webp) | [<img width="200" alt="t2i general portrait artistic 02 b" src="./assets/showcases/t2i_general/9_16_human_pose_11.webp">](./assets/showcases/t2i_general/9_16_human_pose_11.webp) | [<img width="200" alt="t2i general portrait artistic 07" src="./assets/showcases/t2i_general/9_16_artistic_07.webp">](./assets/showcases/t2i_general/9_16_artistic_07.webp) |
 | [<img width="200" alt="t2i general portrait text rendering 02" src="./assets/showcases/t2i_general/9_16_sensenova_u1_31.webp">](./assets/showcases/t2i_general/9_16_sensenova_u1_31.webp) | [<img width="200" alt="t2i general portrait dense landscape 05" src="./assets/showcases/t2i_general/9_16_dense_landscape_05.webp">](./assets/showcases/t2i_general/9_16_dense_landscape_05.webp) | [<img width="200" alt="t2i general portrait dense artistic 11" src="./assets/showcases/t2i_general/9_16_dense_artistic_11.webp">](./assets/showcases/t2i_general/9_16_dense_artistic_11.webp) |
 
+
+#### 🖼️ *Text-to-Image (Reasoning)*
+
+Reproducible prompts are in
+[`examples/t2i/data/sample_reasoning.jsonl`](../examples/t2i/data/sample_reasoning.jsonl).
+
+<table>
+  <tr>
+    <th style="width: 20%">Original Text</th> 
+    <th style="width: 50%">Reasoning Process</th>
+    <th style="width: 30%">Resulting Image</th>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">The playful craft that embodies Russian cultural charm</td>
+    <td><div style="max-height: 200px; overflow-y: auto;">1. <b>Instruction Understanding:</b> The core subject is the matryoshka, identified as a Russian craft. Essential modifiers include playful and Russian cultural charm. The relation is that the craft embodies the charm. 2. <b>Reasoning Process:</b> The prompt identifies the matryoshka, the iconic Russian wooden doll set. 3. <b>Establish the frame:</b> The frame captures the matryoshka set in the foreground. The composition focuses on the Russian craft to show the playful nature of the doll set. 4. <b>Set the lighting and color:</b> Lighting illuminates the matryoshka to reveal the Russian cultural charm. The color palette supports the playful craft aesthetic. 5. <b>Lock the style:</b> The style emphasizes the wooden nature of the Russian craft. The finish reflects the charm of the matryoshka. 6. <b>Explicit Prompt:</b> A set of three colorful, hand-painted wooden matryoshka dolls arranged by size on a rustic wooden table, bright floral patterns, soft natural light.</div></td>
+    <td style="vertical-align: top;"><img src="./assets/showcases/t2i_reasoning/1_reasoning.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">A typical dish from the country where Naples is located</td>
+    <td><div style="max-height: 200px; overflow-y: auto;">1. <b>Instruction Understanding:</b> The core subject is a Neapolitan pizza presented as a typical dish. The context specifies Naples, Italy, as the country of origin for this food item. 2. <b>Reasoning Process:</b> Naples is in Italy, and a classic dish is a Neapolitan pizza. 3. <b>Establish the frame:</b> The Neapolitan pizza is captured in a close-up shot that fills the central frame. The angle is slightly elevated to show the round form of the dish clearly. 4. <b>Set the lighting and color:</b> Soft lighting illuminates the surface of the Neapolitan pizza to reveal texture. Warm tones dominate the color palette, emphasizing the baked nature of the dish. 5. <b>Lock the style:</b> The image utilizes a realistic photographic style with sharp focus on the main subject. The finish appears natural and appetizing, suitable for food documentation. 6. <b>Explicit Prompt:</b> A delicious Neapolitan pizza with a soft, charred crust, tomato sauce, and fresh mozzarella, served on a rustic wooden table, realistic food photography.</div></td>
+    <td style="vertical-align: top;"><img src="./assets/showcases/t2i_reasoning/2_reasoning.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">A gigantic bubble in the immediate foreground with a small town barely visible inside</td>
+    <td><div style="max-height: 200px; overflow-y: auto;">1. <b>Instruction Understanding:</b> The prompt requires a gigantic bubble positioned in the immediate foreground. A small town must be visible inside the bubble. 2. <b>Reasoning Process:</b> The bubble acts as a transparent lens, potentially distorting the town's appearance due to its curvature. 3. <b>Establish the frame:</b> The shot scale is an extreme close-up, placing the bubble so close it fills the majority of the frame. The focus plane is set on the bubble's surface, rendering the background outside the town soft and out of focus. 4. <b>Set the lighting and color:</b> Natural daylight creates bright specular highlights on the upper surface of the bubble. The color palette is dominated by the cool transparency of the bubble and the muted tones of the town within. 5. <b>Lock the style:</b> The overall image style is photorealistic with a high level of detail on the bubble's texture. The rendering captures the glossy finish and physical properties of the bubble accurately. 6. <b>Explicit Prompt:</b> An extreme close-up of a massive, transparent soap bubble floating in the immediate foreground, with a tiny, detailed miniature town visible inside the curvature, refracted and magnified by the surface tension, soft natural daylight, dreamlike, high detail, photorealistic texture.</div></td>
+    <td style="vertical-align: top;"><img src="./assets/showcases/t2i_reasoning/3_reasoning.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">A chocolate bar left in direct sunlight, highlighting the state of the chocolate</td>
+    <td><div style="max-height: 200px; overflow-y: auto;">1. <b>Instruction Understanding:</b> The core subject is a chocolate bar positioned in direct sunlight. The focus is on the state of the chocolate, specifically how the heat affects it. 2. <b>Reasoning Process:</b> Heat causes chocolate to melt, losing its structured shape and becoming a viscous, glossy liquid. 3. <b>Establish the frame:</b> The composition is a close-up shot that fills the frame with the chocolate bar to emphasize detail. The angle is slightly elevated to show the top surface and the pooling liquid clearly. 4. <b>Build the environment:</b> The chocolate bar rests on a generic surface that supports the object without distracting from the main subject. The background is blurred to keep attention on the foreground elements and the chocolate. 5. <b>Set the lighting and color:</b> Direct sunlight creates bright highlights on the melting chocolate, emphasizing its glossy texture. The lighting is warm and intense, casting distinct shadows and illuminating the rich brown colors of the liquid. 6. <b>Explicit Prompt:</b> A close-up of a melting chocolate bar on a surface, with the edges losing their defined shape and pooling into a glossy, viscous puddle under the heat of the sun.</div></td>
+    <td style="vertical-align: top;"><img src="./assets/showcases/t2i_reasoning/6_reasoning.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">A solution of calcium carbonate reacting with acetic acid</td>
+    <td><div style="max-height: 200px; overflow-y: auto;">1. <b>Instruction Understanding:</b> The core subject is a solution of calcium carbonate and acetic acid. The prompt specifies the reacting state of the chemical mixture. 2. <b>Reasoning Process:</b> The reaction produces carbon dioxide gas, which would be visible as a steady stream of bubbles rising through the liquid. 3. <b>Establish the frame:</b> The camera frames the solution closely to capture the details of the reaction. The composition centers on the liquid where the gas is visible. 4. <b>Set the lighting and color:</b> The liquid appears clear, allowing the white bubbles to stand out distinctly. The lighting is bright and even to illuminate the stream of gas. 5. <b>Lock the style:</b> The image maintains a realistic photographic style suitable for scientific observation. The focus is sharp on the reacting solution and bubbles. 6. <b>Explicit Prompt:</b> A test tube filled with a clear liquid and a rapid, effervescent stream of carbon dioxide bubbles rising to the surface, laboratory experiment.</div></td>
+    <td style="vertical-align: top;"><img src="./assets/showcases/t2i_reasoning/7_reasoning.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+</table>
+
 #### 🖼️ *Text-to-Image (Infographics)*
 
 Reproducible prompts are in
@@ -38,11 +77,6 @@ Reproducible prompts are in
 | [<img width="300" alt="t2i landscape 0001" src="./assets/showcases/t2i_infographic/0001_2720x1536.webp">](./assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./assets/showcases/t2i_infographic/0002_2720x1536.webp">](./assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./assets/showcases/t2i_infographic/0003_2720x1536.webp">](./assets/showcases/t2i_infographic/0003_2720x1536.webp) |
 | [<img width="300" alt="t2i square 0004" src="./assets/showcases/t2i_infographic/0004_2048x2048.webp">](./assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./assets/showcases/t2i_infographic/0005_2048x2048.webp">](./assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./assets/showcases/t2i_infographic/0006_2048x2048.webp">](./assets/showcases/t2i_infographic/0006_2048x2048.webp) |
 | [<img width="200" alt="t2i portrait 0007" src="./assets/showcases/t2i_infographic/0007_1536x2720.webp">](./assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./assets/showcases/t2i_infographic/0008_1536x2720.webp">](./assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./assets/showcases/t2i_infographic/0009_1536x2720.webp">](./assets/showcases/t2i_infographic/0009_1536x2720.webp) |
-
-#### 🖼️ *Text-to-Image (Reasoning)*
-
-Reproducible prompts are in
-[`examples/t2i/data/samples_xxxx.jsonl`](../examples/t2i/data/samples_xxxx.jsonl).
 
 ---
 
@@ -70,6 +104,64 @@ Reproducible prompts are in
 
 Reproducible prompts are in
 [`examples/editing/data/samples_reasoning.jsonl`](../examples/editing/data/samples_reasoning.jsonl).
+
+<table>
+  <tr>
+    <th style="width: 20%">Original Text</th>
+    <th style="width: 30%">Original Image</th>
+    <th style="width: 20%">Reasoning Process</th>
+    <th style="width: 30%">Resulting Image</th>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Draw what it will look like one hour later.</td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/034_temporal_reasoning_draw_what_it_will_look_like.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+    <td><div style="max-height: 200px; overflow-y: auto;">
+    1. <b>Source Image Analysis:</b> The source image shows a glass cup of hot tea with steeping tea leaves, and the water appears relatively clear. 2. <b>Instruction Understanding:</b> The instruction asks for the appearance one hour later. 3. <b>Reasoning Process:</b> Over time, tannins and pigments leach out, making the tea noticeably darker and more uniformly colored, and the leaves may look more swollen and darker from soaking. 4. <b>Expected Visual Changes:</b> The expected visible result is a deeper amber-to-brown tea color and more fully saturated liquid. 5. <b>Elements to Preserve:</b> The glass cup, scattered leaves around it, background, and camera angle should remain unchanged. 6. <b>Explicit Edit Prompt:</b> Edit the tea liquid to a much darker, more saturated amber-brown color as if fully steeped, and make the tea leaves look slightly darker and more swollen, while keeping the glass cup, surrounding leaves, background, and framing unchanged.</div></td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/034_temporal_reasoning_draw_what_it_will_look_like_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Draw what it will look like immediately after someone stands up from sitting on it for a long time.</td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/036_causal_reasoning_draw_what_it_will_look_like.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+    <td><div style="max-height: 200px; overflow-y: auto;">
+    1. <b>Source Image Analysis:</b> The source image shows a fluffy lime-green beanbag chair that looks evenly plump and undisturbed on a white background. 2. <b>Instruction Understanding:</b> The edit instruction asks for its appearance immediately after someone stood up from sitting there for a long time. 3. <b>Reasoning Process:</b> Prolonged weight compresses the fabric and internal fill, leaving a depressed seat area, wrinkles radiating outward, and a slowly recovering shape. 4. <b>Expected Visual Changes:</b> The visible result should be a noticeable dip and creasing where a person was seated. 5. <b>Elements to Preserve:</b> The background, beanbag color, lighting, and camera angle should remain unchanged while only the beanbag’s shape shows the compression. 6. <b>Explicit Edit Prompt:</b> Edit the beanbag chair to show a clear seated depression in the center with surrounding wrinkles and slightly compressed fabric, while keeping the white background, lighting, and camera angle unchanged.</div></td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/036_causal_reasoning_draw_what_it_will_look_like_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Draw an image showing the side view of the provided traffic cone.</td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/039_spatial_reasoning_draw_an_image_showing_the_si.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+    <td><div style="max-height: 200px; overflow-y: auto;">
+    1. <b>Source Image Analysis:</b> The source image shows a 3D perspective view of a traffic cone. 2. <b>Instruction Understanding:</b> The instruction asks for a side view. 3. <b>Reasoning Process:</b> A side view of a standard traffic cone results in a triangular silhouette with a flat rectangular base. 4. <b>Expected Visual Changes:</b> The perspective is flattened into this 2D-like geometric profile. 5. <b>Elements to Preserve:</b> The cone's height and color should remain consistent with the original object. 6. <b>Explicit Edit Prompt:</b> Edit the perspective view into a flat side-profile silhouette of a triangle with a rectangular base, keeping the red color and proportions unchanged.</div></td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/039_spatial_reasoning_draw_an_image_showing_the_si_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Change the water to high-concentration saltwater</td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/042_physics_change_the_water_to_high-con.jpg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+    <td><div style="max-height: 200px; overflow-y: auto;">
+    1. <b>Source Image Analysis:</b> The source image shows an egg resting at the bottom of a glass of water. 2. <b>Instruction Understanding:</b> The instruction asks to change the medium to high-concentration saltwater. 3. <b>Reasoning Process:</b> Saltwater is denser than fresh water, which increases the buoyant force on the egg. 4. <b>Expected Visual Changes:</b> As density increases, the egg will overcome gravity and float higher or suspend in the middle of the liquid. 5. <b>Elements to Preserve:</b> The glass and the egg's appearance should remain consistent, focusing on the shift in the egg's vertical position. 6. <b>Explicit Edit Prompt:</b> Edit the position of the egg so it is floating in the middle of the liquid instead of resting on the bottom, while keeping the glass and the egg's appearance unchanged.</div></td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/042_physics_change_the_water_to_high-con_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">What the fruit looks like when ripe in the picture</td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/044_biology_what_the_fruit_looks_like_wh.jpg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+    <td><div style="max-height: 200px; overflow-y: auto;">
+    1. <b>Source Image Analysis:</b> The source image shows green, unripe bananas. 2. <b>Instruction Understanding:</b> The instruction asks for the appearance of the fruit when ripe. 3. <b>Reasoning Process:</b> Ripening involves a breakdown of chlorophyll and the production of sugars, which turns the skin from green to yellow and often causes small brown sugar spots to appear. 4. <b>Expected Visual Changes:</b> The color and texture of the peel should transition to a ripe state. 5. <b>Elements to Preserve:</b> The shape of the bananas and the white background should remain constant. 6. <b>Explicit Edit Prompt:</b> Edit the green bananas to be bright yellow with small brown spots, while keeping the original shape and white background unchanged.</div></td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/044_biology_what_the_fruit_looks_like_wh_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Correct the unreasonable part in the image.</td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/046_anomaly_correction_correct_the_unreasonable_par.jpg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+    <td><div style="max-height: 200px; overflow-y: auto;">
+    1. <b>Source Image Analysis:</b> The source image shows a kettle pouring water onto a mug, but the stream is misaligned and missing the cup. 2. <b>Instruction Understanding:</b> The instruction asks to fix the physical inconsistency. 3. <b>Reasoning Process:</b> The water stream must be redirected to connect the spout to the mug, maintaining the trajectory of gravity. 4. <b>Expected Visual Changes:</b> The water stream will be redirected to connect the spout to the mug. 5. <b>Elements to Preserve:</b> The kettle, mug, and background must remain unchanged while the water path is corrected. 6. <b>Explicit Edit Prompt:</b> Draw a continuous water stream connecting the kettle spout to the mug, keeping the kettle, mug, and background unchanged.</div></td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/046_anomaly_correction_correct_the_unreasonable_par_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Modify the matrix in the image to an upper triangular matrix</td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/047_mathematics_modify_the_matrix_in_the_ima.jpg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+    <td><div style="max-height: 200px; overflow-y: auto;">
+    1. <b>Source Image Analysis:</b> The source image shows a 2x2 matrix with values 1, 2, 3, and 4. 2. <b>Instruction Understanding:</b> The instruction asks to convert this to an upper triangular matrix. 3. <b>Reasoning Process:</b> By definition, an upper triangular matrix has zeros below the main diagonal, so the entry '3' must be changed to '0' while keeping '1', '2', and '4' as they are, and this modification satisfies the mathematical property requested. 4. <b>Expected Visual Changes:</b> The entry '3' in the lower-left position will be changed to '0'. 5. <b>Elements to Preserve:</b> The grid lines, the matrix structure, and the other entries must remain unchanged. 6. <b>Explicit Edit Prompt:</b> Change the '3' in the lower-left position to '0', while keeping the matrix structure and other entries unchanged.</div></td>
+    <td style="vertical-align: top;"><img src="../examples/editing/data/images_reasoning/047_mathematics_modify_the_matrix_in_the_ima_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+</table>
 
 
 ---
