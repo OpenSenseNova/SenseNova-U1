@@ -37,8 +37,19 @@ Reproducible prompts are in
 
 ## Interleaved Generation
 
-<!-- TODO: add interleaved generation samples once ready -->
-TBA.
+Each case below is a single rendered response from `model.interleave_gen`:
+the model first runs a `<think>...</think>` reasoning block that produces
+intermediate images, then emits the final interleaved text-and-image
+answer
+
+
+| |
+| :---: |
+| [<img alt="interleave case 01" src="./assets/showcases/interleave/case_01.webp">](./assets/showcases/interleave/case_01.webp) |
+| [<img alt="interleave case 02" src="./assets/showcases/interleave/case_02.webp">](./assets/showcases/interleave/case_02.webp) |
+| [<img alt="interleave case 03" src="./assets/showcases/interleave/case_03.webp">](./assets/showcases/interleave/case_03.webp) |
+| [<img alt="interleave case 04" src="./assets/showcases/interleave/case_04.webp">](./assets/showcases/interleave/case_04.webp) |
+| [<img alt="interleave case 05" src="./assets/showcases/interleave/case_05.webp">](./assets/showcases/interleave/case_05.webp) |
 
 ---
 

@@ -62,7 +62,12 @@ additional editing and visual understanding samples.
 
 ### Interleaved Generation
 
-TBA
+| |
+| :---: |
+| [<img alt="interleave case 02" src="./docs/assets/showcases/interleave/case_02.webp">](./docs/assets/showcases/interleave/case_02.webp) |
+| [<img alt="interleave case 03" src="./docs/assets/showcases/interleave/case_03.webp">](./docs/assets/showcases/interleave/case_03.webp) |
+
+> 📸 **More interleaved samples:** see [Interleaved Generation gallery](./docs/showcases.md#interleaved-generation).
 
 ### Visual Understanding
 
