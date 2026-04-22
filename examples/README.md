@@ -41,7 +41,7 @@ Single prompt:
 
 ```bash
 python examples/t2i/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --model_path SenseNova/SenseNova-U1-Mini-Beta \
   --prompt "一个咖啡店门口有一个黑板，上面写着日日新咖啡，2元一杯，旁边有个霓虹灯，写着商汤科技，旁边有个海报，海报上面是一只小浣熊，海报下方写着SenseNova newbee。" \
   --width 2048 --height 2048 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -54,7 +54,7 @@ Batched prompts from a JSONL file (each line must contain a `prompt`;
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --model_path SenseNova/SenseNova-U1-Mini-Beta \
     --jsonl examples/t2i/data/samples.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -89,7 +89,7 @@ Short prompts — especially for **infographic** generation — can be enhanced 
 # export U1_ENHANCE_MODEL=gemini-3.1-pro
 
 python examples/t2i/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --model_path SenseNova/SenseNova-U1-Mini-Beta \
   --prompt "如何制作咖啡的教程" \
   --enhance --print_enhance \
   --output output.png
@@ -117,7 +117,7 @@ Single edit:
 
 ```bash
 python examples/editing/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --model_path SenseNova/SenseNova-U1-Mini-Beta \
   --prompt "Change the animal's fur color to a darker shade." \
   --image examples/editing/data/images/1.jpg \
   --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
@@ -133,7 +133,7 @@ overrides the CLI default for that line):
 
 ```bash
 python examples/editing/inference.py \
-    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --model_path SenseNova/SenseNova-U1-Mini-Beta \
     --jsonl examples/editing/data/samples.jsonl \
     --output_dir outputs/editing/ \
     --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
@@ -164,7 +164,7 @@ three-mode launcher covering every usage pattern below.
 ### 1) Single sample, text prompt only
 ```bash
 python examples/interleave/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --model_path SenseNova/SenseNova-U1-Mini-Beta \
   --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
   --resolution "16:9" \
   --output_dir outputs/interleave/text \
@@ -175,7 +175,7 @@ python examples/interleave/inference.py \
 
 ```bash
 python examples/interleave/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --model_path SenseNova/SenseNova-U1-Mini-Beta \
   --prompt "<image>\n图文交错生成小猫游览故宫的场景" \
   --image examples/interleave/data/images/image0.jpg \
   --output_dir outputs/interleave/text_image \
@@ -193,7 +193,7 @@ Each line is one sample:
 
 ```bash
 python examples/interleave/inference.py \
-    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --model_path SenseNova/SenseNova-U1-Mini-Beta \
     --jsonl examples/interleave/data/sample.jsonl \
     --image_root examples/interleave/data/images\
     --resolution "16:9" \
@@ -209,7 +209,7 @@ Single image, with sampling enabled:
 
 ```bash
 python examples/vqa/inference.py \
-  --model_path OpenSenseNova/SenseNova-U1-Mini \
+  --model_path SenseNova/SenseNova-U1-Mini-Beta \
   --image examples/vqa/data/images/menu.jpg \
   --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." \
   --output outputs/menu_answer.txt \
@@ -228,7 +228,7 @@ Batched questions from a JSONL file (each line must contain `image` and `questio
 
 ```bash
 python examples/vqa/inference.py \
-    --model_path OpenSenseNova/SenseNova-U1-Mini \
+    --model_path SenseNova/SenseNova-U1-Mini-Beta \
     --jsonl examples/vqa/data/questions.jsonl \
     --output_dir outputs/vqa/ \
     --max_new_tokens 8192 \
