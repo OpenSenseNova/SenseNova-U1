@@ -13,7 +13,7 @@ open the full-resolution render.
 
 The main table presents the complete n × 3 grid layouts, covering landscape, square, and portrait formats at different resolutions.    
 
-Source prompts are in
+Reproducible prompts are in
 [`examples/t2i/data/samples.jsonl`](../examples/t2i/data/samples.jsonl).
 
 
