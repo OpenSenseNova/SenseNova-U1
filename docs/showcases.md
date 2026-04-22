@@ -102,4 +102,5 @@ General visual understanding across spatial reasoning, multi-image comparison, O
 | |
 | :---: |
 | [<img alt="vqa agentic case" src="./assets/showcases/vqa/agentic_case.webp">](./assets/showcases/vqa/agentic_case.webp) |
-| [<img alt="vqa general cases" src="./assets/showcases/vqa/general_case.webp">](./assets/showcases/vqa/general_case.webp) |
+| [<img alt="vqa agentic case 2" src="./assets/showcases/vqa/agentic_case_2.webp">](./assets/showcases/vqa/agentic_case_2.webp) |
+| [<img alt="vqa general cases" src="./assets/showcases/vqa/general_case_all.webp">](./assets/showcases/vqa/general_case_all.webp) |
