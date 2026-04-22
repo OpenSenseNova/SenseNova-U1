@@ -15,16 +15,33 @@
   <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="720">
 </p>
 
-## Overview
+## 🌟 Overview
 
-Recent large vision–language models (VLMs) remain fundamentally constrained by a persistent dichotomy: understanding and generation are treated as distinct problems, leading to fragmented architectures, cascaded pipelines, and misaligned representation spaces. We argue that this divide is not merely an engineering artifact, but a structural limitation that hinders the emergence of native multimodal intelligence.
-Hence, we introduce **SenseNova-U1**, a native unified multimodal paradigm built upon the **NEO-Unify** model, in which understanding and generation evolve as synergistic views of a single underlying process.
-The key pillars are:
-(i) A near-lossless visual interface that preserves both semantic richness and pixel fidelity without pre-trained vision encoders (VEs) and variational autoencoders (VAEs);
-(ii) An end-to-end framework that operates directly on native inputs (i.e., pixels and text), showing impressive expressivity and generalization over modular counterparts;
-(iii) A native Mixture-of-Transformers (MoT) architecture that supports modality-agnostic reasoning with minimal intrinsic conflict and high data-scaling efficiency.
-We launch two native unified variants, **SenseNova-U1-Mini** and **SenseNova-U1-Flash**, built on dense (8B) and mixture-of-expert (30B-A3B) understanding baselines, respectively. Designed from first principles, they rival top-tier understanding-only VLMs across text understanding, vision–language perception, knowledge reasoning, agentic decision-making, and spatial intelligence. Meanwhile, they deliver strong semantic consistency and visual fidelity, excelling in conventional or knowledge-intensive any-to-image (X2I) synthesis, complex text-rich infographic generation, and interleaved vision–language generation, with or without think patterns. Beyond performance, we provide a comprehensive analysis of model design, data preprocessing, pre-/post-training, and inference strategies to support community research.
-Last but not least, preliminary evidence displays that our models extend beyond perception and generation, performing strongly in vision–language–action (VLA) and world model (WM) scenarios. This points toward a broader roadmap where models do not translate between modalities, but think-and-act across them natively. Multimodal AI is no longer about connecting disparate systems. It is about building one that was never divided, and trusting the necessary capabilities to emerge from within.
+**SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) toward a broader roadmap where models no longer translate between modalities, but think and act across them natively across:   
+
+- 🔸 Text-only & Vision–Language Reasoning  
+- 🔸 Agentic Decision-Making
+- 🔸 Spatial Intelligence   
+- 🔹 Any-to-Image Generation & Editing 
+- 🔹 Text-rich Infographic Generation
+- 🔹 Interleaved Vision–Language Generation
+
+
+#### 🏗️ Key Pillars:      
+
+- 🖼️ Near-Lossless Visual Interface: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
+
+- 🧠 Native Mixture-of-Transformers: Modality-agnostic reasoning with high efficiency and minimal conflict !   
+
+- 🔗 Unified End-to-End Learning: Modeling directly on pixels + text from the first principles !   
+  
+
+#### 🌍 Beyond Multimodality: 
+
+- 🤖 Vision–Language–Action (VLA)      
+
+- 🌐 World Modeling (WM)
+
 
 ## 📣 News
 
