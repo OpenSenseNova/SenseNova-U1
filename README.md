@@ -63,7 +63,8 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 
 ## 🎨 Showcases
 
-#### 🖼️ *Text-to-Image (General Case)*
+<details>
+<summary>🖼️ Text-to-Image (General)</summary>
 
 | | | |
 | :---: | :---: | :---: |
@@ -71,7 +72,10 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 | [<img width="260" alt="t2i general face hd 13" src="./docs/assets/showcases/t2i_general/1_1_face_hd_13.webp">](./docs/assets/showcases/t2i_general/1_1_face_hd_13.webp) | [<img width="260" alt="t2i general face hd 07" src="./docs/assets/showcases/t2i_general/1_1_dense_artistic_10.webp">](./docs/assets/showcases/t2i_general/1_1_dense_artistic_10.webp) | [<img width="260" alt="t2i general landscape 07" src="./docs/assets/showcases/t2i_general/1_1_landscape_07.webp">](./docs/assets/showcases/t2i_general/1_1_landscape_07.webp) |
 | [<img width="200" alt="t2i general portrait artistic 02 b" src="./docs/assets/showcases/t2i_general/9_16_human_pose_11.webp">](./docs/assets/showcases/t2i_general/9_16_human_pose_11.webp) | [<img width="200" alt="t2i general portrait text rendering 02" src="./docs/assets/showcases/t2i_general/9_16_sensenova_u1_31.webp">](./docs/assets/showcases/t2i_general/9_16_sensenova_u1_31.webp) | [<img width="200" alt="t2i general portrait artistic 07" src="./docs/assets/showcases/t2i_general/9_16_artistic_07.webp">](./docs/assets/showcases/t2i_general/9_16_artistic_07.webp) |
 
-#### 🖼️ *Text-to-Image (Infographics)*
+</details>
+
+<details>
+<summary>🖼️ Text-to-Image (Infographics)</summary>
 
 | | | |
 | :---: | :---: | :---: |
@@ -79,65 +83,92 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 | [<img width="300" alt="t2i square 0004" src="./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp) |
 | [<img width="200" alt="t2i portrait 0007" src="./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp) |
 
+</details>
 
-#### 🖼️ *Text-to-Image (Reasoning)*
+<details>
+<summary>🖼️ Text-to-Image (Reasoning)</summary>
 
+</details>     
 
-
-
-> 📸 **More text-to-image samples:** see [Text-to-Image gallery](./docs/showcases.md#text-to-image).
-
-
-#### ✏️ *Image Editing (General)*
-
-| | | |
-| :---: | :---: | :---: |
-| [<img alt="editing sample 0001" src="./docs/assets/showcases/editing/0001_2048x2048_compare.webp">](./docs/assets/showcases/editing/0001_2048x2048_compare.webp) | [<img alt="editing sample 0002" src="./docs/assets/showcases/editing/0002_2048x2048_compare.webp">](./docs/assets/showcases/editing/0002_2048x2048_compare.webp) | [<img alt="editing sample 0003" src="./docs/assets/showcases/editing/0003_2048x2048_compare.webp">](./docs/assets/showcases/editing/0003_2048x2048_compare.webp) |
+> 📸 **More text-to-image samples:** see [Text-to-Image Gallery](./docs/showcases.md#text-to-image). 
 
 
-#### ✏️ *Image Editing (Reasoning)*
+<details>
+<summary>✏️ Image Editing (General)</summary>
 
-> 📸 **More editing samples:** see [Image Editing gallery](./docs/showcases.md#image-editing).
+| | |
+| :---: | :---: |
+| <div align="center"><a href="./examples/editing/data/images/1.webp"><img width="180" alt="editing input 1" src="./examples/editing/data/images/1.webp"></a> <a href="./examples/editing/data/images/1_out.webp"><img width="180" alt="editing output 1" src="./examples/editing/data/images/1_out.webp"></a><br><sub>Change the jacket of the person on the left to bright yellow.</sub></div> | <div align="center"><a href="./examples/editing/data/images/3.webp"><img width="180" alt="editing input 3" src="./examples/editing/data/images/3.webp"></a> <a href="./examples/editing/data/images/3_out.webp"><img width="180" alt="editing output 3" src="./examples/editing/data/images/3_out.webp"></a><br><sub>在小狗头上放一个花环，并且把图片变为吉卜力风格。</sub></div> |
+| <div align="center"><a href="./examples/editing/data/images/2.webp"><img width="180" alt="editing input 2" src="./examples/editing/data/images/2.webp"></a> <a href="./examples/editing/data/images/2_out.webp"><img width="180" alt="editing output 2" src="./examples/editing/data/images/2_out.webp"></a><br><sub>Make the person in the image smile.</sub></div> | <div align="center"><a href="./examples/editing/data/images/4.webp"><img width="180" alt="editing input 4" src="./examples/editing/data/images/4.webp"></a> <a href="./examples/editing/data/images/4_out.webp"><img width="180" alt="editing output 4" src="./examples/editing/data/images/4_out.webp"></a><br><sub>Add a bouquet of flowers.</sub></div> |
+| <div align="center"><a href="./examples/editing/data/images/8.webp"><img width="180" alt="editing input 8" src="./examples/editing/data/images/8.webp"></a> <a href="./examples/editing/data/images/8_out.webp"><img width="180" alt="editing output 8" src="./examples/editing/data/images/8_out.webp"></a><br><sub>Replace the man with a woman.</sub></div> | <div align="center"><a href="./examples/editing/data/images/6.webp"><img width="180" alt="editing input 6" src="./examples/editing/data/images/6.webp"></a> <a href="./examples/editing/data/images/6_out.webp"><img width="180" alt="editing output 6" src="./examples/editing/data/images/6_out.webp"></a><br><sub>Replace the text "WARFIGHTER" to "BATTLEFIELD" in the bold orange-red font.</sub></div> | 
 
-#### ♻️ *Interleaved Generation*
+</details>
+
+
+<details>
+<summary>✏️ Image Editing (Reasoning)</summary>
+
+
+</details>    
+
+> 📸 **More editing samples:** see [Image Editing Gallery](./docs/showcases.md#image-editing). 
+
+<details>
+<summary>♻️ Interleaved Generation</summary>
 
 | |
 | :---: |
 | [<img alt="interleave case 02" src="./docs/assets/showcases/interleave/case_02.webp">](./docs/assets/showcases/interleave/case_02.webp) |
 | [<img alt="interleave case 03" src="./docs/assets/showcases/interleave/case_03.webp">](./docs/assets/showcases/interleave/case_03.webp) |
 
-> 📸 **More interleaved samples:** see [Interleaved Generation gallery](./docs/showcases.md#interleaved-generation).
+</details>
 
-#### 📝 *Visual Understanding*
+> 📸 **More interleaved samples:** see [Interleaved Generation Gallery](./docs/showcases.md#interleaved-generation).
+
+<details>
+<summary>📝 Visual Understanding</summary>
 
 | |
 | :---: |
 | [<img alt="vqa agentic case" src="./docs/assets/showcases/vqa/agentic_case.webp">](./docs/assets/showcases/vqa/agentic_case.webp) |
 | [<img alt="vqa general cases" src="./docs/assets/showcases/vqa/general_case.webp">](./docs/assets/showcases/vqa/general_case.webp) |
 
+</details>
+
+> 📸 **More visual understanding samples:** see [Visual Understanding Gallery](./docs/showcases.md#visual-understanding). 
+
 
 ## 📊 Key Benchmarks
 
-### 📝 *Understanding*
+<details>
+<summary>📝 Visual Understanding</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/understanding.webp" alt="Understanding Benchmarks">
 </p>
 
-### 🖼️ *Generation*
+</details>
+
+<details>
+<summary>🖼️ Visual Generation</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
 </p>
 
-### ♻️ *Interleaved*
+
+</details>
+
+<details>
+<summary>♻️ Interleaved Generation</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/interleaved.webp" alt="Interleaved Benchmarks">
 </p>
 
-Evaluation scripts and benchmark reproduction guides will be added in `evaluation/`.
+</details>
 
+> Evaluation scripts and benchmark reproduction guides are added in [`evaluation`](./evaluation/README.md).
 
 
 ## 🛠️ Quick Start
@@ -159,35 +190,49 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 
 > **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with uv.
 
-#### 📝 *Visual Understanding*
+<details>
+<summary>📝 Visual Understanding</summary>
 
 ```bash
 python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
 ```
 
+</details>
+
 > See [`examples/README.md`](./examples/README.md#visual-understanding-vqa) for batched inference, generation parameters, and JSONL format.
 
-#### 🖼️ *Text-to-Image*
+<details>
+<summary>🖼️ Text-to-Image</summary>
 
 ```bash
 python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "一个咖啡店门口有一个黑板，上面写着日日新咖啡，2元一杯，旁边有个霓虹灯，写着商汤科技，旁边有个海报，海报上面是一只小浣熊，海报下方写着SenseNova newbee。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
 ```
 
+</details>
+
 > Default resolution is 2048×2048 (1:1). See [supported resolution buckets](./examples/README.md#supported-resolution-buckets) for other aspect ratios.
 
-#### ✏️ *Image Editing*
 
-> 💡 Pre-resize inputs to ~2048×2048 before inference for best quality (see [`examples/editing/resize_inputs.py`](./examples/editing/resize_inputs.py)).
+<details>
+<summary>✏️ Image Editing</summary>
 
 ```bash
 python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.jpg --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
 ```
 
-#### ♻️ *Interleaved Generation*
+</details>
+
+> 💡 Pre-resize inputs to ~2048×2048 resolution with orginal aspect ratio before inference for best quality (see [`examples/editing/resize_inputs.py`](./examples/editing/resize_inputs.py)).
+
+
+<details>
+
+<summary>♻️ Interleaved Generation</summary>
 
 ```bash
 python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
 ```
+</details>
 
 > See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
 

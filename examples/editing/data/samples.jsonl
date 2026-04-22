@@ -1,5 +1,8 @@
-{"prompt": "Change the animal's fur color to a darker shade.", "image": "examples/editing/data/images/1.jpg"}
-{"prompt": "Transfer the image into a traditional ukiyo-e woodblock-print style.", "image": "examples/editing/data/images/2.jpg"}
-{"prompt": "Change the beach and ocean environment in the picture to a snowy mountain.", "image": "examples/editing/data/images/3.jpg"}
-{"prompt": "将图中的人物改为日漫风格，并给图片添加文字“使用Neo-Unify生成信息图”。", "image": "examples/editing/data/images/4.webp"}
-{"prompt": "Generate an image that matches the depth map, following this description: A dilapidated red bicycle is parked on a muddy path with a dense primeval forest in the background.", "image": "examples/editing/data/images/5.webp"}
+{"image": "./examples/editing/data/images/1.webp", "prompt": "Change the jacket of the person on the left to bright yellow."}
+{"image": "./examples/editing/data/images/2.webp", "prompt": "Make the person in the image smile."}
+{"image": "./examples/editing/data/images/3.webp", "prompt": "在小狗头上放一个花环，并且把图片变为吉卜力风格。"}
+{"image": "./examples/editing/data/images/4.webp", "prompt": "Add a bouquet of flowers."}
+{"image": "./examples/editing/data/images/5.webp", "prompt": "Turn the image into an American comic style."}
+{"image": "./examples/editing/data/images/6.webp", "prompt": "Replace the text \"WARFIGHTER\" to \"BATTLEFIELD\" in the bold orange-red font."}
+{"image": "./examples/editing/data/images/7.webp", "prompt": "Remove the person on the far right wearing a green skirt and a green top."}
+{"image": "./examples/editing/data/images/8.webp", "prompt": "Replace the man with a woman."}
