@@ -17,7 +17,7 @@
 
 ## 🌟 Overview
 
-**SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) toward a broader roadmap where models no longer translate between modalities, but think and act across them natively across:   
+🚀 **SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) toward a broader roadmap where models no longer translate between modalities, but think and act across them natively across:   
 
 - 🔸 Text-only & Vision–Language Reasoning  
 - 🔸 Agentic Decision-Making
@@ -27,7 +27,7 @@
 - 🔹 Interleaved Vision–Language Generation
 
 
-#### 🏗️ Key Pillars:      
+#### 🏗️ Key Pillars :      
 
 - 🖼️ Near-Lossless Visual Interface: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
 
@@ -36,7 +36,7 @@
 - 🔗 Unified End-to-End Learning: Modeling directly on pixels + text from the first principles !   
   
 
-#### 🌍 Beyond Multimodality: 
+#### 🌍 Beyond Multimodality : 
 
 - 🤖 Vision–Language–Action (VLA)      
 
@@ -45,7 +45,16 @@
 
 ## 📣 News
 
-- `[TBD]` Initial release of SenseNova-U1 (code, weights, and technical report).
+- Initial release of the weights for [SenseNova-U1-Mini-SFT]([TBD]) and [SenseNova-U1-Mini-Beta]([TBD]).  
+
+- Initial release of the [inference code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README.md) for SenseNova-U1.   
+
+## 📋 ToDo
+
+- [ ] Training code of SenseNova-U1 
+
+- [ ] Final weights and technical report of SenseNova-U1
+
 
 ## 🦁 Model Zoo
 
@@ -53,8 +62,8 @@
 
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
-| SenseNova-U1-Mini | 16B | [🤗 link (TBD)](#) |
-| SenseNova-U1-Flash | 38BA3B | [🤗 link (TBD)](#) |
+| SenseNova-U1-Mini-SFT | 8B MoT | [🤗 link (TBD)](#) |
+| SenseNova-U1-Flash-Beta | A3B MoT | [🤗 link (TBD)](#) |
 
 ## 🎨 Showcases
 
