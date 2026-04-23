@@ -94,6 +94,12 @@ The table below compares the latency of a single diffusion step for
 step-level generation efficiency across models, rather than end-to-end latency
 under a fully unified serving setup.
 
-| Metric | Qwen-Image-2512 | Z-Image | GLM-Image | ERNIE-Image | LongCat-Image | Neo-9B |
-| ------ | ---------------: | ------: | --------: | ----------: | ------------: | -----: |
-| Per-step latency (s/step) | 1.478 | 1.110 | 1.394 | 3.024 | 0.796 | 0.312 |
+| Model | Parameters | Per-step latency (s/step) |
+| ----- | ---------: | -------------------------: |
+| Qwen-Image-2512 | 20B | 1.478 |
+| Z-Image | 6B | 1.110 |
+| GLM-Image | 16B | 1.394 |
+| ERNIE-Image | 8B | 3.024 |
+| LongCat-Image | 6B | 0.796 |
+| NEO-Unify | 8B | 0.312 |
+
