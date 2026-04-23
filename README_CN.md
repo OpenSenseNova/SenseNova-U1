@@ -243,12 +243,15 @@
 
 <details open>
 <summary>✨ 通过我们 Skills 和 Studio 制作的有趣案例</summary>
+
 <p align="center">
-  <img src="docs/assets/showcases/t2i_infographic/u1-case.webp" alt="Interleaved Benchmarks">
+  <img width="800" alt="u1 case" src="./docs/assets/showcases/t2i_infographic/u1-case.webp">
 </p>
+
 <p align="center">
-  <img src="docs/assets/showcases/t2i_infographic/neo-case2.webp" alt="Interleaved Benchmarks">
+  <img width="800" alt="neo case 2" src="./docs/assets/showcases/t2i_infographic/neo-case2.webp">
 </p>
+
 </details>
 
 ### 🤗 使用 transformers 运行
