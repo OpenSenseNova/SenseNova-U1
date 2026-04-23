@@ -90,16 +90,16 @@ In NEO-Unify, the KV cache for the generation stage is provided by the understan
 ### Cross-Model Speed Comparison
 
 The table below compares the latency of a single diffusion step for
-**2048x2048** image generation with **CFG enabled**. For NEO-Unify, we report
-both the single-instance result and the `TP2+CFG2` parallel deployment result.
+**2048x2048** image generation with **CFG enabled**. Unless otherwise noted,
+all measurements are taken on **H100**; the `NEO-Unify (TP2+CFG2)` result uses
+`2x H100`.
 
-| Model | Parameters | Per-step latency (s/step) |
-| ----- | ---------: | -------------------------: |
-| Qwen-Image-2512 | 20B | 1.478 |
-| Z-Image | 6B | 1.110 |
-| GLM-Image | 16B | 1.394 |
-| ERNIE-Image | 8B | 1.565 |
-| LongCat-Image | 6B | 0.796 |
-| NEO-Unify (1x, no TP/CFG parallel) | 8B | 0.312 |
-| NEO-Unify (TP2+CFG2) | 8B | 0.158 |
-
+| Model | Understanding | Generation | Per-step latency (s/step) |
+| ----- | ------------: | ---------: | -------------------------: |
+| Qwen-Image-2512 | 7B | 20B | 1.478 |
+| Z-Image | 4B | 6B | 1.110 |
+| GLM-Image | 9B | 7B | 1.394 |
+| ERNIE-Image | 8B | 8B | 1.565 |
+| LongCat-Image | 8B | 6B | 0.796 |
+| NEO-Unify (1x, no TP/CFG parallel) | 8B | 8B | 0.312 |
+| NEO-Unify (TP2+CFG2) | 8B | 8B | 0.158 |
