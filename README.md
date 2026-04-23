@@ -241,6 +241,13 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 
 > Refer to the [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills) for installation and usage details.
 
+<details open>
+<summary>✨ Some interesting cases produced through our Skills and Studio</summary>
+<p align="center">
+  <img src="docs/assets/showcases/t2i_infographic/u1-case.webp" alt="Interleaved Benchmarks">
+</p>
+
+</details>
 
 ### 🤗 Run with transformers
 
