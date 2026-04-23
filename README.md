@@ -246,7 +246,10 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 <p align="center">
   <img src="docs/assets/showcases/t2i_infographic/u1-case.webp" alt="Interleaved Benchmarks">
 </p>
-
+<p align="center">
+  <img src="docs/assets/showcases/t2i_infographic/neo-case2.webp" alt="Interleaved Benchmarks">
+</p>
+</details>
 </details>
 
 ### 🤗 Run with transformers

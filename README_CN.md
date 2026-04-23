@@ -246,7 +246,9 @@
 <p align="center">
   <img src="docs/assets/showcases/t2i_infographic/u1-case.webp" alt="Interleaved Benchmarks">
 </p>
-
+<p align="center">
+  <img src="docs/assets/showcases/t2i_infographic/neo-case2.webp" alt="Interleaved Benchmarks">
+</p>
 </details>
 
 ### 🤗 使用 transformers 运行
