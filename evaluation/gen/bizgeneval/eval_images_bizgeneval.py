@@ -24,6 +24,7 @@ except ImportError:
     tqdm = None
 
 DEFAULT_DATA_PATH = Path(__file__).resolve().parent / "data" / "test.jsonl"
+ERROR_ALPHA = 0.1
 
 
 def _parse_args() -> argparse.Namespace:
@@ -31,12 +32,11 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--image-dir", required=True, help="Directory containing generated BizGenEval images.")
     parser.add_argument("--output-dir", required=True, help="Directory to save per-item results and summary.")
     parser.add_argument("--data-path", default=str(DEFAULT_DATA_PATH), help="BizGenEval JSONL path.")
-    parser.add_argument("--api-base", default=None)
-    parser.add_argument("--api-key", default=None)
-    parser.add_argument("--judge-model", default=None)
+    parser.add_argument("--api-base", required=True)
+    parser.add_argument("--api-key", required=True)
+    parser.add_argument("--judge-model", required=True)
     parser.add_argument("--timeout", type=int, default=240)
-    parser.add_argument("--concurrency", type=int, default=128)
-    parser.add_argument("--error-alpha", type=float, default=0.1)
+    parser.add_argument("--concurrency", type=int, default=8)
     parser.add_argument("--force-rerun", action="store_true")
     return parser.parse_args()
 
@@ -334,7 +334,7 @@ def main() -> None:
                     image_dir=image_dir,
                     items_dir=items_dir,
                     client=client,
-                    error_alpha=args.error_alpha,
+                    error_alpha=ERROR_ALPHA,
                     force_rerun=args.force_rerun,
                     write_lock=write_lock,
                 ): item
@@ -366,14 +366,14 @@ def main() -> None:
         for done, item in enumerate(iterator, start=1):
             try:
                 result = eval_one(
-                    item,
-                    image_dir=image_dir,
-                    items_dir=items_dir,
-                    client=client,
-                    error_alpha=args.error_alpha,
-                    force_rerun=args.force_rerun,
-                    write_lock=write_lock,
-                )
+                item,
+                image_dir=image_dir,
+                items_dir=items_dir,
+                client=client,
+                error_alpha=ERROR_ALPHA,
+                force_rerun=args.force_rerun,
+                write_lock=write_lock,
+            )
             except Exception as exc:
                 _record_error(int(item["_prompt_id"]), exc)
                 result = None
@@ -419,8 +419,8 @@ def main() -> None:
         "data_path": str(Path(args.data_path).resolve()),
         "eval_provider": "judge_client",
         "eval_model": client.model,
-        "error_alpha": args.error_alpha,
-        "easy_hard_error_alpha": args.error_alpha * 2,
+        "error_alpha": ERROR_ALPHA,
+        "easy_hard_error_alpha": ERROR_ALPHA * 2,
         "items": len(final_records),
         "overall_accuracy": overall_accuracy,
         "overall_error_score": overall_error_score,
