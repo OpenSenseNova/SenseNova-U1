@@ -72,13 +72,51 @@ Reproducible prompts are in
 Reproducible prompts are in
 [`examples/t2i/data/samples_infographic.jsonl`](../examples/t2i/data/samples_infographic.jsonl).
 
-| | | |
-| :---: | :---: | :---: |
-| [<img width="300" alt="t2i landscape 0001" src="./assets/showcases/t2i_infographic/0001_2720x1536.webp">](./assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./assets/showcases/t2i_infographic/0002_2720x1536.webp">](./assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./assets/showcases/t2i_infographic/0003_2720x1536.webp">](./assets/showcases/t2i_infographic/0003_2720x1536.webp) |
-| [<img width="300" alt="t2i square 0004" src="./assets/showcases/t2i_infographic/0004_2048x2048.webp">](./assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./assets/showcases/t2i_infographic/0005_2048x2048.webp">](./assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./assets/showcases/t2i_infographic/0006_2048x2048.webp">](./assets/showcases/t2i_infographic/0006_2048x2048.webp) |
-| [<img width="200" alt="t2i portrait 0007" src="./assets/showcases/t2i_infographic/0007_1536x2720.webp">](./assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./assets/showcases/t2i_infographic/0008_1536x2720.webp">](./assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./assets/showcases/t2i_infographic/0009_1536x2720.webp">](./assets/showcases/t2i_infographic/0009_1536x2720.webp) |
+<table align="center">
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0004.webp"><img width="300" alt="t2i landscape 0001" src="./assets/showcases/t2i_infographic/0004.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0012.webp"><img width="300" alt="t2i landscape 0002" src="./assets/showcases/t2i_infographic/0012.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0005.webp"><img width="300" alt="t2i landscape 0003" src="./assets/showcases/t2i_infographic/0005.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0018.webp"><img width="300" alt="t2i landscape 0004" src="./assets/showcases/t2i_infographic/0018.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0024.webp"><img width="300" alt="t2i landscape 0005" src="./assets/showcases/t2i_infographic/0024.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0013.webp"><img width="300" alt="t2i landscape 0006" src="./assets/showcases/t2i_infographic/0013.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0006.webp"><img width="300" alt="t2i landscape 0007" src="./assets/showcases/t2i_infographic/0006.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0015.webp"><img width="300" alt="t2i landscape 0008" src="./assets/showcases/t2i_infographic/0015.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0025.webp"><img width="300" alt="t2i landscape 0009" src="./assets/showcases/t2i_infographic/0025.webp"></a></td>
+  </tr>
+</table>
 
----
+<table align="center">
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0000.webp"><img width="220" alt="t2i landscape 0010" src="./assets/showcases/t2i_infographic/0000.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0003.webp"><img width="220" alt="t2i landscape 0011" src="./assets/showcases/t2i_infographic/0003.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0001.webp"><img width="220" alt="t2i landscape 0012" src="./assets/showcases/t2i_infographic/0001.webp"></a></td>
+      <td align="center"><a href="./assets/showcases/t2i_infographic/0022.webp"><img width="220" alt="t2i landscape 0013" src="./assets/showcases/t2i_infographic/0022.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0016.webp"><img width="220" alt="t2i image 0014" src="./assets/showcases/t2i_infographic/0016.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0010.webp"><img width="220" alt="t2i image 0015" src="./assets/showcases/t2i_infographic/0010.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0007.webp"><img width="220" alt="t2i image 0016" src="./assets/showcases/t2i_infographic/0007.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0021.webp"><img width="220" alt="t2i image 0017" src="./assets/showcases/t2i_infographic/0021.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0009.webp"><img width="220" alt="t2i image 0018" src="./assets/showcases/t2i_infographic/0009.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0020.webp"><img width="220" alt="t2i image 0019" src="./assets/showcases/t2i_infographic/0020.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0008.webp"><img width="220" alt="t2i image 0020" src="./assets/showcases/t2i_infographic/0008.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0021" src="./assets/showcases/t2i_infographic/0002.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0011.webp"><img width="230" alt="t2i image 0022" src="./assets/showcases/t2i_infographic/0011.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0023.webp"><img width="230" alt="t2i image 0023" src="./assets/showcases/t2i_infographic/0023.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0027.webp"><img width="230" alt="t2i image 0024" src="./assets/showcases/t2i_infographic/0027.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0026.webp"><img width="230" alt="t2i image 0025" src="./assets/showcases/t2i_infographic/0026.webp"></a></td>
+  </tr>
+</table>
+
 
 ## Image Editing
 
