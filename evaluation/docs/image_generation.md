@@ -15,7 +15,8 @@ evaluation/gen/
 ├── igenbench/               # IGenBench — general-purpose T2I benchmark
 │   ├── gen_images_igenbench.py
 │   ├── eval_images_igenbench.py
-│   └── run_igenbench.sh
+│   ├── run_igenbench.sh
+│   └── data/*.json
 ├── longtext/                # LongText — long-text rendering (en / zh)
 │   ├── gen_images_longtext.py
 │   ├── eval_images_longtext.py
@@ -76,6 +77,12 @@ The summary (per-item scores + aggregate) is written under `--output-dir`.
 ## IGenBench
 
 General-purpose T2I benchmark with direct image-question judging.
+
+Prepare the IGenBench metadata from
+[`Brookseeworld/IGenBench-Dataset`](https://huggingface.co/datasets/Brookseeworld/IGenBench-Dataset/tree/main)
+and place the per-item JSON files under
+[`igenbench/data/`](../gen/igenbench/data/). The scripts read those JSON files
+directly for both generation prompts and evaluation questions.
 
 ```bash
 bash evaluation/gen/igenbench/run_igenbench.sh
