@@ -31,12 +31,9 @@ def clean_and_remove_hallucinations(text: str) -> str:
 
 
 class ImageEvaluator:
-    def __init__(self, 
-                 device: int | str, 
-                 model_path: str = 'Qwen/Qwen2.5-VL-7B-Instruct') -> None:
+    def __init__(self, device: int | str, model_path: str = "Qwen/Qwen2.5-VL-7B-Instruct") -> None:
         self.device = device
 
-        model_path = '/mnt/aigc/shared_data/cache/huggingface/hub/models--Qwen--Qwen2.5-VL-7B-Instruct/snapshots/cc594898137f460bfe9f0759e9844b3ce807cfb5'
         self.qwen_model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
             model_path,
             torch_dtype=torch.bfloat16,

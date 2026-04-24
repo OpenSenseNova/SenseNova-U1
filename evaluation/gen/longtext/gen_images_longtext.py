@@ -28,8 +28,12 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--model-path", required=True, help="Local checkpoint path or HF model id.")
     parser.add_argument("--output-dir", required=True, help="Directory to save generated images.")
     parser.add_argument("--data-path", default=None, help="LongText JSONL path.")
-    parser.add_argument("--lang", default="en", choices=["en", "zh"], help="Default data split when --data-path is not set.")
-    parser.add_argument("--aspect-ratio", default=DEFAULT_ASPECT_RATIO, help="Output aspect ratio key in SUPPORTED_RESOLUTIONS.")
+    parser.add_argument(
+        "--lang", default="en", choices=["en", "zh"], help="Default data split when --data-path is not set."
+    )
+    parser.add_argument(
+        "--aspect-ratio", default=DEFAULT_ASPECT_RATIO, help="Output aspect ratio key in SUPPORTED_RESOLUTIONS."
+    )
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--dtype", default="bfloat16", choices=["bfloat16", "float16", "float32"])
     parser.add_argument("--cfg-scale", type=float, default=4.0)
@@ -73,10 +77,7 @@ def _resolve_image_size(
     supported_resolutions: dict[str, tuple[int, int]],
 ) -> tuple[int, int]:
     if aspect_ratio not in supported_resolutions:
-        raise ValueError(
-            f"Unsupported aspect ratio: {aspect_ratio!r}. "
-            f"Supported: {sorted(supported_resolutions)}"
-        )
+        raise ValueError(f"Unsupported aspect ratio: {aspect_ratio!r}. Supported: {sorted(supported_resolutions)}")
     return supported_resolutions[aspect_ratio]
 
 
@@ -90,10 +91,7 @@ def main() -> None:
     print(f"[longtext] loaded {len(items)} items from {data_path}")
 
     sensenova_u1.set_attn_backend(args.attn_backend)
-    print(
-        f"[longtext] attn_backend={args.attn_backend!r} "
-        f"effective={sensenova_u1.effective_attn_backend()!r}"
-    )
+    print(f"[longtext] attn_backend={args.attn_backend!r} effective={sensenova_u1.effective_attn_backend()!r}")
 
     engine = SenseNovaU1T2I(
         model_path=args.model_path,
@@ -133,10 +131,7 @@ def main() -> None:
             f"length={item.get('length')} text_length={item.get('text_length')} -> {out_path}"
         )
 
-    print(
-        f"[longtext] done: items={len(items)} "
-        f"generated={generated} skipped={skipped} output_dir={output_dir}"
-    )
+    print(f"[longtext] done: items={len(items)} generated={generated} skipped={skipped} output_dir={output_dir}")
 
 
 if __name__ == "__main__":
