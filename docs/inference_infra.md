@@ -85,3 +85,21 @@ Fill in measured numbers for each machine and deployment profile.
 | L40S | TP2+CFG2 / separate | 0.443 | 25.62 |
 
 In NEO-Unify, the KV cache for the generation stage is provided by the understanding module, so T2I (generation) and I2I (editing) have very similar runtime characteristics. For brevity, we report only T2I latency here.
+
+
+### Cross-Model Speed Comparison
+
+The table below compares the latency of a single diffusion step for
+**2048x2048** image generation with **CFG enabled**. Unless otherwise noted,
+all measurements are taken on **H100**; the `NEO-Unify (TP2+CFG2)` result uses
+`2x H100`.
+
+| Model | Understanding | Generation | Per-step latency (s/step) |
+| ----- | ------------: | ---------: | -------------------------: |
+| Qwen-Image-2512 | 7B | 20B | 1.478 |
+| Z-Image | 4B | 6B | 1.110 |
+| GLM-Image | 9B | 7B | 1.394 |
+| ERNIE-Image | 8B | 8B | 1.565 |
+| LongCat-Image | 8B | 6B | 0.796 |
+| NEO-Unify (1x, no TP/CFG parallel) | 8B | 8B | 0.312 |
+| NEO-Unify (TP2+CFG2) | 8B | 8B | 0.158 |

@@ -18,24 +18,33 @@
 ## 🌟 Overview
 
 🚀 **SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) where models no longer translate between modalities, but think and act across them natively. 
-Multimodal AI is no longer about connecting separate systems, but about building a unified one and trusting the necessary capabilities to emerge from within.
+Multimodal AI is shifting from integration to unification—where capabilities emerge from within.
+Our work sits within the *pre-train–driven Chat era*, yet gestures toward the next step: *post-train–driven Agent era*.
 
 
-#### 🏗️ *Key Pillars :*      
+#### 🏗️ *Key Pillars:*      
 
-- 🖼️ Near-Lossless Visual Interface: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
+- 🖼️ **Near-Lossless Visual Interface**: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
 
-- 🧠 Native Mixture-of-Transformers: Modality-agnostic reasoning with high efficiency and minimal conflict !   
+- 🧠 **Native Mixture-of-Transformers**: Modality-agnostic reasoning with high efficiency and minimal conflict !   
 
-- 🔗 Unified End-to-End Learning: Modeling directly on pixels + text from the first principles !   
-  
+- 🔗 **Unified End-to-End Learning**: Modeling directly on pixels + text from the first principles !   
 
-#### 🌍 *Beyond Multimodality :* 
 
-- 🤖 Vision–Language–Action (VLA)      
+#### ✨ *What This Unlocks:*
 
+- 🏆 **Open-source SOTA efficiency**: U1 sets a new open-source SOTA for unified understanding and generation, and even at a small scale, delivers performance comparable to commercial models with outstanding cost efficiency.
+
+- 📖 **Native interleaved image-text generation**: U1 can generate coherent interleaved text and images in a single flow, unlocking use case such as practical guides and travel diaries that combine clear communication with vivid storytelling, and turn complex information into easy-to-grasp visuals.
+
+- 📰 **High-density information rendering**: U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for knowledge illustration, posters, PPTs, comics, resumes, and other information-rich formats.
+
+#### 🌍 *Beyond Multimodality:* 
+
+- 🤖 Vision–Language–Action (VLA)
 - 🌐 World Modeling (WM)
 
+In this release, we open-sourced the *Lite*-series models as a first step, with stronger models and further exploration still to come.
 
 ## 📣 Updated News
 
@@ -241,7 +250,7 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 
 > Refer to the [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills) for installation and usage details.
 
-<details open>
+<details>
 <summary>✨ Some interesting cases produced through our Skills and Studio</summary>
 
 <p align="center">
