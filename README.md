@@ -36,7 +36,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 
 - 📖 **Native interleaved image-text generation**: U1 can generate coherent interleaved text and images in a single flow, unlocking use case such as visual manuals for clear information delivery and travel diaries for vivid, narrative storytelling.
 
-- 📰 **High-density information rendering**: U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for encyclopedic knowledge, life guides, resumes, and other information-rich formats.
+- 📰 **High-density information rendering**: U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for encyclopedic knowledge, practical guides, comics, resumes, and other information-rich formats.
 
 #### 🌍 *Beyond Multimodality:* 
 
