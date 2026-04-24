@@ -9,7 +9,7 @@ EVAL_OUTPUT_DIR="outputs/sensenova/bizgeneval_eval"
 # Evaluation settings
 API_BASE="http://your-api-base/v1"
 API_KEY="your-api-key"
-JUDGE_MODEL="gemini-3.1-pro-preview"
+JUDGE_MODEL="gemini-3-pro-preview"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "${REPO_ROOT}"

@@ -90,7 +90,7 @@ class JudgeClient:
             except TimeoutError:
                 if attempt >= self.max_retries:
                     raise
-            delay = min(self.retry_backoff_cap, self.retry_backoff_base ** attempt)
+            delay = min(self.retry_backoff_cap, self.retry_backoff_base**attempt)
             time.sleep(delay)
         raise RuntimeError("Judge request failed after retries.")
 

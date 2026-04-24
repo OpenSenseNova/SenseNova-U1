@@ -238,7 +238,7 @@ def eval_one(
         return None
 
     system_prompt, user_template = EVAL_PROMPTS[eval_tag]
-    raw_output = client.judge_image_raw(
+    raw_output = client.judge_image_text(
         image_path=image_path,
         system_prompt=system_prompt,
         user_prompt=_render_prompt(user_template, questions),
@@ -325,47 +325,11 @@ def main() -> None:
             return "cached"
         return "done"
 
-    if args.concurrency > 1:
-        with ThreadPoolExecutor(max_workers=args.concurrency) as pool:
-            futures = {
-                pool.submit(
-                    eval_one,
-                    item,
-                    image_dir=image_dir,
-                    items_dir=items_dir,
-                    client=client,
-                    error_alpha=ERROR_ALPHA,
-                    force_rerun=args.force_rerun,
-                    write_lock=write_lock,
-                ): item
-                for item in tasks
-            }
-            total = len(futures)
-            progress = tqdm(total=total, desc="bizgeneval eval", dynamic_ncols=True) if tqdm else None
-            try:
-                for done, future in enumerate(as_completed(futures), start=1):
-                    item = futures[future]
-                    try:
-                        result = future.result()
-                    except Exception as exc:
-                        _record_error(int(item["_prompt_id"]), exc)
-                        result = None
-                    results.append(result)
-                    status = _result_status(result)
-                    if progress is not None:
-                        progress.update(1)
-                        progress.set_postfix_str(f"prompt_id={item['_prompt_id']} {status}")
-                    else:
-                        print(f"[{done}/{total}] prompt_id={item['_prompt_id']} {status}")
-            finally:
-                if progress is not None:
-                    progress.close()
-    else:
-        total = len(tasks)
-        iterator = tqdm(tasks, total=total, desc="bizgeneval eval", dynamic_ncols=True) if tqdm else tasks
-        for done, item in enumerate(iterator, start=1):
-            try:
-                result = eval_one(
+    max_workers = max(1, args.concurrency)
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = {
+            pool.submit(
+                eval_one,
                 item,
                 image_dir=image_dir,
                 items_dir=items_dir,
@@ -373,16 +337,29 @@ def main() -> None:
                 error_alpha=ERROR_ALPHA,
                 force_rerun=args.force_rerun,
                 write_lock=write_lock,
-            )
-            except Exception as exc:
-                _record_error(int(item["_prompt_id"]), exc)
-                result = None
-            results.append(result)
-            status = _result_status(result)
-            if tqdm and hasattr(iterator, "set_postfix_str"):
-                iterator.set_postfix_str(f"prompt_id={item['_prompt_id']} {status}")
-            else:
-                print(f"[{done}/{total}] prompt_id={item['_prompt_id']} {status}")
+            ): item
+            for item in tasks
+        }
+        total = len(futures)
+        progress = tqdm(total=total, desc="bizgeneval eval", dynamic_ncols=True) if tqdm else None
+        try:
+            for done, future in enumerate(as_completed(futures), start=1):
+                item = futures[future]
+                try:
+                    result = future.result()
+                except Exception as exc:
+                    _record_error(int(item["_prompt_id"]), exc)
+                    result = None
+                results.append(result)
+                status = _result_status(result)
+                if progress is not None:
+                    progress.update(1)
+                    progress.set_postfix_str(f"prompt_id={item['_prompt_id']} {status}")
+                else:
+                    print(f"[{done}/{total}] prompt_id={item['_prompt_id']} {status}")
+        finally:
+            if progress is not None:
+                progress.close()
 
     valid_results = [result for result in results if result]
     if not valid_results:
@@ -418,7 +395,7 @@ def main() -> None:
         "benchmark": "bizgeneval",
         "data_path": str(Path(args.data_path).resolve()),
         "eval_provider": "judge_client",
-        "eval_model": client.model,
+        "judge_model": client.model,
         "error_alpha": ERROR_ALPHA,
         "easy_hard_error_alpha": ERROR_ALPHA * 2,
         "items": len(final_records),

@@ -118,10 +118,7 @@ def main() -> None:
     print(f"[bizgeneval] loaded {len(items)} items from {data_path}")
 
     sensenova_u1.set_attn_backend(args.attn_backend)
-    print(
-        f"[bizgeneval] attn_backend={args.attn_backend!r} "
-        f"effective={sensenova_u1.effective_attn_backend()!r}"
-    )
+    print(f"[bizgeneval] attn_backend={args.attn_backend!r} effective={sensenova_u1.effective_attn_backend()!r}")
 
     engine = SenseNovaU1T2I(
         model_path=args.model_path,
@@ -162,10 +159,7 @@ def main() -> None:
             f"dimension={item.get('dimension')} -> {out_path}"
         )
 
-    print(
-        f"[bizgeneval] done: items={len(items)} "
-        f"generated={generated} skipped={skipped} output_dir={output_dir}"
-    )
+    print(f"[bizgeneval] done: items={len(items)} generated={generated} skipped={skipped} output_dir={output_dir}")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-
 ATTRIBUTE_PROMPT_SYSTEM_V2 = """
 You are an expert visual attribute evaluator.
 
@@ -239,7 +238,6 @@ Evaluate the following Yes/No knowledge/reasoning questions based on the image:
 
 {checklist}
 """
-
 
 
 CHART_USER_TEMPLATE = """
