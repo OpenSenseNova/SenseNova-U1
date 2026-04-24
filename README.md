@@ -18,7 +18,8 @@
 ## 🌟 Overview
 
 🚀 **SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) where models no longer translate between modalities, but think and act across them natively. 
-Multimodal AI is no longer about connecting separate systems, but about building a unified one and trusting the necessary capabilities to emerge from within.
+Multimodal AI is shifting from integration to unification—where capabilities emerge from within.
+Our work sits within the pre-train–driven Chat era, yet gestures toward the next step: post-train–driven Agent era.
 
 
 #### 🏗️ *Key Pillars:*      
