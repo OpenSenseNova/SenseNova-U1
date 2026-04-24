@@ -247,7 +247,7 @@
 
 > 安装与使用详情请参考 [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills)。
 
-<details open>
+<details>
 <summary>✨ 通过我们 Skills 和 Studio 制作的有趣案例</summary>
 <p align="center">
   <img src="docs/assets/showcases/t2i_infographic/u1-case.webp" alt="Interleaved Benchmarks">
