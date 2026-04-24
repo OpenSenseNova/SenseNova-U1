@@ -34,7 +34,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 
 - 🏆 *Open-source SOTA efficiency*: U1 sets a new open-source SOTA for unified understanding and generation, and even at a small scale, delivers results comparable to commercial models with extrem cost efficiency.
 
-- 📖 *Native interleaved image-text generation*: U1 can generate coherent interleaved text and images in a single flow, enabling visual outputs such as visual manuals and travel diaries that make complex information instantly understandable.
+- 📖 *Native interleaved image-text generation*: U1 can generate coherent interleaved text and images in a single flow, unlocking use case such as visual manuals for clear information delivery and travel diaries for vivid, narrative storytelling.
 
 - 📰 *High-density information rendering*: U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for encyclopedic knowledge, life guides, resumes, and other information-rich formats.
 
