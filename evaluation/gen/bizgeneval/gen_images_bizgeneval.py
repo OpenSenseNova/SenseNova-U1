@@ -12,6 +12,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(repo_root / "src"))
 
 import torch
+
 import sensenova_u1
 from examples.t2i.inference import SenseNovaU1T2I
 

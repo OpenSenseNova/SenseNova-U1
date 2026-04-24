@@ -15,8 +15,8 @@ if __package__ in {None, ""}:
     repo_root = Path(__file__).resolve().parents[3]
     sys.path.insert(0, str(repo_root))
 
-from evaluation.gen.common.judge import JudgeClient
 from evaluation.gen.bizgeneval.eval_prompt import EVAL_GENERATION_PROMPTS as EVAL_PROMPTS
+from evaluation.gen.common.judge import JudgeClient
 
 try:
     from tqdm import tqdm
