@@ -40,8 +40,7 @@ Multimodal AI is no longer about connecting separate systems, but about building
 
 #### 🌍 *Beyond Multimodality:* 
 
-- 🤖 Vision–Language–Action (VLA)      
-
+- 🤖 Vision–Language–Action (VLA)
 - 🌐 World Modeling (WM)
 
 
