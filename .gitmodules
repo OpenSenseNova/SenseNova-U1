@@ -1,0 +1,4 @@
+[submodule "evaluation/understanding/neo-evalscope"]
+	path = evaluation/understanding/neo-evalscope
+	url = https://github.com/OpenSenseNova/evalscope.git
+	branch = neo
