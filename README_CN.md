@@ -19,23 +19,31 @@
 
 🚀 **SenseNova-U1** 是基于 **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)** 打造的原生统一多模态范式：模型不再需要在不同模态之间来回"翻译"，而是以原生方式在模态之间思考与行动。
 多模态 AI 不再是把多个独立系统拼接起来，而是构建一个统一系统，并相信所需要的能力会从中自然涌现。
+我们的工作立足于*预训练主导的Chat时代*，也指向了下一阶段: *后训练主导的Agent时代*。
 
 
 #### 🏗️ *核心支柱：*
 
-- 🖼️ 近无损视觉接口：同时保留语义丰富度与像素保真度（无需 VAE 或 Vision Encoder）！
+- 🖼️ **近无损视觉接口**：同时保留语义丰富度与像素保真度（无需 VAE 或 Vision Encoder）！
 
-- 🧠 原生混合 Transformer 架构（MoT）：模态无关的推理，高效率、低冲突！
+- 🧠 **原生混合 Transformer 架构（MoT）**：模态无关的推理，高效率、低冲突！
 
-- 🔗 统一端到端学习：从第一性原理出发，直接对像素与文本进行建模！
+- 🔗 **统一端到端学习**：从第一性原理出发，直接对像素与文本进行建模！
 
+#### ✨ *能力突破:*
 
-#### 🌍 *超越多模态：*
+- 🏆 **开源 SOTA 级效率优势**：U1 在统一理解与生成上刷新开源 SOTA，即使在较小模型规模下，仍可实现媲美商用模型的表现，并具备出色的性价比。
+
+- 📖 **原生图文交错生成**：U1 可以在单次生成流程中连贯地产出图文交错内容，支持视生活指南等高效信息传达场景，也支持旅行日记等更具叙事感与表现力的内容创作，把复杂信息浓缩成一眼看懂的图示。
+
+- 📰 **高密度信息生成能力**：U1 在高密度视觉信息表达方面展现出强大能力，能够生成结构丰富、排版复杂的内容，适用于知识图解、海报、PPT、漫画、简历等多种信息密集型场景。
+
+#### 🌍 *不止于多模态：*
 
 - 🤖 视觉-语言-动作（VLA）
-
 - 🌐 世界建模（WM）
 
+在本次发布中，我们率先开源了 *Lite* 系列模型作为第一步，未来还将沿着这一方向继续探索，并推出更强大的模型。
 
 ## 📣 最新动态
 
@@ -102,11 +110,44 @@
 <details>
 <summary>🖼️ 文生图（信息图）</summary>
 
-| | | |
-| :---: | :---: | :---: |
-| [<img width="300" alt="t2i landscape 0001" src="./docs/assets/showcases/t2i_infographic/0001_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./docs/assets/showcases/t2i_infographic/0002_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./docs/assets/showcases/t2i_infographic/0003_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0003_2720x1536.webp) |
-| [<img width="300" alt="t2i square 0004" src="./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp) |
-| [<img width="200" alt="t2i portrait 0007" src="./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp) |
+<table align="center">
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0004.webp"><img width="300" alt="t2i landscape 0001" src="./docs/assets/showcases/t2i_infographic/0004.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0012.webp"><img width="300" alt="t2i landscape 0002" src="./docs/assets/showcases/t2i_infographic/0012.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0005.webp"><img width="300" alt="t2i landscape 0003" src="./docs/assets/showcases/t2i_infographic/0005.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0018.webp"><img width="300" alt="t2i landscape 0004" src="./docs/assets/showcases/t2i_infographic/0018.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0024.webp"><img width="300" alt="t2i landscape 0005" src="./docs/assets/showcases/t2i_infographic/0024.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0013.webp"><img width="300" alt="t2i landscape 0006" src="./docs/assets/showcases/t2i_infographic/0013.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0006.webp"><img width="300" alt="t2i landscape 0007" src="./docs/assets/showcases/t2i_infographic/0006.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0015.webp"><img width="300" alt="t2i landscape 0008" src="./docs/assets/showcases/t2i_infographic/0015.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0025.webp"><img width="300" alt="t2i landscape 0009" src="./docs/assets/showcases/t2i_infographic/0025.webp"></a></td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0000.webp"><img width="220" alt="t2i landscape 0010" src="./docs/assets/showcases/t2i_infographic/0000.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0003.webp"><img width="220" alt="t2i landscape 0011" src="./docs/assets/showcases/t2i_infographic/0003.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0001.webp"><img width="220" alt="t2i landscape 0012" src="./docs/assets/showcases/t2i_infographic/0001.webp"></a></td>
+      <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0022.webp"><img width="220" alt="t2i landscape 0012" src="./docs/assets/showcases/t2i_infographic/0022.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0016.webp"><img width="220" alt="t2i image 0022" src="./docs/assets/showcases/t2i_infographic/0016.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0010.webp"><img width="220" alt="t2i image 0020" src="./docs/assets/showcases/t2i_infographic/0010.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0007.webp"><img width="220" alt="t2i image 0021" src="./docs/assets/showcases/t2i_infographic/0007.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0021.webp"><img width="220" alt="t2i image 0023" src="./docs/assets/showcases/t2i_infographic/0021.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0009.webp"><img width="220" alt="t2i image 0024" src="./docs/assets/showcases/t2i_infographic/0009.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0020.webp"><img width="220" alt="t2i image 0025" src="./docs/assets/showcases/t2i_infographic/0020.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0008.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0027" src="./docs/assets/showcases/t2i_infographic/0002.webp"></a></td>
+  </tr>
+</table>
 
 </details>
 
@@ -241,7 +282,7 @@
 
 > 安装与使用详情请参考 [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills)。
 
-<details open>
+<details>
 <summary>✨ 通过我们 Skills 和 Studio 制作的有趣案例</summary>
 <p align="center">
   <img src="docs/assets/showcases/t2i_infographic/u1-case.webp" alt="Interleaved Benchmarks">

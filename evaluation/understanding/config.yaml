@@ -1,0 +1,40 @@
+eval_backend: Native
+eval_type: openai_api
+eval_batch_size: 64
+api_url: http://app-8ddd38ba09534bd7b2f35d2ed5a7554f.ns-devoversea-d41e68bd.svc.cluster.local:8000/v1/ #lightllm 部署
+model: SenseNova-U1
+datasets:
+  - mmmu_pro
+  - mmlu_pro
+  - mm_bench
+  - ai2d
+  - math_vista
+  - ifeval
+dataset_args:
+  remove_until: </think>
+ignore_errors: true
+generation_config:
+  stream: false
+  temperature: 0.6
+  timeout: 300
+  max_tokens: 32768
+  top_p: 0.95
+  extra_body:
+    top_k: 20
+    repetition_penalty: 1.05
+    chat_template_kwargs:
+      enable_thinking: true
+
+judge_worker_num: 64
+judge_model_args: {
+  "api_key" : "",
+  "api_url" : "",
+  "model_id" : "gpt-4o-mini-2024-07-18",
+  "generation_config":{
+    "max_tokens" : 4096,
+    "timeout": 300
+  }
+}
+use_cache: results/
+work_dir: results/
+no_timestamp: true

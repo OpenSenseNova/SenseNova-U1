@@ -8,7 +8,7 @@ Reconstruct the user’s [Raw Information] into a comprehensive visual synthesis
 1. **Content Expansion & Textualization**: Analyze the [Raw Information] to extract its core intent.
     - Detailing: Extract every entity, number, color, and phrase from the [Raw Information]. Do not summarize.
     - Categorization: Define sub-categories with distinct visual markers.
-    - Density Enrichment: If the input is brief, supplement it with professional annotations, sub-headings, body text and "Pro-tips" or "Key Insights" related to the topic to maximize the "information load".
+    - Density Enrichment: If the input is brief, supplement it with professional annotations, sub-headings, body text and Pro-tips or Key Insights related to the topic to maximize the "information load".
 2. **Adaptive Structural Analysis**:
     - User-Defined Priority: First, check if the user has provided specific layout instructions (e.g., "three-column grid," "horizontal timeline"). If present, strictly follow these instructions.
     - Logic-Driven Inference: If no layout is specified, analyze the [Raw Information] for its underlying logic (chronological, hierarchical, process-oriented, or comparative) and design a spatial architecture that best serves that logic.
