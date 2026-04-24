@@ -19,7 +19,7 @@
 
 🚀 **SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) where models no longer translate between modalities, but think and act across them natively. 
 Multimodal AI is shifting from integration to unification—where capabilities emerge from within.
-Our work sits within the pre-train–driven Chat era, yet gestures toward the next step: post-train–driven Agent era.
+Our work sits within the *pre-train–driven Chat era*, yet gestures toward the next step: *post-train–driven Agent era*.
 
 
 #### 🏗️ *Key Pillars:*      
@@ -44,6 +44,7 @@ Our work sits within the pre-train–driven Chat era, yet gestures toward the ne
 - 🤖 Vision–Language–Action (VLA)
 - 🌐 World Modeling (WM)
 
+In this release, we open-sourced the *Lite*-series models as a first step, with stronger models and further exploration still to come.
 
 ## 📣 Updated News
 
