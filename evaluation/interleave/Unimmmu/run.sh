@@ -27,10 +27,11 @@ timestep_shift=3.0
 cfg_norm=none
 CFG_INTERVAL_TAG=$(printf "%s_%s" "$cfg_interval_start" "$cfg_interval_end" | sed "s/-/neg/g; s/\.//g")
 TIMESTEP_TAG=$(printf "%s" "$timestep_shift" | sed "s/-/neg/g; s/\.//g")
-OUTPUT_DIR=<OUTPUT_ROOT>/unimmmu/${MODEL_NAME}_${STEP}_cfg_${img_cfg_scale//./}_${cfg_scale//./}_interval_${CFG_INTERVAL_TAG}_ts_${TIMESTEP_TAG}_norm_${cfg_norm}
+OUTPUT_DIR="${OUTPUT_DIR:-<OUTPUT_ROOT>/unimmmu/${MODEL_NAME}_${STEP}_cfg_${img_cfg_scale//./}_${cfg_scale//./}_interval_${CFG_INTERVAL_TAG}_ts_${TIMESTEP_TAG}_norm_${cfg_norm}}"
 
 # Data path
 DATA_PATH="${DATA_PATH:-<DATA_ROOT>/unimmmu/vqa/unimmmu_direct.jsonl}"
+BENCHMARK_PATH="${BENCHMARK_PATH:-}"
 
 # ============================================================================
 # i2t mode - Test run with limited samples
@@ -38,9 +39,9 @@ DATA_PATH="${DATA_PATH:-<DATA_ROOT>/unimmmu/vqa/unimmmu_direct.jsonl}"
 
 run_i2t_test() {
     python Unimmmu/inference_unimmmu.py \
-        --model_path ${MODEL_PATH} \
-        --data_path ${DATA_PATH} \
-        --output_dir ${OUTPUT_DIR}/i2t_test \
+        --model_path "${MODEL_PATH}" \
+        --data_path "${DATA_PATH}" \
+        --output_dir "${OUTPUT_DIR}/i2t_test" \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
         --inference_mode i2t \
@@ -54,9 +55,9 @@ run_i2t_test() {
 
 run_i2t() {
     python Unimmmu/inference_unimmmu.py \
-        --model_path ${MODEL_PATH} \
-        --data_path ${DATA_PATH} \
-        --output_dir ${OUTPUT_DIR}/i2t \
+        --model_path "${MODEL_PATH}" \
+        --data_path "${DATA_PATH}" \
+        --output_dir "${OUTPUT_DIR}/i2t" \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
         --inference_mode i2t \
@@ -71,12 +72,12 @@ run_i2t_multi() {
     NUM_GPUS=${1:-8}
 
     torchrun \
-        --nproc_per_node=${NUM_GPUS} \
+        --nproc_per_node="${NUM_GPUS}" \
         --master_port=29502 \
         Unimmmu/inference_unimmmu.py \
-        --model_path ${MODEL_PATH} \
-        --data_path ${DATA_PATH} \
-        --output_dir ${OUTPUT_DIR}/i2t \
+        --model_path "${MODEL_PATH}" \
+        --data_path "${DATA_PATH}" \
+        --output_dir "${OUTPUT_DIR}/i2t" \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
         --inference_mode i2t \
@@ -89,9 +90,9 @@ run_i2t_multi() {
 
 run_i2t_resume() {
     python Unimmmu/inference_unimmmu.py \
-        --model_path ${MODEL_PATH} \
-        --data_path ${DATA_PATH} \
-        --output_dir ${OUTPUT_DIR}/i2t \
+        --model_path "${MODEL_PATH}" \
+        --data_path "${DATA_PATH}" \
+        --output_dir "${OUTPUT_DIR}/i2t" \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
         --inference_mode i2t \
@@ -105,16 +106,15 @@ run_i2t_resume() {
 
 run_interleave_test() {
     python Unimmmu/inference_unimmmu.py \
-        --model_path ${MODEL_PATH} \
-        --data_path ${DATA_PATH} \
-        --output_dir ${OUTPUT_DIR}/interleave_test \
+        --model_path "${MODEL_PATH}" \
+        --data_path "${DATA_PATH}" \
+        --output_dir "${OUTPUT_DIR}/interleave_test" \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale ${cfg_scale} \
-        --img_cfg_scale ${img_cfg_scale} \
-        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
-        --cfg_norm ${cfg_norm} \
-        --timestep_shift ${timestep_shift} \
+        --cfg_scale "${cfg_scale}" \
+        --img_cfg_scale "${img_cfg_scale}" \
+        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
+        --cfg_norm "${cfg_norm}" \
         --num_steps 50 \
         --inference_mode interleave \
         --timestep_shift 1.0 \
@@ -128,16 +128,15 @@ run_interleave_test() {
 
 run_interleave() {
     python Unimmmu/inference_unimmmu.py \
-        --model_path ${MODEL_PATH} \
-        --data_path ${DATA_PATH} \
-        --output_dir ${OUTPUT_DIR}/interleave \
+        --model_path "${MODEL_PATH}" \
+        --data_path "${DATA_PATH}" \
+        --output_dir "${OUTPUT_DIR}/interleave" \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale ${cfg_scale} \
-        --img_cfg_scale ${img_cfg_scale} \
-        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
-        --cfg_norm ${cfg_norm} \
-        --timestep_shift ${timestep_shift} \
+        --cfg_scale "${cfg_scale}" \
+        --img_cfg_scale "${img_cfg_scale}" \
+        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
+        --cfg_norm "${cfg_norm}" \
         --num_steps 50 \
         --inference_mode interleave \
         --timestep_shift 1.0 \
@@ -152,19 +151,18 @@ run_interleave_multi() {
     NUM_GPUS=${1:-8}
 
     torchrun \
-        --nproc_per_node=${NUM_GPUS} \
+        --nproc_per_node="${NUM_GPUS}" \
         --master_port=29503 \
         Unimmmu/inference_unimmmu.py \
-        --model_path ${MODEL_PATH} \
-        --data_path ${DATA_PATH} \
-        --output_dir ${OUTPUT_DIR}/interleave \
+        --model_path "${MODEL_PATH}" \
+        --data_path "${DATA_PATH}" \
+        --output_dir "${OUTPUT_DIR}/interleave" \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale ${cfg_scale} \
-        --img_cfg_scale ${img_cfg_scale} \
-        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
-        --cfg_norm ${cfg_norm} \
-        --timestep_shift ${timestep_shift} \
+        --cfg_scale "${cfg_scale}" \
+        --img_cfg_scale "${img_cfg_scale}" \
+        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
+        --cfg_norm "${cfg_norm}" \
         --num_steps 50 \
         --inference_mode interleave \
         --timestep_shift 1.0 \
@@ -177,16 +175,15 @@ run_interleave_multi() {
 
 run_interleave_resume() {
     python Unimmmu/inference_unimmmu.py \
-        --model_path ${MODEL_PATH} \
-        --data_path ${DATA_PATH} \
-        --output_dir ${OUTPUT_DIR}/interleave \
+        --model_path "${MODEL_PATH}" \
+        --data_path "${DATA_PATH}" \
+        --output_dir "${OUTPUT_DIR}/interleave" \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale ${cfg_scale} \
-        --img_cfg_scale ${img_cfg_scale} \
-        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
-        --cfg_norm ${cfg_norm} \
-        --timestep_shift ${timestep_shift} \
+        --cfg_scale "${cfg_scale}" \
+        --img_cfg_scale "${img_cfg_scale}" \
+        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
+        --cfg_norm "${cfg_norm}" \
         --num_steps 50 \
         --inference_mode interleave \
         --timestep_shift 1.0 \
@@ -202,13 +199,20 @@ run_score() {
     INPUT_FILE=${1:-"${OUTPUT_DIR}/i2t/unimmmu_results.jsonl"}
     OUTPUT_SCORE_DIR=${2:-""}
 
+    if [ -z "${BENCHMARK_PATH}" ]; then
+        echo "Skipping Unimmmu scoring: set BENCHMARK_PATH to the benchmark repository path."
+        return 0
+    fi
+
     if [ -n "${OUTPUT_SCORE_DIR}" ]; then
         python Unimmmu/calculate_score.py \
-            --input_file ${INPUT_FILE} \
-            --output_dir ${OUTPUT_SCORE_DIR}
+            --input_file "${INPUT_FILE}" \
+            --output_dir "${OUTPUT_SCORE_DIR}" \
+            --benchmark_path "${BENCHMARK_PATH}"
     else
         python Unimmmu/calculate_score.py \
-            --input_file ${INPUT_FILE}
+            --input_file "${INPUT_FILE}" \
+            --benchmark_path "${BENCHMARK_PATH}"
     fi
 }
 
@@ -227,7 +231,7 @@ case "$1" in
         run_score "${OUTPUT_DIR}/i2t/unimmmu_results.jsonl"
         ;;
     "i2t_multi")
-        run_i2t_multi ${2}
+        run_i2t_multi "${2}"
         run_score "${OUTPUT_DIR}/i2t/unimmmu_results.jsonl"
         ;;
     "i2t_resume")
@@ -239,11 +243,11 @@ case "$1" in
         run_score "${OUTPUT_DIR}/interleave_test/unimmmu_results.jsonl"
         ;;
     "interleave")
-        run_interleave_multi 8
+        run_interleave
         run_score "${OUTPUT_DIR}/interleave/unimmmu_results.jsonl"
         ;;
     "interleave_multi")
-        run_interleave_multi ${2}
+        run_interleave_multi "${2}"
         run_score "${OUTPUT_DIR}/interleave/unimmmu_results.jsonl"
         ;;
     "interleave_resume")
@@ -255,7 +259,7 @@ case "$1" in
         bash Unimmmu/launch_device_map_multi.sh
         ;;
     "score")
-        run_score ${2} ${3}
+        run_score "${2:-}" "${3:-}"
         ;;
     "" )
         run_interleave_multi 8
@@ -273,7 +277,7 @@ case "$1" in
         echo "                      Usage: $0 i2t_multi [num_gpus]"
         echo "  i2t_resume        - Resume previous i2t run"
         echo "  interleave_test   - Test with 5 samples (interleave mode)"
-        echo "  interleave        - Default run on 8 GPUs (interleave mode)"
+        echo "  interleave        - Single GPU full run (interleave mode)"
         echo "  interleave_multi  - Multi-GPU run (interleave mode)"
         echo "                      Usage: $0 interleave_multi [num_gpus]"
         echo "  interleave_resume - Resume previous interleave run"
@@ -291,6 +295,8 @@ case "$1" in
         echo "  jigsaw:   150 (binary choice, 3 images)"
         echo "  maze:     150 (path finding, 1 image)"
         echo "  sliding:   84 (puzzle solving, 2 images)"
+        echo ""
+        echo "Set BENCHMARK_PATH before enabling Unimmmu scoring."
         echo ""
         echo "Before running, modify MODEL_PATH in this script."
         echo "Default timestep_shift: ${timestep_shift}"
