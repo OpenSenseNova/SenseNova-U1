@@ -26,6 +26,11 @@ from evaluation.gen.common.judge import JudgeClient
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent / "data"
 
 
+# Reference:
+#   IGenBench: Benchmarking the Reliability of Text-to-Infographic Generation
+#   https://arxiv.org/abs/2601.04498
+
+
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate IGenBench images with direct image-question judging.")
     parser.add_argument("--image-dir", required=True, help="Directory containing generated IGenBench images.")

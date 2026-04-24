@@ -22,6 +22,12 @@ DEFAULT_EN_DATA_PATH = DEFAULT_DATA_DIR / "text_prompts.jsonl"
 DEFAULT_ZH_DATA_PATH = DEFAULT_DATA_DIR / "text_prompts_zh.jsonl"
 
 
+# Reference:
+#   X-Omni: Reinforcement Learning Makes Discrete Autoregressive Image
+#   Generative Models Great Again
+#   https://arxiv.org/abs/2507.22058
+
+
 def clean_and_remove_hallucinations(text: str) -> str:
     keywords_list = ["addCriterion", "No text recognized."]
     s = text

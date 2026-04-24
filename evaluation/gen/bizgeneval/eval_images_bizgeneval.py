@@ -26,6 +26,10 @@ except ImportError:
 DEFAULT_DATA_PATH = Path(__file__).resolve().parent / "data" / "test.jsonl"
 ERROR_ALPHA = 0.1
 
+# Reference:
+#   BizGenEval: A Systematic Benchmark for Commercial Visual Content Generation
+#   https://arxiv.org/abs/2603.25732
+
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate BizGenEval images with Gemini/OpenAI-compatible judge.")

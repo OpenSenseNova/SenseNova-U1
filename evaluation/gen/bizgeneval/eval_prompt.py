@@ -1,3 +1,8 @@
+# Reference:
+#   Evaluation prompt adapted from BizGenEval:
+#   BizGenEval: A Systematic Benchmark for Commercial Visual Content Generation
+#   https://arxiv.org/abs/2603.25732
+
 ATTRIBUTE_PROMPT_SYSTEM_V2 = """
 You are an expert visual attribute evaluator.
 
