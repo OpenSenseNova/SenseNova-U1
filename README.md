@@ -23,20 +23,20 @@ Multimodal AI is no longer about connecting separate systems, but about building
 
 #### 🏗️ *Key Pillars:*      
 
-- 🖼️ Near-Lossless Visual Interface: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
+- 🖼️ **Near-Lossless Visual Interface**: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
 
-- 🧠 Native Mixture-of-Transformers: Modality-agnostic reasoning with high efficiency and minimal conflict !   
+- 🧠 **Native Mixture-of-Transformers**: Modality-agnostic reasoning with high efficiency and minimal conflict !   
 
-- 🔗 Unified End-to-End Learning: Modeling directly on pixels + text from the first principles !   
+- 🔗 **Unified End-to-End Learning**: Modeling directly on pixels + text from the first principles !   
 
 
 #### ✨ *What This Unlocks:*
 
-- 🏆 *Open-source SOTA efficiency*: U1 sets a new open-source SOTA for unified understanding and generation, and even at a small scale, delivers results comparable to commercial models with extrem cost efficiency.
+- 🏆 **Open-source SOTA efficiency**: U1 sets a new open-source SOTA for unified understanding and generation, and even at a small scale, delivers results comparable to commercial models with extrem cost efficiency.
 
-- 📖 *Native interleaved image-text generation*: U1 can generate coherent interleaved text and images in a single flow, unlocking use case such as visual manuals for clear information delivery and travel diaries for vivid, narrative storytelling.
+- 📖 **Native interleaved image-text generation**: U1 can generate coherent interleaved text and images in a single flow, unlocking use case such as visual manuals for clear information delivery and travel diaries for vivid, narrative storytelling.
 
-- 📰 *High-density information rendering*: U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for encyclopedic knowledge, life guides, resumes, and other information-rich formats.
+- 📰 **High-density information rendering**: U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for encyclopedic knowledge, life guides, resumes, and other information-rich formats.
 
 #### 🌍 *Beyond Multimodality:* 
 
