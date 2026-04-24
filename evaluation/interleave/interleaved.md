@@ -4,13 +4,13 @@
 
 ## 目录与执行方式
 
-当前目录：
+### 目录
 
 ```text
 evaluation/interleave
 ```
 
-脚本列表：
+### 脚本列表
 
 - `BabyVision/infer_babyvision.py`
 - `BabyVision/eval_babyvision.py`
@@ -22,44 +22,52 @@ evaluation/interleave
 - `Realunify/inference_realunify.py`
 - `Realunify/inference_realunify_ueg.py`
 
-除非特别说明，以下命令均默认从仓库根目录进入本目录后执行：
+### 执行方式
+
+除非特别说明，以下命令默认从仓库根目录进入本目录后执行：
 
 ```bash
 cd evaluation/interleave
 ```
 
-如果从其他目录执行，请将文中的相对路径替换为本地环境中的可访问路径。
+若从其他目录执行，请将相对路径替换为本地可访问路径。
 
 ## 使用前提
 
-运行前请确认：
+### 说明
 
-1. 当前工作目录为 `evaluation/interleave`。
-2. API 类 Benchmark 需要可访问的服务地址。
-3. 本地模型类 Benchmark 需要可访问的 `--model_path` 与数据文件路径。
-4. 建议显式指定关键路径和服务地址，不依赖环境相关默认值。
+- 当前工作目录为 `evaluation/interleave`
+- API 类 Benchmark 需要可访问的服务地址
+- 本地模型类 Benchmark 需要可访问的 `--model_path` 与数据文件路径
+- 建议显式传入关键路径和服务地址
 
 ## 依赖
 
-API 后端模式（BabyVision）：
+### API 后端模式
+
+适用于 BabyVision：
 
 ```bash
 python3 -m pip install requests regex tqdm
 ```
 
-如需本地图片重采样，额外安装：
+如需本地图片重采样：
 
 ```bash
 python3 -m pip install pillow
 ```
 
-如需运行 BabyVision / OpenING 的评测脚本，额外安装：
+### 评测脚本依赖
+
+如需运行 BabyVision / OpenING 的评测脚本：
 
 ```bash
 python3 -m pip install openai pandas matplotlib pillow
 ```
 
-本地模型加载模式（OpenING / Unimmmu / RealUnify）：
+### 本地模型加载模式
+
+适用于 OpenING 推理、Unimmmu、RealUnify：
 
 ```bash
 python3 -m pip install torch torchvision transformers pillow numpy tqdm
@@ -67,7 +75,9 @@ python3 -m pip install torch torchvision transformers pillow numpy tqdm
 
 ## 环境检查
 
-可先执行以下命令确认脚本能够启动并完成参数解析：
+### 示例命令
+
+可先用以下命令检查脚本能否启动并完成参数解析：
 
 ```bash
 python3 BabyVision/infer_babyvision.py --help
@@ -81,90 +91,82 @@ python3 Realunify/inference_realunify.py --help
 python3 Realunify/inference_realunify_ueg.py --help
 ```
 
-如出现 `ModuleNotFoundError`，请先安装依赖。
+### 说明
+
+如出现 `ModuleNotFoundError`，先安装依赖。
 
 ## 默认值说明
+
+### 说明
 
 文中涉及两类默认值：
 
 - 代码默认值：脚本中 `argparse` 或环境变量定义的默认值
 - 推荐运行值：为减少环境差异，建议显式传入的参数
 
-对于本地模型类脚本，`--data_path` 的代码默认值通常为占位路径，实际运行时应显式传入。
+本地模型类脚本里的 `--data_path` 默认值通常是占位路径，实际运行请显式传入。
 
 ## BabyVision
 
-### 代码默认值
+### 推理
 
-```json
-{
-  "data_path": "./babyvision_data/meta_data.jsonl",
-  "image_root": "./babyvision_data",
-  "output_dir": "./babyvision_results",
-  "generate_urls": "http://127.0.0.1:8000/generate",
-  "model_name": "local-model",
-  "workers": 32,
-  "max_retries": 3,
-  "backend_max_retries": 20,
-  "request_timeout": 600,
-  "max_new_tokens": 32768,
-  "do_sample": true,
-  "temperature": 0.7,
-  "top_p": 0.95,
-  "repetition_penalty": 1.1,
-  "min_pixels": 2097152,
-  "max_pixels": 16777216
-}
-```
-
-### 推荐运行命令
-
-默认位置运行：
-
-```bash
-python3 BabyVision/infer_babyvision.py
-```
-
-显式指定关键参数：
+#### 示例命令
 
 ```bash
 python3 BabyVision/infer_babyvision.py \
+  --model-name local-model \
   --data-path /path/to/meta_data.jsonl \
   --image-root /path/to/babyvision_images \
   --output-dir ./babyvision_results \
-  --generate-urls http://127.0.0.1:8000/generate
+  --generate-urls http://127.0.0.1:8000/generate \
+  --workers 32 \
+  --max-retries 3 \
+  --backend-max-retries 20 \
+  --request-timeout 600 \
+  --max-new-tokens 32768 \
+  --do-sample \
+  --temperature 0.7 \
+  --top-p 0.95 \
+  --repetition-penalty 1.1 \
+  --min-pixels 2097152 \
+  --max-pixels 16777216
 ```
 
-### 常用环境变量
+#### 参数说明
 
-```bash
-export BABYVISION_MODEL_NAME=local-model
-export BABYVISION_DATA_PATH=./babyvision_data/meta_data.jsonl
-export BABYVISION_IMAGE_ROOT=./babyvision_data
-export BABYVISION_OUTPUT_DIR=./babyvision_results
-export BABYVISION_GENERATE_URLS=http://127.0.0.1:8000/generate
-export BABYVISION_WORKERS=32
-export BABYVISION_MAX_RETRIES=3
-export BABYVISION_BACKEND_MAX_RETRIES=20
-export BABYVISION_REQUEST_TIMEOUT=600
-```
+- `--model-name`：结果中的模型名，也用于输出文件名
+- `--data-path`：BabyVision 的 `meta_data.jsonl` 路径
+- `--image-root`：图片根目录；样本相对路径会拼到该目录下
+- `--output-dir`：推理结果输出目录
+- `--generate-urls`：一个或多个 `/generate` 地址，多个地址用英文逗号分隔
+- `--workers`：并发线程数
+- `--max-retries`：单条样本最大重试次数
+- `--backend-max-retries`：单次后端请求最大重试次数
+- `--request-timeout`：单次 HTTP 请求超时，单位秒
+- `--max-new-tokens`：生成的最大 token 数
+- `--do-sample`：启用采样生成
+- `--temperature`：采样温度
+- `--top-p`：top-p 采样阈值
+- `--repetition-penalty`：重复惩罚系数
+- `--min-pixels`：预处理后的最小图片像素
+- `--max-pixels`：预处理后的最大图片像素
 
-### 输出与行为
+#### 输出与行为说明
 
 - 输出文件：`babyvision_<model_name>.jsonl`
-- 主要字段：`taskId`、`type`、`subtype`、`ansType`、`question`、`answer`、`model`、`model_response`、`extracted_answer`
-- 支持断点续跑；已有结果会按 `taskId` 跳过
+- 字段：`taskId`、`type`、`subtype`、`ansType`、`question`、`answer`、`model`、`model_response`、`extracted_answer`
+- 支持断点续跑；已完成的 `taskId` 会跳过
 - 输入图片缺失、请求失败或输出损坏时，脚本返回非零退出码
 
 ### 评测
+
+#### 示例命令
 
 BabyVision 的答案抽取与判分脚本为：
 
 ```text
 BabyVision/eval_babyvision.py
 ```
-
-示例命令：
 
 ```bash
 python3 BabyVision/eval_babyvision.py \
@@ -177,7 +179,7 @@ python3 BabyVision/eval_babyvision.py \
   --retries 3
 ```
 
-参数说明：
+#### 参数说明
 
 - `--input`：待评测的 BabyVision 推理结果文件
 - `--output`：评测结果输出文件；不传时默认生成 `<input>_eval.jsonl` 或 `<input>_eval.json`
@@ -191,7 +193,15 @@ python3 BabyVision/eval_babyvision.py \
 - `--force`：即使已有 `extracted_answer` 或 `LLMJudgeResult` 也强制重算
 - `--judge-only`：仅对已有 `extracted_answer` 的样本做判分，不再重新抽取答案
 
+#### 输出与行为说明
+
+- 输出文件默认为 `<input>_eval.jsonl` 或 `<input>_eval.json`
+- 结果中会补充答案抽取与 judge 判分字段
+- 支持并发调用 judge，并可通过 `--force` 或 `--judge-only` 控制重跑
+
 ### 算分
+
+#### 示例命令
 
 BabyVision 的准确率汇总脚本为：
 
@@ -199,39 +209,27 @@ BabyVision 的准确率汇总脚本为：
 BabyVision/compute_score.py
 ```
 
-示例命令：
-
 ```bash
 python3 BabyVision/compute_score.py \
   /path/to/babyvision_local-model_eval.jsonl
 ```
 
-输出说明：
+#### 参数说明
+
+- 位置参数：一个或多个已完成评测的 BabyVision 结果文件
+
+#### 输出与行为说明
 
 - 输出整体准确率
-- 输出 Type 维度平均准确率
-- 输出 Subtype 维度平均准确率
+- 输出 Type 平均准确率
+- 输出 Subtype 平均准确率
 - 支持同时传入多个结果文件，并汇总均值与标准差
 
 ## OpenING
 
-### 使用说明
+### 推理
 
-- 当前版本采用 `transformers` 本地模型推理，不再依赖 LightLLM 或 OpenAI 兼容接口
-- 运行 OpenING Benchmark 时，应显式指定 `--mode opening`
-- `--model_path` 为必填参数
-- 建议显式传入 `--model_path`、`--meta-path`、`--data-file-name`、`--save_dir`
-- 如需读取 `s3://...` 路径图像，可额外安装 `aoss_client` 并设置 `AOSS_CONF_PATH`
-
-### 关键参数
-
-- 推荐配置：`cfg_scale=4.0`、`img_cfg_scale=1.0`、`timestep_shift=3.0`、`cfg_interval=0 1.0`、`num_steps=50`
-- 推荐生成设置：`max_new_tokens=4096`、`max_generation_pixels=4194304`、`oom_retry_max_pixels=1048576`
-- 推荐输出尺寸：`image_width=1920`、`image_height=1088`
-- 推荐提示策略：`opening_step_prompt_style=can_be`
-- 推荐随机种子：`seed=42`
-
-### 推荐命令
+#### 示例命令
 
 单卡示例：
 
@@ -258,7 +256,7 @@ python3 OpenING/infer_opening.py \
   --seed 42
 ```
 
-推荐的单机 8 卡分片运行方式：
+单机 8 卡分片运行示例：
 
 ```bash
 mkdir -p logs
@@ -291,23 +289,26 @@ done
 wait
 ```
 
-说明：
+#### 参数说明
 
-- `--think_mode think` 表示仅运行 think 模式；如需同时产出 think 和 no_think 结果，可使用 `--think_mode think no_think`
-- `--num_shards` 与 `--shard_index` 用于样本分片，适合单机多卡或多进程并行
-- `--image_width` 与 `--image_height` 同时控制保存尺寸，并会向下对齐到模型要求的倍数
-- `--max_generation_pixels` 为初始生成像素上限，`--oom_retry_max_pixels` 用于 CUDA OOM 后降分辨率重试
-- `--opening_step_prompt_style can_be` 为当前默认推荐值
+- 采用 `transformers` 本地推理
+- `--mode opening`：运行 OpenING Benchmark；切换到 `annotation_config` 模式可用 `--mode annotation_config --input_json_path /path/to/config.json`
+- `--model_path`：模型路径，必填
+- `--meta-path` 与 `--data-file-name`：分别指定 OpenING Benchmark 根目录与 JSONL 文件名
+- `--save_dir`：结果输出目录
+- `--think_mode`：可传 `think`、`no_think`，也可同时传两个值分别产出两套结果
+- `--cfg_scale`、`--img_cfg_scale`、`--timestep_shift`、`--cfg_interval`、`--num_steps`：示例命令中分别使用 `4.0`、`1.0`、`3.0`、`0 1.0`、`50`
+- `--max_new_tokens`、`--max_generation_pixels`、`--oom_retry_max_pixels`：示例命令中分别使用 `4096`、`4194304`、`1048576`
+- `--image_width` 与 `--image_height`：示例命令中使用 `1920x1088`；实际会向下对齐到模型要求的倍数
+- `--opening_step_prompt_style can_be`：推荐步数提示策略
+- `--num_shards` 与 `--shard_index`：样本分片参数
+- `--limit`：仅运行前 N 条样本，便于 smoke test
+- `--uid_file`：仅处理文件中列出的 `total_uid`
+- `--overwrite`：覆盖已有结果
+- `--system_prompt_path`：读取外部系统提示词文件
+- 如需读取 `s3://...` 路径下的图像，可额外安装 `aoss_client` 并设置 `AOSS_CONF_PATH`
 
-附加参数示例：
-
-- 仅运行前 20 条：`--limit 20`
-- 只处理指定 UID：`--uid_file /path/to/uid_list.txt`
-- 覆盖已有结果：`--overwrite`
-- 指定系统提示词文件：`--system_prompt_path /path/to/system_prompt.txt`
-- 切换到 annotation config 模式：`--mode annotation_config --input_json_path /path/to/config.json`
-
-### 输入、输出与行为
+#### 输出与行为说明
 
 输入示例：
 
@@ -337,6 +338,8 @@ wait
 
 ### 评测
 
+#### 示例命令
+
 OpenING 支持基于 GPT judge 的主观评测。仓库内评测脚本为：
 
 ```text
@@ -360,10 +363,9 @@ python3 /path/to/SenseNova-U1/evaluation/interleave/OpenING/eval_opening.py \
   --save_every 10
 ```
 
-如推理阶段使用 `--think_mode think no_think`，则可将 `--output_dir` 指向自动生成的
-`*_think_output` 或 `*_no_think_output` 目录分别评测。
+如推理阶段使用 `--think_mode think no_think`，可分别将 `--output_dir` 指向自动生成的 `*_think_output` 和 `*_no_think_output` 目录进行评测。
 
-参数说明：
+#### 参数说明
 
 - `--mode output_dir`：按模型输出目录进行评测
 - `--opening_root`：OpenING 工作目录根路径
@@ -379,15 +381,21 @@ python3 /path/to/SenseNova-U1/evaluation/interleave/OpenING/eval_opening.py \
 - `--retry_invalid_scores`：仅重试已有结果中分数结构无效的样本
 - `--limit`：仅评测前 N 条待处理任务
 
+#### 输出与行为说明
+
+- 输出为 GPT judge 结果 JSON，由 `--output_file` 指定
+- 可按单个 `*_output` 目录或模型输出父目录批量评测
+- 支持断点续评和仅重试无效分数样本
+
 ### 算分
+
+#### 示例命令
 
 OpenING 的 GPT judge 结果可使用以下脚本汇总：
 
 ```text
 OpenING/summarize_GPT_scores.py
 ```
-
-示例命令：
 
 ```bash
 python3 OpenING/summarize_GPT_scores.py \
@@ -396,42 +404,24 @@ python3 OpenING/summarize_GPT_scores.py \
   --filtered_json /path/to/OpenING/Interleaved_Arena/gpt-score_results_filtered.json
 ```
 
-输出说明：
+#### 参数说明
 
 - `--input_json`：GPT judge 原始结果 JSON
 - `--output_csv`：各模型维度均分与总分汇总表
 - `--filtered_json`：过滤掉无效分数后的结果 JSON
 - `--plot`：可选，展示排行榜表格
 
+#### 输出与行为说明
+
+- 输出汇总 CSV，便于比较不同模型得分
+- 可输出过滤后的 JSON，便于后续复核
+- 开启 `--plot` 时可直接渲染排行榜表格
+
 ## Unimmmu
 
-### 推理模式
+### 推理
 
-- `i2t`：多图理解，仅输出文本
-- `interleave`：多模态推理，同时输出文本和图片
-
-### 参数与默认值
-
-- `--model_path` 为必填参数
-- `--data_path` 的代码默认值为占位路径，实际运行时应显式传入
-
-默认推理参数：
-
-```json
-{
-  "min_pixels": 1048576,
-  "max_pixels": 4194304,
-  "cfg_scale": 4.0,
-  "img_cfg_scale": 1.0,
-  "cfg_interval": [0.0, 1.0],
-  "cfg_norm": "none",
-  "num_steps": 50,
-  "timestep_shift": 3.0,
-  "seed": 42
-}
-```
-
-### 推荐运行命令
+#### 示例命令
 
 单 GPU：
 
@@ -482,40 +472,72 @@ python3 Unimmmu/merge_shards.py \
   --output_file ./output/unimmmu_interleave/unimmmu_results.jsonl
 ```
 
-### 输出
+#### 参数说明
+
+- `--inference_mode`：可选 `i2t` 或 `interleave`
+- `--model_path`：模型路径，必填
+- `--data_path`：数据文件路径；默认值通常是占位路径，实际运行请显式传入
+- `--output_dir`：结果输出目录
+- `--cfg_scale`、`--img_cfg_scale`、`--cfg_interval`、`--cfg_norm`、`--num_steps`、`--timestep_shift`：控制 interleave 生成行为
+- `--min_pixels` 与 `--max_pixels`：控制输入图片缩放范围
+- `--target_image_size`：如需固定正方形生成尺寸，可显式指定
+- `--resume`：按 `hash_uid` 跳过已完成样本
+- `--num_shards` 与 `--shard_rank`：手动分片参数
+- `--device_map auto`：让 HuggingFace 自动分配多卡；使用该模式时请单进程运行
+- `--max_memory_per_gpu_gb`：配合 `--device_map` 使用，限制单卡显存上限
+- `--limit`：仅运行前 N 条样本
+
+#### 输出与行为说明
 
 - 结果文件：`unimmmu_results.jsonl`
-- 主要字段：`hash_uid`、`task`、`model_response`、`inference_mode`、`generated_images`
+- 字段：`hash_uid`、`task`、`model_response`、`inference_mode`、`generated_images`
+- `interleave` 模式生成的图片会保存到 `<output_dir>/images/<task>/`
+- 分片运行时，中间结果写入 `<output_dir>/shards/`
+- 使用 `--resume` 时，脚本会按 `hash_uid` 自动跳过已完成样本
+
+### 评测
+
+#### 示例命令
+
+- 无，直接进入算分
+
+#### 参数说明
+
+- 无
+
+#### 输出与行为说明
+
+- 无独立输出
+
+### 算分
+
+#### 示例命令
+
+```bash
+python3 Unimmmu/calculate_score.py \
+  --input_file ./output/unimmmu_interleave/unimmmu_results.jsonl \
+  --output_dir ./output/unimmmu_interleave/scores \
+  --benchmark_path /path/to/image_text_agent
+```
+
+#### 参数说明
+
+- `--input_file`：推理结果 JSONL
+- `--output_dir`：得分输出目录；默认使用输入文件所在目录
+- `--benchmark_path`：必填，需要指向包含 `evaluation/` 目录的 benchmark 仓库
+- `--use_tools`：可选，可用于 geometry 的 tool_call 模式评分
+
+#### 输出与行为说明
+
+- 脚本会加载推理结果并打印任务分布
+- 实际 scorer 来自外部 benchmark 仓库，而不是当前目录
+- 评分结果会输出到 `--output_dir`
 
 ## RealUnify (GEU)
 
-### 推理模式
+### 推理
 
-- `step`：先编辑图片，再回答问题
-- `interleave`：直接进行多模态推理
-
-### 参数与默认值
-
-- `--model_path` 为必填参数
-- `--data_path` 的代码默认值为占位路径，实际运行时应显式传入
-
-默认推理参数：
-
-```json
-{
-  "min_pixels": 1048576,
-  "max_pixels": 4194304,
-  "cfg_scale": 4.0,
-  "img_cfg_scale": 1.0,
-  "cfg_interval": [0.0, 1.0],
-  "cfg_norm": "none",
-  "num_steps": 50,
-  "timestep_shift": 3.0,
-  "seed": 42
-}
-```
-
-### 推荐运行命令
+#### 示例命令
 
 单 GPU：
 
@@ -559,31 +581,76 @@ python3 Realunify/inference_realunify.py \
   --num_steps 50
 ```
 
-如需固定输出图片尺寸，可增加：
+如需固定输出图片尺寸，可额外传入：
 
 ```text
 --target_image_size 1024
 ```
 
-### 输出
+#### 参数说明
+
+- `--inference_mode`：可选 `step` 或 `interleave`
+- `--model_path`：模型路径，必填
+- `--data_path`：数据文件路径；默认值通常是占位路径，实际运行请显式传入
+- `--output_dir`：结果输出目录
+- `--cfg_scale`、`--img_cfg_scale`、`--cfg_interval`、`--cfg_norm`、`--num_steps`、`--timestep_shift`：控制编辑与生成行为
+- `--min_pixels` 与 `--max_pixels`：控制输入图片缩放范围
+- `--target_image_size`：如需固定正方形输出尺寸，可显式指定
+- `--resume`：按 `hash_uid` 跳过已完成样本
+- `--num_shards` 与 `--shard_rank`：手动分片参数
+- `--device_map auto`：让 HuggingFace 自动分配多卡；使用该模式时请单进程运行
+- `--max_memory_per_gpu_gb`：配合 `--device_map` 使用，限制单卡显存上限
+- `--limit`：仅运行前 N 条样本
+
+#### 输出与行为说明
 
 - 结果文件：`realunify_results.jsonl`
-- 主要字段：`hash_uid`、`task_type`、`model_response`、`answer`、`generated_image`、`generated_images`
+- 字段：`hash_uid`、`task_type`、`model_response`、`answer`、`generated_image`、`generated_images`
+- `step` 模式会写出编辑后图片路径 `generated_image`
+- `interleave` 模式会写出生成图片列表 `generated_images`
+- 分片运行时，中间结果写入 `<output_dir>/shards/`
+- 使用 `--resume` 时，脚本会按 `hash_uid` 自动跳过已完成样本
+
+### 评测
+
+#### 示例命令
+
+- 无，直接进入算分
+
+#### 参数说明
+
+- 无
+
+#### 输出与行为说明
+
+- 无独立输出
+
+### 算分
+
+#### 示例命令
+
+```bash
+python3 Realunify/calculate_score.py \
+  --input_file ./output/realunify_interleave/realunify_results.jsonl \
+  --output_file ./output/realunify_interleave/realunify_scores.json
+```
+
+#### 参数说明
+
+- `--input_file`：推理结果 JSONL
+- `--output_file`：可选，保存汇总结果 JSON 的路径
+
+#### 输出与行为说明
+
+- 脚本会优先从 `<answer>...</answer>` 中提取答案
+- 如果没有 `<answer>` 标签，会回退到 `model_response` 中首个 `A/B/C/D` 字母
+- 输出按 `task_type` 与 overall 两个层级汇总准确率
 
 ## RealUnify (UEG)
 
-### 推理模式
+### 推理
 
-- `understand_t2i`：先理解并精炼 prompt，再生成图片
-- `interleave`：直接进行 interleave 生成
-- `t2i`：直接使用预处理后的 prompt 生成图片
-
-### 参数说明
-
-- `--model_path`、`--output_dir`、`--inference_mode` 为必填参数
-- `--data_path` 的代码默认值为占位路径，实际运行时应显式传入
-
-### 推荐运行命令
+#### 示例命令
 
 ```bash
 python3 Realunify/inference_realunify_ueg.py \
@@ -615,14 +682,63 @@ python3 Realunify/inference_realunify_ueg.py \
   --num_steps 50
 ```
 
-### 输出
+#### 参数说明
+
+- `--inference_mode`：可选 `understand_t2i`、`interleave`、`t2i`
+- `--model_path`、`--output_dir`、`--inference_mode`：必填参数
+- `--data_path`：数据文件路径；默认值通常是占位路径，实际运行请显式传入
+- `--cfg_scale`、`--img_cfg_scale`、`--cfg_interval`、`--cfg_norm`、`--num_steps`、`--timestep_shift`：控制生成行为
+- `--target_image_size`：如需固定正方形输出尺寸，可显式指定
+- `--resume`：跳过已完成样本
+- `--limit`：仅运行前 N 条样本
+- `--device_map auto`：让 HuggingFace 自动分配多卡；使用该模式时请单进程运行
+- `--max_memory_per_gpu_gb`：配合 `--device_map` 使用，限制单卡显存上限
+
+#### 输出与行为说明
 
 - 输出文件：`ueg_results.jsonl`、`ueg_results.json`
-- 主要字段：`index`、`task_type`、`generated_image`、`question_list`
+- 字段：`index`、`task_type`、`generated_image`、`question_list`
+- 结果会保留生成图片路径与后续问答列表，供 judge 评分
+
+### 评测
+
+#### 示例命令
+
+- 无，直接进入算分
+
+#### 参数说明
+
+- 无
+
+#### 输出与行为说明
+
+- 无独立输出
+
+### 算分
+
+#### 示例命令
+
+```bash
+python3 Realunify/calculate_score_ueg.py \
+  --input_file ./output/ueg_interleave/ueg_results.json
+```
+
+#### 参数说明
+
+- `--input_file`：`ueg_results.json` 或 `.jsonl`
+- `--num_workers`：评分并发数
+
+#### 输出与行为说明
+
+- 当前脚本是评分骨架，需自行提供 `GeminiAPI` judge 封装
+- 如果未补充 judge wrapper，脚本会在运行时抛出 `NotImplementedError`
+- 正常完成后会输出带 judge 结果的 `_scored.json`
 
 ## 评测流程概览
 
-典型流程如下：
+### 示例命令
+
+示例流程：
 
 ```bash
 MODEL_PATH=/path/to/hf_model
@@ -654,14 +770,22 @@ torchrun --nproc_per_node=2 Unimmmu/inference_unimmmu.py \
   --num_steps 50
 ```
 
-以上三个 Benchmark 之间无依赖，可并行执行。
+### 说明
+
+- 以上示例主要覆盖本地模型类 Benchmark 的常见执行路径
+- `RealUnify (GEU)`、`RealUnify (UEG)`、`Unimmmu` 三者之间无依赖，可并行执行
+- `BabyVision` 与 `OpenING` 的完整流程请分别参考各自章节中的 `推理 / 评测 / 算分`
 
 ## 退出码
+
+### 说明
 
 - `0`：全部成功，或仅有显式跳过
 - `1`：启动校验失败，或运行过程中存在样本失败
 
 ## 常见问题
+
+### 说明
 
 - 缺少 `requests`、`regex`、`tqdm`：请先安装依赖
 - 数据文件不存在：检查 `--data_path`，或 OpenING 的 `--meta-path`、`--data-file-name`
