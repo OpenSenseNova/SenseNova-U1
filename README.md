@@ -21,16 +21,24 @@
 Multimodal AI is no longer about connecting separate systems, but about building a unified one and trusting the necessary capabilities to emerge from within.
 
 
-#### 🏗️ *Key Pillars :*      
+#### 🏗️ *Key Pillars:*      
 
 - 🖼️ Near-Lossless Visual Interface: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
 
 - 🧠 Native Mixture-of-Transformers: Modality-agnostic reasoning with high efficiency and minimal conflict !   
 
 - 🔗 Unified End-to-End Learning: Modeling directly on pixels + text from the first principles !   
-  
 
-#### 🌍 *Beyond Multimodality :* 
+
+#### ✨ *What This Unlocks:*
+
+- 🏆 *Open-source SOTA efficiency*: U1 sets a new open-source SOTA for unified understanding and generation, and even at a small scale, delivers results comparable to commercial models with extrem cost efficiency.
+
+- 📖 *Native interleaved image-text generation*: U1 can generate coherent interleaved text and images in a single flow, enabling visual outputs such as visual manuals and travel diaries that make complex information instantly understandable.
+
+- 📰 *High-density information rendering*: U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for encyclopedic knowledge, life guides, resumes, and other information-rich formats.
+
+#### 🌍 *Beyond Multimodality:* 
 
 - 🤖 Vision–Language–Action (VLA)      
 
