@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NEO Model Inference for Unimmmu Benchmark (Unimmmu_direct)
+Inference for the Unimmmu benchmark (Unimmmu_direct)
 
 Two modes:
 1. i2t:        Multi-image understanding only (model.chat)
@@ -768,9 +768,9 @@ def process_unimmmu_interleave(
 # ============================================================================
 
 def main():
-    parser = argparse.ArgumentParser(description="NEO Model Inference for Unimmmu Benchmark")
+    parser = argparse.ArgumentParser(description="Inference for the Unimmmu benchmark")
     parser.add_argument("--model_path", type=str, required=True,
-                        help="Path to NEO model")
+                        help="Path to the model")
     parser.add_argument("--data_path", type=str, default=UNIMMMU_DATA_PATH,
                         help="Path to Unimmmu benchmark JSONL")
     parser.add_argument("--output_dir", type=str, default="./output",

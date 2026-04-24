@@ -1,5 +1,5 @@
 # Interleaved Generation Evaluation
 
-Reproduction scripts for interleaved generation benchmarks.
+Detailed guide for interleaved generation benchmarks.
 
-> Scripts and detailed guides will be added here.
+The maintained document is available at [../interleave/interleaved.md](../interleave/interleaved.md).

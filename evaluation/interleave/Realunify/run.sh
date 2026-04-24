@@ -1,5 +1,5 @@
 #!/bin/bash
-# NEO Model Inference for RealUnify Benchmark
+# Inference helper for the RealUnify benchmark
 # Usage examples for different scenarios
 
 # ============================================================================
@@ -7,7 +7,7 @@
 # ============================================================================
 
 # Model path (override via env: MODEL_NAME=xxx STEP=yyy bash run.sh ...)
-STEP="${STEP:-3000_ema}"
+STEP="${STEP:-<STEP_TAG>}"
 MODEL_NAME="${MODEL_NAME:-<YOUR_MODEL_NAME>}"
 MODEL_PATH="${MODEL_PATH:-<MODEL_ROOT>/${MODEL_NAME}/hf_step${STEP}}"
 
@@ -353,7 +353,7 @@ case "$1" in
         run_ueg_score "${2}" "${3:-16}"
         ;;
     *)
-        echo "NEO Model Inference for RealUnify Benchmark"
+        echo "Inference helper for the RealUnify benchmark"
         echo ""
         echo "Usage: $0 <command> [options]"
         echo ""

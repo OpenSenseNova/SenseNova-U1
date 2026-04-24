@@ -1,5 +1,5 @@
 # Visual Understanding Evaluation
 
-Reproduction scripts for visual understanding benchmarks.
+Documentation for visual understanding benchmarks is being consolidated.
 
-> Scripts and detailed guides will be added here.
+For currently published evaluation materials, start from [../README.md](../README.md).

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NEO Model Inference for RealUnify UEG Benchmark
+Inference for the RealUnify UEG benchmark
 
 Three inference modes:
 1. understand_t2i: Refine prompt via understanding, then t2i generation
@@ -372,7 +372,7 @@ def process_ueg_t2i(
 # ============================================================================
 
 def main():
-    parser = argparse.ArgumentParser(description="NEO Model Inference for RealUnify UEG Benchmark")
+    parser = argparse.ArgumentParser(description="Inference for the RealUnify UEG benchmark")
     parser.add_argument("--model_path", type=str, required=True)
     parser.add_argument("--data_path", type=str, default=UEG_DATA_PATH)
     parser.add_argument("--output_dir", type=str, required=True)

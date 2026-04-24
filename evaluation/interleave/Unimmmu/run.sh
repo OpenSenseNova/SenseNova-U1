@@ -1,5 +1,5 @@
 #!/bin/bash
-# NEO Model Inference for Unimmmu Benchmark
+# Inference helper for the Unimmmu benchmark
 # Usage examples for different scenarios
 
 # ============================================================================
@@ -7,7 +7,7 @@
 # ============================================================================
 
 # Model path (override via env: MODEL_NAME=xxx STEP=yyy bash run.sh ...)
-STEP="${STEP:-3000_ema}"
+STEP="${STEP:-<STEP_TAG>}"
 MODEL_NAME="${MODEL_NAME:-<YOUR_MODEL_NAME>}"
 MODEL_PATH="${MODEL_PATH:-<MODEL_ROOT>/${MODEL_NAME}/hf_step${STEP}}"
 
@@ -266,7 +266,7 @@ case "$1" in
         run_score "${OUTPUT_DIR}/interleave/unimmmu_results.jsonl"
         ;;
     *)
-        echo "NEO Model Inference for Unimmmu Benchmark"
+        echo "Inference helper for the Unimmmu benchmark"
         echo ""
         echo "Usage: $0 <command> [options]"
         echo ""

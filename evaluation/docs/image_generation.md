@@ -1,5 +1,5 @@
 # Image Generation Evaluation
 
-Reproduction scripts for image generation benchmarks.
+Documentation for image generation benchmarks is being consolidated.
 
-> Scripts and detailed guides will be added here.
+For currently published evaluation materials, start from [../README.md](../README.md).
