@@ -33,9 +33,9 @@ NEO-Unify eliminates both Visual Encoder (VE) and Variational Auto-Encoder (VAE)
 
 This architecture has several important features:
 
-- 🔗 Language and visual information can be modeled end-to-end as a unified compound.   
-- 🖼️ Preserve semantic richness while  maintaining pixel-level visual fidelity.     
-- 🧠 Across-modality reasoning with high efficiency and minimal conflict, by native mixture of transformers. 
+- 🔗 Model language and visual information end-to-end as a unified compound.   
+- 🖼️ Preserve semantic richness while maintaining pixel-level visual fidelity.     
+- 🧠 Reason across modalities with high efficiency & minimal conflict via native MoTs. 
 
 
 #### ✨ *What This Unlocks:*

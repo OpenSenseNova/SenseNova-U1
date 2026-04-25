@@ -121,7 +121,7 @@ Reproducible prompts are in
 ## Image Editing
 
 Side-by-side compare montages below show `input(s) | output`, with the
-edit instruction rendered along the bottom of each compare tile. The same
+edit instruction rendered along the bottom. The same
 unified model handles single-image attribute / style / relighting edits
 and multi-reference (subject + accessory + pose) composition.
 
