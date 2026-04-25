@@ -390,6 +390,23 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 
 ``` -->
 
+## 🌐 Join the Community!
+
+Join our growing community to share feedback, get support, and stay updated on the latest SenseNova-U1 developments — we'd love to hear from you!
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center"><b><a href="https://discord.gg/cxkwXWjp">Discord</a></b></td>
+    <td align="center"><b>WeChat Group</b></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://discord.gg/cxkwXWjp"><img src="docs/assets/discord_qr.webp" width="160"/></a></td>
+    <td align="center"><img src="docs/assets/wechat_qr.webp" width="160"/></td>
+  </tr>
+</table>
+</div>
+
 ## ⚖️ License
 
 This project is released under the [Apache 2.0 License](./LICENSE).
