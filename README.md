@@ -242,12 +242,9 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 <details>
 <summary>🦾 Visual-Language Action</summary>
 
-| | |
-| :---: | :---: |
-| Case 1 | [![demo1](./docs/assets/showcases/vla/1.png)](./docs/assets/showcases/vla/1.mp4?raw=true) |
-| Case 2 | [![demo2](./docs/assets/showcases/vla/2.png)](./docs/assets/showcases/vla/2.mp4?raw=true) |
-| Case 3 | [![demo3](./docs/assets/showcases/vla/3.png)](./docs/assets/showcases/vla/3.mp4?raw=true) |
-| | |
+[![YouTube](https://img.shields.io/badge/Video%201-%23FF0000.svg?logo=YouTube&logoColor=white)](https://www.youtube.com/watch?v=3mvBPPgv8vo)
+[![YouTube](https://img.shields.io/badge/Video%202-%23FF0000.svg?logo=YouTube&logoColor=white)](https://www.youtube.com/watch?v=2QZY8gf0Vsk)
+[![YouTube](https://img.shields.io/badge/Video%203-%23FF0000.svg?logo=YouTube&logoColor=white)](https://www.youtube.com/watch?v=tznVbuYf0yw)
 
 </details>
 
