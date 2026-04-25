@@ -1,0 +1,8 @@
+{"type": "negation", "yn_question_list": ["Is there a fork in the image?  ", "Is there a steak in the image?  ", "Does the fork pierce the steak?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a girl in the image?  ", "Is there a cup in the image?  ", "Is the girl drinking from the cup?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a bed in the image?  ", "Is there a cat in the image?  ", "Is the bed with a cat on it?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a river in the image?  ", "Are there fish in the image?  ", "Are fish swimming in the river?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a city intersection in the image?  ", "Are there blue cars in the image?  ", "Is there a city intersection with blue cars?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a hamster in the image?  ", "Is there a wheel in the image?  ", "Is the hamster running on the wheel?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a hat in the image?  ", "Is there a cat in the image?  ", "Is the hat providing shade for the cat?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a windbreaker in the image?  ", "Is there a sweater in the image?  ", "Is the windbreaker on top of the sweater?  "], "yn_answer_list": ["yes", "yes", "no"]}

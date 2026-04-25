@@ -1,0 +1,8 @@
+{"type": "2d_spatial_relation", "yn_question_list": ["Is there a cat in the image?  ", "Is there a microwave in the image?  ", "Is the cat on the bottom of the microwave?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "2d_spatial_relation", "yn_question_list": ["Is there a cup in the image?  ", "Is there a pig in the image?  ", "Is the cup on the left of the pig?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "2d_spatial_relation", "yn_question_list": ["Is there a cat in the image?  ", "Is there a table in the image?  ", "Is the cat on the right of the table?  "], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "2d_spatial_relation", "yn_question_list": ["Is there a bag in the image?  ", "Is there a bee in the image?  ", "Is the bag on the left of the bee?  "], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "2d_spatial_relation", "yn_question_list": ["Is there a vase in the image?  ", "Is there a sheep in the image?  ", "Is the vase on the left of the sheep?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "2d_spatial_relation", "yn_question_list": ["Is there a woman in the image?  ", "Is there a microwave in the image?  ", "Is the woman near a microwave?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "2d_spatial_relation", "yn_question_list": ["Is there a couch in the image?  ", "Is there a fish in the image?  ", "Is the couch on the right of the fish?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "2d_spatial_relation", "yn_question_list": ["Is there a dog in the image?  ", "Is there a computer in the image?  ", "Is the dog on side of the computer?"], "yn_answer_list": ["yes", "yes", "yes"]}

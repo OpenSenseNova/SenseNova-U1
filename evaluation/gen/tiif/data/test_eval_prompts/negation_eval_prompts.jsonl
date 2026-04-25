@@ -1,0 +1,75 @@
+{"type": "negation", "yn_question_list": ["Is there a fork in the image?  ", "Is there a steak in the image?  ", "Does the fork pierce the steak?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a girl in the image?  ", "Is there a cup in the image?  ", "Is the girl drinking from the cup?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a bed in the image?  ", "Is there a cat in the image?  ", "Is the bed with a cat on it?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a river in the image?  ", "Are there fish in the image?  ", "Are fish swimming in the river?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a city intersection in the image?  ", "Are there blue cars in the image?  ", "Is there a city intersection with blue cars?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a hamster in the image?  ", "Is there a wheel in the image?  ", "Is the hamster running on the wheel?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a hat in the image?  ", "Is there a cat in the image?  ", "Is the hat providing shade for the cat?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a windbreaker in the image?  ", "Is there a sweater in the image?  ", "Is the windbreaker on top of the sweater?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a harp in the image?  ", "Are there strings in the image?  ", "Is it a harp with no strings?  "], "yn_answer_list": ["yes", "no", "yes"]}
+{"type": "negation", "yn_question_list": ["Is there a balloon in the image?  ", "Are there passengers in the image?  ", "Does the balloon have passengers while flying higher?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a beach in the image?  ", "Are there soft towels on the sand?  ", "Is beach with soft towels spread out?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a dog in the image?  ", "Is there a tiny sweater in the image?  ", "Is the dog wearing a tiny sweater?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a boy in the image?  ", "Is there a tree in the image?  ", "Is the boy under a tree?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a person in the image?  ", "Are there shoelaces in the image?  ", "Are the shoelaces tied?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a library in the image?  ", "Are there books on the shelves?  ", "Is there a library with books on the shelves?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a red zebra in the image?  ", "Is there grass in the image?  ", "Is the red zebra running?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a cat in the image?  ", "Is there sunlight in the image?  ", "Is there a window in the image?  ", "Does the cat sing?"], "yn_answer_list": ["yes", "yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a cat in the image?  ", "Is there a string in the image?  ", "Is the cat batting at the string?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a table in the image?  ", "Is there a notebook in the image?  ", "Is the table with a notebook on it?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a woman in the image?  ", "Is there a hoodie in the image?  ", "Is the woman wearing a hoodie?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Are there roofs in the image?  ", "Is there white snow in the image?  ", "Do the roofs have a covering of white snow?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a cat in the image?  ", "Is the cat tailless?  ", "Is the cat black?  ", "Is the cat sitting quietly?"], "yn_answer_list": ["yes", "yes", "no", "yes"]}
+{"type": "negation", "yn_question_list": ["Is there a little girl in the image?  ", "Is there a barrel in the image?  ", "Is the barrel taller than the little girl?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a girl in the image?  ", "Is mineral water in the image?  ", "Is she wearing dance clothes?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a beach in the image?  ", "Are there footprints in the image?  ", "Are there footprints on the beach?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a girl in the image?  ", "Are there glasses in the image?  ", "Is the girl wearing glasses?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a cake in the image?  ", "Are there candles in the image?  ", "Is there a cake with candles?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Are there an umbrella in the image?  ", "Is there a user in the image?  ", "Is there a downpour in the image?  ", "Does the umbrella open?  "], "yn_answer_list": ["yes", "yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a watermelon in the image?  ", "Is there a pineapple in the image?  ", "Is the watermelon to the right of the pineapple?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there an object or scene in the image?  ", "Are there magazines in the image?  ", "Does the object or scene have any magazines?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a garden in the image?  ", "Are there paths in the image?  ", "Is there a garden with paths?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Are there monkeys in the image?", "Is there flora in the image?", "Is there fauna in the image?", "Are there monkeys among the flora and fauna?"], "yn_answer_list": ["no", "yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a man in the image?  ", "Is there a beanie in the image?  ", "Is the man wearing a beanie?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a fountain in the image?  ", "Is water flowing from the fountain?  ", "Is there a fountain with water flowing?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a coffee mug in the image?  ", "Is there a table in the image?  ", "Is the coffee mug filled with liquid?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a fork in the image?  ", "Is the fork made of metal?"], "yn_answer_list": ["yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a bed in the image?  ", "Are there pillows in the image?  ", "Are bed with pillows?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a camera in the image?  ", "Is there a child in the image?  ", "Is the child smiling?  ", "Is the camera focused on the child?  "], "yn_answer_list": ["yes", "yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Are there playground in the image?  ", "Are there slides in the image?  ", "Is playground with slide?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Are there children in the image?  ", "Are cheerful children playing?  "], "yn_answer_list": ["no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a scene in the image?  ", "Are there bicycles in the image?  ", "Is the scene with bicycles?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a boy in the image?  ", "Is there a helmet in the image?  ", "Is there a tree in the image?  ", "Is the boy wearing a helmet?"], "yn_answer_list": ["yes", "no", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a harp in the image?  ", "Are there strings in the image?  ", "Is the harp with strings?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a rose in the image?  ", "Is there floral presence in the image?  ", "Are there roses or floral presence?"], "yn_answer_list": ["no", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a screen in the image?  ", "Is the screen lit up in the image?  ", "Is there a functioning screen?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a girl in the image?  ", "Is there a handheld fan in the image?  ", "Is the girl holding a handheld fan?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a boy in the image?  ", "Is there a toy in the image?  ", "Did the boy play with the toy?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a woman in the image?  ", "Is there a bracelet in the image?  ", "Is the woman wearing a bracelet?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a room in the image?  ", "Are there chairs in the image?  ", "Is there a room with chairs?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a pig in the image?  ", "Is there mud in the image?  ", "Is the pig rolling around in the mud?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a zoo in the image?  ", "Are there enclosures in the image?  ", "Are there animals in the enclosures?  ", "Are there animals in the zoo's enclosures?  "], "yn_answer_list": ["yes", "yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there bird in the image?  ", "Are there mountains in the image?  ", "Does bird fly higher than mountains?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a scene in the image?  ", "Are there cars crossing in the image?  ", "Is there a scene with cars crossing?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a girl in the image?  ", "Is there attire in the image?  ", "Is there a skirt in the image?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a man in the image?  ", "Are there sneakers in the image?  ", "Is the man tying his sneakers?"], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a river in the image?  ", "Are there fish swimming in the image?  ", "Is it a river with fish swimming?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a nurse in the image?  ", "Is there a room in the image?  ", "Is there a thermometer in the image?  ", "Is nurse with a thermometer?"], "yn_answer_list": ["yes", "yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a classroom in the image?  ", "Is there a teacher in the image?  ", "Is teacher in sight?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a ball in the image?  ", "Is the ball bouncing?  ", "Is there a ball with bounce?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a glass in the image?  ", "Is there orange juice in the image?  ", "Is there glass with orange juice?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there an aquarium in the image?  ", "Are there fish in the image?  ", "Are aquarium with fish?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Are there snowmen in the image?", "Are snowmen absent from the landscape?"], "yn_answer_list": ["no", "yes"]}
+{"type": "negation", "yn_question_list": ["Is there a group in the image?  ", "Are there people wearing hats in the group?  ", "Are groups with hats present?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a cat in the image?  ", "Are the cat's ears visible?  ", "Is the cat riding something?  "], "yn_answer_list": ["yes", "no", "yes"]}
+{"type": "negation", "yn_question_list": ["Is there a street in the image?  ", "Are there cars in the image?  ", "Are there cars crossing the street?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a hamster in the image?  ", "Is there a wheel in the cage in the image?  ", "Is the hamster running on the wheel?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a clock in the image?  ", "Are there hands on the clock?  ", "Does clock tell the time?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a table in the image?  ", "Are there plates in the image?  ", "Are there forks in the image?  ", "Are plates with forks?"], "yn_answer_list": ["yes", "yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a girl in the image?  ", "Is she wearing glasses in the image?  ", "Is there a girl with glasses?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a teacher in the image?  ", "Is there a student in the image?  ", "Are the teacher and student making eye contact?  "], "yn_answer_list": ["yes", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a bed in the image?  ", "Are there pillows in the image?  ", "Is the bed with pillows?  "], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a kitchen in the image?", "Is there a spoon on the counter in the image?", "Is there a kitchen with a spoon on the counter?"], "yn_answer_list": ["yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there an individual in the image?  ", "Are glasses in the image?  ", "Is there a book in the image?  ", "Is person with glasses reading a book?"], "yn_answer_list": ["yes", "no", "yes", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a city in the image?  ", "Is there an intersection in the image?  ", "Are there blue cars in the image?  ", "Are there city intersections with blue cars?  "], "yn_answer_list": ["yes", "yes", "no", "no"]}
+{"type": "negation", "yn_question_list": ["Is there a girl in the image?  ", "Are dance clothes in the image?  ", "Is the girl wearing dance clothes?  ", "Is there mineral water in the image?"], "yn_answer_list": ["yes", "no", "no", "yes"]}

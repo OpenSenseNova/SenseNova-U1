@@ -35,7 +35,9 @@ def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate IGenBench images with direct image-question judging.")
     parser.add_argument("--image-dir", required=True, help="Directory containing generated IGenBench images.")
     parser.add_argument("--output-dir", required=True, help="Directory to save per-item judgments and summary.")
-    parser.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR), help="IGenBench directory with per-item JSON files.")
+    parser.add_argument(
+        "--data-dir", default=str(DEFAULT_DATA_DIR), help="IGenBench directory with per-item JSON files."
+    )
     parser.add_argument("--gen-model-name", default="local_model", help="Generation model tag stored in judgments.")
     parser.add_argument("--api-base", required=True, help="OpenAI-compatible judge API base URL.")
     parser.add_argument("--api-key", required=True, help="OpenAI-compatible judge API key.")
@@ -43,7 +45,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--eval-timeout", type=int, default=240)
     parser.add_argument("--concurrency", type=int, default=128)
     parser.add_argument("--max-items", type=int, default=None)
-    parser.add_argument("--force-rerun", action="store_true", help="Ignore saved judgments and rerun from source items.")
+    parser.add_argument(
+        "--force-rerun", action="store_true", help="Ignore saved judgments and rerun from source items."
+    )
     return parser.parse_args()
 
 

@@ -1,0 +1,2404 @@
+{
+    "data_list": [
+        {
+            "index": 0,
+            "prompt": "A busy café window displays 'Cafe' in large warm brown letters, a menu board above shows 'Menu' in medium black cursive.",
+            "carrier_list": [
+                "window",
+                "board"
+            ],
+            "sentence_list": [
+                "a busy café window displays 'Cafe' in large warm brown letters.",
+                "a menu board above shows 'Menu' in medium black cursive."
+            ]
+        },
+        {
+            "index": 1,
+            "prompt": "In a movie theater lobby, a poster reads 'Premiere' in bold red letters, a sign on the entrance says 'Enter' in large white.",
+            "carrier_list": [
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a poster reads 'Premiere' in bold red letters.",
+                "a sign on the entrance says 'Enter' in large white."
+            ]
+        },
+        {
+            "index": 2,
+            "prompt": "On a bookstore shelf, a book titled 'Novel' in medium blue italic, a stack of magazines labeled 'Trends' in small green.",
+            "carrier_list": [
+                "book",
+                "magazines"
+            ],
+            "sentence_list": [
+                "a book titled 'Novel' in medium blue italic.",
+                "a stack of magazines labeled 'Trends' in small green."
+            ]
+        },
+        {
+            "index": 3,
+            "prompt": "At a subway platform, a digital screen shows 'Next' in large bright yellow, a bench with the word 'Seat' in small gray.",
+            "carrier_list": [
+                "screen",
+                "bench"
+            ],
+            "sentence_list": [
+                "a digital screen shows 'Next' in large bright yellow.",
+                "a bench with the word 'Seat' in small gray."
+            ]
+        },
+        {
+            "index": 4,
+            "prompt": "The school hallway features a bulletin board marked 'News' in bold blue letters, a locker with the label 'Locker' in medium silver.",
+            "carrier_list": [
+                "board",
+                "locker"
+            ],
+            "sentence_list": [
+                "a bulletin board marked 'News' in bold blue letters.",
+                "a locker with the label 'Locker' in medium silver."
+            ]
+        },
+        {
+            "index": 5,
+            "prompt": "Downtown, a billboard displays 'Sale' in large vibrant red letters, a streetlamp with 'Light' in small white.",
+            "carrier_list": [
+                "billboard",
+                "lamp"
+            ],
+            "sentence_list": [
+                "a billboard displays 'Sale' in large vibrant red letters.",
+                "a streetlamp with 'Light' in small white."
+            ]
+        },
+        {
+            "index": 6,
+            "prompt": "Inside a library, a shelf sign says 'Books' in medium dark green, a reading lamp with 'Light' in small yellow.",
+            "carrier_list": [
+                "sign",
+                "lamp"
+            ],
+            "sentence_list": [
+                "a shelf sign says 'Books' in medium dark green.",
+                "a reading lamp with 'Light' in small yellow."
+            ]
+        },
+        {
+            "index": 7,
+            "prompt": "Near the park, a bench has 'Rest' in large calming blue letters, a signpost reads 'North' in medium black.",
+            "carrier_list": [
+                "bench",
+                "signpost"
+            ],
+            "sentence_list": [
+                "a bench has 'Rest' in large calming blue letters.",
+                "a signpost reads 'North' in medium black."
+            ]
+        },
+        {
+            "index": 8,
+            "prompt": "Within the office, a desk sign says 'Work' in bold black letters, a calendar marked 'Today' in medium blue.",
+            "carrier_list": [
+                "sign",
+                "calendar"
+            ],
+            "sentence_list": [
+                "a desk sign says 'Work' in bold black letters.",
+                "a calendar marked 'Today' in medium blue."
+            ]
+        },
+        {
+            "index": 9,
+            "prompt": "Outside the theater, a banner displays 'Show' in large bright white, a poster with 'Tickets' in medium red cursive.",
+            "carrier_list": [
+                "banner",
+                "poster"
+            ],
+            "sentence_list": [
+                "a banner displays 'Show' in large bright white.",
+                "a poster with 'Tickets' in medium red cursive."
+            ]
+        },
+        {
+            "index": 10,
+            "prompt": "A movie theater with a banner that reads 'ACTION' in large red bold letters, a popcorn machine with the word 'SNACK' in small white italic.",
+            "carrier_list": [
+                "banner",
+                "machine"
+            ],
+            "sentence_list": [
+                "a banner that reads 'ACTION' in large red bold letters.",
+                "a popcorn machine with the word 'SNACK' in small white italic."
+            ]
+        },
+        {
+            "index": 11,
+            "prompt": "A busy coffee shop with a sign that says 'CAFE' in medium brown cursive, a chalkboard with 'SPECIAL' in large green bold.",
+            "carrier_list": [
+                "sign",
+                "chalkboard"
+            ],
+            "sentence_list": [
+                "a sign that says 'CAFE' in medium brown cursive.",
+                "a chalkboard with 'SPECIAL' in large green bold."
+            ]
+        },
+        {
+            "index": 12,
+            "prompt": "A retro diner with a neon sign that says 'EAT' in bright pink italic, a menu board reading 'BURGER' in large yellow bold letters.",
+            "carrier_list": [
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a neon sign that says 'EAT' in bright pink italic.",
+                "a menu board reading 'BURGER' in large yellow bold letters."
+            ]
+        },
+        {
+            "index": 13,
+            "prompt": "A fashion store with a display window that says 'TREND' in large black regular letters, a clothing rack with the word 'SALE' in bold red.",
+            "carrier_list": [
+                "window",
+                "rack"
+            ],
+            "sentence_list": [
+                "a display window that says 'TREND' in large black regular letters.",
+                "a clothing rack with the word 'SALE' in bold red."
+            ]
+        },
+        {
+            "index": 14,
+            "prompt": "A sports stadium with a scoreboard that reads 'GOAL' in large white bold letters, a ticket booth with the word 'ENTRY' in medium blue italic.",
+            "carrier_list": [
+                "scoreboard",
+                "booth"
+            ],
+            "sentence_list": [
+                "a scoreboard that reads 'GOAL' in large white bold letters.",
+                "a ticket booth with the word 'ENTRY' in medium blue italic."
+            ]
+        },
+        {
+            "index": 15,
+            "prompt": "A bookstore with a shelf labeled 'BOOKS' in large navy blue regular letters, a table with the word 'READ' in small green cursive.",
+            "carrier_list": [
+                "shelf",
+                "table"
+            ],
+            "sentence_list": [
+                "a shelf labeled 'BOOKS' in large navy blue regular letters.",
+                "a table with the word 'READ' in small green cursive."
+            ]
+        },
+        {
+            "index": 16,
+            "prompt": "A tech expo with a banner saying 'INNOVATE' in large silver bold letters, a booth with 'GADGET' in medium orange italic.",
+            "carrier_list": [
+                "banner",
+                "booth"
+            ],
+            "sentence_list": [
+                "a banner saying 'INNOVATE' in large silver bold letters.",
+                "a booth with 'GADGET' in medium orange italic."
+            ]
+        },
+        {
+            "index": 17,
+            "prompt": "A gym with a wall poster that says 'STRENGTH' in large black bold letters, a water bottle with 'HYDRATE' in small blue cursive.",
+            "carrier_list": [
+                "poster",
+                "bottle"
+            ],
+            "sentence_list": [
+                "a wall poster that says 'STRENGTH' in large black bold letters.",
+                "a water bottle with 'HYDRATE' in small blue cursive."
+            ]
+        },
+        {
+            "index": 18,
+            "prompt": "A street market with a sign that says 'FRESH' in large green bold letters, a stand with the word 'VEGETABLES' in medium red italic.",
+            "carrier_list": [
+                "sign",
+                "stand"
+            ],
+            "sentence_list": [
+                "a sign that says 'FRESH' in large green bold letters.",
+                "a stand with the word 'VEGETABLES' in medium red italic."
+            ]
+        },
+        {
+            "index": 19,
+            "prompt": "A music festival with a large banner reading 'VIBES' in vibrant purple bold letters, a stage with the word 'LIVE' in large white italic.",
+            "carrier_list": [
+                "banner",
+                "stage"
+            ],
+            "sentence_list": [
+                "a large banner reading 'VIBES' in vibrant purple bold letters.",
+                "a stage with the word 'LIVE' in large white italic."
+            ]
+        },
+        {
+            "index": 20,
+            "prompt": "A busy coffee shop with a menu board that reads 'Espresso' in large dark brown letters, a barista apron with the word 'Serve' in bold white.",
+            "carrier_list": [
+                "board",
+                "apron"
+            ],
+            "sentence_list": [
+                "a menu board that reads 'Espresso' in large dark brown letters.",
+                "a barista apron with the word 'Serve' in bold white."
+            ]
+        },
+        {
+            "index": 21,
+            "prompt": "An office desk with a computer screen displaying 'Data' in medium blue font, a coffee mug with 'Focus' in italic black.",
+            "carrier_list": [
+                "screen",
+                "mug"
+            ],
+            "sentence_list": [
+                "a computer screen displaying 'Data' in medium blue font.",
+                "a coffee mug with 'Focus' in italic black."
+            ]
+        },
+        {
+            "index": 22,
+            "prompt": "In a quiet park, a bench with the word 'Rest' in large green letters, a nearby trash bin saying 'Clean' in small regular font.",
+            "carrier_list": [
+                "bench",
+                "bin"
+            ],
+            "sentence_list": [
+                "a bench with the word 'Rest' in large green letters.",
+                "a nearby trash bin saying 'Clean' in small regular font."
+            ]
+        },
+        {
+            "index": 23,
+            "prompt": "A street market with a sign that reads 'Fresh' in bright red large letters, a delivery truck with 'Speed' in bold white.",
+            "carrier_list": [
+                "sign",
+                "truck"
+            ],
+            "sentence_list": [
+                "a sign that reads 'Fresh' in bright red large letters.",
+                "a delivery truck with 'Speed' in bold white."
+            ]
+        },
+        {
+            "index": 24,
+            "prompt": "A bookstore with a window sign that says 'Books' in large blue letters, a nearby shelf labeled 'Sale' in italic red.",
+            "carrier_list": [
+                "sign",
+                "shelf"
+            ],
+            "sentence_list": [
+                "a window sign that says 'Books' in large blue letters.",
+                "a nearby shelf labeled 'Sale' in italic red."
+            ]
+        },
+        {
+            "index": 25,
+            "prompt": "On a subway platform, a digital display reads 'Arrival' in medium yellow font, a nearby poster with 'Journey' in bold black.",
+            "carrier_list": [
+                "display",
+                "poster"
+            ],
+            "sentence_list": [
+                "a digital display reads 'Arrival' in medium yellow font.",
+                "a nearby poster with 'Journey' in bold black."
+            ]
+        },
+        {
+            "index": 26,
+            "prompt": "A sports stadium with a large banner saying 'Victory' in bold gold letters, a player jersey displaying 'Champion' in large white.",
+            "carrier_list": [
+                "banner",
+                "jersey"
+            ],
+            "sentence_list": [
+                "a large banner saying 'Victory' in bold gold letters.",
+                "a player jersey displaying 'Champion' in large white."
+            ]
+        },
+        {
+            "index": 27,
+            "prompt": "At a concert venue, a stage backdrop with 'Live' in large vibrant purple letters, a microphone stand with 'Sound' in italic black.",
+            "carrier_list": [
+                "backdrop",
+                "stand"
+            ],
+            "sentence_list": [
+                "a stage backdrop with 'Live' in large vibrant purple letters.",
+                "a microphone stand with 'Sound' in italic black."
+            ]
+        },
+        {
+            "index": 28,
+            "prompt": "A gym interior with a wall clock showing 'Time' in medium red font, a yoga mat with 'Stretch' in cursive green.",
+            "carrier_list": [
+                "clock",
+                "mat"
+            ],
+            "sentence_list": [
+                "a wall clock showing 'Time' in medium red font.",
+                "a yoga mat with 'Stretch' in cursive green."
+            ]
+        },
+        {
+            "index": 29,
+            "prompt": "A film set with a director chair labeled 'Director' in bold black letters, a clapperboard with 'Action' in large white.",
+            "carrier_list": [
+                "chair",
+                "clapperboard"
+            ],
+            "sentence_list": [
+                "a director chair labeled 'Director' in bold black letters.",
+                "a clapperboard with 'Action' in large white."
+            ]
+        },
+        {
+            "index": 30,
+            "prompt": "A crowded subway station with a large sign saying 'Travel' in bold red letters. A nearby kiosk displays the word 'Ticket' in small italic.",
+            "carrier_list": [
+                "sign",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a large sign saying 'Travel' in bold red letters.",
+                "A nearby kiosk displays the word 'Ticket' in small italic."
+            ]
+        },
+        {
+            "index": 31,
+            "prompt": "In a bookstore, a shelf filled with books labeled 'Fiction' in medium blue cursive. A poster on the wall says 'Read' in large black.",
+            "carrier_list": [
+                "shelf",
+                "poster"
+            ],
+            "sentence_list": [
+                "a shelf filled with books labeled 'Fiction' in medium blue cursive.",
+                "A poster on the wall says 'Read' in large black."
+            ]
+        },
+        {
+            "index": 32,
+            "prompt": "On a busy beach, a surfboard has the word 'Wave' in large white letters. A beach bar counter shows the text 'Drink' in medium colorful.",
+            "carrier_list": [
+                "surfboard",
+                "counter"
+            ],
+            "sentence_list": [
+                "a surfboard has the word 'Wave' in large white letters.",
+                "A beach bar counter shows the text 'Drink' in medium colorful."
+            ]
+        },
+        {
+            "index": 33,
+            "prompt": "A modern office building with a banner that reads 'Success' in large green bold. A digital screen displays 'Goal' in medium regular.",
+            "carrier_list": [
+                "banner",
+                "screen"
+            ],
+            "sentence_list": [
+                "a banner that reads 'Success' in large green bold.",
+                "A digital screen displays 'Goal' in medium regular."
+            ]
+        },
+        {
+            "index": 34,
+            "prompt": "On a park bench, a flyer has the word 'Relax' in small italic. A nearby coffee cart advertises 'Brew' in medium brown.",
+            "carrier_list": [
+                "flyer",
+                "cart"
+            ],
+            "sentence_list": [
+                "a flyer has the word 'Relax' in small italic.",
+                "A nearby coffee cart advertises 'Brew' in medium brown."
+            ]
+        },
+        {
+            "index": 35,
+            "prompt": "In a movie theater lobby, a banner reads 'Premiere' in large gold cursive. A popcorn machine shows 'Snack' in small yellow.",
+            "carrier_list": [
+                "banner",
+                "machine"
+            ],
+            "sentence_list": [
+                "a banner reads 'Premiere' in large gold cursive.",
+                "A popcorn machine shows 'Snack' in small yellow."
+            ]
+        },
+        {
+            "index": 36,
+            "prompt": "A sports stadium with a large sign reading 'Champion' in bold blue letters. A nearby scoreboard displays 'Score' in medium white.",
+            "carrier_list": [
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a large sign reading 'Champion' in bold blue letters.",
+                "A nearby scoreboard displays 'Score' in medium white."
+            ]
+        },
+        {
+            "index": 37,
+            "prompt": "In a music store, a guitar case has the word 'Tune' in medium black. A nearby speaker says 'Beat' in large red bold.",
+            "carrier_list": [
+                "case",
+                "speaker"
+            ],
+            "sentence_list": [
+                "a guitar case has the word 'Tune' in medium black.",
+                "A nearby speaker says 'Beat' in large red bold."
+            ]
+        },
+        {
+            "index": 38,
+            "prompt": "On a busy street corner, a taxi displays the word 'Ride' in small yellow. A bus stop sign says 'Wait' in large green italic.",
+            "carrier_list": [
+                "taxi",
+                "sign"
+            ],
+            "sentence_list": [
+                "a taxi displays the word 'Ride' in small yellow.",
+                "A bus stop sign says 'Wait' in large green italic."
+            ]
+        },
+        {
+            "index": 39,
+            "prompt": "In a café window, a sign says 'Open' in large green. A menu board outside shows 'Coffee' in medium brown cursive.",
+            "carrier_list": [
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a sign says 'Open' in large green.",
+                "A menu board outside shows 'Coffee' in medium brown cursive."
+            ]
+        },
+        {
+            "index": 40,
+            "prompt": "A mountain trail with a sign that reads 'Explore More' in large green letters, a hiker backpack featuring 'Adventure Awaits' in bold.",
+            "carrier_list": [
+                "sign",
+                "backpack"
+            ],
+            "sentence_list": [
+                "a sign that reads 'Explore More' in large green letters.",
+                " a hiker backpack featuring 'Adventure Awaits' in bold."
+            ]
+        },
+        {
+            "index": 41,
+            "prompt": "In a coffee shop, a chalkboard menu displays 'Hot Coffee' in large brown cursive, a napkin with 'Enjoy' written on it in italic.",
+            "carrier_list": [
+                "chalkboard",
+                "napkin"
+            ],
+            "sentence_list": [
+                "a chalkboard menu displays 'Hot Coffee' in large brown cursive.",
+                "a napkin with 'Enjoy' written on it in italic."
+            ]
+        },
+        {
+            "index": 42,
+            "prompt": "A modern office building with a digital screen showing 'Work Smart' in bold blue, a door with 'Meeting Room' on it in medium regular font.",
+            "carrier_list": [
+                "screen",
+                "door"
+            ],
+            "sentence_list": [
+                "a digital screen showing 'Work Smart' in bold blue.",
+                "a door with 'Meeting Room' on it in medium regular font."
+            ]
+        },
+        {
+            "index": 43,
+            "prompt": "At a busy market, a fruit stall has a banner reading 'Fresh Produce' in large red letters, a shopping cart with 'Grab And Go' in small italic.",
+            "carrier_list": [
+                "banner",
+                "cart"
+            ],
+            "sentence_list": [
+                "a banner reading 'Fresh Produce' in large red letters.",
+                "a shopping cart with 'Grab And Go' in small italic."
+            ]
+        },
+        {
+            "index": 44,
+            "prompt": "A park entrance with a sign saying 'Welcome Home' in large welcoming green letters, a bench beside it displaying 'Rest Here' in medium regular font.",
+            "carrier_list": [
+                "sign",
+                "bench"
+            ],
+            "sentence_list": [
+                "a sign saying 'Welcome Home' in large welcoming green letters.",
+                "a bench beside it displaying 'Rest Here' in medium regular font."
+            ]
+        },
+        {
+            "index": 45,
+            "prompt": "On a movie theater banner, 'Now Showing' lights up in large bright white letters, while a poster outside reads 'Coming Soon' in bold black.",
+            "carrier_list": [
+                "banner",
+                "poster"
+            ],
+            "sentence_list": [
+                "a movie theater banner, 'Now Showing' lights up in large bright white letters.",
+                "a poster outside reads 'Coming Soon' in bold black."
+            ]
+        },
+        {
+            "index": 46,
+            "prompt": "In a gym, a motivational poster reads 'Push Limits' in large bold red letters, a water bottle says 'Stay Hydrated' in small blue cursive.",
+            "carrier_list": [
+                "poster",
+                "bottle"
+            ],
+            "sentence_list": [
+                "a motivational poster reads 'Push Limits' in large bold red letters.",
+                "a water bottle says 'Stay Hydrated' in small blue cursive."
+            ]
+        },
+        {
+            "index": 47,
+            "prompt": "A bookstore window features 'Best Sellers' in large gold letters, a stack of books beside it has 'Read More' in medium regular font.",
+            "carrier_list": [
+                "window",
+                "stack"
+            ],
+            "sentence_list": [
+                "a bookstore window features 'Best Sellers' in large gold letters.",
+                "a stack of books beside it has 'Read More' in medium regular font."
+            ]
+        },
+        {
+            "index": 48,
+            "prompt": "At a subway station, a sign reads 'Next Train' in large yellow letters, a nearby vending machine displays 'Snack Time' in bold green.",
+            "carrier_list": [
+                "sign",
+                "machine"
+            ],
+            "sentence_list": [
+                "a sign reads 'Next Train' in large yellow letters.",
+                "a nearby vending machine displays 'Snack Time' in bold green."
+            ]
+        },
+        {
+            "index": 49,
+            "prompt": "A concert stage with a banner reading 'Live Music' in large vibrant purple letters, a ticket booth displays 'Buy Tickets' in medium italic.",
+            "carrier_list": [
+                "banner",
+                "booth"
+            ],
+            "sentence_list": [
+                "a banner reading 'Live Music' in large vibrant purple letters.",
+                "a ticket booth displays 'Buy Tickets' in medium italic."
+            ]
+        },
+        {
+            "index": 50,
+            "prompt": "A coffee shop interior with a chalkboard displaying 'Fresh Brews' in large cursive, a counter menu saying 'Daily Special' in bold red letters.",
+            "carrier_list": [
+                "chalkboard",
+                "menu"
+            ],
+            "sentence_list": [
+                "a chalkboard displaying 'Fresh Brews' in large cursive.",
+                "a counter menu saying 'Daily Special' in bold red letters."
+            ]
+        },
+        {
+            "index": 51,
+            "prompt": "In a bustling shopping mall, a digital screen flashes 'Big Sale Now' in bright yellow large letters, a store window shows 'New Arrivals' in medium italic.",
+            "carrier_list": [
+                "screen",
+                "window"
+            ],
+            "sentence_list": [
+                "a digital screen flashes 'Big Sale Now' in bright yellow large letters.",
+                "a store window shows 'New Arrivals' in medium italic."
+            ]
+        },
+        {
+            "index": 52,
+            "prompt": "A city park with a monument inscribed 'Peace Forever' in large regular letters, a nearby bench with 'Relax Here' in small green.",
+            "carrier_list": [
+                "monument",
+                "bench"
+            ],
+            "sentence_list": [
+                "a monument inscribed 'Peace Forever' in large regular letters.",
+                "a nearby bench with 'Relax Here' in small green."
+            ]
+        },
+        {
+            "index": 53,
+            "prompt": "Along a busy highway, a billboard displays 'Explore More' in bold blue large letters, a gas station sign reads 'Fuel Up' in medium italic.",
+            "carrier_list": [
+                "billboard",
+                "sign"
+            ],
+            "sentence_list": [
+                "a billboard displays 'Explore More' in bold blue large letters.",
+                "a gas station sign reads 'Fuel Up' in medium italic."
+            ]
+        },
+        {
+            "index": 54,
+            "prompt": "At a concert venue, a stage banner says 'Live Music Tonight' in large bold, a nearby snack stand shows 'Hot Dogs' in small red cursive.",
+            "carrier_list": [
+                "banner",
+                "stand"
+            ],
+            "sentence_list": [
+                "a stage banner says 'Live Music Tonight' in large bold.",
+                "a nearby snack stand shows 'Hot Dogs' in small red cursive."
+            ]
+        },
+        {
+            "index": 55,
+            "prompt": "In a modern office lobby, a digital screen reads 'Welcome Home' in large green letters, a reception desk has 'Sign In' in medium regular.",
+            "carrier_list": [
+                "screen",
+                "desk"
+            ],
+            "sentence_list": [
+                "a digital screen reads 'Welcome Home' in large green letters.",
+                "a reception desk has 'Sign In' in medium regular."
+            ]
+        },
+        {
+            "index": 56,
+            "prompt": "Near a subway entrance, a large sign says 'Ride Safe' in bold yellow, a timetable board displays 'Next Train' in medium italic.",
+            "carrier_list": [
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a large sign says 'Ride Safe' in bold yellow.",
+                "a timetable board displays 'Next Train' in medium italic."
+            ]
+        },
+        {
+            "index": 57,
+            "prompt": "On a movie theater banner, the sign reads 'Now Showing' in large bright blue letters, a ticket booth window says 'Buy Tickets' in small bold.",
+            "carrier_list": [
+                "sign",
+                "window"
+            ],
+            "sentence_list": [
+                "the sign reads 'Now Showing' in large bright blue letters.",
+                "a ticket booth window says 'Buy Tickets' in small bold."
+            ]
+        },
+        {
+            "index": 58,
+            "prompt": "At a bookstore, a display stand features the text 'Best Sellers' in large red cursive, a checkout counter sign reads 'Thank You' in medium regular.",
+            "carrier_list": [
+                "stand",
+                "sign"
+            ],
+            "sentence_list": [
+                "a display stand features the text 'Best Sellers' in large red cursive.",
+                "a checkout counter sign reads 'Thank You' in medium regular."
+            ]
+        },
+        {
+            "index": 59,
+            "prompt": "On a busy street corner, a poster on a wall says 'Support Local' in bold green large letters, a nearby coffee cart reads 'Order Here' in small italic.",
+            "carrier_list": [
+                "poster",
+                "cart"
+            ],
+            "sentence_list": [
+                "a poster on a wall says 'Support Local' in bold green large letters.",
+                "a nearby coffee cart reads 'Order Here' in small italic."
+            ]
+        },
+        {
+            "index": 60,
+            "prompt": "A busy downtown street with a large poster that says 'Sale Today' in bright red bold letters, a coffee shop window displaying 'Fresh Brew' in medium green cursive.",
+            "carrier_list": [
+                "poster",
+                "window"
+            ],
+            "sentence_list": [
+                "a large poster that says 'Sale Today' in bright red bold letters.",
+                "a coffee shop window displaying 'Fresh Brew' in medium green cursive."
+            ]
+        },
+        {
+            "index": 61,
+            "prompt": "At a sports stadium, a giant screen shows 'Game Day' in large italic blue letters, a scoreboard reads 'Score 3' in medium regular white.",
+            "carrier_list": [
+                "screen",
+                "scoreboard"
+            ],
+            "sentence_list": [
+                "a giant screen shows 'Game Day' in large italic blue letters.",
+                "a scoreboard reads 'Score 3' in medium regular white."
+            ]
+        },
+        {
+            "index": 62,
+            "prompt": "On a crowded subway platform, an advertisement reads 'Save Big Now' in large yellow bold letters, a train car has 'Next Stop' in medium black italic on it.",
+            "carrier_list": [
+                "advertisement",
+                "car"
+            ],
+            "sentence_list": [
+                "an advertisement reads 'Save Big Now' in large yellow bold letters.",
+                "a train car has 'Next Stop' in medium black italic on it."
+            ]
+        },
+        {
+            "index": 63,
+            "prompt": "In a cozy bookstore, a shelf label reads 'Best Sellers' in medium blue cursive, a window sign displays 'Open Now' in large green bold letters.",
+            "carrier_list": [
+                "label",
+                "sign"
+            ],
+            "sentence_list": [
+                "a shelf label reads 'Best Sellers' in medium blue cursive.",
+                "a window sign displays 'Open Now' in large green bold letters."
+            ]
+        },
+        {
+            "index": 64,
+            "prompt": "Near a construction site, a crane has 'Heavy Load' in large orange bold letters, a caution sign says 'Work Zone' in medium yellow italic.",
+            "carrier_list": [
+                "crane",
+                "sign"
+            ],
+            "sentence_list": [
+                "a crane has 'Heavy Load' in large orange bold letters.",
+                "a caution sign says 'Work Zone' in medium yellow italic."
+            ]
+        },
+        {
+            "index": 65,
+            "prompt": "On a city sidewalk, a digital display shows 'Live News' in medium white regular letters, a nearby bus stop reads 'Arriving Soon' in large red bold letters.",
+            "carrier_list": [
+                "display",
+                "stop"
+            ],
+            "sentence_list": [
+                "a digital display shows 'Live News' in medium white regular letters.",
+                "a nearby bus stop reads 'Arriving Soon' in large red bold letters."
+            ]
+        },
+        {
+            "index": 66,
+            "prompt": "A movie theater banner flashes 'Coming Soon' in large bright pink bold letters, a ticket booth sign says 'Tickets Here' in medium black regular letters.",
+            "carrier_list": [
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a movie theater banner flashes 'Coming Soon' in large bright pink bold letters.",
+                "a ticket booth sign says 'Tickets Here' in medium black regular letters."
+            ]
+        },
+        {
+            "index": 67,
+            "prompt": "In a shopping mall, an escalator warning reads 'Stand Clear' in large red bold letters, a shop door displays 'Closed' in medium gray italic.",
+            "carrier_list": [
+                "warning",
+                "door"
+            ],
+            "sentence_list": [
+                "an escalator warning reads 'Stand Clear' in large red bold letters.",
+                "a shop door displays 'Closed' in medium gray italic."
+            ]
+        },
+        {
+            "index": 68,
+            "prompt": "In an art gallery, a painting title says 'Abstract Vision' in medium black regular letters, a wall plaque reads 'Limited Edition' in small gold italic.",
+            "carrier_list": [
+                "title",
+                "plaque"
+            ],
+            "sentence_list": [
+                "a painting title says 'Abstract Vision' in medium black regular letters.",
+                "a wall plaque reads 'Limited Edition' in small gold italic."
+            ]
+        },
+        {
+            "index": 69,
+            "prompt": "On a food truck, the menu reads 'Tacos Today' in large green bold letters, a payment terminal displays 'Cash Only' in medium black italic.",
+            "carrier_list": [
+                "menu",
+                "terminal"
+            ],
+            "sentence_list": [
+                "the menu reads 'Tacos Today' in large green bold letters.",
+                "a payment terminal displays 'Cash Only' in medium black italic."
+            ]
+        },
+        {
+            "index": 70,
+            "prompt": "A busy shopping mall with a large poster that reads 'Exclusive Deals' in bold red letters, a store window displaying 'Opening Soon' in large italic blue.",
+            "carrier_list": [
+                "poster",
+                "window"
+            ],
+            "sentence_list": [
+                "a large poster that reads 'Exclusive Deals' in bold red letters.",
+                "a store window displaying 'Opening Soon' in large italic blue."
+            ]
+        },
+        {
+            "index": 71,
+            "prompt": "In a modern office, a digital clock shows '09:30 AM' in medium regular digits, and a conference room door has a sign saying 'Meeting In Progress' in large bold black letters.",
+            "carrier_list": [
+                "clock",
+                "sign"
+            ],
+            "sentence_list": [
+                "a digital clock shows '09:30 AM' in medium regular digits.",
+                "a sign saying 'Meeting In Progress' in large bold black letters."
+            ]
+        },
+        {
+            "index": 72,
+            "prompt": "On a mountain trail, a wooden sign reads 'Stay Safe' in large green cursive, a nearby rock displays 'Peak Ahead' in medium white letters.",
+            "carrier_list": [
+                "sign",
+                "rock"
+            ],
+            "sentence_list": [
+                "a wooden sign reads 'Stay Safe' in large green cursive.",
+                "a nearby rock displays 'Peak Ahead' in medium white letters."
+            ]
+        },
+        {
+            "index": 73,
+            "prompt": "At a train station, a platform display reads 'Train Arrives Soon' in large yellow bold letters, a nearby bench says 'Rest Here' in small italic font.",
+            "carrier_list": [
+                "display",
+                "bench"
+            ],
+            "sentence_list": [
+                "a platform display reads 'Train Arrives Soon' in large yellow bold letters.",
+                "a nearby bench says 'Rest Here' in small italic font."
+            ]
+        },
+        {
+            "index": 74,
+            "prompt": "In a café, a menu board reads 'Daily Specials' in large handwritten-style letters, a coffee cup has 'Enjoy Your Day' written on it in medium regular script.",
+            "carrier_list": [
+                "board",
+                "cup"
+            ],
+            "sentence_list": [
+                "a menu board reads 'Daily Specials' in large handwritten-style letters.",
+                "a coffee cup has 'Enjoy Your Day' written on it in medium regular script."
+            ]
+        },
+        {
+            "index": 75,
+            "prompt": "A city park with a sign that says 'No Littering' in bold red letters, a bicycle rack displays 'Park Here' in medium green font.",
+            "carrier_list": [
+                "sign",
+                "rack"
+            ],
+            "sentence_list": [
+                "a sign that says 'No Littering' in bold red letters.",
+                "a bicycle rack displays 'Park Here' in medium green font."
+            ]
+        },
+        {
+            "index": 76,
+            "prompt": "In a bookstore, a shelf has a tag that reads 'New Arrivals' in large blue bold letters, a window poster says 'Read More' in italic black.",
+            "carrier_list": [
+                "tag",
+                "poster"
+            ],
+            "sentence_list": [
+                "a shelf has a tag that reads 'New Arrivals' in large blue bold letters.",
+                "a window poster says 'Read More' in italic black."
+            ]
+        },
+        {
+            "index": 77,
+            "prompt": "On a highway, a road sign displays 'Exit 25' in large white letters, a billboard above reads 'Best Deals' in bold yellow.",
+            "carrier_list": [
+                "sign",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a road sign displays 'Exit 25' in large white letters.",
+                "a billboard above reads 'Best Deals' in bold yellow."
+            ]
+        },
+        {
+            "index": 78,
+            "prompt": "At a movie theater, a banner reads 'Coming Soon' in large bright lights, a ticket counter sign says 'Buy Tickets Here' in medium bold letters.",
+            "carrier_list": [
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner reads 'Coming Soon' in large bright lights.",
+                "a ticket counter sign says 'Buy Tickets Here' in medium bold letters."
+            ]
+        },
+        {
+            "index": 79,
+            "prompt": "In a gym, a motivational poster reads 'Push Yourself' in large red bold letters, a water fountain has a label saying 'Hydrate' in small blue italic script.",
+            "carrier_list": [
+                "poster",
+                "fountain"
+            ],
+            "sentence_list": [
+                "a motivational poster reads 'Push Yourself' in large red bold letters.",
+                "a water fountain has a label saying 'Hydrate' in small blue italic script."
+            ]
+        },
+        {
+            "index": 80,
+            "prompt": "A crowded marketplace with a sign that says 'Fresh Produce' in vibrant green large bold letters, a stall with a label reading 'Discount 50 percent' in bright red medium italic.",
+            "carrier_list": [
+                "sign",
+                "stall"
+            ],
+            "sentence_list": [
+                "a sign that says 'Fresh Produce' in vibrant green large bold letters.",
+                "a stall with a label reading 'Discount 50 percent' in bright red medium italic."
+            ]
+        },
+        {
+            "index": 81,
+            "prompt": "On a mountain trail, a wooden sign reads 'Adventure Awaits' in rustic brown large cursive, a rock with 'Climb Higher' engraved on it in weathered gray.",
+            "carrier_list": [
+                "sign",
+                "rock"
+            ],
+            "sentence_list": [
+                "a wooden sign reads 'Adventure Awaits' in rustic brown large cursive.",
+                "a rock with 'Climb Higher' engraved on it in weathered gray."
+            ]
+        },
+        {
+            "index": 82,
+            "prompt": "Inside a bookstore, a poster on the wall says 'New Arrivals' in bold blue large letters, a shelf with a tag saying 'Bestsellers' in sleek black medium regular.",
+            "carrier_list": [
+                "poster",
+                "tag"
+            ],
+            "sentence_list": [
+                "a poster on the wall says 'New Arrivals' in bold blue large letters.",
+                "a shelf with a tag saying 'Bestsellers' in sleek black medium regular."
+            ]
+        },
+        {
+            "index": 83,
+            "prompt": "At a coffee shop, a sign reads 'Coffee Time' in creamy white large cursive, a menu board saying 'Buy 1 Get 1 Free' in vibrant yellow medium bold.",
+            "carrier_list": [
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a sign reads 'Coffee Time' in creamy white large cursive.",
+                "a menu board saying 'Buy 1 Get 1 Free' in vibrant yellow medium bold."
+            ]
+        },
+        {
+            "index": 84,
+            "prompt": "A busy subway station with a digital screen displaying 'Next Train 5 mins' in bright white large regular, a nearby advertisement showing 'Travel Smart' in modern blue medium italic.",
+            "carrier_list": [
+                "screen",
+                "advertisement"
+            ],
+            "sentence_list": [
+                "a digital screen displaying 'Next Train 5 mins' in bright white large regular.",
+                "a nearby advertisement showing 'Travel Smart' in modern blue medium italic."
+            ]
+        },
+        {
+            "index": 85,
+            "prompt": "On a downtown street corner, a billboard reads 'Explore More' in striking orange large bold letters, a bus stop shelter displaying 'Arriving Soon' in sleek silver medium.",
+            "carrier_list": [
+                "billboard",
+                "shelter"
+            ],
+            "sentence_list": [
+                "a billboard reads 'Explore More' in striking orange large bold letters.",
+                "a bus stop shelter displaying 'Arriving Soon' in sleek silver medium."
+            ]
+        },
+        {
+            "index": 86,
+            "prompt": "Near a park, a notice board says 'No Entry' in bold red large letters, a bicycle rack with a sign reading 'Rent Me' in playful green medium cursive.",
+            "carrier_list": [
+                "board",
+                "rack"
+            ],
+            "sentence_list": [
+                "a notice board says 'No Entry' in bold red large letters.",
+                "a bicycle rack with a sign reading 'Rent Me' in playful green medium cursive."
+            ]
+        },
+        {
+            "index": 87,
+            "prompt": "In a cinema lobby, a banner reads 'Now Showing' in bright yellow large bold letters, a counter display says 'Buy Tickets' in clean white medium regular.",
+            "carrier_list": [
+                "banner",
+                "display"
+            ],
+            "sentence_list": [
+                "a banner reads 'Now Showing' in bright yellow large bold letters.",
+                "a counter display says 'Buy Tickets' in clean white medium regular."
+            ]
+        },
+        {
+            "index": 88,
+            "prompt": "At a gym, a motivational poster reads 'Push Yourself' in dynamic red large italic, a wall clock showing 'Time to Move' in bold black medium.",
+            "carrier_list": [
+                "poster",
+                "clock"
+            ],
+            "sentence_list": [
+                "a motivational poster reads 'Push Yourself' in dynamic red large italic.",
+                "a wall clock showing 'Time to Move' in bold black medium."
+            ]
+        },
+        {
+            "index": 89,
+            "prompt": "On a city skyline, a neon sign says 'Sky High' in luminous blue large bold letters, a rooftop terrace banner reads 'Exclusive Access' in elegant gold medium cursive.",
+            "carrier_list": [
+                "sign",
+                "banner"
+            ],
+            "sentence_list": [
+                "a neon sign says 'Sky High' in luminous blue large bold letters.",
+                "a rooftop terrace banner reads 'Exclusive Access' in elegant gold medium cursive."
+            ]
+        },
+        {
+            "index": 90,
+            "prompt": "A busy shopping mall with a digital display reading 'Summer Sale' in large red letters, a store window beside it showing '50 percent Off' in bold blue.",
+            "carrier_list": [
+                "display",
+                "window"
+            ],
+            "sentence_list": [
+                "a digital display reading 'Summer Sale' in large red letters.",
+                "a store window beside it showing '50 percent Off' in bold blue."
+            ]
+        },
+        {
+            "index": 91,
+            "prompt": "On a bustling street, a bus stop sign says 'Next Bus 5 Min' in italic green, a nearby kiosk displays 'Hot Coffee' in medium brown cursive.",
+            "carrier_list": [
+                "sign",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a bus stop sign says 'Next Bus 5 Min' in italic green.",
+                "a nearby kiosk displays 'Hot Coffee' in medium brown cursive."
+            ]
+        },
+        {
+            "index": 92,
+            "prompt": "A futuristic city skyline with a large screen that reads 'New Horizons' in silver bold letters, a drone by showing 'Next Stop' in small white.",
+            "carrier_list": [
+                "screen",
+                "drone"
+            ],
+            "sentence_list": [
+                "a large screen that reads 'New Horizons' in silver bold letters.",
+                "a drone by showing 'Next Stop' in small white."
+            ]
+        },
+        {
+            "index": 93,
+            "prompt": "In a coffee shop, a chalkboard menu reads 'Special Blend' in large cursive, a nearby counter has 'Freshly Brewed' in medium regular letters.",
+            "carrier_list": [
+                "menu",
+                "counter"
+            ],
+            "sentence_list": [
+                "a chalkboard menu reads 'Special Blend' in large cursive.",
+                "a nearby counter has 'Freshly Brewed' in medium regular letters."
+            ]
+        },
+        {
+            "index": 94,
+            "prompt": "At a football game, a giant scoreboard shows 'Final Score 3-2' in large bold numbers, a fan banner reads 'Go Team' in bright yellow italic.",
+            "carrier_list": [
+                "scoreboard",
+                "banner"
+            ],
+            "sentence_list": [
+                "a giant scoreboard shows 'Final Score 3-2' in large bold numbers.",
+                "a fan banner reads 'Go Team' in bright yellow italic."
+            ]
+        },
+        {
+            "index": 95,
+            "prompt": "Inside a modern office, a wall poster says 'Innovate Daily' in medium blue letters, a desk calendar shows 'Deadline: 10/10' in small red.",
+            "carrier_list": [
+                "poster",
+                "calendar"
+            ],
+            "sentence_list": [
+                "a wall poster says 'Innovate Daily' in medium blue letters.",
+                "a desk calendar shows 'Deadline: 10/10' in small red."
+            ]
+        },
+        {
+            "index": 96,
+            "prompt": "On a street corner, a restaurant sign reads 'Open 24/7' in bold green letters, a food truck nearby displays 'Tacos And Burritos' in large colorful cursive.",
+            "carrier_list": [
+                "sign",
+                "truck"
+            ],
+            "sentence_list": [
+                "a restaurant sign reads 'Open 24/7' in bold green letters.",
+                "a food truck nearby displays 'Tacos And Burritos' in large colorful cursive."
+            ]
+        },
+        {
+            "index": 97,
+            "prompt": "A movie theater banner shows 'Coming Soon: 2025' in large bright letters, a ticket booth displays 'Now Hiring' in bold white.",
+            "carrier_list": [
+                "banner",
+                "booth"
+            ],
+            "sentence_list": [
+                "a movie theater banner shows 'Coming Soon: 2025' in large bright letters.",
+                "a ticket booth displays 'Now Hiring' in bold white."
+            ]
+        },
+        {
+            "index": 98,
+            "prompt": "At a subway station, an ad board reads 'Travel Smart' in medium black letters, a nearby map shows 'Exit 2' in small blue.",
+            "carrier_list": [
+                "board",
+                "map"
+            ],
+            "sentence_list": [
+                "an ad board reads 'Travel Smart' in medium black letters.",
+                "a nearby map shows 'Exit 2' in small blue."
+            ]
+        },
+        {
+            "index": 99,
+            "prompt": "In a park, a trail sign reads 'Hiking Trail 3' in large green letters, a park bench nearby says 'Relax Here' in italic brown.",
+            "carrier_list": [
+                "sign",
+                "bench"
+            ],
+            "sentence_list": [
+                "a trail sign reads 'Hiking Trail 3' in large green letters.",
+                "a park bench nearby says 'Relax Here' in italic brown."
+            ]
+        },
+        {
+            "index": 100,
+            "prompt": "A busy marketplace with a stall displaying 'Fresh Produce' in large green letters, a nearby sign reading 'Discount Today' in bold.",
+            "carrier_list": [
+                "stall",
+                "sign"
+            ],
+            "sentence_list": [
+                "a stall displaying 'Fresh Produce' in large green letters.",
+                "a nearby sign reading 'Discount Today' in bold."
+            ]
+        },
+        {
+            "index": 101,
+            "prompt": "On a movie theater banner, 'Now Showing' appears in large bold letters, while a poster beside it announces 'Best Picture' in medium italic.",
+            "carrier_list": [
+                "banner",
+                "poster"
+            ],
+            "sentence_list": [
+                "a movie theater banner, 'Now Showing' appears in large bold letters",
+                "a poster beside it announces 'Best Picture' in medium italic."
+            ]
+        },
+        {
+            "index": 102,
+            "prompt": "In a cozy café, a chalkboard reads 'Daily Specials' in cursive, a menu on the counter shows 'Hot Coffee' in large brown letters.",
+            "carrier_list": [
+                "chalkboard",
+                "menu"
+            ],
+            "sentence_list": [
+                "a chalkboard reads 'Daily Specials' in cursive.",
+                "a menu on the counter shows 'Hot Coffee' in large brown letters."
+            ]
+        },
+        {
+            "index": 103,
+            "prompt": "At a street corner, a bus stop sign reads 'Next Bus: 5 Minutes' in small black letters, a nearby kiosk advertises 'Free Wi-Fi' in bold blue.",
+            "carrier_list": [
+                "sign",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a bus stop sign reads 'Next Bus: 5 Minutes' in small black letters.",
+                "a nearby kiosk advertises 'Free Wi-Fi' in bold blue."
+            ]
+        },
+        {
+            "index": 104,
+            "prompt": "On a sports field, a scoreboard shows 'Team A 2' in large red letters, a banner across the field says 'Victory Awaits' in italic.",
+            "carrier_list": [
+                "scoreboard",
+                "banner"
+            ],
+            "sentence_list": [
+                "a scoreboard shows 'Team A 2' in large red letters.",
+                "a banner across the field says 'Victory Awaits' in italic."
+            ]
+        },
+        {
+            "index": 105,
+            "prompt": "In a shopping mall, a digital screen displays 'Sale Now' in bright yellow large letters, a store window shows 'New Arrivals' in medium bold.",
+            "carrier_list": [
+                "screen",
+                "window"
+            ],
+            "sentence_list": [
+                "a digital screen displays 'Sale Now' in bright yellow large letters.",
+                "a store window shows 'New Arrivals' in medium bold."
+            ]
+        },
+        {
+            "index": 106,
+            "prompt": "In a library, a wall sign reads 'Quiet Zone' in small green letters, a nearby book cart has 'Free Books' written in cursive.",
+            "carrier_list": [
+                "sign",
+                "cart"
+            ],
+            "sentence_list": [
+                "a wall sign reads 'Quiet Zone' in small green letters.",
+                "a nearby book cart has 'Free Books' written in cursive."
+            ]
+        },
+        {
+            "index": 107,
+            "prompt": "On a busy avenue, a large poster reads 'Limited Edition' in bold black letters, a nearby sign shows 'Open 24/7' in medium italic.",
+            "carrier_list": [
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a large poster reads 'Limited Edition' in bold black letters.",
+                "a nearby sign shows 'Open 24/7' in medium italic."
+            ]
+        },
+        {
+            "index": 108,
+            "prompt": "At an amusement park, a ride display reads 'Fast Thrills' in large red letters, a food stand advertises 'Cool Treats' in small blue.",
+            "carrier_list": [
+                "display",
+                "stand"
+            ],
+            "sentence_list": [
+                "a ride display reads 'Fast Thrills' in large red letters.",
+                "a food stand advertises 'Cool Treats' in small blue."
+            ]
+        },
+        {
+            "index": 109,
+            "prompt": "At an airport gate, a digital sign reads 'Flight 45' in large white letters, a nearby notice board says 'Boarding Now' in bold green.",
+            "carrier_list": [
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a digital sign reads 'Flight 45' in large white letters.",
+                "a nearby notice board says 'Boarding Now' in bold green."
+            ]
+        },
+        {
+            "index": 110,
+            "prompt": "A busy coffee shop with a chalkboard menu saying 'Fresh Brews' in large bold brown letters, a table with a cup that reads 'Sip And Relax' in italic green.",
+            "carrier_list": [
+                "chalkboard",
+                "cup"
+            ],
+            "sentence_list": [
+                "a chalkboard menu saying 'Fresh Brews' in large bold brown letters.",
+                "a table with a cup that reads 'Sip And Relax' in italic green."
+            ]
+        },
+        {
+            "index": 111,
+            "prompt": "On a mountain trail, a wooden sign reads 'Hike Here' in medium green cursive, a stone monument with the text 'Keep Moving' in large bold gray.",
+            "carrier_list": [
+                "sign",
+                "monument"
+            ],
+            "sentence_list": [
+                "a wooden sign reads 'Hike Here' in medium green cursive.",
+                "a stone monument with the text 'Keep Moving' in large bold gray."
+            ]
+        },
+        {
+            "index": 112,
+            "prompt": "At a bustling market, a fruit stand displays 'Juicy Fruits' in bright red large letters, a nearby stall has 'Organic Goods' on its sign in green italic.",
+            "carrier_list": [
+                "stand",
+                "stall"
+            ],
+            "sentence_list": [
+                "a fruit stand displays 'Juicy Fruits' in bright red large letters.",
+                "a nearby stall has 'Organic Goods' on its sign in green italic."
+            ]
+        },
+        {
+            "index": 113,
+            "prompt": "In a modern office, a digital clock reads 'Work Smart' in large regular black digits, a glass door with 'Innovation Hub' written on it in bold blue.",
+            "carrier_list": [
+                "clock",
+                "door"
+            ],
+            "sentence_list": [
+                "a digital clock reads 'Work Smart' in large regular black digits.",
+                "a glass door with 'Innovation Hub' written on it in bold blue."
+            ]
+        },
+        {
+            "index": 114,
+            "prompt": "Near a park, a bench has the text 'Take a Break' in medium italic letters, while a nearby tree features a small sign saying 'Peaceful Spot' in green cursive.",
+            "carrier_list": [
+                "bench",
+                "sign"
+            ],
+            "sentence_list": [
+                "a bench has the text 'Take a Break' in medium italic letters.",
+                "a small sign saying 'Peaceful Spot' in green cursive."
+            ]
+        },
+        {
+            "index": 115,
+            "prompt": "In an art gallery, a painting frame says 'Abstract Art' in large black bold letters, a nearby display reads 'New Collection' in medium blue.",
+            "carrier_list": [
+                "frame",
+                "display"
+            ],
+            "sentence_list": [
+                "a painting frame says 'Abstract Art' in large black bold letters.",
+                "a nearby display reads 'New Collection' in medium blue."
+            ]
+        },
+        {
+            "index": 116,
+            "prompt": "Along a busy highway, a road sign reads 'Next Exit' in large white letters, while a nearby billboard shows 'Drive Safely' in bold red.",
+            "carrier_list": [
+                "sign",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a road sign reads 'Next Exit' in large white letters.",
+                "a nearby billboard shows 'Drive Safely' in bold red."
+            ]
+        },
+        {
+            "index": 117,
+            "prompt": "At a music festival, a stage banner reads 'Rock On' in large bold black letters, a speaker tower displays 'Feel the Beat' in medium blue.",
+            "carrier_list": [
+                "banner",
+                "tower"
+            ],
+            "sentence_list": [
+                "a stage banner reads 'Rock On' in large bold black letters.",
+                "a speaker tower displays 'Feel the Beat' in medium blue."
+            ]
+        },
+        {
+            "index": 118,
+            "prompt": "In a shopping mall, a store window has 'Big Sale' written on it in large red bold letters, while an escalator sign says 'Up to Level 3' in green regular.",
+            "carrier_list": [
+                "window",
+                "sign"
+            ],
+            "sentence_list": [
+                "a store window has 'Big Sale' written on it in large red bold letters.",
+                "an escalator sign says 'Up to Level 3' in green regular."
+            ]
+        },
+        {
+            "index": 119,
+            "prompt": "At a zoo entrance, a large sign reads 'Wild Adventures' in large green bold letters, while a nearby gate says 'Ticket Required' in medium black.",
+            "carrier_list": [
+                "sign",
+                "gate"
+            ],
+            "sentence_list": [
+                "a large sign reads 'Wild Adventures' in large green bold letters.",
+                "a nearby gate says 'Ticket Required' in medium black."
+            ]
+        },
+        {
+            "index": 120,
+            "prompt": "A quiet library with a sign that says 'Read More' in medium green italic letters, a shelf with the label 'Best Sellers' in bold black.",
+            "carrier_list": [
+                "sign",
+                "shelf"
+            ],
+            "sentence_list": [
+                "a sign that says 'Read More' in medium green italic letters.",
+                "a shelf with the label 'Best Sellers' in bold black."
+            ]
+        },
+        {
+            "index": 121,
+            "prompt": "In a busy shopping mall, a poster reads 'New Arrivals' in large red bold letters, a store window displaying '50 percent Off' in bright yellow large letters.",
+            "carrier_list": [
+                "poster",
+                "window"
+            ],
+            "sentence_list": [
+                "a poster reads 'New Arrivals' in large red bold letters.",
+                "a store window displaying '50 percent Off' in bright yellow large letters."
+            ]
+        },
+        {
+            "index": 122,
+            "prompt": "Along a mountain trail, a sign reads 'Adventure Awaits' in large brown regular letters, a bench with the text 'Take a Break' in small italic.",
+            "carrier_list": [
+                "sign",
+                "bench"
+            ],
+            "sentence_list": [
+                "a sign reads 'Adventure Awaits' in large brown regular letters.",
+                "a bench with the text 'Take a Break' in small italic."
+            ]
+        },
+        {
+            "index": 123,
+            "prompt": "At a cozy café, a chalkboard reads 'Fresh Brew' in large cursive green letters, a table with a note saying 'Reserved' in bold red.",
+            "carrier_list": [
+                "chalkboard",
+                "table"
+            ],
+            "sentence_list": [
+                "a chalkboard reads 'Fresh Brew' in large cursive green letters.",
+                "a table with a note saying 'Reserved' in bold red."
+            ]
+        },
+        {
+            "index": 124,
+            "prompt": "A sports stadium with a large banner saying 'Game Day' in bright blue large letters, a scoreboard displaying 'Score: 2-1' in bold white.",
+            "carrier_list": [
+                "banner",
+                "scoreboard"
+            ],
+            "sentence_list": [
+                "a large banner saying 'Game Day' in bright blue large letters.",
+                "a scoreboard displaying 'Score: 2-1' in bold white."
+            ]
+        },
+        {
+            "index": 125,
+            "prompt": "On a city street, a bus stop sign reads 'Next Bus: 5 Min' in medium black regular letters, a nearby trash can with the text 'Keep Clean' in small green italic.",
+            "carrier_list": [
+                "sign",
+                "can"
+            ],
+            "sentence_list": [
+                "a bus stop sign reads 'Next Bus: 5 Min' in medium black regular letters.",
+                "a nearby trash can with the text 'Keep Clean' in small green italic."
+            ]
+        },
+        {
+            "index": 126,
+            "prompt": "Near a park, a food truck has the text 'Tasty Bites' in large colorful cursive letters, a menu board saying 'Daily Special' in bold orange.",
+            "carrier_list": [
+                "truck",
+                "board"
+            ],
+            "sentence_list": [
+                "a food truck has the text 'Tasty Bites' in large colorful cursive letters.",
+                "a menu board saying 'Daily Special' in bold orange."
+            ]
+        },
+        {
+            "index": 127,
+            "prompt": "At a concert venue, a poster reads 'Live Music Tonight' in large purple bold letters, a ticket booth with the text 'Sold Out' in red italic.",
+            "carrier_list": [
+                "poster",
+                "booth"
+            ],
+            "sentence_list": [
+                "a poster reads 'Live Music Tonight' in large purple bold letters.",
+                "a ticket booth with the text 'Sold Out' in red italic."
+            ]
+        },
+        {
+            "index": 128,
+            "prompt": "In a tech store, a display reads 'Latest Gadgets' in medium silver bold letters, a nearby screen showing 'Limited Edition' in small black italic.",
+            "carrier_list": [
+                "display",
+                "screen"
+            ],
+            "sentence_list": [
+                "a display reads 'Latest Gadgets' in medium silver bold letters.",
+                "a nearby screen showing 'Limited Edition' in small black italic."
+            ]
+        },
+        {
+            "index": 129,
+            "prompt": "By a riverside, a wooden sign says 'Relax Here' in large brown cursive letters, a bench with the label 'No Smoking' in small red bold.",
+            "carrier_list": [
+                "sign",
+                "bench"
+            ],
+            "sentence_list": [
+                "a wooden sign says 'Relax Here' in large brown cursive letters.",
+                "a bench with the label 'No Smoking' in small red bold."
+            ]
+        },
+        {
+            "index": 130,
+            "prompt": "A quiet bookstore with a display sign saying 'Best Sellers' in large bold red letters, a coffee cup on the counter with 'Fresh Brew' written on it in medium cursive.",
+            "carrier_list": [
+                "sign",
+                "cup"
+            ],
+            "sentence_list": [
+                "a display sign saying 'Best Sellers' in large bold red letters.",
+                "a coffee cup on the counter with 'Fresh Brew' written on it in medium cursive."
+            ]
+        },
+        {
+            "index": 131,
+            "prompt": "In a vibrant park, a large fountain has the text 'Pure Water' in blue letters on its base, a nearby bench with the words 'Relax Here' in small italic.",
+            "carrier_list": [
+                "fountain",
+                "bench"
+            ],
+            "sentence_list": [
+                "a large fountain has the text 'Pure Water' in blue letters on its base.",
+                "a nearby bench with the words 'Relax Here' in small italic."
+            ]
+        },
+        {
+            "index": 132,
+            "prompt": "On a busy market street, a food truck reads 'Tasty Bites' in bright yellow large letters, a nearby sign says 'Open 24/7' in bold green.",
+            "carrier_list": [
+                "truck",
+                "sign"
+            ],
+            "sentence_list": [
+                "a food truck reads 'Tasty Bites' in bright yellow large letters.",
+                "a nearby sign says 'Open 24/7' in bold green."
+            ]
+        },
+        {
+            "index": 133,
+            "prompt": "A cozy living room with a framed picture that says 'Home Sweet Home' in elegant cursive, a cushion on the couch displaying 'Rest Now' in medium regular.",
+            "carrier_list": [
+                "picture",
+                "cushion"
+            ],
+            "sentence_list": [
+                "a framed picture that says 'Home Sweet Home' in elegant cursive.",
+                "a cushion on the couch displaying 'Rest Now' in medium regular."
+            ]
+        },
+        {
+            "index": 134,
+            "prompt": "At a busy airport, a digital billboard shows 'Fly High' in large sleek white letters, and a luggage trolley has 'Quick Grab' on it in italic blue.",
+            "carrier_list": [
+                "billboard",
+                "trolley"
+            ],
+            "sentence_list": [
+                "a digital billboard shows 'Fly High' in large sleek white letters.",
+                "a luggage trolley has 'Quick Grab' on it in italic blue."
+            ]
+        },
+        {
+            "index": 135,
+            "prompt": "Inside a gym, a motivational poster says 'Push Harder' in bold black letters, a water bottle on the floor reads 'Stay Hydrated' in small green.",
+            "carrier_list": [
+                "poster",
+                "bottle"
+            ],
+            "sentence_list": [
+                "a motivational poster says 'Push Harder' in bold black letters.",
+                "a water bottle on the floor reads 'Stay Hydrated' in small green."
+            ]
+        },
+        {
+            "index": 136,
+            "prompt": "In a modern cafe, a chalkboard menu has 'Daily Specials' in large handwritten style, a takeaway cup shows 'Hot And Fresh' in medium red.",
+            "carrier_list": [
+                "menu",
+                "cup"
+            ],
+            "sentence_list": [
+                "a chalkboard menu has 'Daily Specials' in large handwritten style.",
+                "a takeaway cup shows 'Hot And Fresh' in medium red."
+            ]
+        },
+        {
+            "index": 137,
+            "prompt": "A movie theater entrance with a banner sign that reads 'Now Showing' in bright yellow large letters, a ticket counter with the words 'Buy Tickets' in bold white.",
+            "carrier_list": [
+                "sign",
+                "counter"
+            ],
+            "sentence_list": [
+                "a banner sign that reads 'Now Showing' in bright yellow large letters.",
+                "a ticket counter with the words 'Buy Tickets' in bold white."
+            ]
+        },
+        {
+            "index": 138,
+            "prompt": "A futuristic cityscape with a tower displaying 'Innovation Ahead' in sleek silver letters, a drone nearby with 'Speed Tested' in small italic.",
+            "carrier_list": [
+                "tower",
+                "drone"
+            ],
+            "sentence_list": [
+                "a tower displaying 'Innovation Ahead' in sleek silver letters.",
+                "a drone nearby with 'Speed Tested' in small italic."
+            ]
+        },
+        {
+            "index": 139,
+            "prompt": "At a busy street corner, a construction site banner says 'Under Construction' in large orange bold letters, a nearby warning sign reads 'Safety First' in medium red.",
+            "carrier_list": [
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a construction site banner says 'Under Construction' in large orange bold letters.",
+                "a nearby warning sign reads 'Safety First' in medium red."
+            ]
+        },
+        {
+            "index": 140,
+            "prompt": "A busy marketplace with a stall displaying 'Fresh Produce' in large green letters, a nearby cart with the text 'Daily Special' in bold red.",
+            "carrier_list": [
+                "stall",
+                "cart"
+            ],
+            "sentence_list": [
+                "a stall displaying 'Fresh Produce' in large green letters.",
+                "a nearby cart with the text 'Daily Special' in bold red."
+            ]
+        },
+        {
+            "index": 141,
+            "prompt": "On a mountain trail, a signpost reads 'Top View' in medium brown letters, a rock with 'Climb Higher' engraved in italic.",
+            "carrier_list": [
+                "signpost",
+                "rock"
+            ],
+            "sentence_list": [
+                "a signpost reads 'Top View' in medium brown letters.",
+                "a rock with 'Climb Higher' engraved in italic."
+            ]
+        },
+        {
+            "index": 142,
+            "prompt": "In a bookstore, a shelf has a label saying 'Best Sellers' in bold blue, a nearby table has a sign reading 'New Arrivals' in large black cursive.",
+            "carrier_list": [
+                "label",
+                "sign"
+            ],
+            "sentence_list": [
+                "a label saying 'Best Sellers' in bold blue.",
+                "a sign reading 'New Arrivals' in large black cursive."
+            ]
+        },
+        {
+            "index": 143,
+            "prompt": "At a coffee shop, a chalkboard displays 'Brewed Fresh' in large white letters, a takeout cup with 'Enjoy Now' in small green.",
+            "carrier_list": [
+                "chalkboard",
+                "cup"
+            ],
+            "sentence_list": [
+                "a chalkboard displays 'Brewed Fresh' in large white letters.",
+                "a takeout cup with 'Enjoy Now' in small green."
+            ]
+        },
+        {
+            "index": 144,
+            "prompt": "In a concert hall, a banner says 'Live Music' in large bright yellow letters, a backstage sign reads 'Band Entrance' in italic.",
+            "carrier_list": [
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner says 'Live Music' in large bright yellow letters.",
+                "a backstage sign reads 'Band Entrance' in italic."
+            ]
+        },
+        {
+            "index": 145,
+            "prompt": "A city park with a fountain labeled 'Water Flow' in medium blue letters, a bench nearby with 'Take a Seat' in small red cursive.",
+            "carrier_list": [
+                "fountain",
+                "bench"
+            ],
+            "sentence_list": [
+                "a fountain labeled 'Water Flow' in medium blue letters.",
+                "a bench nearby with 'Take a Seat' in small red cursive."
+            ]
+        },
+        {
+            "index": 146,
+            "prompt": "On a highway, a road sign reads 'Next Exit' in large white letters, a speed limit sign displays '55 MPH' in bold black.",
+            "carrier_list": [
+                "sign",
+                "sign"
+            ],
+            "sentence_list": [
+                "a road sign reads 'Next Exit' in large white letters.",
+                "a speed limit sign displays '55 MPH' in bold black."
+            ]
+        },
+        {
+            "index": 147,
+            "prompt": "In a gym, a banner says 'Stronger Every Day' in large red letters, a wall clock displays 'Workout Time' in medium black.",
+            "carrier_list": [
+                "banner",
+                "clock"
+            ],
+            "sentence_list": [
+                "a banner says 'Stronger Every Day' in large red letters.",
+                "a wall clock displays 'Workout Time' in medium black."
+            ]
+        },
+        {
+            "index": 148,
+            "prompt": "At a museum, a display case has a sign reading 'Ancient Artifacts' in large gold letters, a nearby guidebook shows 'Exhibit Hours' in italic.",
+            "carrier_list": [
+                "case",
+                "guidebook"
+            ],
+            "sentence_list": [
+                "a display case has a sign reading 'Ancient Artifacts' in large gold letters.",
+                "a nearby guidebook shows 'Exhibit Hours' in italic."
+            ]
+        },
+        {
+            "index": 149,
+            "prompt": "On a movie set, a director chair reads 'Action Ready' in bold black, a clapperboard shows 'Scene 1' in large white.",
+            "carrier_list": [
+                "chair",
+                "clapperboard"
+            ],
+            "sentence_list": [
+                "a director chair reads 'Action Ready' in bold black.",
+                "a clapperboard shows 'Scene 1' in large white."
+            ]
+        },
+        {
+            "index": 150,
+            "prompt": "A vibrant bookstore with a window display reading 'Summer Reads' in large red letters, a nearby shelf with 'Best Seller' in bold.",
+            "carrier_list": [
+                "display",
+                "shelf"
+            ],
+            "sentence_list": [
+                "a window display reading 'Summer Reads' in large red letters.",
+                "a nearby shelf with 'Best Seller' in bold."
+            ]
+        },
+        {
+            "index": 151,
+            "prompt": "In a modern café, a chalkboard menu shows 'Special Latte' in green cursive, a sign on the counter says 'Take Away' in italic.",
+            "carrier_list": [
+                "menu",
+                "sign"
+            ],
+            "sentence_list": [
+                "a chalkboard menu shows 'Special Latte' in green cursive.",
+                "a sign on the counter says 'Take Away' in italic."
+            ]
+        },
+        {
+            "index": 152,
+            "prompt": "On a city bus, a poster reads 'Ride with Us' in large blue letters, a screen inside displays 'Next Stop' in medium regular.",
+            "carrier_list": [
+                "poster",
+                "screen"
+            ],
+            "sentence_list": [
+                "a poster reads 'Ride with Us' in large blue letters.",
+                "a screen inside displays 'Next Stop' in medium regular."
+            ]
+        },
+        {
+            "index": 153,
+            "prompt": "At a sports stadium, a large banner says 'Game Day' in bold black letters, a scoreboard reads 'Team A 2 - Team B 1' in regular.",
+            "carrier_list": [
+                "banner",
+                "scoreboard"
+            ],
+            "sentence_list": [
+                "a large banner says 'Game Day' in bold black letters.",
+                "a scoreboard reads 'Team A 2 - Team B 1' in regular."
+            ]
+        },
+        {
+            "index": 154,
+            "prompt": "On a crowded street, a digital billboard flashes 'Shop Now' in bright yellow large letters, a nearby store window says '50 percent Off' in italic.",
+            "carrier_list": [
+                "billboard",
+                "window"
+            ],
+            "sentence_list": [
+                "a digital billboard flashes 'Shop Now' in bright yellow large letters.",
+                "a nearby store window says '50 percent Off' in italic."
+            ]
+        },
+        {
+            "index": 155,
+            "prompt": "A busy shopping mall with a directory that reads 'Second Floor' in medium blue letters, an escalator sign showing 'Upwards' in bold.",
+            "carrier_list": [
+                "directory",
+                "sign"
+            ],
+            "sentence_list": [
+                "a directory that reads 'Second Floor' in medium blue letters.",
+                "an escalator sign showing 'Upwards' in bold."
+            ]
+        },
+        {
+            "index": 156,
+            "prompt": "In a park, a kiosk displays 'Ice Cream Here' in large colorful letters, a nearby bench has 'Relax Now' written on it in small green.",
+            "carrier_list": [
+                "kiosk",
+                "bench"
+            ],
+            "sentence_list": [
+                "a kiosk displays 'Ice Cream Here' in large colorful letters.",
+                "a nearby bench has 'Relax Now' written on it in small green."
+            ]
+        },
+        {
+            "index": 157,
+            "prompt": "At a music festival, a stage banner says 'Live Tonight' in large bold letters, a nearby truck displays 'Food And Drinks' in italic.",
+            "carrier_list": [
+                "banner",
+                "truck"
+            ],
+            "sentence_list": [
+                "a stage banner says 'Live Tonight' in large bold letters.",
+                "a nearby truck displays 'Food And Drinks' in italic."
+            ]
+        },
+        {
+            "index": 158,
+            "prompt": "In a train car, a monitor shows 'Next Departure' in medium regular, a poster on the wall says 'Buy Tickets' in large red letters.",
+            "carrier_list": [
+                "monitor",
+                "poster"
+            ],
+            "sentence_list": [
+                "a monitor shows 'Next Departure' in medium regular.",
+                "a poster on the wall says 'Buy Tickets' in large red letters."
+            ]
+        },
+        {
+            "index": 159,
+            "prompt": "A movie theater with a banner displaying 'Coming Soon' in large bright letters, a ticket booth reads 'Open Now' in bold.",
+            "carrier_list": [
+                "banner",
+                "booth"
+            ],
+            "sentence_list": [
+                "a banner displaying 'Coming Soon' in large bright letters.",
+                "a ticket booth reads 'Open Now' in bold."
+            ]
+        },
+        {
+            "index": 160,
+            "prompt": "A bustling market square with a large sign saying 'Fresh Produce Daily' in bold green letters and a food truck menu displaying 'Try Our Signature Tacos Today' in vibrant red cursive.",
+            "carrier_list": [
+                "sign",
+                "menu"
+            ],
+            "sentence_list": [
+                "a large sign saying 'Fresh Produce Daily' in bold green letters.",
+                "a food truck menu displaying 'Try Our Signature Tacos Today' in vibrant red cursive."
+            ]
+        },
+        {
+            "index": 161,
+            "prompt": "In a city park, a signpost reads 'Walk for Wellness' in large italic letters and a bench nearby has a plaque with 'Rest and Rejuvenate Here' in small engraved cursive.",
+            "carrier_list": [
+                "signpost",
+                "plaque"
+            ],
+            "sentence_list": [
+                "a signpost reads 'Walk for Wellness' in large italic letters.",
+                "a plaque with 'Rest and Rejuvenate Here' in small engraved cursive."
+            ]
+        },
+        {
+            "index": 162,
+            "prompt": "At a movie theater entrance, a banner announces 'Tonight Special Feature: The Great Adventure' in bold white letters and a poster nearby says 'Tickets Available Now' in bright red font.",
+            "carrier_list": [
+                "banner",
+                "poster"
+            ],
+            "sentence_list": [
+                "a banner announces 'Tonight Special Feature: The Great Adventure' in bold white letters.",
+                "a poster nearby says 'Tickets Available Now' in bright red font."
+            ]
+        },
+        {
+            "index": 163,
+            "prompt": "A café window shows 'Open for Breakfast 7 AM - 2 PM' in medium-sized gold cursive and a chalkboard sign outside reads 'Daily Specials: Vegan Wraps and Smoothies' in handwritten white chalk.",
+            "carrier_list": [
+                "window",
+                "sign"
+            ],
+            "sentence_list": [
+                "a café window shows 'Open for Breakfast 7 AM - 2 PM' in medium-sized gold cursive.",
+                "a chalkboard sign outside reads 'Daily Specials: Vegan Wraps and Smoothies' in handwritten white chalk."
+            ]
+        },
+        {
+            "index": 164,
+            "prompt": "On a subway platform, a digital screen displays 'Next Train in 3 Minutes' in bold blue letters and a large poster nearby says 'Your Journey Begins Here' in large italic font.",
+            "carrier_list": [
+                "screen",
+                "poster"
+            ],
+            "sentence_list": [
+                "a digital screen displays 'Next Train in 3 Minutes' in bold blue letters.",
+                "a large poster nearby says 'Your Journey Begins Here' in large italic font."
+            ]
+        },
+        {
+            "index": 165,
+            "prompt": "In a bookshop, a shelf label reads 'New Arrivals This Week' in small italic font and a window display shows 'Author Meet-and-Greet 2 PM Tomorrow' in bold black letters.",
+            "carrier_list": [
+                "label",
+                "display"
+            ],
+            "sentence_list": [
+                "a shelf label reads 'New Arrivals This Week' in small italic font.",
+                "a window display shows 'Author Meet-and-Greet 2 PM Tomorrow' in bold black letters."
+            ]
+        },
+        {
+            "index": 166,
+            "prompt": "At a sports stadium, a banner reads 'Game Day Excitement Awaits' in large red bold letters and a nearby scoreboard displays 'Team A 42 - Team B 38' in bright yellow digits.",
+            "carrier_list": [
+                "banner",
+                "scoreboard"
+            ],
+            "sentence_list": [
+                "a banner reads 'Game Day Excitement Awaits' in large red bold letters.",
+                "a nearby scoreboard displays 'Team A 42 - Team B 38' in bright yellow digits."
+            ]
+        },
+        {
+            "index": 167,
+            "prompt": "On a busy highway, a road sign reads 'Speed Limit 60 MPH' in bold black letters and a billboard shows 'Visit Scenic Mountain View – 20 Miles Ahead' in large green cursive.",
+            "carrier_list": [
+                "sign",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a road sign reads 'Speed Limit 60 MPH' in bold black letters.",
+                "a billboard shows 'Visit Scenic Mountain View – 20 Miles Ahead' in large green cursive."
+            ]
+        },
+        {
+            "index": 168,
+            "prompt": "At an art gallery, a wall sign says 'Explore Abstract Art Today' in elegant italic font and a nearby placard reads 'Artist Reception 5 PM Friday' in small cursive.",
+            "carrier_list": [
+                "sign",
+                "placard"
+            ],
+            "sentence_list": [
+                "a wall sign says 'Explore Abstract Art Today' in elegant italic font.",
+                "a nearby placard reads 'Artist Reception 5 PM Friday' in small cursive."
+            ]
+        },
+        {
+            "index": 169,
+            "prompt": "On a university campus, a building banner announces 'Welcome New Students!' in large bold letters and a noticeboard shows 'Lecture Schedule for Spring 2025' in neat black font.",
+            "carrier_list": [
+                "banner",
+                "noticeboard"
+            ],
+            "sentence_list": [
+                "a building banner announces 'Welcome New Students!' in large bold letters.",
+                "a noticeboard shows 'Lecture Schedule for Spring 2025' in neat black font."
+            ]
+        },
+        {
+            "index": 170,
+            "prompt": "A modern coffee shop interior, with a wall poster that reads 'Brewed Fresh, Served Hot' in large bold brown letters and a table sign showing 'Enjoy Your Coffee in 5 Minutes' in medium italic.",
+            "carrier_list": [
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a wall poster that reads 'Brewed Fresh, Served Hot' in large bold brown letters.",
+                "a table sign showing 'Enjoy Your Coffee in 5 Minutes' in medium italic."
+            ]
+        },
+        {
+            "index": 171,
+            "prompt": "On a city street corner, a digital billboard flashes 'Get Your Daily Dose of Fun' in bright blue large letters and a nearby bus shelter advertises 'Ride the City for 2.50' in small green cursive.",
+            "carrier_list": [
+                "billboard",
+                "shelter"
+            ],
+            "sentence_list": [
+                "a digital billboard flashes 'Get Your Daily Dose of Fun' in bright blue large letters.",
+                "a nearby bus shelter advertises 'Ride the City for 2.50' in small green cursive."
+            ]
+        },
+        {
+            "index": 172,
+            "prompt": "At a movie theater entrance, a neon sign displays 'Now Showing: The Ultimate Adventure' in large colorful letters and the box office window shows 'Tickets Available for Tonight Show' in medium regular.",
+            "carrier_list": [
+                "sign",
+                "window"
+            ],
+            "sentence_list": [
+                "a neon sign displays 'Now Showing: The Ultimate Adventure' in large colorful letters.",
+                "the box office window shows 'Tickets Available for Tonight Show' in medium regular."
+            ]
+        },
+        {
+            "index": 173,
+            "prompt": "On a bookshop door, a small sign says 'New Arrivals Every Week' in italic and a shelf label reads 'Best Sellers Under 15' in bold black.",
+            "carrier_list": [
+                "sign",
+                "label"
+            ],
+            "sentence_list": [
+                "a small sign says 'New Arrivals Every Week' in italic.",
+                "a shelf label reads 'Best Sellers Under 15' in bold black."
+            ]
+        },
+        {
+            "index": 174,
+            "prompt": "In a busy airport terminal, a digital display shows 'Flight Departures in 30 Minutes' in large white letters and a shop window announces 'Exclusive Travel Kits for Sale' in medium red.",
+            "carrier_list": [
+                "display",
+                "window"
+            ],
+            "sentence_list": [
+                "a digital display shows 'Flight Departures in 30 Minutes' in large white letters.",
+                "a shop window announces 'Exclusive Travel Kits for Sale' in medium red."
+            ]
+        },
+        {
+            "index": 175,
+            "prompt": "On a concert stage, a banner reads 'Live Music Every Friday Night' in large vibrant letters and a side poster states 'Free Entry Before 8 PM' in small bold.",
+            "carrier_list": [
+                "banner",
+                "poster"
+            ],
+            "sentence_list": [
+                "a banner reads 'Live Music Every Friday Night' in large vibrant letters.",
+                "a side poster states 'Free Entry Before 8 PM' in small bold."
+            ]
+        },
+        {
+            "index": 176,
+            "prompt": "In a downtown shopping mall, a large display shows 'Big Sale Today Only!' in bright red large letters and a store window sign reads 'Up to 50 percent Off All Clothing' in medium italic.",
+            "carrier_list": [
+                "display",
+                "sign"
+            ],
+            "sentence_list": [
+                "a large display shows 'Big Sale Today Only!' in bright red large letters.",
+                "a store window sign reads 'Up to 50 percent Off All Clothing' in medium italic."
+            ]
+        },
+        {
+            "index": 177,
+            "prompt": "A food truck parked by a park shows 'Tasty Meals on the Go' in medium green letters and a nearby sandwich board advertises 'Try Our Special Burger for 8.99' in small cursive.",
+            "carrier_list": [
+                "truck",
+                "board"
+            ],
+            "sentence_list": [
+                "A food truck parked by a park shows 'Tasty Meals on the Go' in medium green letters.",
+                "a nearby sandwich board advertises 'Try Our Special Burger for 8.99' in small cursive."
+            ]
+        },
+        {
+            "index": 178,
+            "prompt": "At a gym front desk, a notice reads 'Join Now and Get 1 Month Free' in large bold letters and a wall poster announces 'Fitness Classes Every Day at 6 PM' in medium regular.",
+            "carrier_list": [
+                "notice",
+                "poster"
+            ],
+            "sentence_list": [
+                "a notice reads 'Join Now and Get 1 Month Free' in large bold letters.",
+                "a wall poster announces 'Fitness Classes Every Day at 6 PM' in medium regular."
+            ]
+        },
+        {
+            "index": 179,
+            "prompt": "On a subway platform, a large sign displays 'Train Arrives in 3 Minutes' in bold yellow letters and a digital clock above shows 'The Next Stop: Downtown' in medium black.",
+            "carrier_list": [
+                "sign",
+                "clock"
+            ],
+            "sentence_list": [
+                "a large sign displays 'Train Arrives in 3 Minutes' in bold yellow letters.",
+                "a digital clock above shows 'The Next Stop: Downtown' in medium black."
+            ]
+        },
+        {
+            "index": 180,
+            "prompt": "A vibrant city square where a large digital display shows 'Join the Fitness Revolution Now' in bold red letters and a storefront window features 'Summer Sale - Up to 50 percent Off' in large blue letters on it.",
+            "carrier_list": [
+                "display",
+                "window"
+            ],
+            "sentence_list": [
+                "a large digital display shows 'Join the Fitness Revolution Now' in bold red letters.",
+                "a storefront window features 'Summer Sale - Up to 50 percent Off' in large blue letters on it."
+            ]
+        },
+        {
+            "index": 181,
+            "prompt": "In a lively marketplace, a banner above a fruit stall reads 'Fresh Organic Produce Every Day' in green cursive and a sign by the entrance advertises 'Weekly Discounts - Save Big!' in large black bold letters on it.",
+            "carrier_list": [
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner above a fruit stall reads 'Fresh Organic Produce Every Day' in green cursive.",
+                "a sign by the entrance advertises 'Weekly Discounts - Save Big!' in large black bold letters on it."
+            ]
+        },
+        {
+            "index": 182,
+            "prompt": "On a busy highway, a highway sign flashes 'Next Exit - Adventure Park 5 Miles' in medium italic white letters and a billboard displays 'Discover the Best Thrills' in large yellow letters on it.",
+            "carrier_list": [
+                "sign",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a highway sign flashes 'Next Exit - Adventure Park 5 Miles' in medium italic white letters.",
+                "a billboard displays 'Discover the Best Thrills' in large yellow letters on it."
+            ]
+        },
+        {
+            "index": 183,
+            "prompt": "Near a trendy coffee shop, a chalkboard sign says 'Special of the Day - Espresso 2.50' in cursive brown letters and a neon on the window reads 'Open 24/7, Always Fresh' in bright blue bold letters on it.",
+            "carrier_list": [
+                "sign",
+                "neon"
+            ],
+            "sentence_list": [
+                "a chalkboard sign says 'Special of the Day - Espresso 2.50' in cursive brown letters.",
+                "a neon on the window reads 'Open 24/7, Always Fresh' in bright blue bold letters on it."
+            ]
+        },
+        {
+            "index": 184,
+            "prompt": "In a modern shopping mall, a digital board announces 'Exclusive Fashion Trends for 2025' in large bold black letters and a store window advertises 'Buy 1 Get 1 Free on Select Items' in medium red letters on it.",
+            "carrier_list": [
+                "board",
+                "window"
+            ],
+            "sentence_list": [
+                "a digital board announces 'Exclusive Fashion Trends for 2025' in large bold black letters.",
+                "a store window advertises 'Buy 1 Get 1 Free on Select Items' in medium red letters on it."
+            ]
+        },
+        {
+            "index": 185,
+            "prompt": "At a sports event, a large poster shows 'Support Your Team - Wear Your Colors' in bold blue letters and a nearby kiosk has a sign that reads 'Game Day Specials - 20 percent Off' in large italic green letters on it.",
+            "carrier_list": [
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a large poster shows 'Support Your Team - Wear Your Colors' in bold blue letters.",
+                "a nearby kiosk has a sign that reads 'Game Day Specials - 20 percent Off' in large italic green letters on it."
+            ]
+        },
+        {
+            "index": 186,
+            "prompt": "Outside a local bookstore, a sidewalk sign displays 'Books for All Ages and Interests' in medium black letters and a hanging banner reads 'New Arrivals Every Week' in large red cursive letters on it.",
+            "carrier_list": [
+                "sign",
+                "banner"
+            ],
+            "sentence_list": [
+                "a sidewalk sign displays 'Books for All Ages and Interests' in medium black letters.",
+                "a hanging banner reads 'New Arrivals Every Week' in large red cursive letters on it."
+            ]
+        },
+        {
+            "index": 187,
+            "prompt": "On a college campus, a bulletin board reads 'Join the Debate Team - New Members Welcome' in large bold blue letters and a poster nearby shows 'Register for Fall Courses Now' in medium regular black letters on it.",
+            "carrier_list": [
+                "board",
+                "poster"
+            ],
+            "sentence_list": [
+                "a bulletin board reads 'Join the Debate Team - New Members Welcome' in large bold blue letters.",
+                "a poster nearby shows 'Register for Fall Courses Now' in medium regular black letters on it."
+            ]
+        },
+        {
+            "index": 188,
+            "prompt": "Inside a cinema lobby, a banner displays 'This Week Blockbusters' in large bright yellow letters and a nearby poster promotes 'Buy 1 Ticket, Get 1 Free' in medium italic white letters on it.",
+            "carrier_list": [
+                "banner",
+                "poster"
+            ],
+            "sentence_list": [
+                "a banner displays 'This Week Blockbusters' in large bright yellow letters.",
+                "a nearby poster promotes 'Buy 1 Ticket, Get 1 Free' in medium italic white letters on it."
+            ]
+        },
+        {
+            "index": 189,
+            "prompt": "In a beach town, a boardwalk sign says 'Summer Vibes - Enjoy the Sunset' in large orange cursive letters and a surf shop window reads '50 percent Off Surf Gear This Weekend' in medium blue bold letters on it.",
+            "carrier_list": [
+                "sign",
+                "window"
+            ],
+            "sentence_list": [
+                "a boardwalk sign says 'Summer Vibes - Enjoy the Sunset' in large orange cursive letters.",
+                "a surf shop window reads '50 percent Off Surf Gear This Weekend' in medium blue bold letters on it."
+            ]
+        },
+        {
+            "index": 190,
+            "prompt": "A bustling marketplace with a neon sign that reads 'Fresh Produce Daily' in bright green cursive, and a sandwich board outside a shop that says 'Healthy Meals Ready in 10 Minutes' in large letters.",
+            "carrier_list": [
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a neon sign that reads 'Fresh Produce Daily' in bright green cursive.",
+                "a sandwich board outside a shop that says 'Healthy Meals Ready in 10 Minutes' in large letters."
+            ]
+        },
+        {
+            "index": 191,
+            "prompt": "At a city square, a large banner reads 'Celebrate the Weekend Vibes' in bold red large letters, and a park bench has a plaque with the words 'Sit, Relax, Enjoy the Moment' in cursive.",
+            "carrier_list": [
+                "banner",
+                "plaque"
+            ],
+            "sentence_list": [
+                "a large banner reads 'Celebrate the Weekend Vibes' in bold red large letters.",
+                "a park bench has a plaque with the words 'Sit, Relax, Enjoy the Moment' in cursive."
+            ]
+        },
+        {
+            "index": 192,
+            "prompt": "A coffee shop window displays 'Brewing Happiness Since 1998' in elegant gold cursive, and a chalkboard outside advertises 'Special Latte of the Day: Cinnamon Bliss' in bold letters.",
+            "carrier_list": [
+                "window",
+                "chalkboard"
+            ],
+            "sentence_list": [
+                "A coffee shop window displays 'Brewing Happiness Since 1998' in elegant gold cursive.",
+                "a chalkboard outside advertises 'Special Latte of the Day: Cinnamon Bliss' in bold letters."
+            ]
+        },
+        {
+            "index": 193,
+            "prompt": "On a crowded subway platform, a billboard says 'Get Ready for Your Adventure' in large bold letters, and the train car door shows 'Next Stop: City Center' in glowing blue.",
+            "carrier_list": [
+                "billboard",
+                "door"
+            ],
+            "sentence_list": [
+                "a billboard says 'Get Ready for Your Adventure' in large bold letters.",
+                "the train car door shows 'Next Stop: City Center' in glowing blue."
+            ]
+        },
+        {
+            "index": 194,
+            "prompt": "In a busy mall, a huge sign reads 'Limited Time Sale: 50 percent Off Everything' in bold red large letters, and a store window announces 'Open 24/7 for Your Convenience' in cursive.",
+            "carrier_list": [
+                "sign",
+                "window"
+            ],
+            "sentence_list": [
+                "a huge sign reads 'Limited Time Sale: 50 percent Off Everything' in bold red large letters.",
+                "a store window announces 'Open 24/7 for Your Convenience' in cursive."
+            ]
+        },
+        {
+            "index": 195,
+            "prompt": "Above a cinema entrance, the banner displays 'Now Showing: Action Packed Adventure' in bright yellow letters, and a nearby kiosk reads 'Tickets Available for Evening Shows' in italic.",
+            "carrier_list": [
+                "banner",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "the banner displays 'Now Showing: Action Packed Adventure' in bright yellow letters.",
+                "a nearby kiosk reads 'Tickets Available for Evening Shows' in italic."
+            ]
+        },
+        {
+            "index": 196,
+            "prompt": "A restaurant menu board shows 'Daily Special: Grilled Salmon' in golden letters, and a door placard reads 'Open for Breakfast and Dinner' in bold large letters.",
+            "carrier_list": [
+                "board",
+                "placard"
+            ],
+            "sentence_list": [
+                "a restaurant menu board shows 'Daily Special: Grilled Salmon' in golden letters.",
+                "a door placard reads 'Open for Breakfast and Dinner' in bold large letters."
+            ]
+        },
+        {
+            "index": 197,
+            "prompt": "At a sports stadium, a large banner says 'Join the Team, Become a Champion' in bold large letters, and a digital display reads 'Game Starts in 30 Minutes' in flashing red.",
+            "carrier_list": [
+                "banner",
+                "display"
+            ],
+            "sentence_list": [
+                "a large banner says 'Join the Team, Become a Champion' in bold large letters.",
+                "a digital display reads 'Game Starts in 30 Minutes' in flashing red."
+            ]
+        },
+        {
+            "index": 198,
+            "prompt": "On a library wall, a poster reads 'Read, Explore, Discover' in elegant script, and a nearby table has a sign with 'Quiet Zone, Please Respect Silence' in small blue letters.",
+            "carrier_list": [
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a poster reads 'Read, Explore, Discover' in elegant script.",
+                "a sign with 'Quiet Zone, Please Respect Silence' in small blue letters."
+            ]
+        },
+        {
+            "index": 199,
+            "prompt": "On a busy street corner, a bus shelter sign shows 'Free Wi-Fi Available Here' in bright green letters, and a nearby billboard reads 'New Smartphone Deals for You' in bold red large letters.",
+            "carrier_list": [
+                "sign",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a bus shelter sign shows 'Free Wi-Fi Available Here' in bright green letters.",
+                "a nearby billboard reads 'New Smartphone Deals for You' in bold red large letters."
+            ]
+        }
+    ]
+}

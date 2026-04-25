@@ -1,0 +1,3550 @@
+{
+    "data_list": [
+        {
+            "index": 0,
+            "prompt": "A bookstore with a sign saying 'Books' in large bold blue letters, a shelf labeled 'New' in medium green, a checkout counter with 'Pay' in small italic, a window displaying 'Open' in large letters, and a table with 'Read' in medium cursive.",
+            "carrier_list": [
+                "sign",
+                "shelf",
+                "counter",
+                "window",
+                "table"
+            ],
+            "sentence_list": [
+                "a sign saying 'Books' in large bold blue letters.",
+                "a shelf labeled 'New' in medium green.",
+                "a checkout counter with 'Pay' in small italic.",
+                "a window displaying 'Open' in large letters.",
+                "a table with 'Read' in medium cursive."
+            ]
+        },
+        {
+            "index": 1,
+            "prompt": "A gym entrance with a door sign reading 'Start' in bold red, a locker labeled 'Keys' in small letters, a water fountain displaying 'Hydrate' in medium blue italic, a wall poster showing 'Strength' in large bold black letters, and a floor mat with 'Focus' in small cursive.",
+            "carrier_list": [
+                "sign",
+                "locker",
+                "fountain",
+                "poster",
+                "mat"
+            ],
+            "sentence_list": [
+                "a door sign reading 'Start' in bold red.",
+                "a locker labeled 'Keys' in small letters.",
+                "a water fountain displaying 'Hydrate' in medium blue italic.",
+                "a wall poster showing 'Strength' in large bold black letters.",
+                "a floor mat with 'Focus' in small cursive."
+            ]
+        },
+        {
+            "index": 2,
+            "prompt": "A café counter with a menu saying 'Latte' in large brown letters, a cash register with 'Total' in medium regular, a table sign reading 'Reserved' in small italic, a window displaying 'Sun' in large yellow, and a napkin with 'Fresh' in medium green.",
+            "carrier_list": [
+                "menu",
+                "register",
+                "sign",
+                "window",
+                "napkin"
+            ],
+            "sentence_list": [
+                "a menu saying 'Latte' in large brown letters.",
+                "a cash register with 'Total' in medium regular.",
+                "a table sign reading 'Reserved' in small italic.",
+                "a window displaying 'Sun' in large yellow.",
+                "a napkin with 'Fresh' in medium green."
+            ]
+        },
+        {
+            "index": 3,
+            "prompt": "A fashion store with a mannequin holding a sign that says 'Trendy' in large bold pink letters, a shelf marked 'Deals' in medium red, a window display with 'New' in large cursive, a tag on clothes reading 'Sale' in bold red, and a dressing room door with 'Exit' in small black letters.",
+            "carrier_list": [
+                "sign",
+                "shelf",
+                "display",
+                "tag",
+                "door"
+            ],
+            "sentence_list": [
+                "a mannequin holding a sign that says 'Trendy' in large bold pink letters.",
+                "a shelf marked 'Deals' in medium red.",
+                "a window display with 'New' in large cursive.",
+                "a tag on clothes reading 'Sale' in bold red.",
+                "a dressing room door with 'Exit' in small black letters."
+            ]
+        },
+        {
+            "index": 4,
+            "prompt": "A park scene with a bench displaying 'Sit' in medium green, a walking path sign reading 'Jog' in large italic, a lamp post labeled 'Light' in small yellow, a picnic table with 'Relax' in medium blue cursive, and a trash can marked 'Dispose' in small gray.",
+            "carrier_list": [
+                "bench",
+                "sign",
+                "post",
+                "table",
+                "can"
+            ],
+            "sentence_list": [
+                "a bench displaying 'Sit' in medium green.",
+                "a walking path sign reading 'Jog' in large italic.",
+                "a lamp post labeled 'Light' in small yellow.",
+                "a picnic table with 'Relax' in medium blue cursive.",
+                "a trash can marked 'Dispose' in small gray."
+            ]
+        },
+        {
+            "index": 5,
+            "prompt": "A movie set with a clapperboard showing 'Action' in large bold black letters, a director chair labeled 'Director' in medium red, a camera with 'Focus' in small italic, a scene board with 'Take' in medium regular, and a script with 'Scene' in small cursive.",
+            "carrier_list": [
+                "clapperboard",
+                "chair",
+                "camera",
+                "board",
+                "script"
+            ],
+            "sentence_list": [
+                "a clapperboard showing 'Action' in large bold black letters.",
+                "a director chair labeled 'Director' in medium red.",
+                "a camera with 'Focus' in small italic.",
+                "a scene board with 'Take' in medium regular.",
+                "a script with 'Scene' in small cursive."
+            ]
+        },
+        {
+            "index": 6,
+            "prompt": "A restaurant with a table menu reading 'Appetizers' in large green letters, a wall sign showing 'Closed' in bold red, a bar counter with 'Drinks' in medium blue, a door labeled 'Enter' in small black, and a window sign with 'Open' in large white letters.",
+            "carrier_list": [
+                "menu",
+                "sign",
+                "counter",
+                "door",
+                "sign"
+            ],
+            "sentence_list": [
+                "a table menu reading 'Appetizers' in large green letters.",
+                "a wall sign showing 'Closed' in bold red.",
+                "a bar counter with 'Drinks' in medium blue.",
+                "a door labeled 'Enter' in small black.",
+                "a window sign with 'Open' in large white letters."
+            ]
+        },
+        {
+            "index": 7,
+            "prompt": "A street corner with a post reading 'Stop' in large red bold letters, a bus shelter displaying 'Route' in medium blue, a shop window with 'Clearance' in small italic, a car with 'Parked' in medium gray, and a streetlight marked 'Bright' in small yellow.",
+            "carrier_list": [
+                "post",
+                "shelter",
+                "window",
+                "car",
+                "streetlight"
+            ],
+            "sentence_list": [
+                "a post reading 'Stop' in large red bold letters.",
+                "a bus shelter displaying 'Route' in medium blue.",
+                "a shop window with 'Clearance' in small italic.",
+                "a car with 'Parked' in medium gray.",
+                "a streetlight marked 'Bright' in small yellow."
+            ]
+        },
+        {
+            "index": 8,
+            "prompt": "A university campus with a board saying 'Library' in large blue letters, a student union building with 'Cafe' in medium brown, a banner on the quad reading 'Welcome' in large bold green, a bulletin board marked 'Events' in medium red, and a bench with 'Study' in small italic.",
+            "carrier_list": [
+                "board",
+                "building",
+                "banner",
+                "board",
+                "bench"
+            ],
+            "sentence_list": [
+                "a board saying 'Library' in large blue letters.",
+                "a student union building with 'Cafe' in medium brown.",
+                "a banner on the quad reading 'Welcome' in large bold green.",
+                "a bulletin board marked 'Events' in medium red.",
+                "a bench with 'Study' in small italic."
+            ]
+        },
+        {
+            "index": 9,
+            "prompt": "A festival scene with a food stand displaying 'Tacos' in large red letters, a banner with 'Music' in medium purple, a ticket booth labeled 'Entry' in small black, a stage sign reading 'Live' in large bold yellow, and a balloon with 'Fun' in medium colorful letters.",
+            "carrier_list": [
+                "stand",
+                "banner",
+                "booth",
+                "sign",
+                "balloon"
+            ],
+            "sentence_list": [
+                "a food stand displaying 'Tacos' in large red letters.",
+                "a banner with 'Music' in medium purple.",
+                "a ticket booth labeled 'Entry' in small black.",
+                "a stage sign reading 'Live' in large bold yellow.",
+                "a balloon with 'Fun' in medium colorful letters."
+            ]
+        },
+        {
+            "index": 10,
+            "prompt": "A bookstore with a shelf labeled 'Books' in medium blue letters, a counter with 'Cashier' written in bold black, a window displaying 'New' in large green, a sign above the door reading 'Open' in small italic, and a poster on the wall showing 'Sale' in large bold red letters.",
+            "carrier_list": [
+                "shelf",
+                "counter",
+                "window",
+                "sign",
+                "poster"
+            ],
+            "sentence_list": [
+                "a shelf labeled 'Books' in medium blue letters.",
+                "a counter with 'Cashier' written in bold black.",
+                "a window displaying 'New' in large green.",
+                "a sign above the door reading 'Open' in small italic.",
+                "a poster on the wall showing 'Sale' in large bold red letters."
+            ]
+        },
+        {
+            "index": 11,
+            "prompt": "A park scene with a bench displaying 'Seat' in small green, a fountain with a plaque reading 'Water' in medium regular letters, a tree with a sign saying 'Shade' in large italic, a pathway labeled 'Walk' in medium blue, and a playground with 'Play' painted on the ground in bold yellow.",
+            "carrier_list": [
+                "bench",
+                "plaque",
+                "sign",
+                "pathway",
+                "playground"
+            ],
+            "sentence_list": [
+                "a bench displaying 'Seat' in small green.",
+                "a fountain with a plaque reading 'Water' in medium regular letters.",
+                "a sign saying 'Shade' in large italic.",
+                "a pathway labeled 'Walk' in medium blue.",
+                "a playground with 'Play' painted on the ground in bold yellow."
+            ]
+        },
+        {
+            "index": 12,
+            "prompt": "A supermarket with a shelf labeled 'Fruits' in large red letters, a checkout counter showing 'Total' in medium bold, a display rack with 'Snacks' in small orange, a sign above the entrance reading 'Fresh' in large green cursive, and a trolley with 'Cart' written on it in medium regular.",
+            "carrier_list": [
+                "shelf",
+                "counter",
+                "rack",
+                "sign",
+                "trolley"
+            ],
+            "sentence_list": [
+                "a shelf labeled 'Fruits' in large red letters.",
+                "a checkout counter showing 'Total' in medium bold.",
+                "a display rack with 'Snacks' in small orange.",
+                "a sign above the entrance reading 'Fresh' in large green cursive.",
+                "a trolley with 'Cart' written on it in medium regular."
+            ]
+        },
+        {
+            "index": 13,
+            "prompt": "A gym entrance with a sign saying 'Gym' in large black bold, a treadmill with 'Speed' in medium italic, a mirror labeled 'Reflect' in small silver, a wall poster displaying 'Strength' in large blue, and a weight rack showing 'Weights' in medium regular letters.",
+            "carrier_list": [
+                "sign",
+                "treadmill",
+                "mirror",
+                "poster",
+                "rack"
+            ],
+            "sentence_list": [
+                "a sign saying 'Gym' in large black bold.",
+                "a treadmill with 'Speed' in medium italic.",
+                "a mirror labeled 'Reflect' in small silver.",
+                "a wall poster displaying 'Strength' in large blue.",
+                "a weight rack showing 'Weights' in medium regular letters."
+            ]
+        },
+        {
+            "index": 14,
+            "prompt": "A coffee shop interior with a table displaying 'Order' in small brown cursive, a menu board reading 'Cakes' in large pink bold, a counter labeled 'Barista' in medium regular letters, a sign above the door saying 'Close' in small red italic, and a wall with 'Relax' written on it in large green.",
+            "carrier_list": [
+                "table",
+                "board",
+                "counter",
+                "sign",
+                "wall"
+            ],
+            "sentence_list": [
+                "a table displaying 'Order' in small brown cursive.",
+                "a menu board reading 'Cakes' in large pink bold.",
+                "a counter labeled 'Barista' in medium regular letters.",
+                "a sign above the door saying 'Close' in small red italic.",
+                "a wall with 'Relax' written on it in large green."
+            ]
+        },
+        {
+            "index": 15,
+            "prompt": "A city street corner with a lamppost showing 'Light' in medium yellow, a bench labeled 'Rest' in small blue italic, a street sign reading 'Cross' in large white bold, a billboard displaying 'Deals' in large red letters, and a cafe window with 'Brew' written on it in medium brown cursive.",
+            "carrier_list": [
+                "lamppost",
+                "bench",
+                "sign",
+                "billboard",
+                "window"
+            ],
+            "sentence_list": [
+                "a lamppost showing 'Light' in medium yellow.",
+                "a bench labeled 'Rest' in small blue italic.",
+                "a street sign reading 'Cross' in large white bold.",
+                "a billboard displaying 'Deals' in large red letters.",
+                "a cafe window with 'Brew' written on it in medium brown cursive."
+            ]
+        },
+        {
+            "index": 16,
+            "prompt": "A restaurant with a window displaying 'Menu' in large black bold, a wall sign above the door saying 'Open' in medium green, a table with 'Reserve' written on it in small italic, a chalkboard with 'Special' displayed in large red, and a plate with 'Dish' on it in medium regular letters.",
+            "carrier_list": [
+                "window",
+                "sign",
+                "table",
+                "chalkboard",
+                "plate"
+            ],
+            "sentence_list": [
+                "a window displaying 'Menu' in large black bold.",
+                "a wall sign above the door saying 'Open' in medium green.",
+                "a table with 'Reserve' written on it in small italic.",
+                "a chalkboard with 'Special' displayed in large red.",
+                "a plate with 'Dish' on it in medium regular letters."
+            ]
+        },
+        {
+            "index": 17,
+            "prompt": "A movie theater lobby with a sign saying 'Tickets' in large blue bold, a poster on the wall labeled 'Coming' in medium white, a door labeled 'Exit' in small red italic, a snack bar displaying 'Treat' in large yellow, and a sign above the counter reading 'Now' in medium black.",
+            "carrier_list": [
+                "sign",
+                "poster",
+                "door",
+                "bar",
+                "sign"
+            ],
+            "sentence_list": [
+                "a sign saying 'Tickets' in large blue bold.",
+                "a poster on the wall labeled 'Coming' in medium white.",
+                "a door labeled 'Exit' in small red italic.",
+                "a snack bar displaying 'Treat' in large yellow.",
+                "a sign above the counter reading 'Now' in medium black."
+            ]
+        },
+        {
+            "index": 18,
+            "prompt": "A fashion store with a display window reading 'Trends' in large pink cursive, a price tag showing 'Sale' in medium red bold, a poster on the wall with 'Fashion' in large black, a sign above the entrance saying 'New' in medium green italic, and a mirror labeled 'Style' in small silver letters.",
+            "carrier_list": [
+                "window",
+                "tag",
+                "poster",
+                "sign",
+                "mirror"
+            ],
+            "sentence_list": [
+                "a display window reading 'Trends' in large pink cursive.",
+                "a price tag showing 'Sale' in medium red bold.",
+                "a poster on the wall with 'Fashion' in large black.",
+                "a sign above the entrance saying 'New' in medium green italic.",
+                "a mirror labeled 'Style' in small silver letters."
+            ]
+        },
+        {
+            "index": 19,
+            "prompt": "A music festival scene with a stage banner displaying 'Live' in large red bold, a booth labeled 'Tickets' in medium blue, a poster on the wall saying 'Music' in large yellow, a wristband with 'Pass' in small green italic, and a flag fluttering with 'Vibes' in medium colorful letters.",
+            "carrier_list": [
+                "banner",
+                "booth",
+                "poster",
+                "wristband",
+                "flag"
+            ],
+            "sentence_list": [
+                "a stage banner displaying 'Live' in large red bold.",
+                "a booth labeled 'Tickets' in medium blue.",
+                "a poster on the wall saying 'Music' in large yellow.",
+                "a wristband with 'Pass' in small green italic.",
+                "a flag fluttering with 'Vibes' in medium colorful letters."
+            ]
+        },
+        {
+            "index": 20,
+            "prompt": "A bookstore with a sign saying 'Books' in large blue letters, a shelf with 'Bestseller' in bold red, a counter displaying 'New' in green italic, a window showing 'Open' in medium black letters, and a table featuring 'Coffee' in cursive.",
+            "carrier_list": [
+                "sign",
+                "shelf",
+                "counter",
+                "window",
+                "table"
+            ],
+            "sentence_list": [
+                "a sign saying 'Books' in large blue letters.",
+                "a shelf with 'Bestseller' in bold red.",
+                "a counter displaying 'New' in green italic.",
+                "a window showing 'Open' in medium black letters.",
+                "a table featuring 'Coffee' in cursive."
+            ]
+        },
+        {
+            "index": 21,
+            "prompt": "A cafe with a menu listing 'Latte' in medium brown letters, a chalkboard with 'Brunch' in bold, a door labeled 'Exit' in red, a wall displaying 'Fresh' in green italic, and a cup with 'Tea' in small blue letters.",
+            "carrier_list": [
+                "menu",
+                "chalkboard",
+                "door",
+                "wall",
+                "cup"
+            ],
+            "sentence_list": [
+                "a menu listing 'Latte' in medium brown letters.",
+                "a chalkboard with 'Brunch' in bold.",
+                "a door labeled 'Exit' in red.",
+                "a wall displaying 'Fresh' in green italic.",
+                "a cup with 'Tea' in small blue letters."
+            ]
+        },
+        {
+            "index": 22,
+            "prompt": "A fashion store with a window showing 'Sale' in large red letters, a banner saying 'Dress' in bold, a rack with 'New' in green cursive, a sign above the door saying 'Open' in large letters, and a shelf featuring 'Shoes' in medium black.",
+            "carrier_list": [
+                "window",
+                "banner",
+                "rack",
+                "sign",
+                "shelf"
+            ],
+            "sentence_list": [
+                "a window showing 'Sale' in large red letters.",
+                "a banner saying 'Dress' in bold.",
+                "a rack with 'New' in green cursive.",
+                "a sign above the door saying 'Open' in large letters.",
+                "a shelf featuring 'Shoes' in medium black."
+            ]
+        },
+        {
+            "index": 23,
+            "prompt": "A gym with a banner displaying 'Fitness' in large bold letters, a treadmill with 'Run' in red, a dumbbell labeled 'Strength' in italic, a wall poster with 'Health' in green, and a sign above the entrance reading 'Gym' in large letters.",
+            "carrier_list": [
+                "banner",
+                "treadmill",
+                "dumbbell",
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner displaying 'Fitness' in large bold letters.",
+                "a treadmill with 'Run' in red.",
+                "a dumbbell labeled 'Strength' in italic.",
+                "a wall poster with 'Health' in green.",
+                "a sign above the entrance reading 'Gym' in large letters."
+            ]
+        },
+        {
+            "index": 24,
+            "prompt": "A library with a sign showing 'Read' in large blue letters, a shelf marked 'Fiction' in bold, a desk labeled 'Help' in green, a poster with 'Knowledge' in italic, and a clock displaying 'Time' in medium letters.",
+            "carrier_list": [
+                "sign",
+                "shelf",
+                "desk",
+                "poster",
+                "clock"
+            ],
+            "sentence_list": [
+                "a sign showing 'Read' in large blue letters.",
+                "a shelf marked 'Fiction' in bold.",
+                "a desk labeled 'Help' in green.",
+                "a poster with 'Knowledge' in italic.",
+                "a clock displaying 'Time' in medium letters."
+            ]
+        },
+        {
+            "index": 25,
+            "prompt": "A restaurant with a menu board listing 'Pasta' in large red letters, a table featuring 'Order' in bold, a window showing 'Open' in green cursive, a chef hat with 'Cook' in italic, and a chair labeled 'Reserved' in small letters.",
+            "carrier_list": [
+                "menu",
+                "table",
+                "window",
+                "hat",
+                "chair"
+            ],
+            "sentence_list": [
+                "a menu board listing 'Pasta' in large red letters.",
+                "a table featuring 'Order' in bold.",
+                "a window showing 'Open' in green cursive.",
+                "a hat with 'Cook' in italic.",
+                "a chair labeled 'Reserved' in small letters."
+            ]
+        },
+        {
+            "index": 26,
+            "prompt": "A park with a sign reading 'Nature' in green bold letters, a bench displaying 'Relax' in italic, a playground labeled 'Fun' in large colorful letters, a fountain with 'Water' in blue, and a path showing 'Walk' in medium letters.",
+            "carrier_list": [
+                "sign",
+                "bench",
+                "playground",
+                "fountain",
+                "path"
+            ],
+            "sentence_list": [
+                "a sign reading 'Nature' in green bold letters.",
+                "a bench displaying 'Relax' in italic.",
+                "a playground labeled 'Fun' in large colorful letters.",
+                "a fountain with 'Water' in blue.",
+                "a path showing 'Walk' in medium letters."
+            ]
+        },
+        {
+            "index": 27,
+            "prompt": "A hotel lobby with a desk labeled 'Check-in' in bold letters, a sign above the door with 'Lobby' in large letters, a poster displaying 'Vacancy' in red, an elevator button with 'Up' in green, and a room door marked '101' in large black numbers.",
+            "carrier_list": [
+                "desk",
+                "sign",
+                "poster",
+                "button",
+                "door"
+            ],
+            "sentence_list": [
+                "a desk labeled 'Check-in' in bold letters.",
+                "a sign above the door with 'Lobby' in large letters.",
+                "a poster displaying 'Vacancy' in red.",
+                "an elevator button with 'Up' in green.",
+                "a room door marked '101' in large black numbers."
+            ]
+        },
+        {
+            "index": 28,
+            "prompt": "A street corner with a shop window showing 'Deals' in large red letters, a street sign reading 'Main' in bold, a bus stop labeled 'Route' in green, a lamp post displaying 'Light' in yellow, and a parking meter marked 'Paid' in small letters.",
+            "carrier_list": [
+                "window",
+                "sign",
+                "stop",
+                "post",
+                "meter"
+            ],
+            "sentence_list": [
+                "a shop window showing 'Deals' in large red letters.",
+                "a street sign reading 'Main' in bold.",
+                "a bus stop labeled 'Route' in green.",
+                "a lamp post displaying 'Light' in yellow.",
+                "a parking meter marked 'Paid' in small letters."
+            ]
+        },
+        {
+            "index": 29,
+            "prompt": "A concert venue with a banner displaying 'Live' in large bright letters, a ticket booth with 'Sold' in bold red, a stage sign reading 'Show' in large letters, a poster showing 'Music' in colorful, and a wall featuring 'Tonight' in italic.",
+            "carrier_list": [
+                "banner",
+                "booth",
+                "sign",
+                "poster",
+                "wall"
+            ],
+            "sentence_list": [
+                "a banner displaying 'Live' in large bright letters.",
+                "a ticket booth with 'Sold' in bold red.",
+                "a stage sign reading 'Show' in large letters.",
+                "a poster showing 'Music' in colorful.",
+                "a wall featuring 'Tonight' in italic."
+            ]
+        },
+        {
+            "index": 30,
+            "prompt": "A street scene with a sign that says 'Main Street' in large red letters, a billboard displaying 'New Phones' in bold blue letters, a storefront window showing '50 percent Off' in bright yellow, a car bumper sticker reading 'Drive Safe' in italic white letters, and a bus stop sign showing 'Next Bus 5 Minutes' in medium green letters.",
+            "carrier_list": [
+                "sign",
+                "billboard",
+                "window",
+                "sticker",
+                "sign"
+            ],
+            "sentence_list": [
+                "a sign that says 'Main Street' in large red letters.",
+                "a billboard displaying 'New Phones' in bold blue letters.",
+                "a storefront window showing '50 percent Off' in bright yellow.",
+                "a car bumper sticker reading 'Drive Safe' in italic white letters.",
+                "a bus stop sign showing 'Next Bus 5 Minutes' in medium green letters."
+            ]
+        },
+        {
+            "index": 31,
+            "prompt": "A movie poster, the title says 'Summer Vacation' in large bold orange letters, a release date reads 'June 25' in small regular black, a rating shows 'PG-13' in medium red, a tagline reads 'Adventure Awaits' in italic blue, and a logo displays 'Studio Films' in bold white.",
+            "carrier_list": [
+                "title",
+                "date",
+                "rating",
+                "tagline",
+                "logo"
+            ],
+            "sentence_list": [
+                "A movie poster, the title says 'Summer Vacation' in large bold orange letters.",
+                "a release date reads 'June 25' in small regular black.",
+                "a rating shows 'PG-13' in medium red.",
+                "a tagline reads 'Adventure Awaits' in italic blue.",
+                "a logo displays 'Studio Films' in bold white."
+            ]
+        },
+        {
+            "index": 32,
+            "prompt": "Inside a library, a shelf has a sign saying 'Fiction Books' in medium green letters, a desk label reads 'Librarian Desk' in small italic blue, a clock shows '2:30 PM' in regular black, a notice board says 'Library Closed' in large bold red, and a bookshelf displays 'Top Picks' in cursive yellow letters.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "clock",
+                "notice board",
+                "bookshelf"
+            ],
+            "sentence_list": [
+                "a sign saying 'Fiction Books' in medium green letters.",
+                "a desk label reads 'Librarian Desk' in small italic blue.",
+                "a clock shows '2:30 PM' in regular black.",
+                "a notice board says 'Library Closed' in large bold red.",
+                "a bookshelf displays 'Top Picks' in cursive yellow letters."
+            ]
+        },
+        {
+            "index": 33,
+            "prompt": "At a café, a menu board reads 'Espresso Special' in large brown letters, a chalkboard sign says 'Free WiFi' in bold white, a napkin wrapper shows 'Enjoy Coffee' in small green cursive, a receipt displays 'Total: 4.50' in regular black, and a coffee cup label reads 'Latte Art' in italic beige.",
+            "carrier_list": [
+                "menu",
+                "sign",
+                "wrapper",
+                "receipt",
+                "label"
+            ],
+            "sentence_list": [
+                "a menu board reads 'Espresso Special' in large brown letters.",
+                "a chalkboard sign says 'Free WiFi' in bold white.",
+                "a napkin wrapper shows 'Enjoy Coffee' in small green cursive.",
+                "a receipt displays 'Total: 4.50' in regular black.",
+                "a coffee cup label reads 'Latte Art' in italic beige."
+            ]
+        },
+        {
+            "index": 34,
+            "prompt": "In a tech store, a display reads 'Sale Today' in large red letters, a sign shows 'Free Gift' in medium blue bold, a price tag says '99.99 USD' in small black, a window poster advertises 'New Arrivals' in large green italic, and a checkout counter sign reads 'Self-Checkout' in bold orange letters.",
+            "carrier_list": [
+                "display",
+                "sign",
+                "tag",
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a display reads 'Sale Today' in large red letters.",
+                "a sign shows 'Free Gift' in medium blue bold.",
+                "a price tag says '99.99 USD' in small black.",
+                "a window poster advertises 'New Arrivals' in large green italic.",
+                "a checkout counter sign reads 'Self-Checkout' in bold orange letters."
+            ]
+        },
+        {
+            "index": 35,
+            "prompt": "On a website homepage, a banner says 'Latest Updates' in large blue letters, a button displays 'Shop Now' in bold red, a notification reads 'Sale Ends Soon' in medium yellow, a footer has 'Terms And Conditions' in small gray, and a login box says 'Enter Password' in regular black.",
+            "carrier_list": [
+                "banner",
+                "button",
+                "notification",
+                "footer",
+                "box"
+            ],
+            "sentence_list": [
+                "a banner says 'Latest Updates' in large blue letters.",
+                "a button displays 'Shop Now' in bold red.",
+                "a notification reads 'Sale Ends Soon' in medium yellow.",
+                "a footer has 'Terms And Conditions' in small gray.",
+                "a login box says 'Enter Password' in regular black."
+            ]
+        },
+        {
+            "index": 36,
+            "prompt": "A travel brochure, the headline says 'Explore Bali' in large green letters, a location tag reads 'Ubud' in medium italic brown, a discount banner displays '10 percent Off' in bold red, a flight offer reads '499 Only' in small blue, and a review says 'Highly Recommended' in cursive purple.",
+            "carrier_list": [
+                "headline",
+                "tag",
+                "banner",
+                "offer",
+                "review"
+            ],
+            "sentence_list": [
+                "A travel brochure, the headline says 'Explore Bali' in large green letters.",
+                "a location tag reads 'Ubud' in medium italic brown.",
+                "a discount banner displays '10 percent Off' in bold red.",
+                "a flight offer reads '499 Only' in small blue.",
+                "a review says 'Highly Recommended' in cursive purple."
+            ]
+        },
+        {
+            "index": 37,
+            "prompt": "In a fitness gym, a wall poster reads 'Fitness Goals' in large bold black letters, a scoreboard displays 'Top Athlete' in medium gold, a water bottle label shows 'Hydrate Now' in small blue italic, a timer reads '30 Minutes' in regular white, and a membership card says 'Join Today' in bold green.",
+            "carrier_list": [
+                "poster",
+                "scoreboard",
+                "label",
+                "timer",
+                "card"
+            ],
+            "sentence_list": [
+                "a wall poster reads 'Fitness Goals' in large bold black letters.",
+                "a scoreboard displays 'Top Athlete' in medium gold.",
+                "a water bottle label shows 'Hydrate Now' in small blue italic.",
+                "a timer reads '30 Minutes' in regular white.",
+                "a membership card says 'Join Today' in bold green."
+            ]
+        },
+        {
+            "index": 38,
+            "prompt": "In a store window, a price tag shows '29.99 USD' in small red, a sign reads 'Grand Opening' in large bold yellow letters, a banner displays '50 percent Discount' in medium blue, a poster says 'Buy One Get One' in large green italic, and a shopping bag label reads 'Limited Offer' in bold black.",
+            "carrier_list": [
+                "tag",
+                "sign",
+                "banner",
+                "poster",
+                "label"
+            ],
+            "sentence_list": [
+                "a price tag shows '29.99 USD' in small red.",
+                "a sign reads 'Grand Opening' in large bold yellow letters.",
+                "a banner displays '50 percent Discount' in medium blue.",
+                "a poster says 'Buy One Get One' in large green italic.",
+                "a shopping bag label reads 'Limited Offer' in bold black."
+            ]
+        },
+        {
+            "index": 39,
+            "prompt": "A music album cover, the title says 'Sound Waves' in large blue letters, a track list reads 'Track 1: Intro' in medium white, a label shows 'Produced by XYZ' in small gray, a release date displays 'April 15' in regular black, and a barcode says '123456789' in small black.",
+            "carrier_list": [
+                "title",
+                "list",
+                "label",
+                "date",
+                "barcode"
+            ],
+            "sentence_list": [
+                "A music album cover, the title says 'Sound Waves' in large blue letters.",
+                "a track list reads 'Track 1: Intro' in medium white.",
+                "a label shows 'Produced by XYZ' in small gray.",
+                "a release date displays 'April 15' in regular black.",
+                "a barcode says '123456789' in small black."
+            ]
+        },
+        {
+            "index": 40,
+            "prompt": "A street market scene with a sign saying 'Fresh Produce' in vibrant green large letters, a food truck displaying 'Best Burgers' in bold red letters, a banner reading 'Sale Today' in large yellow letters, a price tag showing 'Only 5 Dollars' in small black letters, and a flyer that says 'Join Us' in italic blue letters.",
+            "carrier_list": [
+                "sign",
+                "truck",
+                "banner",
+                "tag",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a sign saying 'Fresh Produce' in vibrant green large letters.",
+                "a food truck displaying 'Best Burgers' in bold red letters.",
+                "a banner reading 'Sale Today' in large yellow letters.",
+                "a price tag showing 'Only 5 Dollars' in small black letters.",
+                "a flyer that says 'Join Us' in italic blue letters."
+            ]
+        },
+        {
+            "index": 41,
+            "prompt": "In a movie scene, a poster reads 'Coming Soon' in large bold white letters, a billboard displays 'Top Movie' in bright blue letters, a screen shows 'Watch Now' in medium regular font, a ticket has 'Admit One' in small italic letters, and a stage sign says 'Live Performance' in large cursive letters.",
+            "carrier_list": [
+                "poster",
+                "billboard",
+                "screen",
+                "ticket",
+                "sign"
+            ],
+            "sentence_list": [
+                "a poster reads 'Coming Soon' in large bold white letters.",
+                "a billboard displays 'Top Movie' in bright blue letters.",
+                "a screen shows 'Watch Now' in medium regular font.",
+                "a ticket has 'Admit One' in small italic letters.",
+                "a stage sign says 'Live Performance' in large cursive letters."
+            ]
+        },
+        {
+            "index": 42,
+            "prompt": "A website homepage, the header shows 'Shop Now' in large red letters, a sidebar says 'Featured Items' in medium regular font, a search bar displays 'Find Products' in small italic letters, a footer has 'Contact Us' in medium bold letters, and a popup says 'Limited Offer' in large orange letters.",
+            "carrier_list": [
+                "header",
+                "sidebar",
+                "bar",
+                "footer",
+                "popup"
+            ],
+            "sentence_list": [
+                "A website homepage, the header shows 'Shop Now' in large red letters.",
+                "a sidebar says 'Featured Items' in medium regular font.",
+                "a search bar displays 'Find Products' in small italic letters.",
+                "a footer has 'Contact Us' in medium bold letters.",
+                "a popup says 'Limited Offer' in large orange letters."
+            ]
+        },
+        {
+            "index": 43,
+            "prompt": "Inside a cafe, a menu board lists 'Coffee Specials' in large brown letters, a cup displays 'Hot Latte' in medium regular font, a sign says 'Free Wi-Fi' in small blue letters, a table has 'Reserved' in bold red letters, and a wall sign shows 'Relax Here' in large cursive letters.",
+            "carrier_list": [
+                "board",
+                "cup",
+                "sign",
+                "table",
+                "sign"
+            ],
+            "sentence_list": [
+                "a menu board lists 'Coffee Specials' in large brown letters.",
+                "a cup displays 'Hot Latte' in medium regular font.",
+                "a sign says 'Free Wi-Fi' in small blue letters.",
+                "a table has 'Reserved' in bold red letters.",
+                "a wall sign shows 'Relax Here' in large cursive letters."
+            ]
+        },
+        {
+            "index": 44,
+            "prompt": "In a tech store, a display reads 'Latest Gadgets' in large silver letters, a sign says 'New Arrival' in medium bold letters, a price tag shows '199 USD' in small black digits, a banner reads 'Big Discount' in large red letters, and a checkout counter has 'Pay Here' in medium italic letters.",
+            "carrier_list": [
+                "display",
+                "sign",
+                "tag",
+                "banner",
+                "counter"
+            ],
+            "sentence_list": [
+                "a display reads 'Latest Gadgets' in large silver letters.",
+                "a sign says 'New Arrival' in medium bold letters.",
+                "a price tag shows '199 USD' in small black digits.",
+                "a banner reads 'Big Discount' in large red letters.",
+                "a checkout counter has 'Pay Here' in medium italic letters."
+            ]
+        },
+        {
+            "index": 45,
+            "prompt": "On a book cover, the title says 'Lost City' in large bold gold letters, the author name says 'J. Taylor' in medium regular font, a tagline reads 'Adventure Awaits' in italic green letters, a review shows 'Best Seller' in small red letters, and a publisher name reads 'Adventure Press' in medium cursive letters.",
+            "carrier_list": [
+                "title",
+                "name",
+                "tagline",
+                "review",
+                "name"
+            ],
+            "sentence_list": [
+                "the title says 'Lost City' in large bold gold letters.",
+                "the author name says 'J. Taylor' in medium regular font.",
+                "a tagline reads 'Adventure Awaits' in italic green letters.",
+                "a review shows 'Best Seller' in small red letters.",
+                "a publisher name reads 'Adventure Press' in medium cursive letters."
+            ]
+        },
+        {
+            "index": 46,
+            "prompt": "In a sports arena, a scoreboard shows 'Team A 3' in large white numbers, a banner says 'Go Team' in bold blue letters, a ticket reads 'Seat 21' in small black font, a fan sign displays 'We Win' in large green letters, and a merchandise sign says 'Shop Gear' in medium italic letters.",
+            "carrier_list": [
+                "scoreboard",
+                "banner",
+                "ticket",
+                "sign",
+                "sign"
+            ],
+            "sentence_list": [
+                "a scoreboard shows 'Team A 3' in large white numbers.",
+                "a banner says 'Go Team' in bold blue letters.",
+                "a ticket reads 'Seat 21' in small black font.",
+                "a fan sign displays 'We Win' in large green letters.",
+                "a merchandise sign says 'Shop Gear' in medium italic letters."
+            ]
+        },
+        {
+            "index": 47,
+            "prompt": "In a fitness center, a wall sign reads 'Join Today' in large orange letters, a schedule says 'Yoga at 10' in medium regular font, a locker displays 'Reserved' in small red letters, a poster says 'Get Fit' in bold blue letters, and a water bottle reads 'Stay Hydrated' in italic green letters.",
+            "carrier_list": [
+                "sign",
+                "schedule",
+                "locker",
+                "poster",
+                "bottle"
+            ],
+            "sentence_list": [
+                "a wall sign reads 'Join Today' in large orange letters.",
+                "a schedule says 'Yoga at 10' in medium regular font.",
+                "a locker displays 'Reserved' in small red letters.",
+                "a poster says 'Get Fit' in bold blue letters.",
+                "a water bottle reads 'Stay Hydrated' in italic green letters."
+            ]
+        },
+        {
+            "index": 48,
+            "prompt": "On a train platform, a timetable displays 'Next Train 5:15' in large black numbers, a sign reads 'Platform 3' in medium regular font, a ticket says 'Round Trip' in small blue letters, a notice shows 'No Smoking' in bold red letters, and a map says 'Train Route' in medium italic letters.",
+            "carrier_list": [
+                "timetable",
+                "sign",
+                "ticket",
+                "notice",
+                "map"
+            ],
+            "sentence_list": [
+                "a timetable displays 'Next Train 5:15' in large black numbers.",
+                "a sign reads 'Platform 3' in medium regular font.",
+                "a ticket says 'Round Trip' in small blue letters.",
+                "a notice shows 'No Smoking' in bold red letters.",
+                "a map says 'Train Route' in medium italic letters."
+            ]
+        },
+        {
+            "index": 49,
+            "prompt": "At a fashion store, a display reads 'New Arrivals' in large pink letters, a tag shows '49.99 USD' in small black digits, a poster says 'Sale Today' in bold yellow letters, a price board reads '50 percent Off' in large red numbers, and a checkout counter shows 'Pay Here' in medium regular font.",
+            "carrier_list": [
+                "display",
+                "tag",
+                "poster",
+                "board",
+                "counter"
+            ],
+            "sentence_list": [
+                "a display reads 'New Arrivals' in large pink letters.",
+                "a tag shows '49.99 USD' in small black digits.",
+                "a poster says 'Sale Today' in bold yellow letters.",
+                "a price board reads '50 percent Off' in large red numbers.",
+                "a checkout counter shows 'Pay Here' in medium regular font."
+            ]
+        },
+        {
+            "index": 50,
+            "prompt": "A street market scene, a sign above the stall says 'Fresh Produce' in large green letters, a banner on a nearby truck reads 'Discounted Prices' in bold red, a sign on a fruit crate displays 'Organic Apples' in small italic, a street vendor apron says 'Healthy Snacks' in large cursive, and a poster on a wall reads 'Sale Today' in bold blue.",
+            "carrier_list": [
+                "sign",
+                "banner",
+                "sign",
+                "apron",
+                "poster"
+            ],
+            "sentence_list": [
+                "a sign above the stall says 'Fresh Produce' in large green letters.",
+                "a banner on a nearby truck reads 'Discounted Prices' in bold red.",
+                "a sign on a fruit crate displays 'Organic Apples' in small italic.",
+                "a street vendor apron says 'Healthy Snacks' in large cursive.",
+                "a poster on a wall reads 'Sale Today' in bold blue."
+            ]
+        },
+        {
+            "index": 51,
+            "prompt": "In a cozy café, a chalkboard menu shows 'Latte Art' in large brown cursive, a sign on the door reads 'Open Now' in bold green, a table has a placemat with 'Daily Special' in medium regular, a cup saucer says 'Enjoy Your Drink' in small italic, and a napkin reads 'Take a Break' in large blue.",
+            "carrier_list": [
+                "menu",
+                "sign",
+                "placemat",
+                "saucer",
+                "napkin"
+            ],
+            "sentence_list": [
+                "a chalkboard menu shows 'Latte Art' in large brown cursive.",
+                "a sign on the door reads 'Open Now' in bold green.",
+                "a placemat with 'Daily Special' in medium regular.",
+                "a cup saucer says 'Enjoy Your Drink' in small italic.",
+                "a napkin reads 'Take a Break' in large blue."
+            ]
+        },
+        {
+            "index": 52,
+            "prompt": "At a tech store, a display screen reads 'New Arrivals' in large white, a price tag on a laptop shows '499 USD' in bold black, a poster says 'Upgrade Today' in medium red italic, a box on a shelf says 'Limited Edition' in small gold, and a shelf label reads 'Smartphones' in large regular.",
+            "carrier_list": [
+                "screen",
+                "tag",
+                "poster",
+                "box",
+                "label"
+            ],
+            "sentence_list": [
+                "a display screen reads 'New Arrivals' in large white.",
+                "a price tag on a laptop shows '499 USD' in bold black.",
+                "a poster says 'Upgrade Today' in medium red italic.",
+                "a box on a shelf says 'Limited Edition' in small gold.",
+                "a shelf label reads 'Smartphones' in large regular."
+            ]
+        },
+        {
+            "index": 53,
+            "prompt": "In an office meeting room, a whiteboard shows 'Team Goals' in large blue bold, a calendar on the wall reads 'January 2025' in medium black, a flip chart says 'Action Plan' in large italic, a laptop screen shows 'Join Meeting' in small green, and a sticky note on the desk says 'Follow Up' in bold yellow.",
+            "carrier_list": [
+                "whiteboard",
+                "calendar",
+                "chart",
+                "screen",
+                "note"
+            ],
+            "sentence_list": [
+                "a whiteboard shows 'Team Goals' in large blue bold.",
+                "a calendar on the wall reads 'January 2025' in medium black.",
+                "a flip chart says 'Action Plan' in large italic.",
+                "a laptop screen shows 'Join Meeting' in small green.",
+                "a sticky note on the desk says 'Follow Up' in bold yellow."
+            ]
+        },
+        {
+            "index": 54,
+            "prompt": "In a gym, a wall poster reads 'Get Stronger' in large red bold, a treadmill display shows '5.0 mph' in medium white, a locker door says 'Personal Items' in small blue italic, a water bottle label reads 'Stay Hydrated' in large green, and a timer on the wall reads '15 Minutes' in bold black.",
+            "carrier_list": [
+                "poster",
+                "display",
+                "door",
+                "label",
+                "timer"
+            ],
+            "sentence_list": [
+                "a wall poster reads 'Get Stronger' in large red bold.",
+                "a treadmill display shows '5.0 mph' in medium white.",
+                "a locker door says 'Personal Items' in small blue italic.",
+                "a water bottle label reads 'Stay Hydrated' in large green.",
+                "a timer on the wall reads '15 Minutes' in bold black."
+            ]
+        },
+        {
+            "index": 55,
+            "prompt": "On a street corner, a bus stop sign shows 'Route 35' in large blue letters, a billboard reads 'Summer Sale' in bold yellow, a newspaper stand displays 'Daily Headlines' in medium black, a flyer on the wall says 'Free Samples' in small red cursive, and a street sign reads 'Main St' in large white.",
+            "carrier_list": [
+                "sign",
+                "billboard",
+                "stand",
+                "flyer",
+                "sign"
+            ],
+            "sentence_list": [
+                "a bus stop sign shows 'Route 35' in large blue letters.",
+                "a billboard reads 'Summer Sale' in bold yellow.",
+                "a newspaper stand displays 'Daily Headlines' in medium black.",
+                "a flyer on the wall says 'Free Samples' in small red cursive.",
+                "a street sign reads 'Main St' in large white."
+            ]
+        },
+        {
+            "index": 56,
+            "prompt": "In a bookstore, a book cover shows 'Best Seller' in large gold bold, a shelf sign says 'Fiction Section' in medium red, a magazine cover reads 'Winter Edition' in small blue italic, a bookmark says 'Next Read' in large green, and a table display reads 'New Releases' in bold black.",
+            "carrier_list": [
+                "cover",
+                "sign",
+                "cover",
+                "bookmark",
+                "display"
+            ],
+            "sentence_list": [
+                "a book cover shows 'Best Seller' in large gold bold.",
+                "a shelf sign says 'Fiction Section' in medium red.",
+                "a magazine cover reads 'Winter Edition' in small blue italic.",
+                "a bookmark says 'Next Read' in large green.",
+                "a table display reads 'New Releases' in bold black."
+            ]
+        },
+        {
+            "index": 57,
+            "prompt": "At a film premiere, a movie poster reads 'Action Adventure' in large red bold, a ticket stub shows 'Row A' in medium black, a banner says 'Opening Night' in large gold, a red carpet sign reads 'VIP Access' in bold white, and a screen displays 'Coming Soon' in small blue italic.",
+            "carrier_list": [
+                "poster",
+                "stub",
+                "banner",
+                "sign",
+                "screen"
+            ],
+            "sentence_list": [
+                "a movie poster reads 'Action Adventure' in large red bold.",
+                "a ticket stub shows 'Row A' in medium black.",
+                "a banner says 'Opening Night' in large gold.",
+                "a red carpet sign reads 'VIP Access' in bold white.",
+                "a screen displays 'Coming Soon' in small blue italic."
+            ]
+        },
+        {
+            "index": 58,
+            "prompt": "In a park, a sign by the entrance says 'Welcome Here' in large green, a bench has a plaque reading 'Relax and Enjoy' in medium brown cursive, a trash can displays 'Keep Clean' in small black, a fountain label says 'Water Refresh' in large blue, and a map board reads 'Park Area' in bold white.",
+            "carrier_list": [
+                "sign",
+                "plaque",
+                "can",
+                "label",
+                "board"
+            ],
+            "sentence_list": [
+                "a sign by the entrance says 'Welcome Here' in large green.",
+                "a bench has a plaque reading 'Relax and Enjoy' in medium brown cursive.",
+                "a trash can displays 'Keep Clean' in small black.",
+                "a fountain label says 'Water Refresh' in large blue.",
+                "a map board reads 'Park Area' in bold white."
+            ]
+        },
+        {
+            "index": 59,
+            "prompt": "On a concert stage, a banner reads 'Live Music' in large red bold, a ticket on a seat shows 'General Admission' in medium black, a monitor on stage displays 'Next Act' in small white italic, a wristband says 'VIP Access' in large gold, and a flyer on the wall reads 'Tour Dates' in bold blue.",
+            "carrier_list": [
+                "banner",
+                "ticket",
+                "monitor",
+                "wristband",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a banner reads 'Live Music' in large red bold.",
+                "a ticket on a seat shows 'General Admission' in medium black.",
+                "a monitor on stage displays 'Next Act' in small white italic.",
+                "a wristband says 'VIP Access' in large gold.",
+                "a flyer on the wall reads 'Tour Dates' in bold blue."
+            ]
+        },
+        {
+            "index": 60,
+            "prompt": "A street scene shows a billboard with the text 'Big Sale' in large red bold letters, a shop window displaying 'New Arrivals' in medium blue, a car license plate reading 'XYZ 123' in small italic, a street sign saying 'Main St.' in bold black, and a nearby poster that reads 'Summer Vibes' in large yellow cursive.",
+            "carrier_list": [
+                "billboard",
+                "window",
+                "plate",
+                "sign",
+                "poster"
+            ],
+            "sentence_list": [
+                "a billboard with the text 'Big Sale' in large red bold letters.",
+                "a shop window displaying 'New Arrivals' in medium blue.",
+                "a car license plate reading 'XYZ 123' in small italic.",
+                "a street sign saying 'Main St.' in bold black.",
+                "a nearby poster that reads 'Summer Vibes' in large yellow cursive."
+            ]
+        },
+        {
+            "index": 61,
+            "prompt": "In a coffee shop, a menu board lists 'Espresso Shot' in large brown bold, a coffee cup has 'Brew Fresh' in small green, a napkin displays 'Thank You' in italic, a poster reads 'Coffee Time' in medium black, and a receipt shows 'Total: 5' in regular font.",
+            "carrier_list": [
+                "board",
+                "cup",
+                "napkin",
+                "poster",
+                "receipt"
+            ],
+            "sentence_list": [
+                "a menu board lists 'Espresso Shot' in large brown bold.",
+                "a coffee cup has 'Brew Fresh' in small green.",
+                "a napkin displays 'Thank You' in italic.",
+                "a poster reads 'Coffee Time' in medium black.",
+                "a receipt shows 'Total: 5' in regular font."
+            ]
+        },
+        {
+            "index": 62,
+            "prompt": "A movie poster features the title 'Star Quest' in large white bold letters, a tagline reads 'Epic Adventure' in medium gold italic, a rating shows '4.8 Stars' in small silver, a website address says 'www.starquest.com' in regular font, and a text box on the side reads 'Now Showing' in bold red.",
+            "carrier_list": [
+                "title",
+                "tagline",
+                "rating",
+                "address",
+                "box"
+            ],
+            "sentence_list": [
+                "a movie poster features the title 'Star Quest' in large white bold letters.",
+                "a tagline reads 'Epic Adventure' in medium gold italic.",
+                "a rating shows '4.8 Stars' in small silver.",
+                "a website address says 'www.starquest.com' in regular font.",
+                "a text box on the side reads 'Now Showing' in bold red."
+            ]
+        },
+        {
+            "index": 63,
+            "prompt": "A website homepage displays the text 'Shop Now' in a large blue banner, a pop-up box offers 'Exclusive Deals' in medium green italic, a footer has 'Terms And Conditions' in small gray, a sidebar reads 'Customer Reviews' in bold black, and a section displays 'Free Shipping' in large orange cursive.",
+            "carrier_list": [
+                "banner",
+                "box",
+                "footer",
+                "sidebar",
+                "section"
+            ],
+            "sentence_list": [
+                "A website homepage displays the text 'Shop Now' in a large blue banner.",
+                "a pop-up box offers 'Exclusive Deals' in medium green italic.",
+                "a footer has 'Terms And Conditions' in small gray.",
+                "a sidebar reads 'Customer Reviews' in bold black.",
+                "a section displays 'Free Shipping' in large orange cursive."
+            ]
+        },
+        {
+            "index": 64,
+            "prompt": "A book cover, the title says 'Summer Escape' in large vibrant blue, the author name 'A. Brooks' is at the bottom in small regular font, a tagline says 'Relax and Enjoy' in medium green italic, a price tag displays '12.99 USD' in small red, and a barcode reads '978-1234567890' in regular font.",
+            "carrier_list": [
+                "title",
+                "name",
+                "tagline",
+                "tag",
+                "barcode"
+            ],
+            "sentence_list": [
+                "A book cover, the title says 'Summer Escape' in large vibrant blue.",
+                "the author name 'A. Brooks' is at the bottom in small regular font.",
+                "a tagline says 'Relax and Enjoy' in medium green italic.",
+                "a price tag displays '12.99 USD' in small red.",
+                "a barcode reads '978-1234567890' in regular font."
+            ]
+        },
+        {
+            "index": 65,
+            "prompt": "At a park, a sign reads 'Playground Rules' in large bold green, a bench label says 'Reserved' in small red italic, a water fountain displays 'Drink Water' in medium blue, a map board has 'Trail 1' in bold black, and a park entrance sign says 'Welcome' in large welcoming blue cursive.",
+            "carrier_list": [
+                "sign",
+                "bench",
+                "fountain",
+                "board",
+                "sign"
+            ],
+            "sentence_list": [
+                "a sign reads 'Playground Rules' in large bold green.",
+                "a bench label says 'Reserved' in small red italic.",
+                "a water fountain displays 'Drink Water' in medium blue.",
+                "a map board has 'Trail 1' in bold black.",
+                "a park entrance sign says 'Welcome' in large welcoming blue cursive."
+            ]
+        },
+        {
+            "index": 66,
+            "prompt": "On a sports ad, a poster reads 'Score Big' in large red bold letters, a scoreboard shows 'Team A: 5' in medium white, a ticket says 'VIP Access' in small gold italic, a banner advertises '50 percent Off' in large yellow, and a flyer reads 'Final Game' in bold black.",
+            "carrier_list": [
+                "poster",
+                "scoreboard",
+                "ticket",
+                "banner",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a poster reads 'Score Big' in large red bold letters.",
+                "a scoreboard shows 'Team A: 5' in medium white.",
+                "a ticket says 'VIP Access' in small gold italic.",
+                "a banner advertises '50 percent Off' in large yellow.",
+                "a flyer reads 'Final Game' in bold black."
+            ]
+        },
+        {
+            "index": 67,
+            "prompt": "In an office setting, a desk label shows 'Marketing' in medium blue bold, a file folder says 'Project X' in small green italic, a sticky note on a monitor says 'Call Sarah' in regular font, a calendar reads 'March 12' in small black, and a coffee mug displays 'Work Hard' in large red cursive.",
+            "carrier_list": [
+                "label",
+                "folder",
+                "note",
+                "calendar",
+                "mug"
+            ],
+            "sentence_list": [
+                "a desk label shows 'Marketing' in medium blue bold.",
+                "a file folder says 'Project X' in small green italic.",
+                "a sticky note on a monitor says 'Call Sarah' in regular font.",
+                "a calendar reads 'March 12' in small black.",
+                "a coffee mug displays 'Work Hard' in large red cursive."
+            ]
+        },
+        {
+            "index": 68,
+            "prompt": "A street festival flyer includes the text 'Live Music' in large vibrant purple, a sign on the food truck reads 'Hot Dogs' in medium red bold, a banner overhead says 'Festival Today' in large yellow, a tent label displays 'Art Showcase' in small blue italic, and a program reads 'Event Schedule' in regular font.",
+            "carrier_list": [
+                "flyer",
+                "sign",
+                "overhead",
+                "label",
+                "program"
+            ],
+            "sentence_list": [
+                "a street festival flyer includes the text 'Live Music' in large vibrant purplee.",
+                "a sign on the food truck reads 'Hot Dogs' in medium red bold.",
+                "a banner overhead says 'Festival Today' in large yellow.",
+                "a tent label displays 'Art Showcase' in small blue italic.",
+                "a program reads 'Event Schedule' in regular font."
+            ]
+        },
+        {
+            "index": 69,
+            "prompt": "At a gym, a poster on the wall reads 'Lift More' in large black bold letters, a membership card shows 'Member ID: 12345' in small gray, a notice board displays 'Class Schedule' in medium blue italic, a water bottle label says 'Stay Hydrated' in green, and a motivational sign reads 'Push Yourself' in large orange cursive.",
+            "carrier_list": [
+                "poster",
+                "card",
+                "board",
+                "label",
+                "sign"
+            ],
+            "sentence_list": [
+                "a poster on the wall reads 'Lift More' in large black bold letters.",
+                "a membership card shows 'Member ID: 12345' in small gray.",
+                "a notice board displays 'Class Schedule' in medium blue italic.",
+                "a water bottle label says 'Stay Hydrated' in green.",
+                "a motivational sign reads 'Push Yourself' in large orange cursive."
+            ]
+        },
+        {
+            "index": 70,
+            "prompt": "A street market scene with a signboard reading 'Fresh Fruits' in large red letters, a vendor booth with 'Special Offer' in bold, a banner that says '50 percent Off' in bright yellow large letters, a cart displaying 'Juicy Mangoes' in medium green, and a food truck with 'Tasty Snacks' in italic.",
+            "carrier_list": [
+                "signboard",
+                "booth",
+                "banner",
+                "cart",
+                "truck"
+            ],
+            "sentence_list": [
+                "a signboard reading 'Fresh Fruits' in large red letters.",
+                "a vendor booth with 'Special Offer' in bold.",
+                "a banner that says '50 percent Off' in bright yellow large letters.",
+                "a cart displaying 'Juicy Mangoes' in medium green.",
+                "a food truck with 'Tasty Snacks' in italic."
+            ]
+        },
+        {
+            "index": 71,
+            "prompt": "A coffee shop interior where a chalkboard menu shows 'Hot Espresso' in large white cursive, a wall poster reads 'Daily Specials' in bold black, a napkin has 'Take a Break' in small blue, a coffee cup says 'Best Coffee' in medium brown, and a clock reads '7:30 AM' in regular.",
+            "carrier_list": [
+                "menu",
+                "poster",
+                "napkin",
+                "cup",
+                "clock"
+            ],
+            "sentence_list": [
+                "a chalkboard menu shows 'Hot Espresso' in large white cursive.",
+                "a wall poster reads 'Daily Specials' in bold black.",
+                "a napkin has 'Take a Break' in small blue.",
+                "a coffee cup says 'Best Coffee' in medium brown.",
+                "a clock reads '7:30 AM' in regular."
+            ]
+        },
+        {
+            "index": 72,
+            "prompt": "In a gym, a wall sign reads 'Fitness Goals' in large bold red, a weight rack label shows 'Heavy Lifting' in medium black, a water bottle displays 'Stay Hydrated' in small blue, a treadmill screen shows 'Speed 5' in regular, and a yoga mat has 'Breathe Deep' in italic green.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "bottle",
+                "screen",
+                "mat"
+            ],
+            "sentence_list": [
+                "a wall sign reads 'Fitness Goals' in large bold red.",
+                "a weight rack label shows 'Heavy Lifting' in medium black.",
+                "a water bottle displays 'Stay Hydrated' in small blue.",
+                "a treadmill screen shows 'Speed 5' in regular.",
+                "a yoga mat has 'Breathe Deep' in italic green."
+            ]
+        },
+        {
+            "index": 73,
+            "prompt": "A movie theater lobby where a banner says 'Coming Soon' in large bold white letters, a popcorn bucket reads 'Hot And Fresh' in medium yellow, a poster displays 'Now Showing' in large red, a ticket booth sign shows 'Adult 12 Dollars' in regular, and a digital board says 'Movie Times' in small blue.",
+            "carrier_list": [
+                "banner",
+                "bucket",
+                "poster",
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a banner says 'Coming Soon' in large bold white letters.",
+                "a popcorn bucket reads 'Hot And Fresh' in medium yellow.",
+                "a poster displays 'Now Showing' in large red.",
+                "a ticket booth sign shows 'Adult 12 Dollars' in regular.",
+                "a digital board says 'Movie Times' in small blue."
+            ]
+        },
+        {
+            "index": 74,
+            "prompt": "On a book cover, the title 'Ocean Adventure' is at the top in large blue bold letters, the author name 'L. Harper' is below in small italic, a tagline says 'Explore the Depths' in medium green, a rating shows '4 Stars' in regular, and a publisher reads 'Seaside Publications' in cursive.",
+            "carrier_list": [
+                "title",
+                "name",
+                "tagline",
+                "rating",
+                "publisher"
+            ],
+            "sentence_list": [
+                "the title 'Ocean Adventure' is at the top in large blue bold letters.",
+                "the author name 'L. Harper' is below in small italic.",
+                "a tagline says 'Explore the Depths' in medium green.",
+                "a rating shows '4 Stars' in regular.",
+                "a publisher reads 'Seaside Publications' in cursive."
+            ]
+        },
+        {
+            "index": 75,
+            "prompt": "In a city park, a sign reads 'Nature Walk' in large green letters, a bench label shows 'Sit And Relax' in small brown, a trash can has 'Keep Clean' in medium red, a path marker says '1 Mile' in bold, and a tree plaque reads 'Tall Oaks' in italic.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "can",
+                "marker",
+                "plaque"
+            ],
+            "sentence_list": [
+                "a sign reads 'Nature Walk' in large green letters.",
+                "a bench label shows 'Sit And Relax' in small brown.",
+                "a trash can has 'Keep Clean' in medium red.",
+                "a path marker says '1 Mile' in bold.",
+                "a tree plaque reads 'Tall Oaks' in italic."
+            ]
+        },
+        {
+            "index": 76,
+            "prompt": "At a music festival, a banner displays 'Live Music' in large colorful letters, a merchandise booth says 'T-Shirts 20 Dollars' in medium black, a stage screen shows 'DJ Tonight' in bold, a ticket says 'General Admission' in small white, and a drink stand reads 'Cold Drinks' in italic blue.",
+            "carrier_list": [
+                "banner",
+                "booth",
+                "screen",
+                "ticket",
+                "stand"
+            ],
+            "sentence_list": [
+                "a banner displays 'Live Music' in large colorful letters.",
+                "a merchandise booth says 'T-Shirts 20 Dollars' in medium black.",
+                "a stage screen shows 'DJ Tonight' in bold.",
+                "a ticket says 'General Admission' in small white.",
+                "a drink stand reads 'Cold Drinks' in italic blue."
+            ]
+        },
+        {
+            "index": 77,
+            "prompt": "On a travel brochure, the title 'Tropical Escape' appears at the top in large bold turquoise, a slogan reads 'Find Paradise' in medium cursive, a price tag shows '999 USD' in red, a rating says '5 Stars' in small gold, and a contact number reads '800-555-1234' in regular.",
+            "carrier_list": [
+                "title",
+                "slogan",
+                "price",
+                "rating",
+                "number"
+            ],
+            "sentence_list": [
+                "the title 'Tropical Escape' appears at the top in large bold turquoise.",
+                "a slogan reads 'Find Paradise' in medium cursive.",
+                "a price tag shows '999 USD' in red.",
+                "a rating says '5 Stars' in small gold.",
+                "a contact number reads '800-555-1234' in regular."
+            ]
+        },
+        {
+            "index": 78,
+            "prompt": "In a tech store, a display screen reads 'New Arrivals' in large blue, a price tag shows 'Price 499' in bold, a flyer says 'Limited Offer' in medium red italic, a product box has 'Smartphone 12' in small black, and a shelf tag reads 'Best Sellers' in green.",
+            "carrier_list": [
+                "screen",
+                "tag",
+                "flyer",
+                "box",
+                "tag"
+            ],
+            "sentence_list": [
+                "a display screen reads 'New Arrivals' in large blue.",
+                "a price tag shows 'Price 499' in bold.",
+                "a flyer says 'Limited Offer' in medium red italic.",
+                "a product box has 'Smartphone 12' in small black.",
+                "a shelf tag reads 'Best Sellers' in green."
+            ]
+        },
+        {
+            "index": 79,
+            "prompt": "At a charity event, a banner shows 'Donate Now' in large red bold, a flyer reads 'Help the Needy' in medium blue, a donation box has '10 pounds' in small black, a volunteer t-shirt says 'Team Hope' in bold, and a schedule sign reads 'Event Starts at 3PM' in italic green.",
+            "carrier_list": [
+                "banner",
+                "flyer",
+                "box",
+                "t-shirt",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner shows 'Donate Now' in large red bold.",
+                "a flyer reads 'Help the Needy' in medium blue.",
+                "a donation box has '10 pounds' in small black.",
+                "a volunteer t-shirt says 'Team Hope' in bold.",
+                "a schedule sign reads 'Event Starts at 3PM' in italic green."
+            ]
+        },
+        {
+            "index": 80,
+            "prompt": "A busy city street with a billboard showing 'Great Sale' in large red bold letters, a storefront with 'Open Now' in green italic, a taxi with a sign reading 'Next Stop' in yellow medium letters, a streetlamp displaying 'Evening Light' in soft white small letters, and a bus stop with 'Arriving Soon' in blue cursive.",
+            "carrier_list": [
+                "billboard",
+                "storefront",
+                "sign",
+                "streetlamp",
+                "stop"
+            ],
+            "sentence_list": [
+                "a billboard showing 'Great Sale' in large red bold letters.",
+                "a storefront with 'Open Now' in green italic.",
+                "a sign reading 'Next Stop' in yellow medium letters.",
+                "a streetlamp displaying 'Evening Light' in soft white small letters.",
+                "a stop with 'Arriving Soon' in blue cursive."
+            ]
+        },
+        {
+            "index": 81,
+            "prompt": "On a website homepage, the header shows 'Welcome Back' in large blue bold letters, the navigation bar reads 'About Us' in medium regular, the footer says 'Contact Info' in small gray, a product listing has '50 percent Off' in large red italic, and a pop-up notification reads 'Free Shipping' in green cursive.",
+            "carrier_list": [
+                "header",
+                "navigation",
+                "footer",
+                "listing",
+                "notification"
+            ],
+            "sentence_list": [
+                "the header shows 'Welcome Back' in large blue bold letters.",
+                "the navigation bar reads 'About Us' in medium regular.",
+                "the footer says 'Contact Info' in small gray.",
+                "a product listing has '50 percent Off' in large red italic.",
+                "a pop-up notification reads 'Free Shipping' in green cursive."
+            ]
+        },
+        {
+            "index": 82,
+            "prompt": "In a movie scene, a subway car displays 'Next Station' in bold yellow large letters, a sign above the door says 'Exit Here' in red medium letters, a digital clock shows '12:15 AM' in regular white small digits, a map has 'Route 5' in blue italic, and a train seat reads 'Reserved' in large black bold.",
+            "carrier_list": [
+                "car",
+                "sign",
+                "clock",
+                "map",
+                "seat"
+            ],
+            "sentence_list": [
+                "a subway car displays 'Next Station' in bold yellow large letters.",
+                "a sign above the door says 'Exit Here' in red medium letters.",
+                "a digital clock shows '12:15 AM' in regular white small digits.",
+                "a map has 'Route 5' in blue italic.",
+                "a train seat reads 'Reserved' in large black bold."
+            ]
+        },
+        {
+            "index": 83,
+            "prompt": "In a café, a chalkboard menu says 'Hot Coffee' in large brown cursive, a napkin has 'Enjoy Your Day' in small green, a table number reads 'Table 4' in medium black bold, a sign by the counter says 'Order Here' in large red italic, and a coffee cup displays 'Fresh Brew' in blue regular.",
+            "carrier_list": [
+                "menu",
+                "napkin",
+                "number",
+                "sign",
+                "cup"
+            ],
+            "sentence_list": [
+                "a chalkboard menu says 'Hot Coffee' in large brown cursive.",
+                "a napkin has 'Enjoy Your Day' in small green.",
+                "a table number reads 'Table 4' in medium black bold.",
+                "a sign by the counter says 'Order Here' in large red italic.",
+                "a coffee cup displays 'Fresh Brew' in blue regular."
+            ]
+        },
+        {
+            "index": 84,
+            "prompt": "On a magazine cover, the headline reads 'Travel Guide' in large bold navy letters, a subtitle says 'Top Destinations' in medium italic, a price tag shows 'Only 5' in small green, a barcode displays '123456789' in regular black, and an issue number shows 'Volume 10' in small gray.",
+            "carrier_list": [
+                "headline",
+                "subtitle",
+                "tag",
+                "barcode",
+                "number"
+            ],
+            "sentence_list": [
+                "the headline reads 'Travel Guide' in large bold navy letters.",
+                "a subtitle says 'Top Destinations' in medium italic.",
+                "a price tag shows 'Only 5' in small green.",
+                "a barcode displays '123456789' in regular black.",
+                "an issue number shows 'Volume 10' in small gray."
+            ]
+        },
+        {
+            "index": 85,
+            "prompt": "In a park, a sign by the entrance says 'No Smoking' in large bold red letters, a bench displays 'Rest Here' in medium green italic, a water fountain reads 'Drink Fresh' in small blue, a map shows 'Park Area A' in regular black, and a kiosk says 'Buy Tickets' in large orange cursive.",
+            "carrier_list": [
+                "sign",
+                "bench",
+                "fountain",
+                "map",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a sign by the entrance says 'No Smoking' in large bold red letters.",
+                "a bench displays 'Rest Here' in medium green italic.",
+                "a water fountain reads 'Drink Fresh' in small blue.",
+                "a map shows 'Park Area A' in regular black.",
+                "a kiosk says 'Buy Tickets' in large orange cursive."
+            ]
+        },
+        {
+            "index": 86,
+            "prompt": "On a book cover, the title reads 'Space Journey' in large bold silver letters, the author name says 'A. White' in medium italic, a tagline says 'Explore Beyond' in small blue cursive, a publisher name displays 'Galaxy Press' in regular black, and a rating reads '5 Stars' in gold small.",
+            "carrier_list": [
+                "title",
+                "name",
+                "tagline",
+                "name",
+                "rating"
+            ],
+            "sentence_list": [
+                "the title reads 'Space Journey' in large bold silver letters.",
+                "the author name says 'A. White' in medium italic.",
+                "a tagline says 'Explore Beyond' in small blue cursive.",
+                "a publisher name displays 'Galaxy Press' in regular black.",
+                "a rating reads '5 Stars' in gold small."
+            ]
+        },
+        {
+            "index": 87,
+            "prompt": "At a restaurant, a menu board shows 'Chef Special' in large red bold letters, a table card reads 'Table 2' in medium black, a drink menu displays 'Soft Drinks' in blue italic, a sign says 'Free Wi-Fi' in small green, and a special offer reads '2 for 1' in large orange bold.",
+            "carrier_list": [
+                "board",
+                "card",
+                "menu",
+                "sign",
+                "offer"
+            ],
+            "sentence_list": [
+                "a menu board shows 'Chef Special' in large red bold letters.",
+                "a table card reads 'Table 2' in medium black.",
+                "a drink menu displays 'Soft Drinks' in blue italic.",
+                "a sign says 'Free Wi-Fi' in small green.",
+                "a special offer reads '2 for 1' in large orange bold."
+            ]
+        },
+        {
+            "index": 88,
+            "prompt": "On a flyer, the event name says 'Annual Fair' in large blue bold letters, the date reads 'Sept 21' in medium black, the location says 'Central Park' in green italic, a contact number displays '555-1234' in small gray, and a ticket price shows '20 dollars' in large red.",
+            "carrier_list": [
+                "name",
+                "date",
+                "location",
+                "number",
+                "price"
+            ],
+            "sentence_list": [
+                "the event name says 'Annual Fair' in large blue bold letters.",
+                "the date reads 'Sept 21' in medium black.",
+                "the location says 'Central Park' in green italic.",
+                "a contact number displays '555-1234' in small gray.",
+                "a ticket price shows '20 dollars' in large red."
+            ]
+        },
+        {
+            "index": 89,
+            "prompt": "In a classroom, a poster reads 'Stay Focused' in large blue bold letters, a notebook displays 'Homework Due' in medium black italic, a clock shows '3:30 PM' in small white, a whiteboard says 'Class Notes' in regular black, and a desk label reads 'Student 5' in medium green.",
+            "carrier_list": [
+                "poster",
+                "notebook",
+                "clock",
+                "whiteboard",
+                "label"
+            ],
+            "sentence_list": [
+                "a poster reads 'Stay Focused' in large blue bold letters.",
+                "a notebook displays 'Homework Due' in medium black italic.",
+                "a clock shows '3:30 PM' in small white.",
+                "a whiteboard says 'Class Notes' in regular black.",
+                "a desk label reads 'Student 5' in medium green."
+            ]
+        },
+        {
+            "index": 90,
+            "prompt": "A city street with a bus stop showing 'Route 42' in large bold blue letters, a store window displaying '50 percent Off' in red italic letters, a traffic sign with 'Stop Here' in large white letters, a restaurant menu showing 'Daily Special' in medium cursive, and a streetlight with 'Parking Zone' in small green letters.",
+            "carrier_list": [
+                "stop",
+                "window",
+                "sign",
+                "menu",
+                "streetlight"
+            ],
+            "sentence_list": [
+                "a bus stop showing 'Route 42' in large bold blue letters.",
+                "a store window displaying '50 percent Off' in red italic letters.",
+                "a traffic sign with 'Stop Here' in large white letters.",
+                "a restaurant menu showing 'Daily Special' in medium cursive.",
+                "a streetlight with 'Parking Zone' in small green letters."
+            ]
+        },
+        {
+            "index": 91,
+            "prompt": "On a magazine cover, the headline reads 'Tech Today' in large bold black letters, a tagline shows 'The Future' in italic blue letters, a price tag says 'Only 9.99' in medium red letters, a date on the cover displays 'April 2025' in small green letters, and a QR code has 'Scan Now' in bold black letters.",
+            "carrier_list": [
+                "headline",
+                "tagline",
+                "tag",
+                "date",
+                "code"
+            ],
+            "sentence_list": [
+                "the headline reads 'Tech Today' in large bold black letters.",
+                "a tagline shows 'The Future' in italic blue letters.",
+                "a price tag says 'Only 9.99' in medium red letters.",
+                "a date on the cover displays 'April 2025' in small green letters.",
+                "a QR code has 'Scan Now' in bold black letters."
+            ]
+        },
+        {
+            "index": 92,
+            "prompt": "In a movie theater, the banner shows 'Coming Soon' in large bold yellow letters, a poster advertises 'Superhero Movie' in large red letters, a ticket booth reads 'Now Showing' in medium white letters, a popcorn box displays 'Snack Time' in italic brown letters, and a sign by the door reads 'VIP Access' in bold blue letters.",
+            "carrier_list": [
+                "banner",
+                "poster",
+                "booth",
+                "box",
+                "sign"
+            ],
+            "sentence_list": [
+                "the banner shows 'Coming Soon' in large bold yellow letters.",
+                "a poster advertises 'Superhero Movie' in large red letters.",
+                "a ticket booth reads 'Now Showing' in medium white letters.",
+                "a popcorn box displays 'Snack Time' in italic brown letters.",
+                "a sign by the door reads 'VIP Access' in bold blue letters."
+            ]
+        },
+        {
+            "index": 93,
+            "prompt": "At a coffee shop, a menu board shows 'Latte Special' in large brown cursive letters, a receipt says 'Total 4.50' in medium black letters, a chalkboard reads 'Happy Hour' in large bold green letters, a coupon displays 'Buy 1 Get 1' in red italic letters, and a sign by the door says 'Free Wi-Fi' in medium blue letters.",
+            "carrier_list": [
+                "board",
+                "receipt",
+                "chalkboard",
+                "coupon",
+                "sign"
+            ],
+            "sentence_list": [
+                "a menu board shows 'Latte Special' in large brown cursive letters.",
+                "a receipt says 'Total 4.50' in medium black letters.",
+                "a chalkboard reads 'Happy Hour' in large bold green letters.",
+                "a coupon displays 'Buy 1 Get 1' in red italic letters.",
+                "a sign by the door says 'Free Wi-Fi' in medium blue letters."
+            ]
+        },
+        {
+            "index": 94,
+            "prompt": "On a website homepage, a banner reads 'Sign Up Now' in large red bold letters, a button shows 'Learn More' in medium blue letters, a product listing says 'Only 29.99' in small green letters, a cart icon reads '3 Items' in medium white letters, and a footer displays 'Terms And Conditions' in small black letters.",
+            "carrier_list": [
+                "banner",
+                "button",
+                "listing",
+                "icon",
+                "footer"
+            ],
+            "sentence_list": [
+                "a banner reads 'Sign Up Now' in large red bold letters.",
+                "a button shows 'Learn More' in medium blue letters.",
+                "a product listing says 'Only 29.99' in small green letters.",
+                "a cart icon reads '3 Items' in medium white letters.",
+                "a footer displays 'Terms And Conditions' in small black letters."
+            ]
+        },
+        {
+            "index": 95,
+            "prompt": "In a gym, a wall sign shows 'Join Now' in large bold red letters, a timer reads '5 Minutes' in medium white letters, a water bottle displays 'Stay Hydrated' in small blue letters, a fitness tracker shows 'Calories Burned' in italic green letters, and a poster reads 'Train Hard' in large black letters.",
+            "carrier_list": [
+                "sign",
+                "timer",
+                "bottle",
+                "tracker",
+                "poster"
+            ],
+            "sentence_list": [
+                "a wall sign shows 'Join Now' in large bold red letters.",
+                "a timer reads '5 Minutes' in medium white letters.",
+                "a water bottle displays 'Stay Hydrated' in small blue letters.",
+                "a fitness tracker shows 'Calories Burned' in italic green letters.",
+                "a poster reads 'Train Hard' in large black letters."
+            ]
+        },
+        {
+            "index": 96,
+            "prompt": "In a bookstore, a shelf sign displays 'Best Sellers' in large bold yellow letters, a bookmark reads 'Read More' in small blue letters, a price tag shows 'Only 12.99' in medium red letters, a display stand shows 'New Arrivals' in large green letters, and a shopping bag reads 'Thank You' in italic black letters.",
+            "carrier_list": [
+                "sign",
+                "bookmark",
+                "tag",
+                "stand",
+                "bag"
+            ],
+            "sentence_list": [
+                "a shelf sign displays 'Best Sellers' in large bold yellow letters.",
+                "a bookmark reads 'Read More' in small blue letters.",
+                "a price tag shows 'Only 12.99' in medium red letters.",
+                "a display stand shows 'New Arrivals' in large green letters.",
+                "a shopping bag reads 'Thank You' in italic black letters."
+            ]
+        },
+        {
+            "index": 97,
+            "prompt": "At a concert, the stage banner shows 'Live Now' in large bold red letters, a ticket reads 'VIP Access' in medium gold letters, a merchandise booth sign says 'Band T-Shirts' in large white letters, a setlist on a board reads 'Song 1' in small black letters, and a backdrop shows 'Next Tour' in italic blue letters.",
+            "carrier_list": [
+                "banner",
+                "ticket",
+                "sign",
+                "board",
+                "backdrop"
+            ],
+            "sentence_list": [
+                "the stage banner shows 'Live Now' in large bold red letters.",
+                "a ticket reads 'VIP Access' in medium gold letters.",
+                "a merchandise booth sign says 'Band T-Shirts' in large white letters.",
+                "a setlist on a board reads 'Song 1' in small black letters.",
+                "a backdrop shows 'Next Tour' in italic blue letters."
+            ]
+        },
+        {
+            "index": 98,
+            "prompt": "At a car dealership, a banner reads 'Special Offer' in large red bold letters, a sign on a car door displays 'Test Drive' in medium blue letters, a price tag says '19,999' in large black letters, a financing flyer shows 'Low Interest' in small green letters, and a sale sign says 'Hurry, Limited Stock' in bold orange letters.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "tag",
+                "flyer",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner reads 'Special Offer' in large red bold letters.",
+                "a sign on a car door displays 'Test Drive' in medium blue letters.",
+                "a price tag says '19,999' in large black letters.",
+                "a financing flyer shows 'Low Interest' in small green letters.",
+                "a sale sign says 'Hurry, Limited Stock' in bold orange letters."
+            ]
+        },
+        {
+            "index": 99,
+            "prompt": "In an office, a calendar shows 'March 10' in medium black letters, a notice board reads 'Team Meeting' in large bold blue letters, a desk sign says 'Manager' in small white letters, a phone screen displays 'Call Now' in italic red letters, and a planner shows 'Agenda: Monday' in medium green letters.",
+            "carrier_list": [
+                "calendar",
+                "board",
+                "sign",
+                "screen",
+                "planner"
+            ],
+            "sentence_list": [
+                "a calendar shows 'March 10' in medium black letters.",
+                "a notice board reads 'Team Meeting' in large bold blue letters.",
+                "a desk sign says 'Manager' in small white letters.",
+                "a phone screen displays 'Call Now' in italic red letters.",
+                "a planner shows 'Agenda: Monday' in medium green letters."
+            ]
+        },
+        {
+            "index": 100,
+            "prompt": "A street scene with a storefront displaying 'Super Deals' in large red bold letters, a bus stop showing 'Next Bus 5 min' in medium italic, a billboard advertising 'Big Sale' in bold yellow, a car window with a parking permit reading 'Zone 2' in small regular, and a street sign with 'Main St' in large blue.",
+            "carrier_list": [
+                "storefront",
+                "stop",
+                "billboard",
+                "window",
+                "sign"
+            ],
+            "sentence_list": [
+                "a storefront displaying 'Super Deals' in large red bold letters.",
+                "a bus stop showing 'Next Bus 5 min' in medium italic.",
+                "a billboard advertising 'Big Sale' in bold yellow.",
+                "a car window with a parking permit reading 'Zone 2' in small regular.",
+                "a street sign with 'Main St' in large blue."
+            ]
+        },
+        {
+            "index": 101,
+            "prompt": "A movie poster with the title 'Sky Warriors' at the top in large bold white letters, a release date stating 'Coming Soon' in medium italic, a rating box showing 'Rated PG-13' in small regular, a tagline saying 'Fly to Victory' in cursive, and a director name 'John F.' in medium regular.",
+            "carrier_list": [
+                "poster",
+                "date",
+                "box",
+                "tagline",
+                "name"
+            ],
+            "sentence_list": [
+                "a movie poster with the title 'Sky Warriors' at the top in large bold white letters.",
+                "a release date stating 'Coming Soon' in medium italic.",
+                "a rating box showing 'Rated PG-13' in small regular.",
+                "a tagline saying 'Fly to Victory' in cursive.",
+                "a director name 'John F.' in medium regular."
+            ]
+        },
+        {
+            "index": 102,
+            "prompt": "A magazine cover with the title 'Tech Trends' at the top in large black bold letters, a headline saying 'Latest Gadgets' in medium blue, a tagline reading 'Innovate Today' in italic, a price tag of 'Only 9.99' in small red, and a date 'March 2025' in medium regular.",
+            "carrier_list": [
+                "cover",
+                "headline",
+                "tagline",
+                "tag",
+                "date"
+            ],
+            "sentence_list": [
+                "a magazine cover with the title 'Tech Trends' at the top in large black bold letters.",
+                "a headline saying 'Latest Gadgets' in medium blue.",
+                "a tagline reading 'Innovate Today' in italic.",
+                "a price tag of 'Only 9.99' in small red.",
+                "a date 'March 2025' in medium regular."
+            ]
+        },
+        {
+            "index": 103,
+            "prompt": "On a café wall, a menu board lists 'Fresh Brew' in large brown bold letters, a sign above the counter reads 'Order Here' in medium italic, a clock shows '12:30 PM' in small regular, a display says 'Daily Special' in large green, and a board reads 'Now Hiring' in bold blue.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "clock",
+                "display",
+                "board"
+            ],
+            "sentence_list": [
+                "a menu board lists 'Fresh Brew' in large brown bold letters.",
+                "a sign above the counter reads 'Order Here' in medium italic.",
+                "a clock shows '12:30 PM' in small regular.",
+                "a display says 'Daily Special' in large green.",
+                "a board reads 'Now Hiring' in bold blue."
+            ]
+        },
+        {
+            "index": 104,
+            "prompt": "A website landing page with a header saying 'Exclusive Offers' in large bold gold letters, a banner displaying 'Free Shipping' in medium red, a button with 'Shop Now' in large italic, a review section showing '5 Stars' in small regular, and a footer with 'Contact Us' in medium blue.",
+            "carrier_list": [
+                "header",
+                "banner",
+                "button",
+                "section",
+                "footer"
+            ],
+            "sentence_list": [
+                "a header saying 'Exclusive Offers' in large bold gold letters.",
+                "a banner displaying 'Free Shipping' in medium red.",
+                "a button with 'Shop Now' in large italic.",
+                "a review section showing '5 Stars' in small regular.",
+                "a footer with 'Contact Us' in medium blue."
+            ]
+        },
+        {
+            "index": 105,
+            "prompt": "In a gym, a poster reads 'Strength Training' in large black bold letters, a water bottle label shows 'Hydrate 24/7' in medium blue italic, a clock reads '7:00 AM' in small regular, a motivational sign says 'Push Yourself' in large red, and a calendar has 'Workout Monday' in medium regular.",
+            "carrier_list": [
+                "poster",
+                "label",
+                "clock",
+                "sign",
+                "calendar"
+            ],
+            "sentence_list": [
+                "a poster reads 'Strength Training' in large black bold letters.",
+                "a water bottle label shows 'Hydrate 24/7' in medium blue italic.",
+                "a clock reads '7:00 AM' in small regular.",
+                "a motivational sign says 'Push Yourself' in large red.",
+                "a calendar has 'Workout Monday' in medium regular."
+            ]
+        },
+        {
+            "index": 106,
+            "prompt": "A book cover with the title 'The Hidden Path' at the top in large elegant cursive, a subtitle saying 'A Journey Begins' in medium italic, a review box showing 'Top Seller' in bold gold, an author name 'John Doe' in medium regular, and a publisher logo 'Epic Reads' in small blue.",
+            "carrier_list": [
+                "cover",
+                "subtitle",
+                "box",
+                "name",
+                "logo"
+            ],
+            "sentence_list": [
+                "a book cover with the title 'The Hidden Path' at the top in large elegant cursive.",
+                "a subtitle saying 'A Journey Begins' in medium italic.",
+                "a review box showing 'Top Seller' in bold gold.",
+                "an author name 'John Doe' in medium regular.",
+                "a publisher logo 'Epic Reads' in small blue."
+            ]
+        },
+        {
+            "index": 107,
+            "prompt": "In a shopping mall, a sale sign displays '50 percent Off' in large red bold letters, a store window reads 'Opening Soon' in medium italic, an escalator sign shows 'Up to Level 2' in small green, a digital board shows 'Grand Opening' in large blue, and a price tag says '19.99 USD' in medium regular.",
+            "carrier_list": [
+                "sign",
+                "window",
+                "sign",
+                "board",
+                "tag"
+            ],
+            "sentence_list": [
+                "a sale sign displays '50 percent Off' in large red bold letters.",
+                "a store window reads 'Opening Soon' in medium italic.",
+                "an escalator sign shows 'Up to Level 2' in small green.",
+                "a digital board shows 'Grand Opening' in large blue.",
+                "a price tag says '19.99 USD' in medium regular."
+            ]
+        },
+        {
+            "index": 108,
+            "prompt": "A concert poster with the band name 'Electric Vibe' at the top in large bold purple letters, a date 'Jan 30, 2025' in medium white, a ticket price 'Tickets 25 dollars' in small yellow, a venue name 'Arena Hall' in medium regular, and a time 'Doors Open 7PM' in bold orange.",
+            "carrier_list": [
+                "poster",
+                "date",
+                "price",
+                "name",
+                "time"
+            ],
+            "sentence_list": [
+                "a concert poster with the band name 'Electric Vibe' at the top in large bold purple letters.",
+                "a date 'Jan 30, 2025' in medium white.",
+                "a ticket price 'Tickets 25 dollars' in small yellow.",
+                "a venue name 'Arena Hall' in medium regular.",
+                "a time 'Doors Open 7PM' in bold orange."
+            ]
+        },
+        {
+            "index": 109,
+            "prompt": "On a city bus, an ad reads 'Visit Paris' in large blue bold letters, a ticket dispenser shows 'Next Stop 3' in medium regular, a sign inside says 'Seats Available' in small green italic, a route map displays 'Line 5' in medium black, and a digital board reads 'Arriving Soon' in large red.",
+            "carrier_list": [
+                "ad",
+                "dispenser",
+                "sign",
+                "map",
+                "board"
+            ],
+            "sentence_list": [
+                "an ad reads 'Visit Paris' in large blue bold letters.",
+                "a ticket dispenser shows 'Next Stop 3' in medium regular.",
+                "a sign inside says 'Seats Available' in small green italic.",
+                "a route map displays 'Line 5' in medium black.",
+                "a digital board reads 'Arriving Soon' in large red."
+            ]
+        },
+        {
+            "index": 110,
+            "prompt": "A street scene with a store window showing '50 percent Off' in large red bold letters, a bus stop sign with 'Route 22' in medium blue italic, a billboard displaying 'Buy One Get One' in large bright yellow, a street sign reading 'Main St.' in medium white, and a car bumper sticker saying 'Drive Safe' in small green cursive.",
+            "carrier_list": [
+                "window",
+                "sign",
+                "billboard",
+                "sign",
+                "sticker"
+            ],
+            "sentence_list": [
+                "a store window showing '50 percent Off' in large red bold letters.",
+                "a bus stop sign with 'Route 22' in medium blue italic.",
+                "a billboard displaying 'Buy One Get One' in large bright yellow.",
+                "a street sign reading 'Main St.' in medium white.",
+                "a car bumper sticker saying 'Drive Safe' in small green cursive."
+            ]
+        },
+        {
+            "index": 111,
+            "prompt": "A movie poster with the title 'Summer Escape' in large bold white letters at the top, a tagline reading 'Feel the Adventure' in medium italic, a rating with '8.3/10' in small regular, a director name 'J. Doe' in medium, and a release date 'July 2025' in small.",
+            "carrier_list": [
+                "title",
+                "tagline",
+                "rating",
+                "name",
+                "date"
+            ],
+            "sentence_list": [
+                "the title 'Summer Escape' in large bold white letters at the top.",
+                "a tagline reading 'Feel the Adventure' in medium italic.",
+                "a rating with '8.3/10' in small regular.",
+                "a director name 'J. Doe' in medium.",
+                "a release date 'July 2025' in small."
+            ]
+        },
+        {
+            "index": 112,
+            "prompt": "A magazine cover with the title 'Tech Today' in large bold black letters at the top, a headline reading 'Top Gadgets' in medium blue, a price tag showing 'Only 5' in small red, an issue number 'Vol 8' in medium, and a featured article 'AI Future' in large italic.",
+            "carrier_list": [
+                "title",
+                "headline",
+                "tag",
+                "number",
+                "article"
+            ],
+            "sentence_list": [
+                "the title 'Tech Today' in large bold black letters at the top.",
+                "a headline reading 'Top Gadgets' in medium blue.",
+                "a price tag showing 'Only 5' in small red.",
+                "an issue number 'Vol 8' in medium.",
+                "a featured article 'AI Future' in large italic."
+            ]
+        },
+        {
+            "index": 113,
+            "prompt": "A café menu board with the text 'Daily Special' in large cursive, a drink section reading 'Espresso 3 dollars' in medium brown, a dessert label showing 'Chocolate Cake' in large, an offer 'Happy Hour' in medium green, and a wifi password 'Cafe1234' in small.",
+            "carrier_list": [
+                "board",
+                "section",
+                "label",
+                "offer",
+                "password"
+            ],
+            "sentence_list": [
+                "A café menu board with the text 'Daily Special' in large cursive.",
+                "a drink section reading 'Espresso 3 dollars' in medium brown.",
+                "a dessert label showing 'Chocolate Cake' in large.",
+                "an offer 'Happy Hour' in medium green.",
+                "a wifi password 'Cafe1234' in small."
+            ]
+        },
+        {
+            "index": 114,
+            "prompt": "A website homepage with a navigation bar that reads 'About Us' in medium blue, a banner displaying 'Summer Sale' in large bold red, a call-to-action 'Shop Now' in large italic, a blog title 'Tech Innovations' in medium, and a footer with 'Contact Info' in small regular.",
+            "carrier_list": [
+                "bar",
+                "banner",
+                "call-to-action",
+                "title",
+                "footer"
+            ],
+            "sentence_list": [
+                "a navigation bar that reads 'About Us' in medium blue.",
+                "a banner displaying 'Summer Sale' in large bold red.",
+                "a call-to-action 'Shop Now' in large italic.",
+                "a blog title 'Tech Innovations' in medium.",
+                "a footer with 'Contact Info' in small regular."
+            ]
+        },
+        {
+            "index": 115,
+            "prompt": "A concert poster with the title 'Live Music' in large bold black letters, a date 'March 2025' in medium red, a venue 'The Grand Hall' in medium, a ticket price 'Only 25' in large green, and a performer name 'DJ Max' in medium italic.",
+            "carrier_list": [
+                "title",
+                "date",
+                "venue",
+                "price",
+                "name"
+            ],
+            "sentence_list": [
+                "the title 'Live Music' in large bold black letters.",
+                "a date 'March 2025' in medium red.",
+                "a venue 'The Grand Hall' in medium.",
+                "a ticket price 'Only 25' in large green.",
+                "a performer name 'DJ Max' in medium italic."
+            ]
+        },
+        {
+            "index": 116,
+            "prompt": "On a bulletin board, a reminder saying 'Team Meeting' in large bold blue, a deadline reading 'Due Friday' in medium red, a phone number '555-1234' in small black, a job listing 'Looking for Interns' in medium, and a contact email 'info@company.com' in small italic.",
+            "carrier_list": [
+                "reminder",
+                "deadline",
+                "number",
+                "listing",
+                "email"
+            ],
+            "sentence_list": [
+                "a reminder saying 'Team Meeting' in large bold blue.",
+                "a deadline reading 'Due Friday' in medium red.",
+                "a phone number '555-1234' in small black.",
+                "a job listing 'Looking for Interns' in medium.",
+                "a contact email 'info@company.com' in small italic."
+            ]
+        },
+        {
+            "index": 117,
+            "prompt": "A business flyer with a headline 'Grand Opening' in large bold red, a time 'Saturday 12 PM' in medium, a discount label '20 percent Off' in large green, a location '123 Main St.' in medium blue, and a phone number '555-7890' in small.",
+            "carrier_list": [
+                "headline",
+                "time",
+                "label",
+                "location",
+                "number"
+            ],
+            "sentence_list": [
+                "a headline 'Grand Opening' in large bold red.",
+                "a time 'Saturday 12 PM' in medium.",
+                "a discount label '20 percent Off' in large green.",
+                "a location '123 Main St.' in medium blue.",
+                "a phone number '555-7890' in small."
+            ]
+        },
+        {
+            "index": 118,
+            "prompt": "A travel brochure with a title 'Tropical Paradise' in large bold turquoise, a flight price 'Only 499' in medium orange, a location name 'Bahamas' in large blue, a duration '7 Days' in medium, and a phone number '800-555-1234' in small.",
+            "carrier_list": [
+                "title",
+                "price",
+                "name",
+                "duration",
+                "number"
+            ],
+            "sentence_list": [
+                "the title 'Tropical Paradise' in large bold turquoise.",
+                "a flight price 'Only 499' in medium orange.",
+                "a location name 'Bahamas' in large blue.",
+                "a duration '7 Days' in medium.",
+                "a phone number '800-555-1234' in small."
+            ]
+        },
+        {
+            "index": 119,
+            "prompt": "A gym poster with the title 'Get Fit' in large bold black letters, a membership price 'Only 20' in medium red, a workout class 'Yoga Mondays' in large green, a schedule '7 AM Daily' in medium, and a contact number '123-456-7890' in small.",
+            "carrier_list": [
+                "title",
+                "price",
+                "class",
+                "schedule",
+                "number"
+            ],
+            "sentence_list": [
+                "the title 'Get Fit' in large bold black letters.",
+                "a membership price 'Only 20' in medium red.",
+                "a workout class 'Yoga Mondays' in large green.",
+                "a schedule '7 AM Daily' in medium.",
+                "a contact number '123-456-7890' in small."
+            ]
+        },
+        {
+            "index": 120,
+            "prompt": "A street corner with a billboard displaying 'Now Open 24 Hours' in large bold red letters, a café window showing 'Best Coffee in Town' in medium italic brown letters, a taxi with a sign reading 'Ride Available 24/7' in small regular green letters, a park bench with a label 'Take a Rest, Enjoy Nature' in large cursive green letters, and a building entrance with 'Secure Your Spot Today' in medium bold blue letters on it.",
+            "carrier_list": [
+                "billboard",
+                "window",
+                "sign",
+                "label",
+                "entrance"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Now Open 24 Hours' in large bold red letters.",
+                "a café window showing 'Best Coffee in Town' in medium italic brown letters.",
+                "a sign reading 'Ride Available 24/7' in small regular green letters.",
+                "a label 'Take a Rest, Enjoy Nature' in large cursive green letters.",
+                "a building entrance with 'Secure Your Spot Today' in medium bold blue letters on it."
+            ]
+        },
+        {
+            "index": 121,
+            "prompt": "In a shopping mall, a kiosk with the text 'Limited Time Offers Inside' in medium bold red letters, a clothing store window displaying 'Summer Collection 50 percent Off' in large italic yellow letters, a poster on the wall saying 'Sale Ends This Weekend' in small cursive blue letters, a digital screen with 'Free Delivery on Orders Over 50' in medium regular green letters, and a floor decal reading 'Follow the Arrow for Discounts' in large bold orange letters.",
+            "carrier_list": [
+                "kiosk",
+                "window",
+                "poster",
+                "screen",
+                "decal"
+            ],
+            "sentence_list": [
+                "a kiosk with the text 'Limited Time Offers Inside' in medium bold red letters.",
+                "a clothing store window displaying 'Summer Collection 50 percent Off' in large italic yellow letters.",
+                "a poster on the wall saying 'Sale Ends This Weekend' in small cursive blue letters.",
+                "a digital screen with 'Free Delivery on Orders Over 50' in medium regular green letters.",
+                "a floor decal reading 'Follow the Arrow for Discounts' in large bold orange letters."
+            ]
+        },
+        {
+            "index": 122,
+            "prompt": "At a movie theater entrance, a banner displaying 'Now Showing: The Last Horizon' in large bold white letters, a ticket booth with the text 'Get Your Tickets Here' in medium regular blue letters, a poster beside the door saying 'Coming Soon: The Silent Night' in small italic black letters, a popcorn stand labeled 'Large Size 5 Only' in medium bold yellow letters, and a digital screen showing 'Buy One Get One Free Today' in large cursive red letters.",
+            "carrier_list": [
+                "banner",
+                "booth",
+                "poster",
+                "stand",
+                "screen"
+            ],
+            "sentence_list": [
+                "a banner displaying 'Now Showing: The Last Horizon' in large bold white letters.",
+                "a ticket booth with the text 'Get Your Tickets Here' in medium regular blue letters.",
+                "a poster beside the door saying 'Coming Soon: The Silent Night' in small italic black letters.",
+                "a popcorn stand labeled 'Large Size 5 Only' in medium bold yellow letters.",
+                "a digital screen showing 'Buy One Get One Free Today' in large cursive red letters."
+            ]
+        },
+        {
+            "index": 123,
+            "prompt": "In a bookstore, a sign on the shelf reads 'Best Sellers This Month' in large italic green letters, a display table shows 'Get 10 percent Off on New Releases' in medium bold orange letters, a poster above the door says 'Open Until 9 PM' in small regular black letters, a checkout counter with 'Free Gift with Every Purchase' in medium cursive blue letters, and a window display says 'Explore Our Book Collections' in large bold purple letters.",
+            "carrier_list": [
+                "sign",
+                "table",
+                "poster",
+                "counter",
+                "display"
+            ],
+            "sentence_list": [
+                "a sign on the shelf reads 'Best Sellers This Month' in large italic green letters.",
+                "a display table shows 'Get 10 percent Off on New Releases' in medium bold orange letters.",
+                "a poster above the door says 'Open Until 9 PM' in small regular black letters.",
+                "a checkout counter with 'Free Gift with Every Purchase' in medium cursive blue letters.",
+                "a window display says 'Explore Our Book Collections' in large bold purple letters."
+            ]
+        },
+        {
+            "index": 124,
+            "prompt": "On a restaurant window, a sign reads 'Daily Specials - Check Inside' in medium italic red letters, a table menu with 'Combo Deals for 15 Only' in small bold yellow letters, a billboard across the street saying 'Dine with Us Tonight' in large regular white letters, a food truck banner displaying 'Hot And Fresh - Served Daily' in medium cursive orange letters, and a street sign with 'Best Dining Spot Nearby' in small italic green letters.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "billboard",
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a sign reads 'Daily Specials - Check Inside' in medium italic red letters.",
+                "a table menu with 'Combo Deals for 15 Only' in small bold yellow letters.",
+                "a billboard across the street saying 'Dine with Us Tonight' in large regular white letters.",
+                "a food truck banner displaying 'Hot And Fresh - Served Daily' in medium cursive orange letters.",
+                "a street sign with 'Best Dining Spot Nearby' in small italic green letters."
+            ]
+        },
+        {
+            "index": 125,
+            "prompt": "A fitness center lobby with a banner reading 'Transform Your Body Today' in large bold blue letters, a gym wall sign says 'Join for 19.99 This Month' in medium regular green letters, a flyer on the counter displays 'Summer Bootcamp Starts June 5' in small italic orange letters, a digital board shows 'Yoga Classes at 6 PM' in medium cursive purple letters, and a brochure reads 'Exclusive Member Discounts Available' in large regular red letters.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "flyer",
+                "board",
+                "brochure"
+            ],
+            "sentence_list": [
+                "a banner reading 'Transform Your Body Today' in large bold blue letters.",
+                "a gym wall sign says 'Join for 19.99 This Month' in medium regular green letters.",
+                "a flyer on the counter displays 'Summer Bootcamp Starts June 5' in small italic orange letters.",
+                "a digital board shows 'Yoga Classes at 6 PM' in medium cursive purple letters.",
+                "a brochure reads 'Exclusive Member Discounts Available' in large regular red letters."
+            ]
+        },
+        {
+            "index": 126,
+            "prompt": "On a city bus, a side panel displays 'Ride the Fastest Route to Downtown' in medium bold blue letters, a bus stop sign reads 'Next Bus in 5 Minutes' in small regular green letters, a window sign says 'Clean, Comfortable, Affordable' in large italic white letters, a driver panel says 'Exact Change Only' in medium cursive black letters, and a rear ad reads 'Visit the New Mall Today' in large bold red letters.",
+            "carrier_list": [
+                "panel",
+                "sign",
+                "sign",
+                "panel",
+                "ad"
+            ],
+            "sentence_list": [
+                "a side panel displays 'Ride the Fastest Route to Downtown' in medium bold blue letters.",
+                "a bus stop sign reads 'Next Bus in 5 Minutes' in small regular green letters.",
+                "a window sign says 'Clean, Comfortable, Affordable' in large italic white letters.",
+                "a driver panel says 'Exact Change Only' in medium cursive black letters.",
+                "a rear ad reads 'Visit the New Mall Today' in large bold red letters."
+            ]
+        },
+        {
+            "index": 127,
+            "prompt": "At a tech store, a monitor display shows 'Upgrade Your Laptop Today' in large bold silver letters, a wall poster reads '10 percent Off All Accessories' in medium italic orange letters, a shelf sign says 'Best Deals on Phones' in small regular blue letters, a counter display reads 'Free Installation for All Products' in medium cursive green letters, and a register screen displays 'Pay with Card or Cash' in large regular black letters.",
+            "carrier_list": [
+                "monitor",
+                "poster",
+                "sign",
+                "display",
+                "screen"
+            ],
+            "sentence_list": [
+                "a monitor display shows 'Upgrade Your Laptop Today' in large bold silver letters.",
+                "a wall poster reads '10 percent Off All Accessories' in medium italic orange letters.",
+                "a shelf sign says 'Best Deals on Phones' in small regular blue letters.",
+                "a counter display reads 'Free Installation for All Products' in medium cursive green letters.",
+                "a register screen displays 'Pay with Card or Cash' in large regular black letters."
+            ]
+        },
+        {
+            "index": 128,
+            "prompt": "In a busy street market, a food stall banner says 'Delicious Burgers 5 Only' in medium bold red letters, a fruit stand sign reads 'Fresh Organic Produce' in large italic green letters, a table sign says 'Hot Drinks - Coffee And Tea Available' in small regular brown letters, a cash register display shows 'Total: 14.50' in medium cursive black letters, and a nearby cart says 'Buy One, Get One Free Today' in large bold yellow letters.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "sign",
+                "display",
+                "cart"
+            ],
+            "sentence_list": [
+                "a food stall banner says 'Delicious Burgers 5 Only' in medium bold red letters.",
+                "a fruit stand sign reads 'Fresh Organic Produce' in large italic green letters.",
+                "a table sign says 'Hot Drinks - Coffee And Tea Available' in small regular brown letters.",
+                "a cash register display shows 'Total: 14.50' in medium cursive black letters.",
+                "a nearby cart says 'Buy One, Get One Free Today' in large bold yellow letters."
+            ]
+        },
+        {
+            "index": 129,
+            "prompt": "On a concert stage, a large banner displays 'Summer Music Festival 2025' in large bold blue letters, a ticket booth sign reads 'Buy Tickets Online Now' in medium regular white letters, a VIP entrance sign says 'VIP Access Only' in small italic gold letters, a merchandise stand with 'Limited Edition T-Shirts Available' in medium cursive red letters, and a projector screen shows 'Welcome to the Show!' in large regular black letters.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "sign",
+                "stand",
+                "screen"
+            ],
+            "sentence_list": [
+                "a large banner displays 'Summer Music Festival 2025' in large bold blue letters.",
+                "a ticket booth sign reads 'Buy Tickets Online Now' in medium regular white letters.",
+                "a VIP entrance sign says 'VIP Access Only' in small italic gold letters.",
+                "a merchandise stand with 'Limited Edition T-Shirts Available' in medium cursive red letters.",
+                "a projector screen shows 'Welcome to the Show!' in large regular black letters."
+            ]
+        },
+        {
+            "index": 130,
+            "prompt": "A city square with a billboard reading 'Enjoy Your Coffee Break' in large bold brown letters, a taxi with a door label saying 'Book Your Ride Now' in medium italic blue letters, a restaurant window displaying 'Delicious Dishes Served Daily' in large green letters, a park bench with 'Take a Seat and Relax' written on it in small cursive red letters, and a nearby kiosk with 'Open from 8 AM to 10 PM' in medium regular black letters.",
+            "carrier_list": [
+                "billboard",
+                "label",
+                "window",
+                "bench",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a billboard reading 'Enjoy Your Coffee Break' in large bold brown letters.",
+                "a door label saying 'Book Your Ride Now' in medium italic blue letters.",
+                "a restaurant window displaying 'Delicious Dishes Served Daily' in large green letters.",
+                "a park bench with 'Take a Seat and Relax' written on it in small cursive red letters.",
+                "a nearby kiosk with 'Open from 8 AM to 10 PM' in medium regular black letters."
+            ]
+        },
+        {
+            "index": 131,
+            "prompt": "A subway station with a sign showing 'Trains Every 5 Minutes' in large regular white letters, a newsstand displaying 'Latest Headlines Available Here' in medium bold black letters, a platform board reading 'Next Train to Downtown' in large italic blue letters, a safety notice saying 'Keep Your Belongings Close' in small bold red letters, and a kiosk with 'Fare Information Available Inside' in medium regular green letters.",
+            "carrier_list": [
+                "sign",
+                "newsstand",
+                "board",
+                "notice",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a sign showing 'Trains Every 5 Minutes' in large regular white letters.",
+                "a newsstand displaying 'Latest Headlines Available Here' in medium bold black letters.",
+                "a platform board reading 'Next Train to Downtown' in large italic blue letters.",
+                "a safety notice saying 'Keep Your Belongings Close' in small bold red letters.",
+                "a kiosk with 'Fare Information Available Inside' in medium regular green letters."
+            ]
+        },
+        {
+            "index": 132,
+            "prompt": "A movie theater with a banner displaying 'Now Showing: The Big Adventure' in large bold yellow letters, a poster outside saying 'Coming Soon: Summer Blockbuster' in medium italic orange letters, a ticket booth with 'Get Your Tickets Here' in large regular black letters, a banner reading 'Discounts Available This Weekend' in medium cursive blue letters, and a nearby sign saying 'Parking Available for 5 Dollars' in small regular white letters.",
+            "carrier_list": [
+                "banner",
+                "poster",
+                "booth",
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner displaying 'Now Showing: The Big Adventure' in large bold yellow letters.",
+                "a poster outside saying 'Coming Soon: Summer Blockbuster' in medium italic orange letters.",
+                "a ticket booth with 'Get Your Tickets Here' in large regular black letters.",
+                "a banner reading 'Discounts Available This Weekend' in medium cursive blue letters.",
+                "a nearby sign saying 'Parking Available for 5 Dollars' in small regular white letters."
+            ]
+        },
+        {
+            "index": 133,
+            "prompt": "A university campus with a building sign reading 'Engineering Department Open' in large bold blue letters, a notice board displaying 'Apply for Scholarships Now' in medium italic green letters, a student center door labeled 'Visit Our Lounge Anytime' in large cursive purple letters, a poster for a course saying 'Start Your Career Path Today' in medium regular black letters, and a banner saying 'Join the Tech Club Now' in small bold red letters.",
+            "carrier_list": [
+                "sign",
+                "board",
+                "door",
+                "poster",
+                "banner"
+            ],
+            "sentence_list": [
+                "a building sign reading 'Engineering Department Open' in large bold blue letters.",
+                "a notice board displaying 'Apply for Scholarships Now' in medium italic green letters.",
+                "a student center door labeled 'Visit Our Lounge Anytime' in large cursive purple letters.",
+                "a poster for a course saying 'Start Your Career Path Today' in medium regular black letters.",
+                "a banner saying 'Join the Tech Club Now' in small bold red letters."
+            ]
+        },
+        {
+            "index": 134,
+            "prompt": "A coffee shop with a chalkboard sign reading 'Best Coffee in Town' in large italic brown letters, a menu on the wall displaying 'New Specials Every Week' in medium bold black letters, a takeout cup saying 'Grab And Go Available' in small regular white letters, a storefront poster saying 'We are Open Every Day' in large cursive green letters, and a sign at the counter reading 'Order Online for Fast Pickup' in medium regular blue letters.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "cup",
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a chalkboard sign reading 'Best Coffee in Town' in large italic brown letters.",
+                "a menu on the wall displaying 'New Specials Every Week' in medium bold black letters.",
+                "a takeout cup saying 'Grab And Go Available' in small regular white letters.",
+                "a storefront poster saying 'We are Open Every Day' in large cursive green letters.",
+                "a sign at the counter reading 'Order Online for Fast Pickup' in medium regular blue letters."
+            ]
+        },
+        {
+            "index": 135,
+            "prompt": "A fitness center with a poster saying 'Get Fit, Stay Strong' in large bold red letters, a membership card display reading 'Sign Up for 1 Year Now' in medium italic black letters, a gym bench with 'Push Yourself Further' in small cursive orange letters, a large banner saying 'Transform Your Body Today' in medium regular blue letters, and a water bottle label showing 'Stay Hydrated with Every Workout' in small bold green letters.",
+            "carrier_list": [
+                "poster",
+                "display",
+                "bench",
+                "banner",
+                "label"
+            ],
+            "sentence_list": [
+                "a poster saying 'Get Fit, Stay Strong' in large bold red letters.",
+                "a membership card display reading 'Sign Up for 1 Year Now' in medium italic black letters.",
+                "a gym bench with 'Push Yourself Further' in small cursive orange letters.",
+                "a large banner saying 'Transform Your Body Today' in medium regular blue letters.",
+                "a water bottle label showing 'Stay Hydrated with Every Workout' in small bold green letters."
+            ]
+        },
+        {
+            "index": 136,
+            "prompt": "A sports arena with a banner reading 'Tickets Available for This Event' in large bold blue letters, a concession stand sign saying 'Grab Your Snacks Here' in medium regular yellow letters, a scoreboard showing 'Game Time: 7 PM Tonight' in large italic white letters, a team flag with 'Cheer for the Home Team' in medium cursive red letters, and a locker room door labeled 'Players Only' in small bold black letters.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "scoreboard",
+                "flag",
+                "door"
+            ],
+            "sentence_list": [
+                "a banner reading 'Tickets Available for This Event' in large bold blue letters.",
+                "a concession stand sign saying 'Grab Your Snacks Here' in medium regular yellow letters.",
+                "a scoreboard showing 'Game Time: 7 PM Tonight' in large italic white letters.",
+                "a team flag with 'Cheer for the Home Team' in medium cursive red letters.",
+                "a locker room door labeled 'Players Only' in small bold black letters."
+            ]
+        },
+        {
+            "index": 137,
+            "prompt": "A fashion store with a sign showing 'Season Sale: Up to 50 percent Off' in large bold pink letters, a product display saying 'Exclusive Collection Available' in medium italic gold letters, a mannequin with a label saying 'New Arrivals This Week' in small regular black letters, a store window with 'Shop Now, Pay Later' in large cursive white letters, and a changing room door with 'Try On Your Favorite Styles' in medium bold blue letters.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "mannequin",
+                "window",
+                "door"
+            ],
+            "sentence_list": [
+                "a sign showing 'Season Sale: Up to 50 percent Off' in large bold pink letters.",
+                "a product display saying 'Exclusive Collection Available' in medium italic gold letters.",
+                "a mannequin with a label saying 'New Arrivals This Week' in small regular black letters.",
+                "a store window with 'Shop Now, Pay Later' in large cursive white letters.",
+                "a changing room door with 'Try On Your Favorite Styles' in medium bold blue letters."
+            ]
+        },
+        {
+            "index": 138,
+            "prompt": "A tech conference with a podium sign saying 'Innovate with Us Today' in large italic silver letters, a banner showing 'Explore New Ideas and Trends' in medium bold blue letters, a booth display saying 'Exclusive Demos Available' in small regular black letters, a registration counter with 'Sign Up for Workshops Here' in medium cursive green letters, and a floor sticker with 'Follow the Innovation Path' in large regular white letters.",
+            "carrier_list": [
+                "sign",
+                "banner",
+                "display",
+                "counter",
+                "sticker"
+            ],
+            "sentence_list": [
+                "a podium sign saying 'Innovate with Us Today' in large italic silver letters.",
+                "a banner showing 'Explore New Ideas and Trends' in medium bold blue letters.",
+                "a booth display saying 'Exclusive Demos Available' in small regular black letters.",
+                "a registration counter with 'Sign Up for Workshops Here' in medium cursive green letters.",
+                "a floor sticker with 'Follow the Innovation Path' in large regular white letters."
+            ]
+        },
+        {
+            "index": 139,
+            "prompt": "A street festival with a stage banner reading 'Live Music Starts at 6 PM' in large bold purple letters, a food truck with 'Fresh Tacos Available Here' in medium italic yellow letters, a sponsor flag saying 'Powered by Local Businesses' in small regular red letters, a ticket booth sign saying 'Purchase Your Tickets Now' in large cursive blue letters, and a street lamp with 'Festival Parking Available Nearby' in medium bold green letters.",
+            "carrier_list": [
+                "banner",
+                "truck",
+                "flag",
+                "sign",
+                "lamp"
+            ],
+            "sentence_list": [
+                "a stage banner reading 'Live Music Starts at 6 PM' in large bold purple letters.",
+                "a food truck with 'Fresh Tacos Available Here' in medium italic yellow letters.",
+                "a sponsor flag saying 'Powered by Local Businesses' in small regular red letters.",
+                "a ticket booth sign saying 'Purchase Your Tickets Now' in large cursive blue letters.",
+                "a street lamp with 'Festival Parking Available Nearby' in medium bold green letters."
+            ]
+        },
+        {
+            "index": 140,
+            "prompt": "A coffee shop with a menu board displaying 'Best Coffee in Town' in large bold brown letters, a door sign showing 'Open 7 AM - 10 PM' in green, a napkin with 'Your Daily Boost' in small italic, a coffee cup labeled 'Freshly Brewed Just For You' in blue, and a chalkboard announcing 'Buy One, Get One Free Today' in large cursive red.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "napkin",
+                "cup",
+                "chalkboard"
+            ],
+            "sentence_list": [
+                "a menu board displaying 'Best Coffee in Town' in large bold brown letters.",
+                "a door sign showing 'Open 7 AM - 10 PM' in green.",
+                "a napkin with 'Your Daily Boost' in small italic.",
+                "a coffee cup labeled 'Freshly Brewed Just For You' in blue.",
+                "a chalkboard announcing 'Buy One, Get One Free Today' in large cursive red."
+            ]
+        },
+        {
+            "index": 141,
+            "prompt": "A city street scene with a billboard saying 'Visit the New Downtown Mall' in large bold blue letters, a taxi cab with 'Fare Starts at 5' in green, a restaurant window displaying 'Try Our Signature Dish Today' in medium italic, a traffic light with 'Stop for Safety' in red, and a newsstand sign reading 'Catch Up on Daily Headlines' in bold black.",
+            "carrier_list": [
+                "billboard",
+                "taxi",
+                "window",
+                "light",
+                "sign"
+            ],
+            "sentence_list": [
+                "a billboard saying 'Visit the New Downtown Mall' in large bold blue letters.",
+                "a taxi cab with 'Fare Starts at 5' in green.",
+                "a restaurant window displaying 'Try Our Signature Dish Today' in medium italic.",
+                "a traffic light with 'Stop for Safety' in red.",
+                "a newsstand sign reading 'Catch Up on Daily Headlines' in bold black."
+            ]
+        },
+        {
+            "index": 142,
+            "prompt": "A movie theater with a banner showing 'Now Showing: Adventure Awaits' in large bold yellow letters, a popcorn stand with 'Hot And Fresh Popcorn Here' in red, a ticket booth sign saying 'Buy Tickets Online' in medium regular, a poster outside saying 'Coming Soon: The Epic Journey' in large italic, and a large screen showing 'Special Premiere Night Tonight' in bold white.",
+            "carrier_list": [
+                "banner",
+                "stand",
+                "booth",
+                "poster",
+                "screen"
+            ],
+            "sentence_list": [
+                "a banner showing 'Now Showing: Adventure Awaits' in large bold yellow letters.",
+                "a popcorn stand with 'Hot And Fresh Popcorn Here' in red.",
+                "a ticket booth sign saying 'Buy Tickets Online' in medium regular.",
+                "a poster outside saying 'Coming Soon: The Epic Journey' in large italic.",
+                "a large screen showing 'Special Premiere Night Tonight' in bold white."
+            ]
+        },
+        {
+            "index": 143,
+            "prompt": "A fitness center with a wall poster displaying 'Train Hard, Get Results' in large bold red letters, a gym bag with 'No Pain, No Gain' in small italic, a water bottle labeled 'Stay Hydrated Always' in blue, a treadmill monitor showing 'Calories Burned: 500' in medium regular, and a motivational quote on the wall saying 'Push Yourself Beyond Limits' in large cursive.",
+            "carrier_list": [
+                "poster",
+                "bag",
+                "bottle",
+                "monitor",
+                "quote"
+            ],
+            "sentence_list": [
+                "a wall poster displaying 'Train Hard, Get Results' in large bold red letters.",
+                "a gym bag with 'No Pain, No Gain' in small italic.",
+                "a water bottle labeled 'Stay Hydrated Always' in blue.",
+                "a treadmill monitor showing 'Calories Burned: 500' in medium regular.",
+                "a motivational quote on the wall saying 'Push Yourself Beyond Limits' in large cursive."
+            ]
+        },
+        {
+            "index": 144,
+            "prompt": "A bookstore with a shelf tag reading 'Bestsellers of the Month' in bold red letters, a sign at the entrance saying 'New Arrivals Daily' in large blue, a window display announcing 'Special Discount: Buy 2, Get 1 Free' in medium regular, a flyer on the counter saying 'Join Our Book Club Today' in small italic, and a checkout counter sign reading 'Save 10 percent on Your First Purchase' in large green.",
+            "carrier_list": [
+                "tag",
+                "sign",
+                "display",
+                "flyer",
+                "sign"
+            ],
+            "sentence_list": [
+                "a shelf tag reading 'Bestsellers of the Month' in bold red letters.",
+                "a sign at the entrance saying 'New Arrivals Daily' in large blue.",
+                "a window display announcing 'Special Discount: Buy 2, Get 1 Free' in medium regular.",
+                "a flyer on the counter saying 'Join Our Book Club Today' in small italic.",
+                "a checkout counter sign reading 'Save 10 percent on Your First Purchase' in large green."
+            ]
+        },
+        {
+            "index": 145,
+            "prompt": "A tech conference with a banner reading 'Innovate, Educate, Inspire' in large bold blue letters, a registration desk sign showing 'Check-In Here' in medium regular, a flyer on the table saying 'Exclusive Networking Event Tonight' in small italic, a wall poster displaying 'Future of AI and Robotics' in large white, and a speaker podium with 'Keynote Speaker: John Doe' in bold black.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "flyer",
+                "poster",
+                "podium"
+            ],
+            "sentence_list": [
+                "a banner reading 'Innovate, Educate, Inspire' in large bold blue letters.",
+                "a registration desk sign showing 'Check-In Here' in medium regular.",
+                "a flyer on the table saying 'Exclusive Networking Event Tonight' in small italic.",
+                "a wall poster displaying 'Future of AI and Robotics' in large white.",
+                "a speaker podium with 'Keynote Speaker: John Doe' in bold black."
+            ]
+        },
+        {
+            "index": 146,
+            "prompt": "A car dealership with a large sign saying 'Huge Sale This Weekend' in large bold red letters, a car windshield sticker showing 'Limited Time Offer' in small italic, a banner above the showroom saying 'Find Your Perfect Ride Today' in medium blue, a price tag on a vehicle with 'Only 19,999' in large green, and a flyer on the counter reading 'Test Drive Today!' in bold black.",
+            "carrier_list": [
+                "sign",
+                "sticker",
+                "banner",
+                "tag",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a large sign saying 'Huge Sale This Weekend' in large bold red letters.",
+                "a car windshield sticker showing 'Limited Time Offer' in small italic.",
+                "a banner above the showroom saying 'Find Your Perfect Ride Today' in medium blue.",
+                "a price tag on a vehicle with 'Only 19,999' in large green.",
+                "a flyer on the counter reading 'Test Drive Today!' in bold black."
+            ]
+        },
+        {
+            "index": 147,
+            "prompt": "A hotel lobby with a digital screen displaying 'Welcome to Luxe Stay' in large bold gold letters, a brochure on the counter saying 'Book Your Room Today' in medium regular, a banner above the front desk reading 'Exclusive Offers for Members' in large italic, a menu card with 'Breakfast Served from 6 AM' in small green, and a floor sign reading 'Elevator to All Floors' in bold white.",
+            "carrier_list": [
+                "screen",
+                "brochure",
+                "banner",
+                "card",
+                "sign"
+            ],
+            "sentence_list": [
+                "a digital screen displaying 'Welcome to Luxe Stay' in large bold gold letters.",
+                "a brochure on the counter saying 'Book Your Room Today' in medium regular.",
+                "a banner above the front desk reading 'Exclusive Offers for Members' in large italic.",
+                "a menu card with 'Breakfast Served from 6 AM' in small green.",
+                "a floor sign reading 'Elevator to All Floors' in bold white."
+            ]
+        },
+        {
+            "index": 148,
+            "prompt": "A website landing page with a header saying 'Explore Our Latest Collections' in large bold black letters, a product image caption reading 'Fashion Forward for Every Season' in medium italic, a call-to-action button saying 'Shop Now and Save' in large red, a testimonial section displaying 'Real Reviews from Real Customers' in small regular, and a footer message saying 'Contact Us for More Information' in bold blue.",
+            "carrier_list": [
+                "header",
+                "caption",
+                "button",
+                "section",
+                "message"
+            ],
+            "sentence_list": [
+                "a header saying 'Explore Our Latest Collections' in large bold black letters.",
+                "a product image caption reading 'Fashion Forward for Every Season' in medium italic.",
+                "a call-to-action button saying 'Shop Now and Save' in large red.",
+                "a testimonial section displaying 'Real Reviews from Real Customers' in small regular.",
+                "a footer message saying 'Contact Us for More Information' in bold blue."
+            ]
+        },
+        {
+            "index": 149,
+            "prompt": "A park with a large sign saying 'Welcome to Green Valley Park' in large bold green letters, a picnic table with 'Reserve Your Spot Now' in medium italic, a pathway marker displaying 'Next Restroom in 200 Meters' in small black, a playground sign reading 'For Children Under 12 Only' in large red, and a park bench with 'Take a Break, Enjoy Nature' in bold brown.",
+            "carrier_list": [
+                "sign",
+                "table",
+                "marker",
+                "sign",
+                "bench"
+            ],
+            "sentence_list": [
+                "a large sign saying 'Welcome to Green Valley Park' in large bold green letters.",
+                "a picnic table with 'Reserve Your Spot Now' in medium italic.",
+                "a pathway marker displaying 'Next Restroom in 200 Meters' in small black.",
+                "a playground sign reading 'For Children Under 12 Only' in large red.",
+                "a park bench with 'Take a Break, Enjoy Nature' in bold brown."
+            ]
+        },
+        {
+            "index": 150,
+            "prompt": "A bookstore entrance with a sign 'Books' in large red letters, a window displaying 'Read' in medium italic letters, a door labeled 'Enter' in small blue letters, a banner saying 'New' in large cursive green letters, and a shelf featuring 'Best' in medium bold letters.",
+            "carrier_list": [
+                "sign",
+                "window",
+                "door",
+                "banner",
+                "shelf"
+            ],
+            "sentence_list": [
+                "a sign 'Books' in large red letters.",
+                "a window displaying 'Read' in medium italic letters.",
+                "a door labeled 'Enter' in small blue letters.",
+                "a banner saying 'New' in large cursive green letters.",
+                "a shelf featuring 'Best' in medium bold letters."
+            ]
+        },
+        {
+            "index": 151,
+            "prompt": "A university campus with a gate marked 'Campus' in large bold blue letters, a billboard displaying 'Enroll' in medium red letters, a statue labeled 'Honor' in small letters, a bulletin board showing 'Events' in medium italic, and a café sign 'Cafe' in large cursive green letters.",
+            "carrier_list": [
+                "gate",
+                "billboard",
+                "statue",
+                "board",
+                "sign"
+            ],
+            "sentence_list": [
+                "a gate marked 'Campus' in large bold blue letters.",
+                "a billboard displaying 'Enroll' in medium red letters.",
+                "a statue labeled 'Honor' in small letters.",
+                "a bulletin board showing 'Events' in medium italic.",
+                "a café sign 'Cafe' in large cursive green letters."
+            ]
+        },
+        {
+            "index": 152,
+            "prompt": "An airport terminal with a departure board showing 'Flights' in large bold black letters, a check-in counter labeled 'Tickets' in medium blue letters, a gate sign 'Boarding' in large red letters, a restroom sign 'Restrooms' in medium italic, and a baggage claim 'Baggage' in small letters.",
+            "carrier_list": [
+                "board",
+                "counter",
+                "sign",
+                "sign",
+                "claim"
+            ],
+            "sentence_list": [
+                "a departure board showing 'Flights' in large bold black letters.",
+                "a check-in counter labeled 'Tickets' in medium blue letters.",
+                "a gate sign 'Boarding' in large red letters.",
+                "a restroom sign 'Restrooms' in medium italic.",
+                "a baggage claim 'Baggage' in small letters."
+            ]
+        },
+        {
+            "index": 153,
+            "prompt": "A gym front with a sign 'Fitness' in large bold red letters, a window displaying 'Open' in medium green letters, a door labeled 'Enter' in small letters, a billboard saying 'Strength' in large italic letters, and a locker room sign 'Lockers' in medium letters.",
+            "carrier_list": [
+                "sign",
+                "window",
+                "door",
+                "billboard",
+                "sign"
+            ],
+            "sentence_list": [
+                "a sign 'Fitness' in large bold red letters.",
+                "a window displaying 'Open' in medium green letters.",
+                "a door labeled 'Enter' in small letters.",
+                "a billboard saying 'Strength' in large italic letters.",
+                "a locker room sign 'Lockers' in medium letters."
+            ]
+        },
+        {
+            "index": 154,
+            "prompt": "A restaurant facade with a menu board 'Menu' in large cursive letters, a window displaying 'Open' in medium bold green letters, a door labeled 'Welcome' in large letters, a signboard 'Dine' in medium italic red letters, and a parking sign 'Parking' in small letters.",
+            "carrier_list": [
+                "board",
+                "window",
+                "door",
+                "signboard",
+                "sign"
+            ],
+            "sentence_list": [
+                "a menu board 'Menu' in large cursive letters.",
+                "a window displaying 'Open' in medium bold green letters.",
+                "a door labeled 'Welcome' in large letters.",
+                "a signboard 'Dine' in medium italic red letters.",
+                "a parking sign 'Parking' in small letters."
+            ]
+        },
+        {
+            "index": 155,
+            "prompt": "A movie set with a clapboard labeled 'Action' in large red letters, a backdrop showing 'Scene' in medium bold letters, a prop marked 'Props' in small italic letters, a chair labeled 'Director' in medium letters, and a light stand 'Lights' in large blue letters.",
+            "carrier_list": [
+                "clapboard",
+                "backdrop",
+                "prop",
+                "chair",
+                "stand"
+            ],
+            "sentence_list": [
+                "a clapboard labeled 'Action' in large red letters.",
+                "a backdrop showing 'Scene' in medium bold letters.",
+                "a prop marked 'Props' in small italic letters.",
+                "a chair labeled 'Director' in medium letters.",
+                "a light stand 'Lights' in large blue letters."
+            ]
+        },
+        {
+            "index": 156,
+            "prompt": "A sports stadium entrance with a gate 'Tickets' in large bold letters, a scoreboard displaying 'Score' in medium red letters, a sign 'VIP' in large italic letters, a restroom labeled 'Restrooms' in medium letters, and a concession stand 'Food' in small letters.",
+            "carrier_list": [
+                "gate",
+                "scoreboard",
+                "sign",
+                "restroom",
+                "stand"
+            ],
+            "sentence_list": [
+                "a gate 'Tickets' in large bold letters.",
+                "a scoreboard displaying 'Score' in medium red letters.",
+                "a sign 'VIP' in large italic letters.",
+                "a restroom labeled 'Restrooms' in medium letters.",
+                "a concession stand 'Food' in small letters."
+            ]
+        },
+        {
+            "index": 157,
+            "prompt": "A subway station with a sign 'Metro' in large blue letters, a bench labeled 'Seats' in medium italic letters, a map displaying 'Route' in medium bold letters, a door marked 'Exit' in small letters, and a timetable 'Schedule' in large letters.",
+            "carrier_list": [
+                "sign",
+                "bench",
+                "map",
+                "door",
+                "timetable"
+            ],
+            "sentence_list": [
+                "a sign 'Metro' in large blue letters.",
+                "a bench labeled 'Seats' in medium italic letters.",
+                "a map displaying 'Route' in medium bold letters.",
+                "a door marked 'Exit' in small letters.",
+                "a timetable 'Schedule' in large letters."
+            ]
+        },
+        {
+            "index": 158,
+            "prompt": "A library front with a door 'Library' in large bold letters, a window displaying 'Quiet' in medium italic letters, a sign 'Books' in small green letters, a bulletin board 'News' in medium letters, and a entrance 'Enter' in large letters.",
+            "carrier_list": [
+                "door",
+                "window",
+                "sign",
+                "bulletin board",
+                "entrance"
+            ],
+            "sentence_list": [
+                "a door 'Library' in large bold letters.",
+                "a window displaying 'Quiet' in medium italic letters.",
+                "a sign 'Books' in small green letters.",
+                "a bulletin board 'News' in medium letters.",
+                "a entrance 'Enter' in large letters."
+            ]
+        },
+        {
+            "index": 159,
+            "prompt": "A park entrance with a gate 'Park' in large green letters, a sign 'Welcome' in medium bold letters, a bench labeled 'Rest' in small italic letters, a fountain marked 'Water' in medium letters, and a path sign 'Trail' in large letters.",
+            "carrier_list": [
+                "gate",
+                "sign",
+                "bench",
+                "fountain",
+                "sign"
+            ],
+            "sentence_list": [
+                "a gate 'Park' in large green letters.",
+                "a sign 'Welcome' in medium bold letters.",
+                "a bench labeled 'Rest' in small italic letters.",
+                "a fountain marked 'Water' in medium letters.",
+                "a path sign 'Trail' in large letters."
+            ]
+        },
+        {
+            "index": 160,
+            "prompt": "In a bustling marketplace, a sign displays 'Fresh Fruits' in large red letters, a stall label reads 'Best Veggies' in bold green, a banner shows 'Daily Specials' in medium blue italic, a flyer advertises 'Free Samples' in small black cursive, and a poster announces 'Weekend Sale' in large yellow.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "banner",
+                "flyer",
+                "poster"
+            ],
+            "sentence_list": [
+                "a sign displays 'Fresh Fruits' in large red letters.",
+                "a stall label reads 'Best Veggies' in bold green.",
+                "a banner shows 'Daily Specials' in medium blue italic.",
+                "a flyer advertises 'Free Samples' in small black cursive.",
+                "a poster announces 'Weekend Sale' in large yellow."
+            ]
+        },
+        {
+            "index": 161,
+            "prompt": "On a restaurant menu, the header says 'Daily Menu' in bold black, a section title reads 'Appetizers' in medium italic, a dish name displays 'Grilled Chicken' in large regular, a price tag shows '12 pounds' in small red, and a footer contains 'Enjoy Your Meal' in cursive.",
+            "carrier_list": [
+                "header",
+                "title",
+                "name",
+                "tag",
+                "footer"
+            ],
+            "sentence_list": [
+                "the header says 'Daily Menu' in bold black.",
+                "a section title reads 'Appetizers' in medium italic.",
+                "a dish name displays 'Grilled Chicken' in large regular.",
+                "a price tag shows '12 pounds' in small red.",
+                "a footer contains 'Enjoy Your Meal' in cursive."
+            ]
+        },
+        {
+            "index": 162,
+            "prompt": "At a music festival, a stage banner displays 'Live Concert' in large bold blue letters, a ticket stub reads 'Entry Pass' in medium green, a booth sign shows 'Merchandise' in small italic, a schedule board displays 'Set Times' in large regular, and a map sticker says 'Main Stage' in bold yellow.",
+            "carrier_list": [
+                "banner",
+                "stub",
+                "sign",
+                "board",
+                "sticker"
+            ],
+            "sentence_list": [
+                "a stage banner displays 'Live Concert' in large bold blue letters.",
+                "a ticket stub reads 'Entry Pass' in medium green.",
+                "a booth sign shows 'Merchandise' in small italic.",
+                "a schedule board displays 'Set Times' in large regular.",
+                "a map sticker says 'Main Stage' in bold yellow."
+            ]
+        },
+        {
+            "index": 163,
+            "prompt": "Within an office space, a door label reads 'Conference Room' in large white letters, a desk nameplate displays 'John Doe' in medium black, a whiteboard shows 'Project Plan' in bold blue, a clock reads '3:00 PM' in regular font, and a window sticker says 'Office Hours' in small green cursive.",
+            "carrier_list": [
+                "label",
+                "nameplate",
+                "whiteboard",
+                "clock",
+                "sticker"
+            ],
+            "sentence_list": [
+                "a door label reads 'Conference Room' in large white letters.",
+                "a desk nameplate displays 'John Doe' in medium black.",
+                "a whiteboard shows 'Project Plan' in bold blue.",
+                "a clock reads '3:00 PM' in regular font.",
+                "a window sticker says 'Office Hours' in small green cursive."
+            ]
+        },
+        {
+            "index": 164,
+            "prompt": "On a travel brochure, the cover title says 'Explore Now' in large bold orange, a destination name reads 'Sunny Beach' in medium blue italic, a package deal displays 'All Inclusive' in small black, a price tag shows '299 USD' in large red, and a contact section contains 'Book Today' in cursive.",
+            "carrier_list": [
+                "title",
+                "name",
+                "deal",
+                "tag",
+                "section"
+            ],
+            "sentence_list": [
+                "the cover title says 'Explore Now' in large bold orange.",
+                "a destination name reads 'Sunny Beach' in medium blue italic.",
+                "a package deal displays 'All Inclusive' in small black.",
+                "a price tag shows '299 USD' in large red.",
+                "a contact section contains 'Book Today' in cursive."
+            ]
+        },
+        {
+            "index": 165,
+            "prompt": "In a bookstore, a shelf label reads 'Bestsellers' in large gold letters, a sign displays 'New Arrivals' in medium purple, a poster advertises 'Author Event' in bold black, a price tag shows '15 dollars' in small green, and a clearance banner says 'Last Chance' in large red italic.",
+            "carrier_list": [
+                "label",
+                "sign",
+                "poster",
+                "tag",
+                "banner"
+            ],
+            "sentence_list": [
+                "a shelf label reads 'Bestsellers' in large gold letters.",
+                "a sign displays 'New Arrivals' in medium purple.",
+                "a poster advertises 'Author Event' in bold black.",
+                "a price tag shows '15 dollars' in small green.",
+                "a clearance banner says 'Last Chance' in large red italic."
+            ]
+        },
+        {
+            "index": 166,
+            "prompt": "On a smartphone app interface, the home button displays 'Home' in medium blue, a menu item reads 'Settings' in small gray italic, a notification shows '3 Alerts' in large red bold, a search bar contains 'Search Here' in regular black, and a profile icon says 'User Info' in cursive.",
+            "carrier_list": [
+                "button",
+                "item",
+                "notification",
+                "bar",
+                "icon"
+            ],
+            "sentence_list": [
+                "the home button displays 'Home' in medium blue.",
+                "a menu item reads 'Settings' in small gray italic.",
+                "a notification shows '3 Alerts' in large red bold.",
+                "a search bar contains 'Search Here' in regular black.",
+                "a profile icon says 'User Info' in cursive."
+            ]
+        },
+        {
+            "index": 167,
+            "prompt": "At a university campus, a building sign reads 'Library' in large white letters, a bulletin board displays 'Campus Events' in medium blue bold, a pathway marker shows 'Main Hall' in small green, a restroom sign says 'Facilities' in regular black, and a parking sign displays 'Visitor Parking' in italic yellow.",
+            "carrier_list": [
+                "sign",
+                "board",
+                "marker",
+                "sign",
+                "sign"
+            ],
+            "sentence_list": [
+                "a building sign reads 'Library' in large white letters.",
+                "a bulletin board displays 'Campus Events' in medium blue bold.",
+                "a pathway marker shows 'Main Hall' in small green.",
+                "a restroom sign says 'Facilities' in regular black.",
+                "a parking sign displays 'Visitor Parking' in italic yellow."
+            ]
+        },
+        {
+            "index": 168,
+            "prompt": "On a fitness app screen, the dashboard title says 'Workout Plan' in large red, a section label reads 'Daily Goals' in medium black bold, a timer displays '30 Minutes' in small green, a progress bar shows '75 percent Complete' in regular blue, and a motivational quote contains 'Keep Going' in cursive.",
+            "carrier_list": [
+                "title",
+                "label",
+                "timer",
+                "bar",
+                "quote"
+            ],
+            "sentence_list": [
+                "the dashboard title says 'Workout Plan' in large red.",
+                "a section label reads 'Daily Goals' in medium black bold.",
+                "a timer displays '30 Minutes' in small green.",
+                "a progress bar shows '75 percent Complete' in regular blue.",
+                "a motivational quote contains 'Keep Going' in cursive."
+            ]
+        },
+        {
+            "index": 169,
+            "prompt": "In a children playground, a swing set sign reads 'Swing Time' in large colorful letters, a slide label displays 'Fun Slide' in medium blue italic, a bench sign shows 'Rest Area' in small green, a sandbox banner says 'Play Safe' in bold yellow, and a fence sticker contains 'No Running' in red cursive.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "sign",
+                "banner",
+                "sticker"
+            ],
+            "sentence_list": [
+                "a swing set sign reads 'Swing Time' in large colorful letters.",
+                "a slide label displays 'Fun Slide' in medium blue italic.",
+                "a bench sign shows 'Rest Area' in small green.",
+                "a sandbox banner says 'Play Safe' in bold yellow.",
+                "a fence sticker contains 'No Running' in red cursive."
+            ]
+        },
+        {
+            "index": 170,
+            "prompt": "In a subway station, a billboard displays 'Next Stop' in large bold white letters, a ticket machine shows 'Fare 2.50' in medium red, a timetable reads '10:30 Arrival' in italic blue letters, a map has 'Line 3' in large green, and a bench label says 'Seat 12' in small regular.",
+            "carrier_list": [
+                "billboard",
+                "machine",
+                "timetable",
+                "map",
+                "label"
+            ],
+            "sentence_list": [
+                "a billboard displays 'Next Stop' in large bold white letters.",
+                "a ticket machine shows 'Fare 2.50' in medium red.",
+                "a timetable reads '10:30 Arrival' in italic blue letters.",
+                "a map has 'Line 3' in large green.",
+                "a bench label says 'Seat 12' in small regular."
+            ]
+        },
+        {
+            "index": 171,
+            "prompt": "In a shopping mall, a storefront sign reads 'Summer Sale' in large red bold letters, a directory displays 'Floor 2' in medium blue, a kiosk label says 'Electronics' in large regular, a restroom sign shows 'Restrooms' in medium italic, and an elevator button reads 'Lobby' in small green.",
+            "carrier_list": [
+                "sign",
+                "directory",
+                "label",
+                "sign",
+                "button"
+            ],
+            "sentence_list": [
+                "a storefront sign reads 'Summer Sale' in large red bold letters.",
+                "a directory displays 'Floor 2' in medium blue.",
+                "a kiosk label says 'Electronics' in large regular.",
+                "a restroom sign shows 'Restrooms' in medium italic.",
+                "an elevator button reads 'Lobby' in small green."
+            ]
+        },
+        {
+            "index": 172,
+            "prompt": "On a movie poster, the title says 'Action Blast' in large bold yellow letters, the tagline reads 'Feel the Thrill' in medium italic, the rating shows 'PG-13' in small black, a release date displays 'July 20' in medium blue, and a star cast list includes 'A. Smith' in large cursive.",
+            "carrier_list": [
+                "title",
+                "tagline",
+                "rating",
+                "date",
+                "cast"
+            ],
+            "sentence_list": [
+                "the title says 'Action Blast' in large bold yellow letters.",
+                "the tagline reads 'Feel the Thrill' in medium italic.",
+                "the rating shows 'PG-13' in small black.",
+                "a release date displays 'July 20' in medium blue.",
+                "a star cast list includes 'A. Smith' in large cursivee."
+            ]
+        },
+        {
+            "index": 173,
+            "prompt": "Within a classroom, a whiteboard displays 'Lesson 5' in large blue bold letters, a poster reads 'Stay Focused' in medium red italic, a clock shows '9:00 AM' in small black, a bookshelf label says 'Math Books' in medium green, and a desk sign reads 'Student 12' in small regular.",
+            "carrier_list": [
+                "whiteboard",
+                "poster",
+                "clock",
+                "label",
+                "sign"
+            ],
+            "sentence_list": [
+                "a whiteboard displays 'Lesson 5' in large blue bold letters.",
+                "a poster reads 'Stay Focused' in medium red italic.",
+                "a clock shows '9:00 AM' in small black.",
+                "a bookshelf label says 'Math Books' in medium green.",
+                "a desk sign reads 'Student 12' in small regular."
+            ]
+        },
+        {
+            "index": 174,
+            "prompt": "In a bedroom, a wall clock shows '7:30 PM' in medium black, a poster displays 'Dream Big' in large bold blue letters, a nightstand label reads 'Lamp On' in small green, a mirror has 'Be Yourself' in medium italic, and a window sign says 'Good Night' in large cursive.",
+            "carrier_list": [
+                "clock",
+                "poster",
+                "label",
+                "mirror",
+                "sign"
+            ],
+            "sentence_list": [
+                "a wall clock shows '7:30 PM' in medium black.",
+                "a poster displays 'Dream Big' in large bold blue letters.",
+                "a nightstand label reads 'Lamp On' in small green.",
+                "a mirror has 'Be Yourself' in medium italic.",
+                "a window sign says 'Good Night' in large cursive."
+            ]
+        },
+        {
+            "index": 175,
+            "prompt": "On a billboard advertisement, the brand name reads 'Fast Cars' in large red bold letters, a slogan says 'Drive Now' in medium italic, a price tag displays '20,000 USD' in small black, a note shows 'Call 123' in medium blue, and a website URL reads 'www.abcdef.com' in large green.",
+            "carrier_list": [
+                "name",
+                "slogan",
+                "tag",
+                "note",
+                "URL"
+            ],
+            "sentence_list": [
+                "the brand name reads 'Fast Cars' in large red bold letters.",
+                "a slogan says 'Drive Now' in medium italic.",
+                "a price tag displays '20,000 USD' in small black.",
+                "a note shows 'Call 123' in medium blue.",
+                "a website URL reads 'www.abcdef.com' in large green."
+            ]
+        },
+        {
+            "index": 176,
+            "prompt": "At a gym, a sign reads 'Gym Open' in large bold red letters, a schedule displays 'Yoga Class' in medium italic, a locker label says 'Locker 45' in small black, a water fountain sign shows 'Drink Up' in medium blue, and a treadmill label reads 'Run 5K' in large green.",
+            "carrier_list": [
+                "sign",
+                "schedule",
+                "label",
+                "sign",
+                "label"
+            ],
+            "sentence_list": [
+                "a sign reads 'Gym Open' in large bold red letters.",
+                "a schedule displays 'Yoga Class' in medium italic.",
+                "a locker label says 'Locker 45' in small black.",
+                "a water fountain sign shows 'Drink Up' in medium blue.",
+                "a treadmill label reads 'Run 5K' in large green."
+            ]
+        },
+        {
+            "index": 177,
+            "prompt": "In a library, a shelf sign reads 'Fiction' in large italic blue letters, a desk label says 'Reference' in medium black, a sign displays 'Quiet Zone' in small green, a computer station shows 'Login Here' in medium bold, and an exit sign reads 'Exit' in large red.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "sign",
+                "station",
+                "sign"
+            ],
+            "sentence_list": [
+                "a shelf sign reads 'Fiction' in large italic blue letters.",
+                "a desk label says 'Reference' in medium black.",
+                "a sign displays 'Quiet Zone' in small green.",
+                "a computer station shows 'Login Here' in medium bold.",
+                "an exit sign reads 'Exit' in large red."
+            ]
+        },
+        {
+            "index": 178,
+            "prompt": "At a bustling city street, a billboard displays 'Sale Now' in large bold red letters, a storefront sign reads 'Coffee Bar' in medium green letters, a bus stop sign shows 'Next Bus 5' in small italic blue letters, a graffiti wall tags 'Urban Life' in large cursive black letters, and a streetlight label says 'No Parking' in medium bold white letters.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "sign",
+                "wall",
+                "label"
+            ],
+            "sentence_list": [
+                "a billboard displays 'Sale Now' in large bold red letters.",
+                "a storefront sign reads 'Coffee Bar' in medium green letters.",
+                "a bus stop sign shows 'Next Bus 5' in small italic blue letters.",
+                "a graffiti wall tags 'Urban Life' in large cursive black letters.",
+                "a streetlight label says 'No Parking' in medium bold white letters."
+            ]
+        },
+        {
+            "index": 179,
+            "prompt": "Inside a modern office, a desk has a nameplate 'Alex Doe' in medium regular black letters, a board writes 'Project X' in large bold blue letters, a window sticker shows 'Open 24/7' in small green letters, a door sign reads 'Conference Room' in large italic gray letters, and a computer screen displays 'Loading' in medium regular white letters.",
+            "carrier_list": [
+                "nameplate",
+                "board",
+                "sticker",
+                "sign",
+                "screen"
+            ],
+            "sentence_list": [
+                "a desk has a nameplate 'Alex Doe' in medium regular black letters.",
+                "a board writes 'Project X' in large bold blue letters.",
+                "a window sticker shows 'Open 24/7' in small green letters.",
+                "a door sign reads 'Conference Room' in large italic gray letters.",
+                "a computer screen displays 'Loading' in medium regular white letters."
+            ]
+        },
+        {
+            "index": 180,
+            "prompt": "On a vibrant poster, the headline says 'Join Today' in large bold orange letters, a subtitle reads 'Fitness Club' in medium italic blue letters, a banner displays '50 percent Off' in large red letters, a footer shows 'Limited Time' in small regular black letters, and a logo includes 'FitLife' in medium cursive green letters.",
+            "carrier_list": [
+                "headline",
+                "subtitle",
+                "banner",
+                "footer",
+                "logo"
+            ],
+            "sentence_list": [
+                "the headline says 'Join Today' in large bold orange letters.",
+                "a subtitle reads 'Fitness Club' in medium italic blue letters.",
+                "a banner displays '50 percent Off' in large red letters.",
+                "a footer shows 'Limited Time' in small regular black letters.",
+                "a logo includes 'FitLife' in medium cursive green letters."
+            ]
+        },
+        {
+            "index": 181,
+            "prompt": "Within a cozy bedroom, a mirror has 'Dream Big' in large cursive pink letters, a bookshelf label reads 'Favorites' in medium bold brown letters, a nightstand clock shows '8:00 PM' in small regular black letters, a wall hook displays 'Coats Here' in medium italic gray letters, and a window curtain says 'Good Morning' in large regular yellow letters.",
+            "carrier_list": [
+                "mirror",
+                "label",
+                "clock",
+                "hook",
+                "curtain"
+            ],
+            "sentence_list": [
+                "a mirror has 'Dream Big' in large cursive pink letters.",
+                "a bookshelf label reads 'Favorites' in medium bold brown letters.",
+                "a nightstand clock shows '8:00 PM' in small regular black letters.",
+                "a wall hook displays 'Coats Here' in medium italic gray letters.",
+                "a window curtain says 'Good Morning' in large regular yellow letters."
+            ]
+        },
+        {
+            "index": 182,
+            "prompt": "At a lively restaurant, a menu board lists 'Burger Special' in large bold red letters, a table sign reads 'Reserved' in medium italic black letters, a chalkboard displays 'Happy Hour' in large green letters, a wall decoration shows 'Fresh Salad' in medium regular white letters, and a door sticker says 'Welcome' in large cursive blue letters.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "chalkboard",
+                "decoration",
+                "sticker"
+            ],
+            "sentence_list": [
+                "a menu board lists 'Burger Special' in large bold red letters.",
+                "a table sign reads 'Reserved' in medium italic black letters.",
+                "a chalkboard displays 'Happy Hour' in large green letters.",
+                "a wall decoration shows 'Fresh Salad' in medium regular white letters.",
+                "a door sticker says 'Welcome' in large cursive blue letters."
+            ]
+        },
+        {
+            "index": 183,
+            "prompt": "During a school hallway scene, a locker door has 'John Books' in medium regular brown letters, a bulletin board displays 'Club Meetings' in large bold green letters, a classroom door reads 'History 10' in medium italic blue letters, a hallway sign shows 'Restrooms' in small regular white letters, and a notice board says 'School Events' in large bold yellow letters.",
+            "carrier_list": [
+                "door",
+                "board",
+                "door",
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a locker door has 'John Books' in medium regular brown letters.",
+                "a bulletin board displays 'Club Meetings' in large bold green letters.",
+                "a classroom door reads 'History 10' in medium italic blue letters.",
+                "a hallway sign shows 'Restrooms' in small regular white letters.",
+                "a notice board says 'School Events' in large bold yellow letters."
+            ]
+        },
+        {
+            "index": 184,
+            "prompt": "In a stylish advertisement, a billboard showcases 'New Arrival' in large bold black letters, a banner reads 'Summer Sale' in medium red letters, a sidebar displays 'Free Shipping' in small italic blue letters, a footer shows 'Shop Now' in large regular white letters, and a logo includes 'Trendz' in medium cursive purple letters.",
+            "carrier_list": [
+                "billboard",
+                "banner",
+                "sidebar",
+                "footer",
+                "logo"
+            ],
+            "sentence_list": [
+                "a billboard showcases 'New Arrival' in large bold black letters.",
+                "a banner reads 'Summer Sale' in medium red letters.",
+                "a sidebar displays 'Free Shipping' in small italic blue letters.",
+                "a footer shows 'Shop Now' in large regular white letters.",
+                "a logo includes 'Trendz' in medium cursive purple letters."
+            ]
+        },
+        {
+            "index": 185,
+            "prompt": "On a movie poster, the title displays 'Action Hero' in large bold red letters, a tagline reads 'Save the World' in medium italic blue letters, a star rating shows '5 Stars' in small yellow letters, a release date displays 'Dec 2024' in medium regular black letters, and a production logo says 'Epic Films' in large cursive white letters.",
+            "carrier_list": [
+                "title",
+                "tagline",
+                "rating",
+                "date",
+                "logo"
+            ],
+            "sentence_list": [
+                "the title displays 'Action Hero' in large bold red letters.",
+                "a tagline reads 'Save the World' in medium italic blue letters.",
+                "a star rating shows '5 Stars' in small yellow letters.",
+                "a release date displays 'Dec 2024' in medium regular black letters.",
+                "a production logo says 'Epic Films' in large cursive white letters."
+            ]
+        },
+        {
+            "index": 186,
+            "prompt": "In a dynamic logo design, the main icon shows 'TechX' in large bold blue letters, a tagline reads 'Innovate Now' in medium italic, a badge displays '2025' in large black letters, a slogan includes 'Future Ready' in small cursive, and a symbol shows 'Connect'.",
+            "carrier_list": [
+                "icon",
+                "tagline",
+                "badge",
+                "slogan",
+                "symbol"
+            ],
+            "sentence_list": [
+                "the main icon shows 'TechX' in large bold blue letters.",
+                "a tagline reads 'Innovate Now' in medium italic.",
+                "a badge displays '2025' in large black letters.",
+                "a slogan includes 'Future Ready' in small cursive.",
+                "a symbol shows 'Connect'."
+            ]
+        },
+        {
+            "index": 187,
+            "prompt": "A lively downtown street with a billboard displaying 'Grand Opening This Weekend' in large red letters, a café window showing 'Fresh Espresso Available' in green regular, a bus stop sign labeled 'Next Bus in 15 Minutes' in medium italic, a bookstore marquee reading 'New Releases Inside' in bold yellow, and a parking meter indicating 'Paid Parking Until 6 PM' in small black letters.",
+            "carrier_list": [
+                "billboard",
+                "window",
+                "sign",
+                "marquee",
+                "meter"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Grand Opening This Weekend' in large red letters.",
+                "a café window showing 'Fresh Espresso Available' in green regular.",
+                "a bus stop sign labeled 'Next Bus in 15 Minutes' in medium italic.",
+                "a bookstore marquee reading 'New Releases Inside' in bold yellow.",
+                "a parking meter indicating 'Paid Parking Until 6 PM' in small black letters."
+            ]
+        },
+        {
+            "index": 188,
+            "prompt": "Bright bookstore facade featuring a sign saying 'Best Sellers of the Month' in large green letters, a window display reading 'Exclusive Author Signings' in medium cursive, a door plaque labeled 'Welcome Book Lovers' in bold blue, a sidewalk banner with 'Join Our Book Club Today' in italic, and a kiosk showcasing 'Discounts on Classics' in medium regular.",
+            "carrier_list": [
+                "sign",
+                "window",
+                "plaque",
+                "banner",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a sign saying 'Best Sellers of the Month' in large green letters.",
+                "a window display reading 'Exclusive Author Signings' in medium cursive.",
+                "a door plaque labeled 'Welcome Book Lovers' in bold blue.",
+                "a sidewalk banner with 'Join Our Book Club Today' in italic.",
+                "a kiosk showcasing 'Discounts on Classics' in medium regular."
+            ]
+        },
+        {
+            "index": 189,
+            "prompt": "Colorful amusement park entrance with a marquee displaying 'Welcome to FunLand' in large colorful letters, a ticket booth sign reading 'Buy Your Tickets Here' in bold red, a map stand labeled 'Explore the Rides' in medium regular, a souvenir shop window showing 'Exclusive Merchandise Available' in large blue, and a safety notice saying 'Stay Safe and Enjoy' in small italic.",
+            "carrier_list": [
+                "marquee",
+                "sign",
+                "stand",
+                "window",
+                "notice"
+            ],
+            "sentence_list": [
+                "a marquee displaying 'Welcome to FunLand' in large colorful letters.",
+                "a ticket booth sign reading 'Buy Your Tickets Here' in bold red.",
+                "a map stand labeled 'Explore the Rides' in medium regular.",
+                "a souvenir shop window showing 'Exclusive Merchandise Available' in large blue.",
+                "a safety notice saying 'Stay Safe and Enjoy' in small italic."
+            ]
+        },
+        {
+            "index": 190,
+            "prompt": "Elegant hotel lobby showcasing a sign with 'Check-In Now Available' in large gold letters, a reception desk label reading 'Welcome Guests' in bold white, a directory board displaying 'Services Offered' in medium regular, a lounge area banner saying 'Relax and Unwind' in cursive, and a room number plaque indicating 'Your Stay Begins Here' in small black letters.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "board",
+                "banner",
+                "plaque"
+            ],
+            "sentence_list": [
+                "a sign with 'Check-In Now Available' in large gold letters.",
+                "a reception desk label reading 'Welcome Guests' in bold white.",
+                "a directory board displaying 'Services Offered' in medium regular.",
+                "a lounge area banner saying 'Relax and Unwind' in cursive.",
+                "a room number plaque indicating 'Your Stay Begins Here' in small black letters."
+            ]
+        },
+        {
+            "index": 191,
+            "prompt": "Modern office building entrance featuring a sign labeled 'Corporate Headquarters' in large gray letters, a directory panel reading 'Find Your Department' in medium italic, a security desk banner with 'Access Restricted Area' in bold red, a waiting area notice saying 'Please Take a Number' in small blue letters, and a restroom sign displaying 'Men and Women' in medium regular.",
+            "carrier_list": [
+                "sign",
+                "panel",
+                "banner",
+                "notice",
+                "sign"
+            ],
+            "sentence_list": [
+                "a sign labeled 'Corporate Headquarters' in large gray letters.",
+                "a directory panel reading 'Find Your Department' in medium italic.",
+                "a security desk banner with 'Access Restricted Area' in bold red.",
+                "a waiting area notice saying 'Please Take a Number' in small blue letters.",
+                "a restroom sign displaying 'Men and Women' in medium regular."
+            ]
+        },
+        {
+            "index": 192,
+            "prompt": "Vibrant school hallway with a banner displaying 'Welcome New Students' in large colorful letters, a classroom door sign reading 'Math 101' in bold blue, a bulletin board labeled 'Upcoming Events' in medium regular, a locker door sticker saying 'Keep Belongings Secure' in italic, and a cafeteria menu board showing 'Daily Special Meals' in medium green letters.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "board",
+                "sticker",
+                "board"
+            ],
+            "sentence_list": [
+                "a banner displaying 'Welcome New Students' in large colorful letters.",
+                "a classroom door sign reading 'Math 101' in bold blue.",
+                "a bulletin board labeled 'Upcoming Events' in medium regular.",
+                "a locker door sticker saying 'Keep Belongings Secure' in italic.",
+                "a cafeteria menu board showing 'Daily Special Meals' in medium green letters."
+            ]
+        },
+        {
+            "index": 193,
+            "prompt": "Cozy coffee shop window showcasing a chalkboard with 'Daily Specials Available' in large handwritten style, a door sign labeled 'Open for Business' in bold green, a menu board reading 'Choose Your Favorite Drink' in medium regular, a shelf display saying 'Fresh Pastries Inside' in small red letters, and a seating area sign indicating 'Free Wi-Fi Here' in italic.",
+            "carrier_list": [
+                "chalkboard",
+                "sign",
+                "board",
+                "display",
+                "sign"
+            ],
+            "sentence_list": [
+                "a chalkboard with 'Daily Specials Available' in large handwritten style.",
+                "a door sign labeled 'Open for Business' in bold green.",
+                "a menu board reading 'Choose Your Favorite Drink' in medium regular.",
+                "a shelf display saying 'Fresh Pastries Inside' in small red letters.",
+                "a seating area sign indicating 'Free Wi-Fi Here' in italic."
+            ]
+        },
+        {
+            "index": 194,
+            "prompt": "Dynamic sports stadium entrance featuring a marquee displaying 'Championship Game Tonight' in large bold yellow letters, a ticket booth sign reading 'Purchase Tickets Here' in medium red, a concession stand label saying 'Snacks and Drinks Available' in italic, a merchandise shop window showing 'Team Gear for Sale' in bold blue, and a parking sign indicating 'Reserved Parking Areas' in small black letters.",
+            "carrier_list": [
+                "marquee",
+                "sign",
+                "label",
+                "window",
+                "sign"
+            ],
+            "sentence_list": [
+                "a marquee displaying 'Championship Game Tonight' in large bold yellow letters.",
+                "a ticket booth sign reading 'Purchase Tickets Here' in medium red.",
+                "a concession stand label saying 'Snacks and Drinks Available' in italic.",
+                "a merchandise shop window showing 'Team Gear for Sale' in bold blue.",
+                "a parking sign indicating 'Reserved Parking Areas' in small black letters."
+            ]
+        },
+        {
+            "index": 195,
+            "prompt": "Creative art gallery facade with a sign labeled 'Exhibition Opening This Friday' in large elegant letters, a window display reading 'Featured Artists Inside' in medium cursive, a reception desk banner saying 'Welcome to Our Gallery' in bold white, a brochure stand displaying 'Upcoming Workshops' in small black, and a restroom sign indicating 'Art Inspired Restrooms' in italic.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "banner",
+                "stand",
+                "sign"
+            ],
+            "sentence_list": [
+                "a sign labeled 'Exhibition Opening This Friday' in large elegant letters.",
+                "a window display reading 'Featured Artists Inside' in medium cursive.",
+                "a reception desk banner saying 'Welcome to Our Gallery' in bold white.",
+                "a brochure stand displaying 'Upcoming Workshops' in small black.",
+                "a restroom sign indicating 'Art Inspired Restrooms' in italic."
+            ]
+        },
+        {
+            "index": 196,
+            "prompt": "Charming restaurant exterior showcasing a sign with 'Family Meals Available' in large red letters, a window display reading 'Daily Fresh Catch' in bold blue letters, a door plaque labeled 'Welcome Diners' in green cursive, a patio banner saying 'Outdoor Seating Open' in italic large letters, and a menu board displaying 'Chef Specials Tonight' in medium bold letters.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "plaque",
+                "banner",
+                "board"
+            ],
+            "sentence_list": [
+                "a sign with 'Family Meals Available' in large red letters.",
+                "a window display reading 'Daily Fresh Catch' in bold blue letters.",
+                "a door plaque labeled 'Welcome Diners' in green cursive.",
+                "a patio banner saying 'Outdoor Seating Open' in italic large letters.",
+                "a menu board displaying 'Chef Specials Tonight' in medium bold letters."
+            ]
+        }
+    ]
+}

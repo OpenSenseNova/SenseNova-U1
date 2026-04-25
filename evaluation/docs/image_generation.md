@@ -24,10 +24,15 @@ evaluation/gen/
 │   └── data/{text_prompts.jsonl,text_prompts_zh.jsonl}
 ├── cvtg/                    # CVTG-2K — complex visual text generation
 │   ├── eval_cvtg.py
-│   └── run_cvtgeval.sh
+│   ├── unified_metrics_eval.py
+│   ├── sa_0_4_vit_l_14_linear.pth
+│   ├── run_cvtgeval.sh
+│   └── data/{CVTG,CVTG-Style}/{2..5}{,_combined}.json
 └── tiif/                    # TIIF-Bench — text-image instruction following
     ├── eval_tiif.py
-    └── run_tiifeval.sh
+    ├── run_tiifeval.sh
+    ├── eval/{eval_with_vlm_mp,summary_results,summary_dimension_results}.py
+    └── data/{testmini,test}{_prompts,_eval_prompts}/*.jsonl
 ```
 
 Every benchmark follows the same two-stage flow: **generate images**, then
@@ -139,58 +144,65 @@ for `en`, `text_prompts_zh.jsonl` for `zh`).
 ## CVTG-2K
 
 Complex visual text generation at 2K resolution, evaluated with the
-TextCrafter metrics suite (PaddleOCR + unified metrics). The launcher
-covers multi-GPU and multi-node sharding, plus an optional eval stage.
+in-tree [`unified_metrics_eval.py`](../gen/cvtg/unified_metrics_eval.py)
+script (PaddleOCR-based word accuracy + unified visual-text metrics).
+Generation runs as a single Python process with the model sharded across
+visible GPUs via HuggingFace `device_map`.
 
 ```bash
-BENCHMARK_ROOT=/path/to/CVTG-2K \
-TEXTCRAFTER_ROOT=/path/to/TextCrafter_Eval \
-  bash evaluation/gen/cvtg/run_cvtgeval.sh
+bash evaluation/gen/cvtg/run_cvtgeval.sh
 ```
+
+The CVTG-2K prompts ship under [`cvtg/data/`](../gen/cvtg/data/) and the
+LAION aesthetic-predictor head [`sa_0_4_vit_l_14_linear.pth`](../gen/cvtg/sa_0_4_vit_l_14_linear.pth)
+sits next to the eval script — no external download is required.
 
 Common overrides (set as env vars before the launcher):
 
 | Variable | Default | Description |
 | :------- | :------ | :---------- |
 | `MODEL_PATH` | `sensenova/SenseNova-U1-8B-MoT-SFT` | Local checkpoint path or HF model id |
-| `BENCHMARK_ROOT` | — (required) | CVTG-2K dataset root |
+| `BENCHMARK_ROOT` | `evaluation/gen/cvtg/data` | CVTG-2K dataset root |
 | `OUTPUT_DIR` | `<repo>/outputs/sensenova/cvtg` | Generated-image + results dir |
-| `TEXTCRAFTER_ROOT` | — (required when `RUN_EVAL=1`) | Upstream TextCrafter eval source |
 | `PADDLEOCR_SOURCE_DIR` | — | Pre-downloaded PaddleOCR cache (copied to `$HOME/.paddleocr` if missing) |
 | `IMAGE_SIZE` / `CFG_SCALE` / `TIMESTEP_SHIFT` / `NUM_STEPS` | `2048` / `7.0` / `1.0` / `50` | Sampling config |
 | `CVTG_SUBSETS` / `CVTG_AREAS` | `CVTG,CVTG-Style` / `2,3,4,5` | Which splits to run |
-| `LAUNCH_MODE` | `device_map_multi` | `device_map`, `device_map_multi`, or `ddp` |
-| `GPUS` / `CUDA_VISIBLE_DEVICES` / `GPUS_PER_WORKER` | `8` / `0..7` / `2` | GPU layout |
-| `NUM_NODES` / `NODE_RANK` | `1` / `0` | Multi-node sharding |
-| `RUN_GENERATION` / `RUN_EVAL` | `1` / `1` (auto-`0` on non-rank-0 nodes) | Stage toggles |
+| `CUDA_VISIBLE_DEVICES` | `0,1,2,3,4,5,6,7` | GPUs available for model sharding |
+| `DEVICE_MAP` / `MAX_MEMORY_PER_GPU_GB` | `auto` / `70` | HF `device_map` strategy and per-GPU memory cap |
+| `RUN_GENERATION` / `RUN_EVAL` | `1` / `1` | Stage toggles |
 
-Example — 8-GPU single-node run, generation only:
+Example — generation only:
 
 ```bash
-RUN_EVAL=0 GPUS=8 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
-BENCHMARK_ROOT=/path/to/CVTG-2K \
+RUN_EVAL=0 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
   bash evaluation/gen/cvtg/run_cvtgeval.sh
 ```
 
 Generated images land under `$OUTPUT_DIR/<subset>/<area>/<key>.png`, and the
-aggregated metrics are written to `$OUTPUT_DIR/CVTG_results.json`.
+aggregated metrics are written to `$OUTPUT_DIR/CVTG_results.json`. Re-runs
+skip samples whose output PNG already exists, so an interrupted run can be
+resumed by simply re-invoking the launcher.
 
 ## TIIF-Bench
 
 Text-image instruction following benchmark, evaluated with a GPT-4o-class
-judge via `eval/eval_with_vlm_mp.py` from the upstream TIIF-Bench repo.
+judge via the in-tree
+[`eval/eval_with_vlm_mp.py`](../gen/tiif/eval/eval_with_vlm_mp.py).
 
 ```bash
-TIIF_BENCH_ROOT=/path/to/TIIF-Bench API_KEY=sk-... \
+API_KEY=sk-... \
   bash evaluation/gen/tiif/run_tiifeval.sh
 ```
+
+The TIIF-Bench prompts (`testmini` and `test` splits) and the three eval
+helper scripts ship under [`tiif/data/`](../gen/tiif/data/) and
+[`tiif/eval/`](../gen/tiif/eval/) — no external download is required.
 
 Required / common overrides:
 
 | Variable | Default | Description |
 | :------- | :------ | :---------- |
 | `MODEL_PATH` | `sensenova/SenseNova-U1-8B-MoT-SFT` | Local checkpoint path or HF model id |
-| `TIIF_BENCH_ROOT` | — (required) | Upstream TIIF-Bench repo |
 | `OUTPUT_DIR` | `<repo>/outputs/sensenova/tiif` | Generated-image + results dir |
 | `TIIFBENCH_SPLIT` | `testmini` | Which split to run (`testmini` / `test`) |
 | `TIIFBENCH_EVAL_MODEL` | `gpt-4o` | Judge model |
@@ -205,7 +217,6 @@ Example — single-node generation + eval against an Azure OpenAI endpoint:
 ```bash
 API_KEY=sk-... \
 TIIFBENCH_AZURE_ENDPOINT=https://your-endpoint.openai.azure.com \
-TIIF_BENCH_ROOT=/path/to/TIIF-Bench \
 MODEL_PATH=/path/to/checkpoint \
   bash evaluation/gen/tiif/run_tiifeval.sh
 ```
@@ -221,10 +232,11 @@ with a dimension-level summary in `result_summary_dimension.txt` next to it.
 - **Judge APIs.** All API-based evaluators accept any OpenAI-compatible
   endpoint — point them at SenseNova, Gemini (OpenAI-compat), Azure OpenAI,
   or a local vLLM / sglang server as needed.
-- **Sharding.** `run_cvtgeval.sh` and `run_tiifeval.sh` accept
-  `NUM_NODES` / `NODE_RANK` for multi-node generation; the remaining
-  benchmarks are single-process and scale by running multiple invocations
-  against disjoint `--output-dir`s.
+- **Multi-GPU.** `run_tiifeval.sh` uses DDP (`torchrun --nproc_per_node`)
+  with one full model replica per GPU. `run_cvtgeval.sh` instead shards a
+  single model across GPUs via HF `device_map="auto"` — preferred when one
+  GPU cannot hold the whole model. To scale further, run multiple
+  invocations against disjoint `--output_dir`s and merge the results.
 - **Re-evaluation.** `eval_images_bizgeneval.py` / `eval_images_igenbench.py`
   skip items whose judgments already exist in `--output-dir`. Pass
   `--force-rerun` to ignore the cache.

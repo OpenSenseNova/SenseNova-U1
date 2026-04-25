@@ -1,0 +1,4218 @@
+{
+    "data_list": [
+        {
+            "index": 0,
+            "prompt": "A busy street scene with a digital billboard showing 'SALE', a taxi with the license plate '1234', and a storefront window with 'OPEN' on it.",
+            "carrier_list": [
+                "billboard",
+                "plate",
+                "window"
+            ],
+            "sentence_list": [
+                "a digital billboard showing 'SALE'.",
+                "a taxi with the license plate '1234'.",
+                "a storefront window with 'OPEN' on it."
+            ]
+        },
+        {
+            "index": 1,
+            "prompt": "In a café, a menu board displays 'Coffee', a napkin says 'Enjoy', and a cup has 'Fresh' printed on it.",
+            "carrier_list": [
+                "board",
+                "napkin",
+                "cup"
+            ],
+            "sentence_list": [
+                "a menu board displays 'Coffee'.",
+                "a napkin says 'Enjoy'.",
+                "a cup has 'Fresh' printed on it."
+            ]
+        },
+        {
+            "index": 2,
+            "prompt": "At a sports stadium, a scoreboard flashes 'Goal', a player jersey reads '10', and the entrance banner says 'Welcome'.",
+            "carrier_list": [
+                "scoreboard",
+                "jersey",
+                "banner"
+            ],
+            "sentence_list": [
+                "a scoreboard flashes 'Goal'.",
+                "a player jersey reads '10'.",
+                "the entrance banner says 'Welcome'."
+            ]
+        },
+        {
+            "index": 3,
+            "prompt": "On a city sidewalk, a bus stop sign reads 'Arrivals', a shop window shows 'Sale', and a pedestrian’s T-shirt says 'Run'.",
+            "carrier_list": [
+                "sign",
+                "window",
+                "T-shirt"
+            ],
+            "sentence_list": [
+                "a bus stop sign reads 'Arrivals'.",
+                "a shop window shows 'Sale'.",
+                "a pedestrian’s T-shirt says 'Run'."
+            ]
+        },
+        {
+            "index": 4,
+            "prompt": "In a library, a shelf has 'Books', a desk sign reads 'Study', and a wall poster says 'Learn'.",
+            "carrier_list": [
+                "shelf",
+                "sign",
+                "poster"
+            ],
+            "sentence_list": [
+                "a shelf has 'Books'.",
+                "a desk sign reads 'Study'.",
+                "a wall poster says 'Learn'."
+            ]
+        },
+        {
+            "index": 5,
+            "prompt": "On a movie set, the director’s chair has 'Action', a clapperboard shows 'Scene 1', and a camera lens says 'Focus'.",
+            "carrier_list": [
+                "chair",
+                "clapperboard",
+                "lens"
+            ],
+            "sentence_list": [
+                "the director’s chair has 'Action'.",
+                "a clapperboard shows 'Scene 1'.",
+                "a camera lens says 'Focus'."
+            ]
+        },
+        {
+            "index": 6,
+            "prompt": "At a music concert, the stage banner says 'Live', a speaker has 'Bass', and a guitar pick reads 'Play'.",
+            "carrier_list": [
+                "banner",
+                "speaker",
+                "pick"
+            ],
+            "sentence_list": [
+                "the stage banner says 'Live'.",
+                "a speaker has 'Bass'.",
+                "a guitar pick reads 'Play'."
+            ]
+        },
+        {
+            "index": 7,
+            "prompt": "In a park, a bike rack has 'Parked', a fountain displays 'Flow', and a park bench says 'Sit'.",
+            "carrier_list": [
+                "rack",
+                "fountain",
+                "bench"
+            ],
+            "sentence_list": [
+                "a bike rack has 'Parked'.",
+                "a fountain displays 'Flow'.",
+                "a park bench says 'Sit'."
+            ]
+        },
+        {
+            "index": 8,
+            "prompt": "At a train station, a timetable shows 'Arrival', a trackside sign says 'Platform', and a ticket booth has 'Buy' written on it.",
+            "carrier_list": [
+                "timetable",
+                "sign",
+                "booth"
+            ],
+            "sentence_list": [
+                "a timetable shows 'Arrival'.",
+                "a trackside sign says 'Platform'.",
+                "a ticket booth has 'Buy' written on it."
+            ]
+        },
+        {
+            "index": 9,
+            "prompt": "In a modern office, a desk has 'Work', a meeting room door reads 'Meeting', and a wall clock shows 'Time'.",
+            "carrier_list": [
+                "desk",
+                "door",
+                "clock"
+            ],
+            "sentence_list": [
+                "a desk has 'Work'.",
+                "a meeting room door reads 'Meeting'.",
+                "a wall clock shows 'Time'."
+            ]
+        },
+        {
+            "index": 10,
+            "prompt": "A bustling city street with a billboard displaying 'Sale', a café menu showing 'Coffee', and a taxi with 'Drive' on its side.",
+            "carrier_list": [
+                "billboard",
+                "menu",
+                "taxi"
+            ],
+            "sentence_list": [
+                "A billboard displaying 'Sale'.",
+                "A café menu showing 'Coffee'.",
+                "A taxi with 'Drive' on its side."
+            ]
+        },
+        {
+            "index": 11,
+            "prompt": "At a crowded sports stadium, a giant screen shows 'Victory', a scoreboard reads '2-1', and a fan shirt has 'Champion' on it.",
+            "carrier_list": [
+                "screen",
+                "scoreboard",
+                "shirt"
+            ],
+            "sentence_list": [
+                "A giant screen shows 'Victory'.",
+                "A scoreboard reads '2-1'.",
+                "A fan shirt has 'Champion' on it."
+            ]
+        },
+        {
+            "index": 12,
+            "prompt": "A book cover featuring a forest scene with the title 'Wild', a road sign reading 'Exit', and a backpack with 'Explore' written on it.",
+            "carrier_list": [
+                "cover",
+                "sign",
+                "backpack"
+            ],
+            "sentence_list": [
+                "A book cover featuring a forest scene with the title 'Wild'.",
+                "A road sign reading 'Exit'.",
+                "A backpack with 'Explore' written on it."
+            ]
+        },
+        {
+            "index": 13,
+            "prompt": "In a futuristic city, a hovercar’s display shows 'Ready', a digital ad board reads 'Tomorrow', and a streetlamp has 'Light' on it.",
+            "carrier_list": [
+                "display",
+                "board",
+                "streetlamp"
+            ],
+            "sentence_list": [
+                "A hovercar’s display shows 'Ready'.",
+                "A digital ad board reads 'Tomorrow'.",
+                "A streetlamp has 'Light' on it."
+            ]
+        },
+        {
+            "index": 14,
+            "prompt": "A busy gym with a wall poster that says 'Strength', a treadmill’s screen with 'Speed' on it, and a water bottle labeled 'Hydrate'.",
+            "carrier_list": [
+                "poster",
+                "screen",
+                "bottle"
+            ],
+            "sentence_list": [
+                "A wall poster that says 'Strength'.",
+                "A treadmill’s screen with 'Speed' on it.",
+                "A water bottle labeled 'Hydrate'."
+            ]
+        },
+        {
+            "index": 15,
+            "prompt": "On a movie set, a director chair says 'Action', a clapperboard displays 'Scene', and a spotlight reads 'Focus'.",
+            "carrier_list": [
+                "chair",
+                "clapperboard",
+                "spotlight"
+            ],
+            "sentence_list": [
+                "A director chair says 'Action'.",
+                "A clapperboard displays 'Scene'.",
+                "A spotlight reads 'Focus'."
+            ]
+        },
+        {
+            "index": 16,
+            "prompt": "Inside a store, a shopping cart has 'Pick', a checkout counter reads 'Total', and a shelf displays 'Best'.",
+            "carrier_list": [
+                "cart",
+                "counter",
+                "shelf"
+            ],
+            "sentence_list": [
+                "A shopping cart has 'Pick'.",
+                "A checkout counter reads 'Total'.",
+                "A shelf displays 'Best'."
+            ]
+        },
+        {
+            "index": 17,
+            "prompt": "A street artist working with a spray can that says 'Create', a wall mural has 'Dream', and a sign reads 'Art'.",
+            "carrier_list": [
+                "can",
+                "mural",
+                "sign"
+            ],
+            "sentence_list": [
+                "A spray can that says 'Create'.",
+                "A wall mural has 'Dream'.",
+                "A sign reads 'Art'."
+            ]
+        },
+        {
+            "index": 18,
+            "prompt": "At a café, the chalkboard menu reads 'Brew', a coffee cup has 'Sip', and a napkin says 'Relax'.",
+            "carrier_list": [
+                "menu",
+                "cup",
+                "napkin"
+            ],
+            "sentence_list": [
+                "The chalkboard menu reads 'Brew'.",
+                "A coffee cup has 'Sip'.",
+                "A napkin says 'Relax'."
+            ]
+        },
+        {
+            "index": 19,
+            "prompt": "A travel brochure’s cover with 'Adventure' on it, a map showing 'Route', and a passport with 'Travel' embossed on it.",
+            "carrier_list": [
+                "cover",
+                "map",
+                "passport"
+            ],
+            "sentence_list": [
+                "A travel brochure’s cover with 'Adventure' on it.",
+                "A map showing 'Route'.",
+                "A passport with 'Travel' embossed on it."
+            ]
+        },
+        {
+            "index": 20,
+            "prompt": "A bustling city street with a billboard displaying 'Sale', a bus stop sign reading '12', and a shop window with the word 'Open'.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "window"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Sale'.",
+                "a bus stop sign reading '12'.",
+                "a shop window with the word 'Open'."
+            ]
+        },
+        {
+            "index": 21,
+            "prompt": "A vintage book cover featuring a title 'Journey', a spine labeled 'Read', and the back cover displaying 'Tomorrow'.",
+            "carrier_list": [
+                "cover",
+                "spine",
+                "cover"
+            ],
+            "sentence_list": [
+                "a vintage book cover featuring a title 'Journey'.",
+                "a spine labeled 'Read'.",
+                "the back cover displaying 'Tomorrow'."
+            ]
+        },
+        {
+            "index": 22,
+            "prompt": "A restaurant menu with the word 'Fresh', a special offer board showing '50 percent', and a chef apron with the word 'Cook'.",
+            "carrier_list": [
+                "menu",
+                "board",
+                "apron"
+            ],
+            "sentence_list": [
+                "a restaurant menu with the word 'Fresh'.",
+                "a special offer board showing '50 percent'.",
+                "a chef apron with the word 'Cook'."
+            ]
+        },
+        {
+            "index": 23,
+            "prompt": "A busy office with a calendar marked 'Monday', a desk lamp reading 'Focus', and a coffee cup labeled 'Energy'.",
+            "carrier_list": [
+                "calendar",
+                "lamp",
+                "cup"
+            ],
+            "sentence_list": [
+                "a calendar marked 'Monday'.",
+                "a desk lamp reading 'Focus'.",
+                "a coffee cup labeled 'Energy'."
+            ]
+        },
+        {
+            "index": 24,
+            "prompt": "A movie scene set in a library with a bookshelf labeled 'Stories', a desk with the word 'Learn', and a poster on the wall reading 'Epic'.",
+            "carrier_list": [
+                "bookshelf",
+                "desk",
+                "poster"
+            ],
+            "sentence_list": [
+                "a bookshelf labeled 'Stories'.",
+                "a desk with the word 'Learn'.",
+                "a poster on the wall reading 'Epic'."
+            ]
+        },
+        {
+            "index": 25,
+            "prompt": "A website homepage with the header 'Start', a product section labeled 'Buy', and a footer with the word 'Contact'.",
+            "carrier_list": [
+                "header",
+                "section",
+                "footer"
+            ],
+            "sentence_list": [
+                "a website homepage with the header 'Start'.",
+                "a product section labeled 'Buy'.",
+                "a footer with the word 'Contact'."
+            ]
+        },
+        {
+            "index": 26,
+            "prompt": "A street market scene with a sign reading 'Bargain', a fruit stand labeled '3 dollars', and a cart with the word 'Fresh'.",
+            "carrier_list": [
+                "sign",
+                "stand",
+                "cart"
+            ],
+            "sentence_list": [
+                "a sign reading 'Bargain'.",
+                "a fruit stand labeled '3 dollars'.",
+                "a cart with the word 'Fresh'."
+            ]
+        },
+        {
+            "index": 27,
+            "prompt": "A workout poster in a gym with the title 'Strength', a dumbbell labeled 'Lift', and a water bottle with the word 'Hydrate'.",
+            "carrier_list": [
+                "poster",
+                "dumbbell",
+                "bottle"
+            ],
+            "sentence_list": [
+                "a workout poster in a gym with the title 'Strength'.",
+                "a dumbbell labeled 'Lift'.",
+                "a water bottle with the word 'Hydrate'."
+            ]
+        },
+        {
+            "index": 28,
+            "prompt": "A subway station with a platform sign reading 'Arriving', a train schedule showing '5:20', and a tunnel sign with the word 'Exit'.",
+            "carrier_list": [
+                "sign",
+                "schedule",
+                "sign"
+            ],
+            "sentence_list": [
+                "a platform sign reading 'Arriving'.",
+                "a train schedule showing '5:20'.",
+                "a tunnel sign with the word 'Exit'."
+            ]
+        },
+        {
+            "index": 29,
+            "prompt": "A concert flyer with the word 'Live', a ticket booth displaying '25 dollars', and a banner overhead reading 'Music'.",
+            "carrier_list": [
+                "flyer",
+                "booth",
+                "banner"
+            ],
+            "sentence_list": [
+                "a concert flyer with the word 'Live'.",
+                "a ticket booth displaying '25 dollars'.",
+                "a banner overhead reading 'Music'."
+            ]
+        },
+        {
+            "index": 30,
+            "prompt": "A street scene at sunset, with a shop sign saying 'Open'. A billboard above it displays 'Sale'. A bus stop sign has 'Next' written on it.",
+            "carrier_list": [
+                "sign",
+                "billboard",
+                "sign"
+            ],
+            "sentence_list": [
+                "A shop sign saying 'Open'.",
+                "A billboard above it displays 'Sale'.",
+                "A bus stop sign has 'Next' written on it."
+            ]
+        },
+        {
+            "index": 31,
+            "prompt": "On a busy college campus, a flyer reads 'Join'. A large chalkboard has the word 'Lecture'. A student’s backpack shows 'Ready'.",
+            "carrier_list": [
+                "flyer",
+                "chalkboard",
+                "backpack"
+            ],
+            "sentence_list": [
+                "A flyer reads 'Join'.",
+                "A large chalkboard has the word 'Lecture'.",
+                "A student’s backpack shows 'Ready'."
+            ]
+        },
+        {
+            "index": 32,
+            "prompt": "In a modern office lobby, a wall clock reads '12:00'. The receptionist desk has a sign saying 'Welcome'. A door in the background displays 'Exit'.",
+            "carrier_list": [
+                "clock",
+                "sign",
+                "door"
+            ],
+            "sentence_list": [
+                "A wall clock reads '12:00'.",
+                "The receptionist desk has a sign saying 'Welcome'.",
+                "A door in the background displays 'Exit'."
+            ]
+        },
+        {
+            "index": 33,
+            "prompt": "A city skyline at dusk with a building sign saying 'Live'. A subway entrance’s sign has 'Trains' on it. A streetlight has 'Bright'.",
+            "carrier_list": [
+                "sign",
+                "sign",
+                "streetlight"
+            ],
+            "sentence_list": [
+                "A building sign saying 'Live'.",
+                "A subway entrance’s sign has 'Trains' on it.",
+                "A streetlight has 'Bright'."
+            ]
+        },
+        {
+            "index": 34,
+            "prompt": "Inside a coffee shop, a menu board reads 'Brew'. A coffee cup on a counter displays 'Fresh'. A wall poster shows 'Relax'.",
+            "carrier_list": [
+                "board",
+                "cup",
+                "poster"
+            ],
+            "sentence_list": [
+                "A menu board reads 'Brew'.",
+                "A coffee cup on a counter displays 'Fresh'.",
+                "A wall poster shows 'Relax'."
+            ]
+        },
+        {
+            "index": 35,
+            "prompt": "At a food truck, a banner says 'Tacos'. The truck window has the word 'Order'. A sign by the cash register reads 'Cash'.",
+            "carrier_list": [
+                "banner",
+                "window",
+                "sign"
+            ],
+            "sentence_list": [
+                "A banner says 'Tacos'.",
+                "The truck window has the word 'Order'.",
+                "A sign by the cash register reads 'Cash'."
+            ]
+        },
+        {
+            "index": 36,
+            "prompt": "On a futuristic billboard, a digital display shows 'Now'. A floating drone has the word 'Fly'. A store window reads 'Buy'.",
+            "carrier_list": [
+                "display",
+                "drone",
+                "window"
+            ],
+            "sentence_list": [
+                "A digital display shows 'Now'.",
+                "A floating drone has the word 'Fly'.",
+                "A store window reads 'Buy'."
+            ]
+        },
+        {
+            "index": 37,
+            "prompt": "At an art gallery, a wall label says 'Art'. The gallery door displays 'Open'. A gallery brochure reads 'Tour'.",
+            "carrier_list": [
+                "label",
+                "door",
+                "brochure"
+            ],
+            "sentence_list": [
+                "A wall label says 'Art'.",
+                "The gallery door displays 'Open'.",
+                "A gallery brochure reads 'Tour'."
+            ]
+        },
+        {
+            "index": 38,
+            "prompt": "A concert venue shows a banner with 'Live'. The stage floor has 'Music' written on it. The audience LED wristbands show 'Rave'.",
+            "carrier_list": [
+                "banner",
+                "floor",
+                "wristbands"
+            ],
+            "sentence_list": [
+                "A banner with 'Live'.",
+                "The stage floor has 'Music' written on it.",
+                "The audience LED wristbands show 'Rave'."
+            ]
+        },
+        {
+            "index": 39,
+            "prompt": "On a magazine cover, a title reads 'Explore'. A tagline at the bottom says 'Adventure'. A barcode in the corner displays '12345'.",
+            "carrier_list": [
+                "title",
+                "tagline",
+                "barcode"
+            ],
+            "sentence_list": [
+                "A title reads 'Explore'.",
+                "A tagline at the bottom says 'Adventure'.",
+                "A barcode in the corner displays '12345'."
+            ]
+        },
+        {
+            "index": 40,
+            "prompt": "A busy street scene with a shop sign reading 'Open', a bus stop displaying '15', and a storefront with the word 'Sale' on it.",
+            "carrier_list": [
+                "sign",
+                "stop",
+                "storefront"
+            ],
+            "sentence_list": [
+                "a shop sign reading 'Open'.",
+                "a bus stop displaying '15'.",
+                "a storefront with the word 'Sale' on it."
+            ]
+        },
+        {
+            "index": 41,
+            "prompt": "At a cafe counter, the menu board says 'Espresso', a sign on the window reads 'Now', and a cup of coffee has 'Enjoy' printed on it.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "cup"
+            ],
+            "sentence_list": [
+                "the menu board says 'Espresso'.",
+                "a sign on the window reads 'Now'.",
+                "a cup of coffee has 'Enjoy' printed on it."
+            ]
+        },
+        {
+            "index": 42,
+            "prompt": "In a park, a large billboard reads 'Relax', a bench shows 'Sit', and a tree trunk has 'Grow' etched into it.",
+            "carrier_list": [
+                "billboard",
+                "bench",
+                "trunk"
+            ],
+            "sentence_list": [
+                "a large billboard reads 'Relax'.",
+                "a bench shows 'Sit'.",
+                "a tree trunk has 'Grow' etched into it."
+            ]
+        },
+        {
+            "index": 43,
+            "prompt": "On a movie set, a clapperboard shows 'Action', a director chair has 'Star' written on it, and a costume rack displays 'Hero'.",
+            "carrier_list": [
+                "clapperboard",
+                "chair",
+                "rack"
+            ],
+            "sentence_list": [
+                "a clapperboard shows 'Action'.",
+                "a director chair has 'Star' written on it.",
+                "a costume rack displays 'Hero'."
+            ]
+        },
+        {
+            "index": 44,
+            "prompt": "In a library, a bookshelf label reads 'Fiction', a poster on the wall says 'Read', and a bookmark displays 'Page'.",
+            "carrier_list": [
+                "label",
+                "poster",
+                "bookmark"
+            ],
+            "sentence_list": [
+                "a bookshelf label reads 'Fiction'.",
+                "a poster on the wall says 'Read'.",
+                "a bookmark displays 'Page'."
+            ]
+        },
+        {
+            "index": 45,
+            "prompt": "A gym scene with a treadmill showing 'Speed', a water bottle labeled 'Hydrate', and a dumbbell marked 'Lift'.",
+            "carrier_list": [
+                "treadmill",
+                "bottle",
+                "dumbbell"
+            ],
+            "sentence_list": [
+                "a treadmill showing 'Speed'.",
+                "a water bottle labeled 'Hydrate'.",
+                "a dumbbell marked 'Lift'."
+            ]
+        },
+        {
+            "index": 46,
+            "prompt": "In a futuristic city, a neon sign glows with 'Tech', a train station display reads '12:45', and a skyscraper has 'Tower' on it.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "skyscraper"
+            ],
+            "sentence_list": [
+                "a neon sign glows with 'Tech'.",
+                "a train station display reads '12:45'.",
+                "a skyscraper has 'Tower' on it."
+            ]
+        },
+        {
+            "index": 47,
+            "prompt": "At a concert, a banner says 'Live', a ticket shows 'VIP', and a guitar amplifier is marked with 'Loud'.",
+            "carrier_list": [
+                "banner",
+                "ticket",
+                "amplifier"
+            ],
+            "sentence_list": [
+                "a banner says 'Live'.",
+                "a ticket shows 'VIP'.",
+                "a guitar amplifier is marked with 'Loud'."
+            ]
+        },
+        {
+            "index": 48,
+            "prompt": "On a fashion runway, a designer tag reads 'Trend', a boutique window shows 'Chic', and a shoe box is labeled 'Style'.",
+            "carrier_list": [
+                "tag",
+                "window",
+                "box"
+            ],
+            "sentence_list": [
+                "a designer tag reads 'Trend'.",
+                "a boutique window shows 'Chic'.",
+                "a shoe box is labeled 'Style'."
+            ]
+        },
+        {
+            "index": 49,
+            "prompt": "In a classroom, a chalkboard reads 'Study', a desk has 'Note' written on it, and a clock shows '2:00'.",
+            "carrier_list": [
+                "chalkboard",
+                "desk",
+                "clock"
+            ],
+            "sentence_list": [
+                "a chalkboard reads 'Study'.",
+                "a desk has 'Note' written on it.",
+                "a clock shows '2:00'."
+            ]
+        },
+        {
+            "index": 50,
+            "prompt": "A busy street corner with a bus stop sign displaying 'Arrivals', a billboard reads 'Free', and a street vendor’s cart has 'Lunch' written on it.",
+            "carrier_list": [
+                "sign",
+                "billboard",
+                "cart"
+            ],
+            "sentence_list": [
+                "a bus stop sign displaying 'Arrivals'.",
+                "a billboard reads 'Free'.",
+                "a street vendor’s cart has 'Lunch' written on it."
+            ]
+        },
+        {
+            "index": 51,
+            "prompt": "In a coffee shop, a sign on the wall says 'Brew', the menu board shows '5:00', and a barista’s apron has 'Serve' on it.",
+            "carrier_list": [
+                "sign",
+                "board",
+                "apron"
+            ],
+            "sentence_list": [
+                "a sign on the wall says 'Brew'.",
+                "the menu board shows '5:00'.",
+                "a barista’s apron has 'Serve' on it."
+            ]
+        },
+        {
+            "index": 52,
+            "prompt": "A futuristic cityscape with a neon sign reading 'Live', a hovercar display shows '2X', and a storefront window has 'Open' on it.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "window"
+            ],
+            "sentence_list": [
+                "a neon sign reading 'Live'.",
+                "a hovercar display shows '2X'.",
+                "a storefront window has 'Open' on it."
+            ]
+        },
+        {
+            "index": 53,
+            "prompt": "On a restaurant wall, a sign says 'Today', the order board displays '12:45', and a dessert counter has 'Cake' written on it.",
+            "carrier_list": [
+                "sign",
+                "board",
+                "counter"
+            ],
+            "sentence_list": [
+                "a sign says 'Today'.",
+                "the order board displays '12:45'.",
+                "a dessert counter has 'Cake' written on it."
+            ]
+        },
+        {
+            "index": 54,
+            "prompt": "In an office, a calendar reads 'Monday', a printer shows 'Print', and a desk lamp has 'Bright' written on it.",
+            "carrier_list": [
+                "calendar",
+                "printer",
+                "lamp"
+            ],
+            "sentence_list": [
+                "a calendar reads 'Monday'.",
+                "a printer shows 'Print'.",
+                "a desk lamp has 'Bright' written on it."
+            ]
+        },
+        {
+            "index": 55,
+            "prompt": "A movie poster features a giant character with the word 'Power', a spaceship cockpit displays 'Launch', and a dark sky backdrop shows 'Night'.",
+            "carrier_list": [
+                "poster",
+                "cockpit",
+                "backdrop"
+            ],
+            "sentence_list": [
+                "a movie poster features a giant character with the word 'Power'.",
+                "a spaceship cockpit displays 'Launch'.",
+                "a dark sky backdrop shows 'Night'."
+            ]
+        },
+        {
+            "index": 56,
+            "prompt": "A concert scene where the stage has 'Rock' in bold letters, the ticket booth shows '15:00', and a fan’s t-shirt reads 'Live'.",
+            "carrier_list": [
+                "stage",
+                "booth",
+                "t-shirt"
+            ],
+            "sentence_list": [
+                "the stage has 'Rock' in bold letters.",
+                "the ticket booth shows '15:00'.",
+                "a fan’s t-shirt reads 'Live'."
+            ]
+        },
+        {
+            "index": 57,
+            "prompt": "A train station with a platform sign reading 'Next', the arrival board shows '7:00', and a kiosk displays 'Tickets'.",
+            "carrier_list": [
+                "sign",
+                "board",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a platform sign reading 'Next'.",
+                "the arrival board shows '7:00'.",
+                "a kiosk displays 'Tickets'."
+            ]
+        },
+        {
+            "index": 58,
+            "prompt": "A bookstore window displays the word 'Read', a shelf holds a book’s cover with 'Escape' on it., and a checkout counter has 'Buy'.",
+            "carrier_list": [
+                "window",
+                "cover",
+                "counter"
+            ],
+            "sentence_list": [
+                "a bookstore window displays the word 'Read'.",
+                "a shelf holds a book’s cover with 'Escape' on it.",
+                "a checkout counter has 'Buy'."
+            ]
+        },
+        {
+            "index": 59,
+            "prompt": "At a sports event, a scoreboard reads 'Game', a fan’s banner displays 'Go', and a scoreboard shows '3-2'.",
+            "carrier_list": [
+                "scoreboard",
+                "banner",
+                "scoreboard"
+            ],
+            "sentence_list": [
+                "a scoreboard reads 'Game'.",
+                "a fan’s banner displays 'Go'.",
+                "a scoreboard shows '3-2'."
+            ]
+        },
+        {
+            "index": 60,
+            "prompt": "A city street corner with a billboard saying 'Big Sale', a bus stop showing 'Route 5', and a food truck with the text 'Fresh Tacos'.",
+            "carrier_list": [
+                "billboard",
+                "stop",
+                "truck"
+            ],
+            "sentence_list": [
+                "a billboard saying 'Big Sale'.",
+                "a bus stop showing 'Route 5'.",
+                "a food truck with the text 'Fresh Tacos'."
+            ]
+        },
+        {
+            "index": 61,
+            "prompt": "In a busy coffee shop, a chalkboard sign reads 'Free Wi-Fi', a counter menu says 'Espresso', and a cup displays 'Best Brew'.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "cup"
+            ],
+            "sentence_list": [
+                "a chalkboard sign reads 'Free Wi-Fi'.",
+                "a counter menu says 'Espresso'.",
+                "a cup displays 'Best Brew'."
+            ]
+        },
+        {
+            "index": 62,
+            "prompt": "A bookstore window with a sign saying 'New Arrivals', a shelf tag reads 'Bestsellers', and a reading chair has the label 'Comfort Zone'.",
+            "carrier_list": [
+                "sign",
+                "shelf",
+                "chair"
+            ],
+            "sentence_list": [
+                "a sign saying 'New Arrivals'.",
+                "a shelf tag reads 'Bestsellers'.",
+                "a reading chair has the label 'Comfort Zone'."
+            ]
+        },
+        {
+            "index": 63,
+            "prompt": "At a fitness gym, a wall banner says 'Get Strong', a digital clock shows '6:00 AM', and a water dispenser has the text 'Refill Here'.",
+            "carrier_list": [
+                "banner",
+                "clock",
+                "dispenser"
+            ],
+            "sentence_list": [
+                "a wall banner says 'Get Strong'.",
+                "a digital clock shows '6:00 AM'.",
+                "a water dispenser has the text 'Refill Here'."
+            ]
+        },
+        {
+            "index": 64,
+            "prompt": "On a concert stage, a banner reads 'Live Music', a ticket booth shows 'Sold Out', and a merchandise stall displays 'T-Shirts'.",
+            "carrier_list": [
+                "banner",
+                "booth",
+                "stall"
+            ],
+            "sentence_list": [
+                "a banner reads 'Live Music'.",
+                "a ticket booth shows 'Sold Out'.",
+                "a merchandise stall displays 'T-Shirts'."
+            ]
+        },
+        {
+            "index": 65,
+            "prompt": "A movie theater entrance with a sign saying 'Now Showing', a poster reads 'Action Movie', and a snack counter shows 'Popcorn'.",
+            "carrier_list": [
+                "sign",
+                "poster",
+                "counter"
+            ],
+            "sentence_list": [
+                "a sign saying 'Now Showing'.",
+                "a poster reads 'Action Movie'.",
+                "a snack counter shows 'Popcorn'."
+            ]
+        },
+        {
+            "index": 66,
+            "prompt": "A fashion store window displays 'New Collection', a price tag reads '49.99 USD', and a mannequin is tagged 'Sale'.",
+            "carrier_list": [
+                "window",
+                "tag",
+                "mannequin"
+            ],
+            "sentence_list": [
+                "a fashion store window displays 'New Collection'.",
+                "a price tag reads '49.99 USD'.",
+                "a mannequin is tagged 'Sale'."
+            ]
+        },
+        {
+            "index": 67,
+            "prompt": "At a tech expo, a display reads 'Innovation Hub', a booth shows 'Smart Devices', and a flyer says 'Join Us'.",
+            "carrier_list": [
+                "display",
+                "booth",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a display reads 'Innovation Hub'.",
+                "a booth shows 'Smart Devices'.",
+                "a flyer says 'Join Us'."
+            ]
+        },
+        {
+            "index": 68,
+            "prompt": "A city park entrance has a sign saying 'Park Open', a bench displays 'Relax Here', and a walking path has 'Enjoy Nature'.",
+            "carrier_list": [
+                "sign",
+                "bench",
+                "path"
+            ],
+            "sentence_list": [
+                "a sign saying 'Park Open'.",
+                "a bench displays 'Relax Here'.",
+                "a walking path has 'Enjoy Nature'."
+            ]
+        },
+        {
+            "index": 69,
+            "prompt": "In an office lobby, a wall sign says 'Welcome', a reception desk shows 'Please Wait', and an elevator button reads 'Ground Floor'.",
+            "carrier_list": [
+                "sign",
+                "desk",
+                "button"
+            ],
+            "sentence_list": [
+                "a wall sign says 'Welcome'.",
+                "a reception desk shows 'Please Wait'.",
+                "an elevator button reads 'Ground Floor'."
+            ]
+        },
+        {
+            "index": 70,
+            "prompt": "A busy street scene with a billboard reading 'Summer Sale', a shop window displaying '50 percent Off', and a delivery truck with 'Express Delivery' printed on it.",
+            "carrier_list": [
+                "billboard",
+                "window",
+                "truck"
+            ],
+            "sentence_list": [
+                "a billboard reading 'Summer Sale'.",
+                "a shop window displaying '50 percent Off'.",
+                "a delivery truck with 'Express Delivery' printed on it."
+            ]
+        },
+        {
+            "index": 71,
+            "prompt": "In a coffee shop, the menu board says 'Morning Brew', a cup of coffee has 'Enjoy Now' written on it, and the table has a napkin with 'Take a Break' on it.",
+            "carrier_list": [
+                "board",
+                "cup",
+                "napkin"
+            ],
+            "sentence_list": [
+                "the menu board says 'Morning Brew'.",
+                "a cup of coffee has 'Enjoy Now' written on it.",
+                "a napkin with 'Take a Break' on it."
+            ]
+        },
+        {
+            "index": 72,
+            "prompt": "A city park with a sign that reads 'Free Wi-Fi', a bench with the text 'Sit Here', and a fountain with the label 'Water Flowing'.",
+            "carrier_list": [
+                "sign",
+                "bench",
+                "label"
+            ],
+            "sentence_list": [
+                "a sign that reads 'Free Wi-Fi'.",
+                "a bench with the text 'Sit Here'.",
+                "a fountain with the label 'Water Flowing'."
+            ]
+        },
+        {
+            "index": 73,
+            "prompt": "A movie theater banner says 'Opening Night', the ticket booth displays 'Tickets Here', and the sidewalk has a chalkboard with 'Special Offer' written on it.",
+            "carrier_list": [
+                "banner",
+                "booth",
+                "chalkboard"
+            ],
+            "sentence_list": [
+                "a movie theater banner says 'Opening Night'.",
+                "the ticket booth displays 'Tickets Here'.",
+                "a chalkboard with 'Special Offer' written on it."
+            ]
+        },
+        {
+            "index": 74,
+            "prompt": "Inside a bookstore, a display reads 'New Arrivals', a book cover says 'Read More', and the checkout counter has a sign that says 'Sale Today'.",
+            "carrier_list": [
+                "display",
+                "cover",
+                "sign"
+            ],
+            "sentence_list": [
+                "a display reads 'New Arrivals'.",
+                "a book cover says 'Read More'.",
+                "the checkout counter has a sign that says 'Sale Today'."
+            ]
+        },
+        {
+            "index": 75,
+            "prompt": "In a sports store, a poster says 'Gear Up', a shelf label reads 'Best Deals', and a sneaker box has 'Limited Edition' on it.",
+            "carrier_list": [
+                "poster",
+                "shelf",
+                "box"
+            ],
+            "sentence_list": [
+                "a poster says 'Gear Up'.",
+                "a shelf label reads 'Best Deals'.",
+                "a sneaker box has 'Limited Edition' on it."
+            ]
+        },
+        {
+            "index": 76,
+            "prompt": "At a concert venue, a banner reads 'Live Music', a ticket shows 'General Admission', and the bar area has a sign saying 'Drink Specials'.",
+            "carrier_list": [
+                "banner",
+                "ticket",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner reads 'Live Music'.",
+                "a ticket shows 'General Admission'.",
+                "the bar area has a sign saying 'Drink Specials'."
+            ]
+        },
+        {
+            "index": 77,
+            "prompt": "A website header says 'Shop Now', a pop-up button shows 'Subscribe Today', and the footer text reads 'Contact Us'.",
+            "carrier_list": [
+                "header",
+                "button",
+                "footer"
+            ],
+            "sentence_list": [
+                "a website header says 'Shop Now'.",
+                "a pop-up button shows 'Subscribe Today'.",
+                "the footer text reads 'Contact Us'."
+            ]
+        },
+        {
+            "index": 78,
+            "prompt": "In a restaurant, the board says 'Daily Special', the drink menu displays 'Happy Hour', and the table note shows 'Reserved'.",
+            "carrier_list": [
+                "board",
+                "menu",
+                "note"
+            ],
+            "sentence_list": [
+                "the board says 'Daily Special'.",
+                "the drink menu displays 'Happy Hour'.",
+                "the table note shows 'Reserved'."
+            ]
+        },
+        {
+            "index": 79,
+            "prompt": "In an airport terminal, a sign reads 'Departures', a gate display shows 'Flight 205', and a snack machine says 'Snack Time'.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "machine"
+            ],
+            "sentence_list": [
+                "a sign reads 'Departures'.",
+                "a gate display shows 'Flight 205'.",
+                "a snack machine says 'Snack Time'."
+            ]
+        },
+        {
+            "index": 80,
+            "prompt": "A bustling city street, a billboard reads 'Best Deals', a bus stop sign displays 'Next Bus', and a café window has the text 'Open Now'.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "window"
+            ],
+            "sentence_list": [
+                "a billboard reads 'Best Deals'.",
+                "a bus stop sign displays 'Next Bus'.",
+                "a café window has the text 'Open Now'."
+            ]
+        },
+        {
+            "index": 81,
+            "prompt": "In a modern office, a large screen shows 'Project Update', a desk calendar reads 'January 2025', and a notebook has 'Meeting Notes'.",
+            "carrier_list": [
+                "screen",
+                "calendar",
+                "notebook"
+            ],
+            "sentence_list": [
+                "a large screen shows 'Project Update'.",
+                "a desk calendar reads 'January 2025'.",
+                "a notebook has 'Meeting Notes'."
+            ]
+        },
+        {
+            "index": 82,
+            "prompt": "A book cover’s title is 'Adventure Awaits', a subtitle says 'Chapter One', and the author name is displayed as 'John Doe'.",
+            "carrier_list": [
+                "cover",
+                "subtitle",
+                "name"
+            ],
+            "sentence_list": [
+                "a book cover’s title is 'Adventure Awaits'.",
+                "a subtitle says 'Chapter One'.",
+                "the author name is displayed as 'John Doe'."
+            ]
+        },
+        {
+            "index": 83,
+            "prompt": "A shop window with a sign that reads 'Sale Today', a shopping cart with '50 percent Off', and a price tag saying 'Only 5 dollars'.",
+            "carrier_list": [
+                "sign",
+                "cart",
+                "tag"
+            ],
+            "sentence_list": [
+                "a sign that reads 'Sale Today'.",
+                "a shopping cart with '50 percent Off'.",
+                "a price tag saying 'Only 5 dollars'."
+            ]
+        },
+        {
+            "index": 84,
+            "prompt": "At a concert venue, a stage banner displays 'Live Show', a ticket stub reads 'General Admission', and the crowd holds up signs with 'Rock On'.",
+            "carrier_list": [
+                "banner",
+                "stub",
+                "sign"
+            ],
+            "sentence_list": [
+                "a stage banner displays 'Live Show'.",
+                "a ticket stub reads 'General Admission'.",
+                "signs with 'Rock On'."
+            ]
+        },
+        {
+            "index": 85,
+            "prompt": "In a café, a menu board says 'Fresh Brew', a coffee cup is labeled 'Espresso', and a table has a note that reads 'Reserve Now'.",
+            "carrier_list": [
+                "board",
+                "cup",
+                "note"
+            ],
+            "sentence_list": [
+                "a menu board says 'Fresh Brew'.",
+                "a coffee cup is labeled 'Espresso'.",
+                "a table has a note that reads 'Reserve Now'."
+            ]
+        },
+        {
+            "index": 86,
+            "prompt": "A magazine cover with the headline 'Tech Innovations', an ad says 'New Release', and a sidebar shows 'Exclusive Offer'.",
+            "carrier_list": [
+                "headline",
+                "ad",
+                "sidebar"
+            ],
+            "sentence_list": [
+                "a magazine cover with the headline 'Tech Innovations'.",
+                "an ad says 'New Release'.",
+                "a sidebar shows 'Exclusive Offer'."
+            ]
+        },
+        {
+            "index": 87,
+            "prompt": "On a train platform, an electronic board reads 'Track 5', a kiosk has 'Buy Tickets', and a poster shows 'Travel Deals'.",
+            "carrier_list": [
+                "board",
+                "kiosk",
+                "poster"
+            ],
+            "sentence_list": [
+                "an electronic board reads 'Track 5'.",
+                "a kiosk has 'Buy Tickets'.",
+                "a poster shows 'Travel Deals'."
+            ]
+        },
+        {
+            "index": 88,
+            "prompt": "A movie theater display reads 'Now Showing', a banner says 'Action Flick', and the ticket counter has the text 'Ticket Price'.",
+            "carrier_list": [
+                "display",
+                "banner",
+                "counter"
+            ],
+            "sentence_list": [
+                "a movie theater display reads 'Now Showing'.",
+                "a banner says 'Action Flick'.",
+                "the ticket counter has the text 'Ticket Price'."
+            ]
+        },
+        {
+            "index": 89,
+            "prompt": "At a sports stadium, a scoreboard displays 'Final Score', a banner says 'Team Spirit', and a souvenir booth has 'Buy Here'.",
+            "carrier_list": [
+                "scoreboard",
+                "banner",
+                "booth"
+            ],
+            "sentence_list": [
+                "a scoreboard displays 'Final Score'.",
+                "a banner says 'Team Spirit'.",
+                "a souvenir booth has 'Buy Here'."
+            ]
+        },
+        {
+            "index": 90,
+            "prompt": "A busy street corner with a neon sign flashing 'Open 24/7', a food truck with the text 'Fresh Tacos' on its side, and a billboard showing 'Sale Now'.",
+            "carrier_list": [
+                "sign",
+                "truck",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a neon sign flashing 'Open 24/7'.",
+                "a food truck with the text 'Fresh Tacos' on its side.",
+                "a billboard showing 'Sale Now'."
+            ]
+        },
+        {
+            "index": 91,
+            "prompt": "A bookstore window with a sign that says 'New Arrivals', a shelf with 'Best Seller' tags on books, and a small poster that reads '50 percent Off'.",
+            "carrier_list": [
+                "sign",
+                "shelf",
+                "poster"
+            ],
+            "sentence_list": [
+                "a sign that says 'New Arrivals'.",
+                "a shelf with 'Best Seller' tags on books.",
+                "a small poster that reads '50 percent Off'."
+            ]
+        },
+        {
+            "index": 92,
+            "prompt": "A café menu board with 'Special today' written, a wall poster reads 'Coffee Lovers', and the counter has a sign that says 'Order Here'.",
+            "carrier_list": [
+                "board",
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a café menu board with 'Special today' written.",
+                "a wall poster reads 'Coffee Lovers'.",
+                "a sign that says 'Order Here'."
+            ]
+        },
+        {
+            "index": 93,
+            "prompt": "A fashion boutique storefront with a sign saying 'Season Sale', a display window shows 'Limited Edition', and a clothing rack has 'New Collection'.",
+            "carrier_list": [
+                "sign",
+                "window",
+                "rack"
+            ],
+            "sentence_list": [
+                "a sign saying 'Season Sale'.",
+                "a display window shows 'Limited Edition'.",
+                "a clothing rack has 'New Collection'."
+            ]
+        },
+        {
+            "index": 94,
+            "prompt": "In a gym, a motivational wall print says 'Push Yourself', the exercise machines have 'Start Now' on them, and a water bottle station shows 'Refill Here'.",
+            "carrier_list": [
+                "print",
+                "machines",
+                "station"
+            ],
+            "sentence_list": [
+                "a motivational wall print says 'Push Yourself'.",
+                "the exercise machines have 'Start Now' on them.",
+                "a water bottle station shows 'Refill Here'."
+            ]
+        },
+        {
+            "index": 95,
+            "prompt": "A concert poster outside a venue reads 'Live Tonight', the banner flashes 'Tickets Available', and the entrance door has a sign that says 'VIP Access'.",
+            "carrier_list": [
+                "poster",
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a concert poster outside a venue reads 'Live Tonight'.",
+                "the banner flashes 'Tickets Available'.",
+                "a sign that says 'VIP Access'."
+            ]
+        },
+        {
+            "index": 96,
+            "prompt": "A website ad banner with the text 'Join Now', a floating button says 'Sign Up', and a pop-up message shows 'Limited Time Offer'.",
+            "carrier_list": [
+                "banner",
+                "button",
+                "message"
+            ],
+            "sentence_list": [
+                "a website ad banner with the text 'Join Now'.",
+                "a floating button says 'Sign Up'.",
+                "a pop-up message shows 'Limited Time Offer'."
+            ]
+        },
+        {
+            "index": 97,
+            "prompt": "A movie scene in a diner with a jukebox playing 'Old Hits', the menu reads 'Today Special', and a wall clock shows 'Dinner Time'.",
+            "carrier_list": [
+                "jukebox",
+                "menu",
+                "clock"
+            ],
+            "sentence_list": [
+                "a jukebox playing 'Old Hits'.",
+                "the menu reads 'Today Special'.",
+                "a wall clock shows 'Dinner Time'."
+            ]
+        },
+        {
+            "index": 98,
+            "prompt": "A travel brochure cover with 'Explore More', a destination ad says 'Best Deals', and a flight deal banner reads 'Book Now'.",
+            "carrier_list": [
+                "cover",
+                "ad",
+                "banner"
+            ],
+            "sentence_list": [
+                "a travel brochure cover with 'Explore More'.",
+                "a destination ad says 'Best Deals'.",
+                "a flight deal banner reads 'Book Now'."
+            ]
+        },
+        {
+            "index": 99,
+            "prompt": "A street market stall has a sign saying 'Fresh Fruits', a price board reads '5 dollars Each', and a small poster near the register shows 'Weekend Special'.",
+            "carrier_list": [
+                "sign",
+                "board",
+                "poster"
+            ],
+            "sentence_list": [
+                "a sign saying 'Fresh Fruits'.",
+                "a price board reads '5 dollars Each'.",
+                "a small poster near the register shows 'Weekend Special'."
+            ]
+        },
+        {
+            "index": 100,
+            "prompt": "At a bustling café, the sign above reads 'Open Daily'. A chalkboard menu displays 'Coffee Specials'. A takeaway cup features the text 'Grab And Go'.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "cup"
+            ],
+            "sentence_list": [
+                "the sign above reads 'Open Daily'.",
+                "A chalkboard menu displays 'Coffee Specials'.",
+                "A takeaway cup features the text 'Grab And Go'."
+            ]
+        },
+        {
+            "index": 101,
+            "prompt": "In a lively park, a bench has 'Relax Here' engraved. A fountain is labeled 'Splash Zone'. A playground banner shows 'Fun Times'.",
+            "carrier_list": [
+                "bench",
+                "fountain",
+                "banner"
+            ],
+            "sentence_list": [
+                "a bench has 'Relax Here' engraved.",
+                "A fountain is labeled 'Splash Zone'.",
+                "A playground banner shows 'Fun Times'."
+            ]
+        },
+        {
+            "index": 102,
+            "prompt": "On a university campus, a building entrance displays 'Welcome Students'. A bulletin board reads 'Events Today'. A shuttle bus has 'Campus Ride' on its side.",
+            "carrier_list": [
+                "entrance",
+                "board",
+                "bus"
+            ],
+            "sentence_list": [
+                "a building entrance displays 'Welcome Students'.",
+                "A bulletin board reads 'Events Today'.",
+                "A shuttle bus has 'Campus Ride' on its side."
+            ]
+        },
+        {
+            "index": 103,
+            "prompt": "During a music festival, a stage banner proclaims 'Live Now'. A food truck window shows 'Tasty Bites'. A wristband is marked 'VIP Pass'.",
+            "carrier_list": [
+                "banner",
+                "window",
+                "wristband"
+            ],
+            "sentence_list": [
+                "a stage banner proclaims 'Live Now'.",
+                "A food truck window shows 'Tasty Bites'.",
+                "A wristband is marked 'VIP Pass'."
+            ]
+        },
+        {
+            "index": 104,
+            "prompt": "Inside a library, a bookshelf sign says 'New Arrivals'. A reading nook has 'Quiet Zone'. A computer station displays 'Free WiFi'.",
+            "carrier_list": [
+                "sign",
+                "nook",
+                "station"
+            ],
+            "sentence_list": [
+                "a bookshelf sign says 'New Arrivals'.",
+                "A reading nook has 'Quiet Zone'.",
+                "A computer station displays 'Free WiFi'."
+            ]
+        },
+        {
+            "index": 105,
+            "prompt": "At a sports arena, the scoreboard announces 'Team Victory'. A concession stand is labeled 'Snacks Here'. A parking sign reads 'Reserved 50'.",
+            "carrier_list": [
+                "scoreboard",
+                "stand",
+                "sign"
+            ],
+            "sentence_list": [
+                "the scoreboard announces 'Team Victory'.",
+                "A concession stand is labeled 'Snacks Here'.",
+                "A parking sign reads 'Reserved 50'."
+            ]
+        },
+        {
+            "index": 106,
+            "prompt": "On a movie set, a clapboard shows 'Scene 12'. A director’s chair has 'Director'. A poster in the background displays 'Now Casting'.",
+            "carrier_list": [
+                "clapboard",
+                "chair",
+                "poster"
+            ],
+            "sentence_list": [
+                "a clapboard shows 'Scene 12'.",
+                "A director’s chair has 'Director'.",
+                "A poster in the background displays 'Now Casting'."
+            ]
+        },
+        {
+            "index": 107,
+            "prompt": "In a shopping mall, a directory board lists 'Store Guide'. A restroom sign reads 'Ladies' and 'Gents'. An escalator button displays 'Up' and 'Down'.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "button"
+            ],
+            "sentence_list": [
+                "a directory board lists 'Store Guide'.",
+                "A restroom sign reads 'Ladies' and 'Gents'.",
+                "An escalator button displays 'Up' and 'Down'."
+            ]
+        },
+        {
+            "index": 108,
+            "prompt": "At a beach, a lifeguard tower is marked 'Safe Swim'. A sign on umbrellas says 'Shade Area'. A boardwalk banner displays 'Sunny Days'.",
+            "carrier_list": [
+                "tower",
+                "sign",
+                "banner"
+            ],
+            "sentence_list": [
+                "a lifeguard tower is marked 'Safe Swim'.",
+                "A sign on umbrellas says 'Shade Area'.",
+                "A boardwalk banner displays 'Sunny Days'."
+            ]
+        },
+        {
+            "index": 109,
+            "prompt": "Inside a gym, a locker has 'Member Only'. A treadmill displays 'Run Fast'. A water fountain is labeled 'Hydrate Here'.",
+            "carrier_list": [
+                "locker",
+                "treadmill",
+                "fountain"
+            ],
+            "sentence_list": [
+                "a locker has 'Member Only'.",
+                "A treadmill displays 'Run Fast'.",
+                "A water fountain is labeled 'Hydrate Here'."
+            ]
+        },
+        {
+            "index": 110,
+            "prompt": "On a highway, a billboard advertises 'Big Savings'. A highway sign shows 'Exit 32'. A rest area sign reads 'Rest Stop'.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "sign"
+            ],
+            "sentence_list": [
+                "a billboard advertises 'Big Savings'.",
+                "a highway sign shows 'Exit 32'.",
+                "a rest area sign reads 'Rest Stop'."
+            ]
+        },
+        {
+            "index": 111,
+            "prompt": "A city street with a billboard displaying 'New Sale', a store window with '50 percent OFF' on it, and a taxi with 'Go Green' written on its side.",
+            "carrier_list": [
+                "billboard",
+                "window",
+                "taxi"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'New Sale'.",
+                "a store window with '50 percent OFF' on it.",
+                "a taxi with 'Go Green' written on its side."
+            ]
+        },
+        {
+            "index": 112,
+            "prompt": "A movie scene set in a futuristic city where a neon sign says 'Welcome Home', a large screen showing 'Coming Soon', and a subway train labeled 'Next Stop'.",
+            "carrier_list": [
+                "sign",
+                "screen",
+                "train"
+            ],
+            "sentence_list": [
+                "a neon sign says 'Welcome Home'.",
+                "a large screen showing 'Coming Soon'.",
+                "a subway train labeled 'Next Stop'."
+            ]
+        },
+        {
+            "index": 113,
+            "prompt": "A bookstore with a poster on the wall reading 'Top Picks', a shelf of books with a sign 'Bestsellers', and a window display labeled 'New Arrivals'.",
+            "carrier_list": [
+                "poster",
+                "sign",
+                "display"
+            ],
+            "sentence_list": [
+                "a poster on the wall reading 'Top Picks'.",
+                "a shelf of books with a sign 'Bestsellers'.",
+                "a window display labeled 'New Arrivals'."
+            ]
+        },
+        {
+            "index": 114,
+            "prompt": "a restaurant menu board displays 'Try Now'., a window with 'Open Daily' written on it, and a napkin with 'Enjoy' printed.",
+            "carrier_list": [
+                "board",
+                "window",
+                "napkin"
+            ],
+            "sentence_list": [
+                "a restaurant menu board displays 'Try Now'.",
+                "a window with 'Open Daily' written on it.",
+                "a napkin with 'Enjoy' printed."
+            ]
+        },
+        {
+            "index": 115,
+            "prompt": "In a gym, a wall sign says 'Push Yourself', a poster reads 'Join Today', and a water bottle labeled 'Stay Hydrated'.",
+            "carrier_list": [
+                "sign",
+                "poster",
+                "bottle"
+            ],
+            "sentence_list": [
+                "a wall sign says 'Push Yourself'.",
+                "a poster reads 'Join Today'.",
+                "a water bottle labeled 'Stay Hydrated'."
+            ]
+        },
+        {
+            "index": 116,
+            "prompt": "At a coffee shop, a chalkboard displays 'Hot Brew', a counter menu says 'Order Now', and a cup with 'Fresh Coffee' on it.",
+            "carrier_list": [
+                "chalkboard",
+                "menu",
+                "cup"
+            ],
+            "sentence_list": [
+                "a chalkboard displays 'Hot Brew'.",
+                "a counter menu says 'Order Now'.",
+                "a cup with 'Fresh Coffee' on it."
+            ]
+        },
+        {
+            "index": 117,
+            "prompt": "A concert stage where a banner reads 'Live Music', a t-shirt on the singer says 'Rock On', and a backdrop sign says 'Now Playing'.",
+            "carrier_list": [
+                "banner",
+                "t-shirt",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner reads 'Live Music'.",
+                "a t-shirt on the singer says 'Rock On'.",
+                "a backdrop sign says 'Now Playing'."
+            ]
+        },
+        {
+            "index": 118,
+            "prompt": "In a tech store, a sign on the counter says 'Limited Edition', a display screen shows 'Best Deals', and a shelf with 'New Launch' labels.",
+            "carrier_list": [
+                "sign",
+                "screen",
+                "shelf"
+            ],
+            "sentence_list": [
+                "a sign on the counter says 'Limited Edition'.",
+                "a display screen shows 'Best Deals'.",
+                "a shelf with 'New Launch' labels."
+            ]
+        },
+        {
+            "index": 119,
+            "prompt": "a website homepage title reads 'Shop Now', a pop-up message says '50 percent Discount', and a footer shows 'Privacy Policy'.",
+            "carrier_list": [
+                "title",
+                "message",
+                "footer"
+            ],
+            "sentence_list": [
+                "a website homepage title reads 'Shop Now'.",
+                "a pop-up message says '50 percent Discount'.",
+                "a footer shows 'Privacy Policy'."
+            ]
+        },
+        {
+            "index": 120,
+            "prompt": "At a car dealership, a large banner reads 'Exclusive Deal', a car window sticker says 'Test Drive', and a flyer displays 'Limited Time'.",
+            "carrier_list": [
+                "banner",
+                "sticker",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a large banner reads 'Exclusive Deal'.",
+                "a car window sticker says 'Test Drive'.",
+                "a flyer displays 'Limited Time'."
+            ]
+        },
+        {
+            "index": 121,
+            "prompt": "A busy street corner with a billboard displaying 'Best Deals', a store window with 'New Arrivals', and a taxi’s door with the text 'Ride Now' on it.",
+            "carrier_list": [
+                "billboard",
+                "window",
+                "door"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Best Deals'.",
+                "a store window with 'New Arrivals'.",
+                "a taxi’s door with the text 'Ride Now' on it."
+            ]
+        },
+        {
+            "index": 122,
+            "prompt": "In a bookstore, a display table has a sign reading 'Bestseller List', the spine of a book shows 'Author of the Year', and a shelf has a label saying 'Fiction'.",
+            "carrier_list": [
+                "sign",
+                "spine",
+                "label"
+            ],
+            "sentence_list": [
+                "a sign reading 'Bestseller List'.",
+                "the spine of a book shows 'Author of the Year'.",
+                "a label saying 'Fiction'."
+            ]
+        },
+        {
+            "index": 123,
+            "prompt": "A coffee shop menu board lists 'Hot Drinks', the napkin dispenser has the words 'Take One', and a small sign by the counter reads 'Thank You'.",
+            "carrier_list": [
+                "board",
+                "dispenser",
+                "sign"
+            ],
+            "sentence_list": [
+                "a coffee shop menu board lists 'Hot Drinks'.",
+                "the napkin dispenser has the words 'Take One'.",
+                "a small sign by the counter reads 'Thank You'."
+            ]
+        },
+        {
+            "index": 124,
+            "prompt": "At an outdoor festival, a stage banner displays 'Live Music', a food truck has the text 'Open Now', and a poster on the fence reads 'Ticket Available'.",
+            "carrier_list": [
+                "banner",
+                "truck",
+                "poster"
+            ],
+            "sentence_list": [
+                "a stage banner displays 'Live Music'.",
+                "a food truck has the text 'Open Now'.",
+                "a poster on the fence reads 'Ticket Available'."
+            ]
+        },
+        {
+            "index": 125,
+            "prompt": "On a city bus, the ad on the side says 'Affordable Prices', the bus stop sign reads 'Next Bus 5 min', and a digital display inside shows 'Route 32'.",
+            "carrier_list": [
+                "ad",
+                "sign",
+                "display"
+            ],
+            "sentence_list": [
+                "the ad on the side says 'Affordable Prices'.",
+                "the bus stop sign reads 'Next Bus 5 min'.",
+                "a digital display inside shows 'Route 32'."
+            ]
+        },
+        {
+            "index": 126,
+            "prompt": "In a gym, a motivational poster shows 'Stay Strong', a weight rack has a label '5 kg', and the wall clock displays '7:00 AM'.",
+            "carrier_list": [
+                "poster",
+                "label",
+                "clock"
+            ],
+            "sentence_list": [
+                "a motivational poster shows 'Stay Strong'.",
+                "a weight rack has a label '5 kg'.",
+                "the wall clock displays '7:00 AM'."
+            ]
+        },
+        {
+            "index": 127,
+            "prompt": "On a movie theater banner, the headline reads 'Now Showing', the ticket booth sign says 'Buy Tickets', and a popcorn machine has the label 'Fresh Popcorn'.",
+            "carrier_list": [
+                "headline",
+                "sign",
+                "label"
+            ],
+            "sentence_list": [
+                "the headline reads 'Now Showing'.",
+                "the ticket booth sign says 'Buy Tickets'.",
+                "a popcorn machine has the label 'Fresh Popcorn'."
+            ]
+        },
+        {
+            "index": 128,
+            "prompt": "A street vendor cart has a sign saying 'Buy 1 Get 1', a sandwich label advertises 'Fresh Daily', and a small chalkboard reads 'Today’s Special'.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "chalkboard"
+            ],
+            "sentence_list": [
+                "a sign saying 'Buy 1 Get 1'.",
+                "a sandwich label advertises 'Fresh Daily'.",
+                "a small chalkboard reads 'Today’s Special'."
+            ]
+        },
+        {
+            "index": 129,
+            "prompt": "In an art gallery, a large canvas has the title 'Modern Art', a price tag on a sculpture reads '200 USD', and a sign at the entrance shows 'Open Today'.",
+            "carrier_list": [
+                "title",
+                "tag",
+                "sign"
+            ],
+            "sentence_list": [
+                "a large canvas has the title 'Modern Art'.",
+                "a price tag on a sculpture reads '200 USD'.",
+                "a sign at the entrance shows 'Open Today'."
+            ]
+        },
+        {
+            "index": 130,
+            "prompt": "On a smartphone app screen, the header says 'Your Profile', a notification says 'Message Received', and a button reads 'Send Now'.",
+            "carrier_list": [
+                "header",
+                "notification",
+                "button"
+            ],
+            "sentence_list": [
+                "the header says 'Your Profile'.",
+                "a notification says 'Message Received'.",
+                "a button reads 'Send Now'."
+            ]
+        },
+        {
+            "index": 131,
+            "prompt": "A city street corner with a billboard reading 'Best Deals', a taxi with the number '42' on the side, and a shop window displaying 'Open 24/7'.",
+            "carrier_list": [
+                "billboard",
+                "taxi",
+                "window"
+            ],
+            "sentence_list": [
+                "a billboard reading 'Best Deals'.",
+                "a taxi with the number '42' on the side.",
+                "a shop window displaying 'Open 24/7'."
+            ]
+        },
+        {
+            "index": 132,
+            "prompt": "A book cover with the title 'Mystery Unveiled', a tagline reading 'Coming Soon', and a barcode at the bottom labeled '978-12345'.",
+            "carrier_list": [
+                "title",
+                "tagline",
+                "barcode"
+            ],
+            "sentence_list": [
+                "A book cover with the title 'Mystery Unveiled'.",
+                "a tagline reading 'Coming Soon'.",
+                "a barcode at the bottom labeled '978-12345'."
+            ]
+        },
+        {
+            "index": 133,
+            "prompt": "At a restaurant, a menu board says 'Specials Today', a drink bottle displays '500ml', and a table tent reads 'Order Now'.",
+            "carrier_list": [
+                "board",
+                "bottle",
+                "tent"
+            ],
+            "sentence_list": [
+                "a menu board says 'Specials Today'.",
+                "a drink bottle displays '500ml'.",
+                "a table tent reads 'Order Now'."
+            ]
+        },
+        {
+            "index": 134,
+            "prompt": "A movie theater banner with the text 'Now Showing', a ticket counter displaying '2:00 PM', and a concession stand offering 'Large Popcorn'.",
+            "carrier_list": [
+                "banner",
+                "counter",
+                "stand"
+            ],
+            "sentence_list": [
+                "a movie theater banner with the text 'Now Showing'.",
+                "a ticket counter displaying '2:00 PM'.",
+                "a concession stand offering 'Large Popcorn'."
+            ]
+        },
+        {
+            "index": 135,
+            "prompt": "In a gym, a poster on the wall reads 'Get Strong', a calendar on the desk shows 'Monday', and a water bottle reads '750ml'.",
+            "carrier_list": [
+                "poster",
+                "calendar",
+                "bottle"
+            ],
+            "sentence_list": [
+                "a poster on the wall reads 'Get Strong'.",
+                "a calendar on the desk shows 'Monday'.",
+                "a water bottle reads '750ml'."
+            ]
+        },
+        {
+            "index": 136,
+            "prompt": "A shopping mall directory with 'Level 2' at the top, a store window with 'Sale 50 percent' on it, and an escalator sign saying 'Up Only'.",
+            "carrier_list": [
+                "directory",
+                "window",
+                "sign"
+            ],
+            "sentence_list": [
+                "a shopping mall directory with 'Level 2' at the top.",
+                "a store window with 'Sale 50 percent' on it.",
+                "an escalator sign saying 'Up Only'."
+            ]
+        },
+        {
+            "index": 137,
+            "prompt": "a street sign with 'Main Street' is displayed, a billboard advertises '40 percent Off', and a bus stop shows 'Next Bus: 10 mins'.",
+            "carrier_list": [
+                "sign",
+                "billboard",
+                "stop"
+            ],
+            "sentence_list": [
+                "a street sign with 'Main Street' is displayed.",
+                "a billboard advertises '40 percent Off'.",
+                "a bus stop shows 'Next Bus: 10 mins'."
+            ]
+        },
+        {
+            "index": 138,
+            "prompt": "An online store homepage with the banner 'Limited Offer', a product image with 'Discounted Price', and the checkout button reads 'Buy Now'.",
+            "carrier_list": [
+                "banner",
+                "image",
+                "button"
+            ],
+            "sentence_list": [
+                "the banner 'Limited Offer'.",
+                "a product image with 'Discounted Price'.",
+                "the checkout button reads 'Buy Now'."
+            ]
+        },
+        {
+            "index": 139,
+            "prompt": "A travel agency brochure with 'Explore More' on the front, a flight schedule showing '10:00 AM', and a price tag with '499 USD'.",
+            "carrier_list": [
+                "brochure",
+                "schedule",
+                "tag"
+            ],
+            "sentence_list": [
+                "a travel agency brochure with 'Explore More' on the front.",
+                "a flight schedule showing '10:00 AM'.",
+                "a price tag with '499 USD'."
+            ]
+        },
+        {
+            "index": 140,
+            "prompt": "At a music concert, a stage backdrop reads 'Live Tonight', a wristband says 'VIP Access', and a ticket stub shows 'Section A'.",
+            "carrier_list": [
+                "backdrop",
+                "wristband",
+                "stub"
+            ],
+            "sentence_list": [
+                "a stage backdrop reads 'Live Tonight'.",
+                "a wristband says 'VIP Access'.",
+                "a ticket stub shows 'Section A'."
+            ]
+        },
+        {
+            "index": 141,
+            "prompt": "A bustling street corner with a café window displaying 'Fresh Brew', a bus stop sign showing 'Route 5', and a billboard with 'Big Sale' on it.",
+            "carrier_list": [
+                "window",
+                "sign",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a café window displaying 'Fresh Brew'.",
+                "a bus stop sign showing 'Route 5'.",
+                "a billboard with 'Big Sale' on it."
+            ]
+        },
+        {
+            "index": 142,
+            "prompt": "In a tech store, a screen displays 'New Arrivals', a price tag shows 'Only 99 dollars', and a sign reads 'Best Deal'.",
+            "carrier_list": [
+                "screen",
+                "tag",
+                "sign"
+            ],
+            "sentence_list": [
+                "a screen displays 'New Arrivals'.",
+                "a price tag shows 'Only 99 dollars'.",
+                "a sign reads 'Best Deal'."
+            ]
+        },
+        {
+            "index": 143,
+            "prompt": "A food truck offers 'Hot Tacos' on its side, a sign by the window says 'Order Now', and a menu board reads 'Combo Deal'.",
+            "carrier_list": [
+                "truck",
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a food truck offers 'Hot Tacos' on its side.",
+                "a sign by the window says 'Order Now'.",
+                "a menu board reads 'Combo Deal'."
+            ]
+        },
+        {
+            "index": 144,
+            "prompt": "At a library entrance, a banner shows 'New Releases', a shelf label says 'Fiction', and a sign inside reads 'Free Wi-Fi'.",
+            "carrier_list": [
+                "banner",
+                "label",
+                "sign"
+            ],
+            "sentence_list": [
+                "a banner shows 'New Releases'.",
+                "a shelf label says 'Fiction'.",
+                "a sign inside reads 'Free Wi-Fi'."
+            ]
+        },
+        {
+            "index": 145,
+            "prompt": "A fitness ad shows a model wearing a shirt with 'Train Hard', a poster on the wall says 'Get Fit', and a gym entrance reads 'Join Now'.",
+            "carrier_list": [
+                "shirt",
+                "poster",
+                "entrance"
+            ],
+            "sentence_list": [
+                "a shirt with 'Train Hard'.",
+                "a poster on the wall says 'Get Fit'.",
+                "a gym entrance reads 'Join Now'."
+            ]
+        },
+        {
+            "index": 146,
+            "prompt": "In a bookstore, a table sign says 'Best Sellers', a shelf label reads 'Romance', and a display reads '50 percent Off'.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "display"
+            ],
+            "sentence_list": [
+                "a table sign says 'Best Sellers'.",
+                "a shelf label reads 'Romance'.",
+                "a display reads '50 percent Off'."
+            ]
+        },
+        {
+            "index": 147,
+            "prompt": "A museum poster showcases 'Ancient Art', a sign reads 'Opening Soon', and a digital screen shows 'Exhibit Today'.",
+            "carrier_list": [
+                "poster",
+                "sign",
+                "screen"
+            ],
+            "sentence_list": [
+                "a museum poster showcases 'Ancient Art'.",
+                "a sign reads 'Opening Soon'.",
+                "a digital screen shows 'Exhibit Today'."
+            ]
+        },
+        {
+            "index": 148,
+            "prompt": "On a highway billboard, the text reads 'Save Time', a car license plate shows 'SUV 2025', and a roadside sign says 'Gas Station'.",
+            "carrier_list": [
+                "billboard",
+                "plate",
+                "sign"
+            ],
+            "sentence_list": [
+                "a highway billboard reads 'Save Time'.",
+                "a car license plate shows 'SUV 2025'.",
+                "a roadside sign says 'Gas Station'."
+            ]
+        },
+        {
+            "index": 149,
+            "prompt": "A park entrance features a sign with 'Family Fun', a bench label says 'Relax Here', and a map reads 'Explore More'.",
+            "carrier_list": [
+                "sign",
+                "label",
+                "map"
+            ],
+            "sentence_list": [
+                "a sign with 'Family Fun'.",
+                "a bench label says 'Relax Here'.",
+                "a map reads 'Explore More'."
+            ]
+        },
+        {
+            "index": 150,
+            "prompt": "A busy street corner with a billboard displaying 'Big Sale', a storefront window with the sign 'Open 24/7', and a delivery van with 'Free Shipping' written on its side.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "van"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Big Sale'.",
+                "a storefront window with the sign 'Open 24/7'.",
+                "a delivery van with 'Free Shipping' written on its side."
+            ]
+        },
+        {
+            "index": 151,
+            "prompt": "In a city park, a kiosk advertises 'Fresh Juice', a park bench’s backrest has 'Take a Seat' on it, and a tree has a tag that reads 'Nature Lover'.",
+            "carrier_list": [
+                "kiosk",
+                "bench",
+                "tag"
+            ],
+            "sentence_list": [
+                "a kiosk advertises 'Fresh Juice'.",
+                "a park bench’s backrest has 'Take a Seat' on it.",
+                "a tree has a tag that reads 'Nature Lover'."
+            ]
+        },
+        {
+            "index": 152,
+            "prompt": "At a bookstore, a shelf displays a book’s cover with 'Best Seller' on it, a promotional sign reads '50 percent Off', and the checkout counter has a sign saying 'Thank You'.",
+            "carrier_list": [
+                "cover",
+                "sign",
+                "sign"
+            ],
+            "sentence_list": [
+                "a shelf displays a book’s cover with 'Best Seller' on it.",
+                "a promotional sign reads '50 percent Off'.",
+                "the checkout counter has a sign saying 'Thank You'."
+            ]
+        },
+        {
+            "index": 153,
+            "prompt": "On a coffee shop window, a sign reads 'Coffee Here', a menu board displays 'Espresso' in bold letters, and a table tent shows 'Free Wi-Fi'.",
+            "carrier_list": [
+                "sign",
+                "board",
+                "tent"
+            ],
+            "sentence_list": [
+                "a sign reads 'Coffee Here'.",
+                "a menu board displays 'Espresso' in bold letters.",
+                "a table tent shows 'Free Wi-Fi'."
+            ]
+        },
+        {
+            "index": 154,
+            "prompt": "A movie theater lobby features a poster with 'Now Showing', a ticket machine displays 'Select Seat', and a popcorn machine says 'Hot And Fresh'.",
+            "carrier_list": [
+                "poster",
+                "machine",
+                "machine"
+            ],
+            "sentence_list": [
+                "a poster with 'Now Showing'.",
+                "a ticket machine displays 'Select Seat'.",
+                "a popcorn machine says 'Hot And Fresh'."
+            ]
+        },
+        {
+            "index": 155,
+            "prompt": "Inside a gym, a wall banner reads 'Get Fit', a treadmill display shows 'Speed 6.0', and a water bottle holder says 'Stay Hydrated'.",
+            "carrier_list": [
+                "banner",
+                "display",
+                "holder"
+            ],
+            "sentence_list": [
+                "a wall banner reads 'Get Fit'.",
+                "a treadmill display shows 'Speed 6.0'.",
+                "a water bottle holder says 'Stay Hydrated'."
+            ]
+        },
+        {
+            "index": 156,
+            "prompt": "On a clothing store mannequin, the tag reads 'New Arrival', a wall poster advertises '50 percent Off', and the fitting room door says 'Try Me'.",
+            "carrier_list": [
+                "tag",
+                "poster",
+                "door"
+            ],
+            "sentence_list": [
+                "the tag reads 'New Arrival'.",
+                "a wall poster advertises '50 percent Off'.",
+                "the fitting room door says 'Try Me'."
+            ]
+        },
+        {
+            "index": 157,
+            "prompt": "A restaurant menu shows 'Chef Special', a table sign reads 'Reserved', and a takeout box has 'Thank You' printed on it.",
+            "carrier_list": [
+                "menu",
+                "sign",
+                "box"
+            ],
+            "sentence_list": [
+                "a restaurant menu shows 'Chef Special'.",
+                "a table sign reads 'Reserved'.",
+                "a takeout box has 'Thank You' printed on it."
+            ]
+        },
+        {
+            "index": 158,
+            "prompt": "At a bakery, a window sign reads 'Freshly Baked', a bread display has 'Hot Loafs' written on it, and a cake stand says 'Order Here'.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "stand"
+            ],
+            "sentence_list": [
+                "a window sign reads 'Freshly Baked'.",
+                "a bread display has 'Hot Loafs' written on it.",
+                "a cake stand says 'Order Here'."
+            ]
+        },
+        {
+            "index": 159,
+            "prompt": "In an office hallway, a notice board reads 'Meeting Today', a door sign says 'Conference Room', and a floor sticker shows 'Keep Right'.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "sticker"
+            ],
+            "sentence_list": [
+                "a notice board reads 'Meeting Today'.",
+                "a door sign says 'Conference Room'.",
+                "a floor sticker shows 'Keep Right'."
+            ]
+        },
+        {
+            "index": 160,
+            "prompt": "A bustling city street where a digital billboard shows 'Hot Deals', a taxi door reads 'Call Now', and a storefront has a sign that says 'Open 24/7'.",
+            "carrier_list": [
+                "billboard",
+                "door",
+                "sign"
+            ],
+            "sentence_list": [
+                "a digital billboard shows 'Hot Deals'.",
+                "a taxi door reads 'Call Now'.",
+                "a sign that says 'Open 24/7'."
+            ]
+        },
+        {
+            "index": 161,
+            "prompt": "In a bookstore, a shelf label displays 'Best Sellers', a book cover shows 'Chapter One', and a checkout counter has 'Total Price'.",
+            "carrier_list": [
+                "label",
+                "cover",
+                "counter"
+            ],
+            "sentence_list": [
+                "a shelf label displays 'Best Sellers'.",
+                "a book cover shows 'Chapter One'.",
+                "a checkout counter has 'Total Price'."
+            ]
+        },
+        {
+            "index": 162,
+            "prompt": "A restaurant menu board displays 'Specials Today', a waiter’s apron reads 'Order Here', and the wall behind the counter has 'Now Serving'.",
+            "carrier_list": [
+                "board",
+                "apron",
+                "wall"
+            ],
+            "sentence_list": [
+                "a restaurant menu board displays 'Specials Today'.",
+                "a waiter’s apron reads 'Order Here'.",
+                "the wall behind the counter has 'Now Serving'."
+            ]
+        },
+        {
+            "index": 163,
+            "prompt": "a movie theater poster has the title 'Coming Soon' highlighted, a ticket booth sign reads 'Buy Tickets', and a digital screen shows 'Showtimes'.",
+            "carrier_list": [
+                "title",
+                "sign",
+                "screen"
+            ],
+            "sentence_list": [
+                "a movie theater poster has the title 'Coming Soon' highlighted.",
+                "a ticket booth sign reads 'Buy Tickets'.",
+                "a digital screen shows 'Showtimes'."
+            ]
+        },
+        {
+            "index": 164,
+            "prompt": "A fitness app interface with the text 'Workout Plan' at the top, a progress bar reading '50 percent Completed', and a button saying 'Start Now'.",
+            "carrier_list": [
+                "interface",
+                "bar",
+                "button"
+            ],
+            "sentence_list": [
+                "a fitness app interface with the text 'Workout Plan' at the top.",
+                "a progress bar reading '50 percent Completed'.",
+                "a button saying 'Start Now'."
+            ]
+        },
+        {
+            "index": 165,
+            "prompt": "At a coffee shop, the chalkboard menu reads 'Fresh Brews', a cup shows 'Take Away', and a sign by the door says 'Open Late'.",
+            "carrier_list": [
+                "menu",
+                "cup",
+                "sign"
+            ],
+            "sentence_list": [
+                "the chalkboard menu reads 'Fresh Brews'.",
+                "a cup shows 'Take Away'.",
+                "a sign by the door says 'Open Late'."
+            ]
+        },
+        {
+            "index": 166,
+            "prompt": "On a street advertisement, a banner displays 'Big Sale', a bus stop has 'Next Bus', and a digital screen shows 'Weather Report'.",
+            "carrier_list": [
+                "banner",
+                "stop",
+                "screen"
+            ],
+            "sentence_list": [
+                "a banner displays 'Big Sale'.",
+                "a bus stop has 'Next Bus'.",
+                "a digital screen shows 'Weather Report'."
+            ]
+        },
+        {
+            "index": 167,
+            "prompt": "A tech conference banner says 'Tech Expo 2025', a speaker’s podium reads 'Main Speaker', and a registration desk has a sign that says 'Sign Up'.",
+            "carrier_list": [
+                "banner",
+                "podium",
+                "sign"
+            ],
+            "sentence_list": [
+                "a tech conference banner says 'Tech Expo 2025'.",
+                "a speaker’s podium reads 'Main Speaker'.",
+                "a registration desk has a sign that says 'Sign Up'."
+            ]
+        },
+        {
+            "index": 168,
+            "prompt": "A travel agency poster shows 'Explore More', a brochure reads 'Destination Guide', and a window decal says 'Book Today'.",
+            "carrier_list": [
+                "poster",
+                "brochure",
+                "decal"
+            ],
+            "sentence_list": [
+                "a travel agency poster shows 'Explore More'.",
+                "a brochure reads 'Destination Guide'.",
+                "a window decal says 'Book Today'."
+            ]
+        },
+        {
+            "index": 169,
+            "prompt": "A concert flyer with the text 'Live Music' at the top, a ticket shows 'VIP Access', and a stage backdrop reads 'Welcome Fans'.",
+            "carrier_list": [
+                "flyer",
+                "ticket",
+                "backdrop"
+            ],
+            "sentence_list": [
+                "a concert flyer with the text 'Live Music' at the top.",
+                "a ticket shows 'VIP Access'.",
+                "a stage backdrop reads 'Welcome Fans'."
+            ]
+        },
+        {
+            "index": 170,
+            "prompt": "A busy city street with a billboard showing 'Big Sale', a bus stop sign displaying 'Route 5', and a kiosk with 'Hot Coffee' written on it.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a billboard showing 'Big Sale'.",
+                "a bus stop sign displaying 'Route 5'.",
+                "a kiosk with 'Hot Coffee' written on it."
+            ]
+        },
+        {
+            "index": 171,
+            "prompt": "In a gym, a poster on the wall reads 'Lift More', a water bottle on the floor says 'Stay Hydrated', and a workout timer on the machine shows '10 minutes'.",
+            "carrier_list": [
+                "poster",
+                "bottle",
+                "timer"
+            ],
+            "sentence_list": [
+                "a poster on the wall reads 'Lift More'.",
+                "a water bottle on the floor says 'Stay Hydrated'.",
+                "a workout timer on the machine shows '10 minutes'."
+            ]
+        },
+        {
+            "index": 172,
+            "prompt": "On a café counter, a menu board displays 'Specials Today', a coffee cup has 'Enjoy Now' on it, and a tip jar says 'Thanks!'.",
+            "carrier_list": [
+                "board",
+                "cup",
+                "jar"
+            ],
+            "sentence_list": [
+                "a menu board displays 'Specials Today'.",
+                "a coffee cup has 'Enjoy Now' on it.",
+                "a tip jar says 'Thanks!'."
+            ]
+        },
+        {
+            "index": 173,
+            "prompt": "A movie theater lobby with a banner that reads 'Now Showing', a popcorn machine labeled 'Fresh Popcorn', and a ticket booth with 'Buy Tickets' on it.",
+            "carrier_list": [
+                "banner",
+                "machine",
+                "booth"
+            ],
+            "sentence_list": [
+                "a banner that reads 'Now Showing'.",
+                "a popcorn machine labeled 'Fresh Popcorn'.",
+                "a ticket booth with 'Buy Tickets' on it."
+            ]
+        },
+        {
+            "index": 174,
+            "prompt": "a book cover with the title 'Great Adventure' is featured, a tagline below reads 'Uncover Secrets', and the author name says 'John Smith'.",
+            "carrier_list": [
+                "title",
+                "tagline",
+                "name"
+            ],
+            "sentence_list": [
+                "a book cover with the title 'Great Adventure' is featured.",
+                "a tagline below reads 'Uncover Secrets'.",
+                "the author name says 'John Smith'."
+            ]
+        },
+        {
+            "index": 175,
+            "prompt": "At a street food stall, a signboard reads 'Tasty Treats', the food cart has 'Hot And Fresh' written on it, and a menu board displays '5 USD Deal'.",
+            "carrier_list": [
+                "signboard",
+                "cart",
+                "board"
+            ],
+            "sentence_list": [
+                "a signboard reads 'Tasty Treats'.",
+                "the food cart has 'Hot And Fresh' written on it.",
+                "a menu board displays '5 USD Deal'."
+            ]
+        },
+        {
+            "index": 176,
+            "prompt": "A tech store with a sign that says 'New Arrival', a laptop on display shows 'Buy Now', and a promotional flyer reads '50 percent Off'.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a sign that says 'New Arrival'.",
+                "a laptop on display shows 'Buy Now'.",
+                "a promotional flyer reads '50 percent Off'."
+            ]
+        },
+        {
+            "index": 177,
+            "prompt": "In a library, a poster reads 'Read More', a bookshelf has a label saying 'Best Sellers', and a desk sign says 'Quiet Zone'.",
+            "carrier_list": [
+                "poster",
+                "label",
+                "sign"
+            ],
+            "sentence_list": [
+                "a poster reads 'Read More'.",
+                "a bookshelf has a label saying 'Best Sellers'.",
+                "a desk sign says 'Quiet Zone'."
+            ]
+        },
+        {
+            "index": 178,
+            "prompt": "At a music festival, a banner reads 'Live Music', a booth sign says 'Free Water', and a stage backdrop shows 'Headliners Tonight'.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "backdrop"
+            ],
+            "sentence_list": [
+                "a banner reads 'Live Music'.",
+                "a booth sign says 'Free Water'.",
+                "a stage backdrop shows 'Headliners Tonight'."
+            ]
+        },
+        {
+            "index": 179,
+            "prompt": "In a car showroom, a display board says 'Limited Offer', a price tag on a car reads '20,000 USD', and a sign shows 'Test Drive'.",
+            "carrier_list": [
+                "board",
+                "tag",
+                "sign"
+            ],
+            "sentence_list": [
+                "a display board says 'Limited Offer'.",
+                "a price tag on a car reads '20,000 USD'.",
+                "a sign shows 'Test Drive'."
+            ]
+        },
+        {
+            "index": 180,
+            "prompt": "A street corner with a signboard reading 'Open 24/7', a food truck with 'Hot Coffee' displayed on the side, and a billboard saying 'Taste the Best'.",
+            "carrier_list": [
+                "signboard",
+                "truck",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a signboard reading 'Open 24/7'.",
+                "a food truck with 'Hot Coffee' displayed on the side.",
+                "a billboard saying 'Taste the Best'."
+            ]
+        },
+        {
+            "index": 181,
+            "prompt": "In a bookstore, a shelf has a book’s cover with 'Top Seller' on it, a poster says 'New Arrival', and a sign on the door reads 'Closed Sundays'.",
+            "carrier_list": [
+                "book",
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a book’s cover with 'Top Seller' on it.",
+                "a poster says 'New Arrival'.",
+                "a sign on the door reads 'Closed Sundays'."
+            ]
+        },
+        {
+            "index": 182,
+            "prompt": "At a concert, the stage banner says 'Live Music', a speaker system displays 'Volume 10', and the tickets say 'General Admission'.",
+            "carrier_list": [
+                "banner",
+                "system",
+                "tickets"
+            ],
+            "sentence_list": [
+                "the stage banner says 'Live Music'.",
+                "a speaker system displays 'Volume 10'.",
+                "the tickets say 'General Admission'."
+            ]
+        },
+        {
+            "index": 183,
+            "prompt": "A cafe window displays 'Daily Specials', the menu board inside says 'Hot Soup', and a coffee cup has 'Espresso' written on it.",
+            "carrier_list": [
+                "window",
+                "board",
+                "cup"
+            ],
+            "sentence_list": [
+                "a cafe window displays 'Daily Specials'.",
+                "the menu board inside says 'Hot Soup'.",
+                "a coffee cup has 'Espresso' written on it."
+            ]
+        },
+        {
+            "index": 184,
+            "prompt": "A movie theater banner reads 'Now Showing', a popcorn stand says 'Large Size', and a ticket booth reads 'Sold Out'.",
+            "carrier_list": [
+                "banner",
+                "stand",
+                "booth"
+            ],
+            "sentence_list": [
+                "A movie theater banner reads 'Now Showing'.",
+                "a popcorn stand says 'Large Size'.",
+                "a ticket booth reads 'Sold Out'."
+            ]
+        },
+        {
+            "index": 185,
+            "prompt": "In a shopping mall, a store sign says '50 percent Off', a product display shows 'Limited Edition', and a sale banner says 'Hurry Up'.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "banner"
+            ],
+            "sentence_list": [
+                "a store sign says '50 percent Off'.",
+                "a product display shows 'Limited Edition'.",
+                "a sale banner says 'Hurry Up'."
+            ]
+        },
+        {
+            "index": 186,
+            "prompt": "On a product packaging, the box says 'New Formula', a label reads 'Best Before 2025', and a warning sign says 'Keep Cool'.",
+            "carrier_list": [
+                "box",
+                "label",
+                "sign"
+            ],
+            "sentence_list": [
+                "the box says 'New Formula'.",
+                "a label reads 'Best Before 2025'.",
+                "a warning sign says 'Keep Cool'."
+            ]
+        },
+        {
+            "index": 187,
+            "prompt": "In an office, a computer screen displays 'Project Update', a sticky note says 'Deadline 3 PM', and a poster on the wall says 'Teamwork Wins'.",
+            "carrier_list": [
+                "screen",
+                "note",
+                "poster"
+            ],
+            "sentence_list": [
+                "a computer screen displays 'Project Update'.",
+                "a sticky note says 'Deadline 3 PM'.",
+                "a poster on the wall says 'Teamwork Wins'."
+            ]
+        },
+        {
+            "index": 188,
+            "prompt": "On a website landing page, the header says 'Sign Up Now', a pop-up button shows 'Learn More', and the footer contains 'Privacy Policy'.",
+            "carrier_list": [
+                "header",
+                "button",
+                "footer"
+            ],
+            "sentence_list": [
+                "the header says 'Sign Up Now'.",
+                "a pop-up button shows 'Learn More'.",
+                "the footer contains 'Privacy Policy'."
+            ]
+        },
+        {
+            "index": 189,
+            "prompt": "A city billboard advertises 'Save Energy', a bus stop sign shows 'Route 22', and a parked car’s window has 'For Sale' on it.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "window"
+            ],
+            "sentence_list": [
+                "a city billboard advertises 'Save Energy'.",
+                "a bus stop sign shows 'Route 22'.",
+                "a parked car’s window has 'For Sale' on it."
+            ]
+        },
+        {
+            "index": 190,
+            "prompt": "A busy street corner with a billboard displaying 'Best Deals', a bus stop sign reading 'Route 5', and a shop window with a sticker saying '50 percent Off'.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "sticker"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Best Deals'.",
+                "a bus stop sign reading 'Route 5'.",
+                "a shop window with a sticker saying '50 percent Off'."
+            ]
+        },
+        {
+            "index": 191,
+            "prompt": "A bookstore display with a sign saying 'New Arrivals', a table of books with labels 'Bestseller' on them, and a digital screen showing '20 percent Off'.",
+            "carrier_list": [
+                "sign",
+                "labels",
+                "screen"
+            ],
+            "sentence_list": [
+                "a sign saying 'New Arrivals'.",
+                "a table of books with labels 'Bestseller' on them.",
+                "a digital screen showing '20 percent Off'."
+            ]
+        },
+        {
+            "index": 192,
+            "prompt": "In a cafe, a chalkboard menu reads 'Daily Special', a table has a cup with 'Good Vibes' written on it, and a poster says 'Buy One, Get One'.",
+            "carrier_list": [
+                "menu",
+                "cup",
+                "poster"
+            ],
+            "sentence_list": [
+                "a chalkboard menu reads 'Daily Special'.",
+                "a cup with 'Good Vibes' written on it.",
+                "a poster says 'Buy One, Get One'."
+            ]
+        },
+        {
+            "index": 193,
+            "prompt": "A sports stadium entrance features a large banner saying 'Game Day', a ticket booth’s window has 'Sold Out' on it, and a scoreboard shows '2nd Half'.",
+            "carrier_list": [
+                "banner",
+                "window",
+                "scoreboard"
+            ],
+            "sentence_list": [
+                "a large banner saying 'Game Day'.",
+                "a ticket booth’s window has 'Sold Out' on it.",
+                "a scoreboard shows '2nd Half'."
+            ]
+        },
+        {
+            "index": 194,
+            "prompt": "A busy subway station with a sign saying 'Exit Here', an advertisement on the wall reads 'Shop Now', and a platform display reads 'Train Delayed'.",
+            "carrier_list": [
+                "sign",
+                "advertisement",
+                "display"
+            ],
+            "sentence_list": [
+                "a sign saying 'Exit Here'.",
+                "an advertisement on the wall reads 'Shop Now'.",
+                "a platform display reads 'Train Delayed'."
+            ]
+        },
+        {
+            "index": 195,
+            "prompt": "A movie theater banner shows 'Now Showing', a popcorn machine says 'Fresh Popcorn', and the lobby screen displays 'Movie Times'.",
+            "carrier_list": [
+                "banner",
+                "machine",
+                "screen"
+            ],
+            "sentence_list": [
+                "a movie theater banner shows 'Now Showing'.",
+                "a popcorn machine says 'Fresh Popcorn'.",
+                "the lobby screen displays 'Movie Times'."
+            ]
+        },
+        {
+            "index": 196,
+            "prompt": "A tech website homepage with the title 'New Gadgets', a button saying 'Shop Now', and a sidebar displaying 'Limited Stock'.",
+            "carrier_list": [
+                "title",
+                "button",
+                "sidebar"
+            ],
+            "sentence_list": [
+                "A tech website homepage with the title 'New Gadgets'.",
+                "a button saying 'Shop Now'.",
+                "a sidebar displaying 'Limited Stock'."
+            ]
+        },
+        {
+            "index": 197,
+            "prompt": "A concert venue with a neon sign reading 'Live Music', a flyer shows 'Tickets Available', and the entrance door displays 'No Entry'.",
+            "carrier_list": [
+                "sign",
+                "flyer",
+                "door"
+            ],
+            "sentence_list": [
+                "a neon sign reading 'Live Music'.",
+                "a flyer shows 'Tickets Available'.",
+                "the entrance door displays 'No Entry'."
+            ]
+        },
+        {
+            "index": 198,
+            "prompt": "A shopping mall with a digital sign saying 'Grand Opening', an elevator button reads 'Level 3', and a kiosk displays 'Special Offer'.",
+            "carrier_list": [
+                "sign",
+                "button",
+                "kiosk"
+            ],
+            "sentence_list": [
+                "a digital sign saying 'Grand Opening'.",
+                "an elevator button reads 'Level 3'.",
+                "a kiosk displays 'Special Offer'."
+            ]
+        },
+        {
+            "index": 199,
+            "prompt": "A city street with a street light labeled 'Main Street', a taxi window shows 'Next Stop', and a bench has 'Relax Here' written on it.",
+            "carrier_list": [
+                "light",
+                "window",
+                "bench"
+            ],
+            "sentence_list": [
+                "a street light labeled 'Main Street'.",
+                "a taxi window shows 'Next Stop'.",
+                "a bench has 'Relax Here' written on it."
+            ]
+        },
+        {
+            "index": 200,
+            "prompt": "A bustling city street with a billboard displaying 'Sale Ends Soon', a storefront with a sign reading 'Open 24/7', and a passing bus with 'Express Route' on the side.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "bus"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Sale Ends Soon'.",
+                "a storefront with a sign reading 'Open 24/7'.",
+                "a passing bus with 'Express Route' on the side."
+            ]
+        },
+        {
+            "index": 201,
+            "prompt": "In a movie theater lobby, a poster shows 'Now Showing', a popcorn machine with 'Freshly Popped' on it, and a clock reads '10:00 PM'.",
+            "carrier_list": [
+                "poster",
+                "machine",
+                "clock"
+            ],
+            "sentence_list": [
+                "a poster shows 'Now Showing'.",
+                "a popcorn machine with 'Freshly Popped' on it.",
+                "a clock reads '10:00 PM'."
+            ]
+        },
+        {
+            "index": 202,
+            "prompt": "At a coffee shop, the menu board says 'Daily Special', a cup of coffee labeled 'Premium Roast', and a tip jar with 'Thanks for Tips' written on it.",
+            "carrier_list": [
+                "board",
+                "cup",
+                "jar"
+            ],
+            "sentence_list": [
+                "the menu board says 'Daily Special'.",
+                "a cup of coffee labeled 'Premium Roast'.",
+                "a tip jar with 'Thanks for Tips' written on it."
+            ]
+        },
+        {
+            "index": 203,
+            "prompt": "In a sports arena, a large banner says 'Championship Game', a scoreboard shows '3:45', and a concession stand displays 'Buy 1, Get 1'.",
+            "carrier_list": [
+                "banner",
+                "scoreboard",
+                "stand"
+            ],
+            "sentence_list": [
+                "a large banner says 'Championship Game'.",
+                "a scoreboard shows '3:45'.",
+                "a concession stand displays 'Buy 1, Get 1'."
+            ]
+        },
+        {
+            "index": 204,
+            "prompt": "On a bookstore shelf, a book cover shows 'Bestseller List', a price tag reads 'Only 9.99 USD', and a small poster says 'Next Release'.",
+            "carrier_list": [
+                "cover",
+                "tag",
+                "poster"
+            ],
+            "sentence_list": [
+                "a book cover shows 'Bestseller List'.",
+                "a price tag reads 'Only 9.99 USD'.",
+                "a small poster says 'Next Release'."
+            ]
+        },
+        {
+            "index": 205,
+            "prompt": "At a gym, a wall sign reads 'Push Yourself', a water dispenser with 'Stay Hydrated' on it, and a clock shows '6:00 AM'.",
+            "carrier_list": [
+                "sign",
+                "dispenser",
+                "clock"
+            ],
+            "sentence_list": [
+                "a wall sign reads 'Push Yourself'.",
+                "a water dispenser with 'Stay Hydrated' on it.",
+                "a clock shows '6:00 AM'."
+            ]
+        },
+        {
+            "index": 206,
+            "prompt": "In a shopping mall, a kiosk sign says 'Free Samples', an escalator has 'Going Up' on it, and a store window reads 'New Arrivals'.",
+            "carrier_list": [
+                "sign",
+                "escalator",
+                "window"
+            ],
+            "sentence_list": [
+                "a kiosk sign says 'Free Samples'.",
+                "an escalator has 'Going Up' on it.",
+                "a store window reads 'New Arrivals'."
+            ]
+        },
+        {
+            "index": 207,
+            "prompt": "In a vintage diner, the menu board displays 'Classic Diner', a neon sign says 'Open Late', and the cashier register has 'Total: 15.75' on it.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "register"
+            ],
+            "sentence_list": [
+                "the menu board displays 'Classic Diner'.",
+                "a neon sign says 'Open Late'.",
+                "the cashier register has 'Total: 15.75' on it."
+            ]
+        },
+        {
+            "index": 208,
+            "prompt": "On a music festival stage, a large screen displays 'Live Performance', a banner reads 'Tickets Available', and a sign shows 'Next Band'.",
+            "carrier_list": [
+                "screen",
+                "banner",
+                "sign"
+            ],
+            "sentence_list": [
+                "a large screen displays 'Live Performance'.",
+                "a banner reads 'Tickets Available'.",
+                "a sign shows 'Next Band'."
+            ]
+        },
+        {
+            "index": 209,
+            "prompt": "On a tech website, the headline says 'Latest Gadgets', a button reads 'Buy Now', and the footer says 'Contact Us'.",
+            "carrier_list": [
+                "headline",
+                "button",
+                "footer"
+            ],
+            "sentence_list": [
+                "the headline says 'Latest Gadgets'.",
+                "a button reads 'Buy Now'.",
+                "the footer says 'Contact Us'."
+            ]
+        },
+        {
+            "index": 210,
+            "prompt": "A bustling city park features a bench with 'Relax Here', a signpost displaying 'Main Street', and a fountain labeled 'Water Flow'.",
+            "carrier_list": [
+                "bench",
+                "signpost",
+                "fountain"
+            ],
+            "sentence_list": [
+                "a bench with 'Relax Here'.",
+                "a signpost displaying 'Main Street'.",
+                "a fountain labeled 'Water Flow'."
+            ]
+        },
+        {
+            "index": 211,
+            "prompt": "On a coffee shop window, the menu reads 'D Special', a chalkboard says 'Open 24/7', and a door sticker shows 'Welcome Friends'.",
+            "carrier_list": [
+                "menu",
+                "chalkboard",
+                "sticker"
+            ],
+            "sentence_list": [
+                "the menu reads 'D Special'.",
+                "a chalkboard says 'Open 24/7'.",
+                "a door sticker shows 'Welcome Friends'."
+            ]
+        },
+        {
+            "index": 212,
+            "prompt": "Inside a library, a bookshelf is tagged 'Best Sellers', a reading lamp bears 'Quiet Area', and a notice board displays 'Upcoming Events'.",
+            "carrier_list": [
+                "bookshelf",
+                "lamp",
+                "board"
+            ],
+            "sentence_list": [
+                "a bookshelf is tagged 'Best Sellers'.",
+                "a reading lamp bears 'Quiet Area'.",
+                "a notice board displays 'Upcoming Events'."
+            ]
+        },
+        {
+            "index": 213,
+            "prompt": "At a busy marketplace, a stall banner reads 'Fresh Fruits', a price tag shows 'Only 2 USD', and a signboard says 'Open Now'.",
+            "carrier_list": [
+                "banner",
+                "tag",
+                "signboard"
+            ],
+            "sentence_list": [
+                "a stall banner reads 'Fresh Fruits'.",
+                "a price tag shows 'Only 2 USD'.",
+                "a signboard says 'Open Now'."
+            ]
+        },
+        {
+            "index": 214,
+            "prompt": "A high school hallway includes a locker with 'Class of 2025', a bulletin board displaying 'Join Clubs', and a trophy case labeled 'Champions'.",
+            "carrier_list": [
+                "locker",
+                "board",
+                "case"
+            ],
+            "sentence_list": [
+                "a locker with 'Class of 2025'.",
+                "a bulletin board displaying 'Join Clubs'.",
+                "a trophy case labeled 'Champions'."
+            ]
+        },
+        {
+            "index": 215,
+            "prompt": "In a modern office, a desk has a nameplate 'John Doe', a computer screen shows 'Work Tasks', and a whiteboard reads 'Team Goals'.",
+            "carrier_list": [
+                "nameplate",
+                "screen",
+                "whiteboard"
+            ],
+            "sentence_list": [
+                "a desk has a nameplate 'John Doe'.",
+                "a computer screen shows 'Work Tasks'.",
+                "a whiteboard reads 'Team Goals'."
+            ]
+        },
+        {
+            "index": 216,
+            "prompt": "On a movie set, a clapboard says 'Scene 12', a backdrop features 'City Lights', and a prop sign displays 'Action Now'.",
+            "carrier_list": [
+                "clapboard",
+                "backdrop",
+                "sign"
+            ],
+            "sentence_list": [
+                "a clapboard says 'Scene 12'.",
+                "a backdrop features 'City Lights'.",
+                "a prop sign displays 'Action Now'."
+            ]
+        },
+        {
+            "index": 217,
+            "prompt": "At a sports arena, a scoreboard shows 'Home 3 - 2', a banner reads 'Go Team!', and a concession stand is labeled 'Snacks Here'.",
+            "carrier_list": [
+                "scoreboard",
+                "banner",
+                "stand"
+            ],
+            "sentence_list": [
+                "a scoreboard shows 'Home 3 - 2'.",
+                "a banner reads 'Go Team!'.",
+                "a concession stand is labeled 'Snacks Here'."
+            ]
+        },
+        {
+            "index": 218,
+            "prompt": "A vibrant bookstore cover features a shelf labeled 'New Arrivals', a window display says 'Best Reads', and a cashier counter shows 'Checkout Fast'.",
+            "carrier_list": [
+                "shelf",
+                "display",
+                "counter"
+            ],
+            "sentence_list": [
+                "a shelf labeled 'New Arrivals'.",
+                "a window display says 'Best Reads'.",
+                "a cashier counter shows 'Checkout Fast'."
+            ]
+        },
+        {
+            "index": 219,
+            "prompt": "In a trendy nightclub, a neon sign displays 'Dance Floor', a bar menu reads 'Signature Drinks', and a restroom door is labeled 'Ladies And Gents'.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "door"
+            ],
+            "sentence_list": [
+                "a neon sign displays 'Dance Floor'.",
+                "a bar menu reads 'Signature Drinks'.",
+                "a restroom door is labeled 'Ladies And Gents'."
+            ]
+        },
+        {
+            "index": 220,
+            "prompt": "A busy street corner with a sign saying 'Open 24/7', a taxi with the number '452' on the side, and a store window displaying 'New Arrivals'.",
+            "carrier_list": [
+                "sign",
+                "taxi",
+                "window"
+            ],
+            "sentence_list": [
+                "a sign saying 'Open 24/7'.",
+                "a taxi with the number '452' on the side.",
+                "a store window displaying 'New Arrivals'."
+            ]
+        },
+        {
+            "index": 221,
+            "prompt": "A magazine cover with the title 'Top Trends', an advertisement for a product reading 'Limited Offer', and a tagline at the bottom saying 'Exclusive Deal'.",
+            "carrier_list": [
+                "cover",
+                "advertisement",
+                "tagline"
+            ],
+            "sentence_list": [
+                "a magazine cover with the title 'Top Trends'.",
+                "an advertisement for a product reading 'Limited Offer'.",
+                "a tagline at the bottom saying 'Exclusive Deal'."
+            ]
+        },
+        {
+            "index": 222,
+            "prompt": "A coffee shop window with a sign that reads 'Fresh Brew', a chalkboard with 'Happy Hour' written on it, and a coffee cup with the label 'Best Blend'.",
+            "carrier_list": [
+                "sign",
+                "chalkboard",
+                "cup"
+            ],
+            "sentence_list": [
+                "a sign that reads 'Fresh Brew'.",
+                "a chalkboard with 'Happy Hour' written on it.",
+                "a coffee cup with the label 'Best Blend'."
+            ]
+        },
+        {
+            "index": 223,
+            "prompt": "A concert poster with a large text 'Live Tonight', a ticket stub with 'Row A' printed on it, and a banner above saying 'Sold Out'.",
+            "carrier_list": [
+                "poster",
+                "stub",
+                "banner"
+            ],
+            "sentence_list": [
+                "a concert poster with a large text 'Live Tonight'.",
+                "a ticket stub with 'Row A' printed on it.",
+                "a banner above saying 'Sold Out'."
+            ]
+        },
+        {
+            "index": 224,
+            "prompt": "A fitness ad with the phrase 'Train Hard', a gym membership card that says 'Unlimited Access', and a motivational quote on the wall reading 'Push Yourself'.",
+            "carrier_list": [
+                "ad",
+                "card",
+                "quote"
+            ],
+            "sentence_list": [
+                "a fitness ad with the phrase 'Train Hard'.",
+                "a gym membership card that says 'Unlimited Access'.",
+                "a motivational quote on the wall reading 'Push Yourself'."
+            ]
+        },
+        {
+            "index": 225,
+            "prompt": "A bookstore entrance with a sign that says 'Best Sellers', a shelf with a book titled 'Future Insights', and a flyer on the ground reading 'Sign Up Now'.",
+            "carrier_list": [
+                "sign",
+                "shelf",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a sign that says 'Best Sellers'.",
+                "a shelf with a book titled 'Future Insights'.",
+                "a flyer on the ground reading 'Sign Up Now'."
+            ]
+        },
+        {
+            "index": 226,
+            "prompt": "A city bus stop with a digital display showing 'Arriving Soon', a bench with the text 'Waiting Area', and a billboard that says 'Tourist Guide'.",
+            "carrier_list": [
+                "display",
+                "bench",
+                "billboard"
+            ],
+            "sentence_list": [
+                "a digital display showing 'Arriving Soon'.",
+                "a bench with the text 'Waiting Area'.",
+                "a billboard that says 'Tourist Guide'."
+            ]
+        },
+        {
+            "index": 227,
+            "prompt": "A movie theater banner with the film title 'Action Packed', a poster outside saying 'Coming Soon', and a sign on the door reading 'Showtime: 8:00 PM'.",
+            "carrier_list": [
+                "banner",
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a movie theater banner with the film title 'Action Packed'.",
+                "a poster outside saying 'Coming Soon'.",
+                "a sign on the door reading 'Showtime: 8:00 PM'."
+            ]
+        },
+        {
+            "index": 228,
+            "prompt": "A website homepage with the title 'Tech World', a button that says 'Subscribe Now', and a pop-up with the text 'Special Offer'.",
+            "carrier_list": [
+                "title",
+                "button",
+                "pop-up"
+            ],
+            "sentence_list": [
+                "a website homepage with the title 'Tech World'.",
+                "a button that says 'Subscribe Now'.",
+                "a pop-up with the text 'Special Offer'."
+            ]
+        },
+        {
+            "index": 229,
+            "prompt": "A music festival flyer with the headline 'Join Us', a wristband with 'VIP Access' printed on it, and a booth offering 'Free Merchandise'.",
+            "carrier_list": [
+                "headline",
+                "wristband",
+                "booth"
+            ],
+            "sentence_list": [
+                "a music festival flyer with the headline 'Join Us'.",
+                "a wristband with 'VIP Access' printed on it.",
+                "a booth offering 'Free Merchandise'."
+            ]
+        },
+        {
+            "index": 230,
+            "prompt": "A busy street scene with a billboard displaying 'Summer Sale', a taxi’s door with 'Taxi Service' written on it, and a café menu board that says 'Coffee Specials'.",
+            "carrier_list": [
+                "billboard",
+                "taxi",
+                "board"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Summer Sale'.",
+                "a taxi’s door with 'Taxi Service' written on it.",
+                "a café menu board that says 'Coffee Specials'."
+            ]
+        },
+        {
+            "index": 231,
+            "prompt": "In a futuristic city, a giant screen shows 'Future Tech', a robot chest reads 'Model X', and a street sign says 'Main St'.",
+            "carrier_list": [
+                "screen",
+                "chest",
+                "sign"
+            ],
+            "sentence_list": [
+                "a giant screen shows 'Future Tech'.",
+                "a robot chest reads 'Model X'.",
+                "a street sign says 'Main St'."
+            ]
+        },
+        {
+            "index": 232,
+            "prompt": "A shopping mall entrance with a digital sign that reads 'Welcome Back', an elevator display showing 'Floor 3', and a storefront window with 'New Arrivals'.",
+            "carrier_list": [
+                "sign",
+                "display",
+                "window"
+            ],
+            "sentence_list": [
+                "a digital sign that reads 'Welcome Back'.",
+                "an elevator display showing 'Floor 3'.",
+                "a storefront window with 'New Arrivals'."
+            ]
+        },
+        {
+            "index": 233,
+            "prompt": "On a movie set, the clapperboard shows 'Take 5', a director’s chair says 'Director', and a neon sign reads 'Now Playing'.",
+            "carrier_list": [
+                "clapperboard",
+                "chair",
+                "sign"
+            ],
+            "sentence_list": [
+                "the clapperboard shows 'Take 5'.",
+                "a director’s chair says 'Director'.",
+                "a neon sign reads 'Now Playing'."
+            ]
+        },
+        {
+            "index": 234,
+            "prompt": "Inside a library, a book spine displays 'Science Fiction', a desk sign reads 'Quiet Zone', and a clock on the wall shows '2:45 PM'.",
+            "carrier_list": [
+                "spine",
+                "sign",
+                "clock"
+            ],
+            "sentence_list": [
+                "a book spine displays 'Science Fiction'.",
+                "a desk sign reads 'Quiet Zone'.",
+                "a clock on the wall shows '2:45 PM'."
+            ]
+        },
+        {
+            "index": 235,
+            "prompt": "A sports stadium with a large banner saying 'Championship Game', a scoreboard reads 'Score: 3-2', and a t-shirt in the crowd has 'Team Spirit' on it.",
+            "carrier_list": [
+                "banner",
+                "scoreboard",
+                "t-shirt"
+            ],
+            "sentence_list": [
+                "a large banner saying 'Championship Game'.",
+                "a scoreboard reads 'Score: 3-2'.",
+                "a t-shirt in the crowd has 'Team Spirit' on it."
+            ]
+        },
+        {
+            "index": 236,
+            "prompt": "At a concert venue, the banner reads 'Live Tonight', a band member’s guitar says 'Rock On', and a poster says 'Tickets Available'.",
+            "carrier_list": [
+                "banner",
+                "guitar",
+                "poster"
+            ],
+            "sentence_list": [
+                "the banner reads 'Live Tonight'.",
+                "a band member’s guitar says 'Rock On'.",
+                "a poster says 'Tickets Available'."
+            ]
+        },
+        {
+            "index": 237,
+            "prompt": "On a food truck, a sign says 'Hot Dogs', the menu reads 'Combo Deal', and a payment terminal displays 'Total: 8 dollars'.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "terminal"
+            ],
+            "sentence_list": [
+                "a sign says 'Hot Dogs'.",
+                "the menu reads 'Combo Deal'.",
+                "a payment terminal displays 'Total: 8 dollars'."
+            ]
+        },
+        {
+            "index": 238,
+            "prompt": "At a bookshop, a shelf label reads 'Best Sellers', a checkout counter shows 'Sale Today', and a store window displays '50 percent Off'.",
+            "carrier_list": [
+                "label",
+                "counter",
+                "window"
+            ],
+            "sentence_list": [
+                "a shelf label reads 'Best Sellers'.",
+                "a checkout counter shows 'Sale Today'.",
+                "a store window displays '50 percent Off'."
+            ]
+        },
+        {
+            "index": 239,
+            "prompt": "A tech company website with a banner saying 'Innovative Solutions', a contact button says 'Get in Touch', and a footer reads 'Privacy Policy'.",
+            "carrier_list": [
+                "banner",
+                "button",
+                "footer"
+            ],
+            "sentence_list": [
+                "a banner saying 'Innovative Solutions'.",
+                "a contact button says 'Get in Touch'.",
+                "a footer reads 'Privacy Policy'."
+            ]
+        },
+        {
+            "index": 240,
+            "prompt": "A bustling city street with a large sign saying 'Grand Opening Sale Starts Now', a bus stop showing 'Next Bus in 5 Minutes', and a shop window displaying 'Discounted Items 50 percent Off'.",
+            "carrier_list": [
+                "sign",
+                "stop",
+                "window"
+            ],
+            "sentence_list": [
+                "a large sign saying 'Grand Opening Sale Starts Now'.",
+                "a bus stop showing 'Next Bus in 5 Minutes'.",
+                "a shop window displaying 'Discounted Items 50 percent Off'."
+            ]
+        },
+        {
+            "index": 241,
+            "prompt": "A vibrant movie theater entrance with a banner reading 'Now Showing: Action Thrillers', a ticket booth displaying 'Buy Tickets Online Now', and a poster on the wall announcing 'Coming Soon: Summer Blockbusters'.",
+            "carrier_list": [
+                "banner",
+                "booth",
+                "poster"
+            ],
+            "sentence_list": [
+                "a banner reading 'Now Showing: Action Thrillers'.",
+                "a ticket booth displaying 'Buy Tickets Online Now'.",
+                "a poster on the wall announcing 'Coming Soon: Summer Blockbusters'."
+            ]
+        },
+        {
+            "index": 242,
+            "prompt": "A sports arena with a giant screen flashing 'Final Score: 3-2, Home Team Wins', a scoreboard showing 'Game Time: 7:00 PM', and a section of the stands with a banner reading 'Fan Appreciation Night'.",
+            "carrier_list": [
+                "screen",
+                "scoreboard",
+                "banner"
+            ],
+            "sentence_list": [
+                "a giant screen flashing 'Final Score: 3-2, Home Team Wins'.",
+                "a scoreboard showing 'Game Time: 7:00 PM'.",
+                "a banner reading 'Fan Appreciation Night'."
+            ]
+        },
+        {
+            "index": 243,
+            "prompt": "A cozy café with a chalkboard sign outside saying 'Fresh Brewed Coffee Available', a menu on the wall with 'Daily Special: Avocado Toast', and a counter display featuring 'Free Wi-Fi for All Customers'.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "display"
+            ],
+            "sentence_list": [
+                "a chalkboard sign outside saying 'Fresh Brewed Coffee Available'.",
+                "a menu on the wall with 'Daily Special: Avocado Toast'.",
+                "a counter display featuring 'Free Wi-Fi for All Customers'."
+            ]
+        },
+        {
+            "index": 244,
+            "prompt": "A fitness gym with a wall poster that says 'Join Now and Save 20 percent', a membership desk sign reading 'Personal Training Available', and a digital screen showing 'Class Schedule for the Week'.",
+            "carrier_list": [
+                "poster",
+                "sign",
+                "screen"
+            ],
+            "sentence_list": [
+                "a wall poster that says 'Join Now and Save 20 percent'.",
+                "a membership desk sign reading 'Personal Training Available'.",
+                "a digital screen showing 'Class Schedule for the Week'."
+            ]
+        },
+        {
+            "index": 245,
+            "prompt": "A music festival venue with a stage banner reading 'Live Performance Starts at 6 PM', a food stand sign saying 'Cold Beverages Available Here', and a backstage door with 'Artist Only Zone' written on it.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "door"
+            ],
+            "sentence_list": [
+                "a stage banner reading 'Live Performance Starts at 6 PM'.",
+                "a food stand sign saying 'Cold Beverages Available Here'.",
+                "a backstage door with 'Artist Only Zone' written on it."
+            ]
+        },
+        {
+            "index": 246,
+            "prompt": "A bookstore entrance with a banner that reads 'New Arrivals on Sale', a shelf label saying 'Top Picks of the Month', and a checkout counter with 'Sign Up for Book Club' printed on it.",
+            "carrier_list": [
+                "banner",
+                "label",
+                "counter"
+            ],
+            "sentence_list": [
+                "a banner that reads 'New Arrivals on Sale'.",
+                "a shelf label saying 'Top Picks of the Month'.",
+                "a checkout counter with 'Sign Up for Book Club' printed on it."
+            ]
+        },
+        {
+            "index": 247,
+            "prompt": "A modern office building with an elevator display showing 'Going Up to the 10th Floor', a lobby poster that says 'Employee of the Month', and a conference room door with 'Meeting in Progress' on it.",
+            "carrier_list": [
+                "display",
+                "poster",
+                "door"
+            ],
+            "sentence_list": [
+                "an elevator display showing 'Going Up to the 10th Floor'.",
+                "a lobby poster that says 'Employee of the Month'.",
+                "a conference room door with 'Meeting in Progress' on it."
+            ]
+        },
+        {
+            "index": 248,
+            "prompt": "A family amusement park with a large entrance arch reading 'Welcome to Adventure World', a game booth sign saying 'Win Prizes Here', and a food court menu showing 'Delicious Treats at Affordable Prices'.",
+            "carrier_list": [
+                "arch",
+                "sign",
+                "menu"
+            ],
+            "sentence_list": [
+                "a large entrance arch reading 'Welcome to Adventure World'.",
+                "a game booth sign saying 'Win Prizes Here'.",
+                "a food court menu showing 'Delicious Treats at Affordable Prices'."
+            ]
+        },
+        {
+            "index": 249,
+            "prompt": "A travel agency window with a flyer saying 'Book Your Dream Vacation Today', a sign above the counter displaying 'Special Offers for Early Bookings', and a brochure rack featuring 'Top Destinations for 2025'.",
+            "carrier_list": [
+                "flyer",
+                "sign",
+                "rack"
+            ],
+            "sentence_list": [
+                "a flyer saying 'Book Your Dream Vacation Today'.",
+                "a sign above the counter displaying 'Special Offers for Early Bookings'.",
+                "a brochure rack featuring 'Top Destinations for 2025'."
+            ]
+        },
+        {
+            "index": 250,
+            "prompt": "A busy city street with a large digital screen showing 'Sale Starts Now, 50 percent Off!', a café menu board with 'Fresh Brewed Coffee Daily', and a shop window displaying 'Open 24 Hours, All Week Long'.",
+            "carrier_list": [
+                "screen",
+                "board",
+                "window"
+            ],
+            "sentence_list": [
+                "a large digital screen showing 'Sale Starts Now, 50 percent Off!'.",
+                "a café menu board with 'Fresh Brewed Coffee Daily'.",
+                "a shop window displaying 'Open 24 Hours, All Week Long'."
+            ]
+        },
+        {
+            "index": 251,
+            "prompt": "A library entrance with a sign reading 'Open for Research and Study', a wall poster showing 'Free Workshops Every Saturday', and a table flyer stating 'New Arrivals in Fiction Section'.",
+            "carrier_list": [
+                "sign",
+                "poster",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a sign reading 'Open for Research and Study'.",
+                "a wall poster showing 'Free Workshops Every Saturday'.",
+                "a table flyer stating 'New Arrivals in Fiction Section'."
+            ]
+        },
+        {
+            "index": 252,
+            "prompt": "A movie theater lobby with a banner saying 'Now Showing: The Great Adventure', a ticket counter board listing 'Tickets Available for 7 PM Show', and a display screen reading 'Coming Soon: Exciting New Releases'",
+            "carrier_list": [
+                "banner",
+                "board",
+                "screen"
+            ],
+            "sentence_list": [
+                "a banner saying 'Now Showing: The Great Adventure'.",
+                "a ticket counter board listing 'Tickets Available for 7 PM Show'.",
+                "a display screen reading 'Coming Soon: Exciting New Releases'."
+            ]
+        },
+        {
+            "index": 253,
+            "prompt": "A fitness gym wall with a motivational poster that says 'Achieve Your Goals, One Rep at a Time', a water bottle rack sign displaying 'Stay Hydrated, Stay Strong', and a schedule board showing 'Yoga Classes at 6 AM and 7 PM'.",
+            "carrier_list": [
+                "poster",
+                "sign",
+                "board"
+            ],
+            "sentence_list": [
+                "a motivational poster that says 'Achieve Your Goals, One Rep at a Time'.",
+                "a water bottle rack sign displaying 'Stay Hydrated, Stay Strong'.",
+                "a schedule board showing 'Yoga Classes at 6 AM and 7 PM'."
+            ]
+        },
+        {
+            "index": 254,
+            "prompt": "A food truck window with a banner displaying 'Try Our Delicious Tacos Today', a menu board listing 'Special Combo Deals Starting at 5 dollars', and a side advertisement saying 'Follow Us on Instagram for Discounts'.",
+            "carrier_list": [
+                "banner",
+                "board",
+                "advertisement"
+            ],
+            "sentence_list": [
+                "a banner displaying 'Try Our Delicious Tacos Today'.",
+                "a menu board listing 'Special Combo Deals Starting at 5 dollars'.",
+                "a side advertisement saying 'Follow Us on Instagram for Discounts'."
+            ]
+        },
+        {
+            "index": 255,
+            "prompt": "A modern art gallery wall with a placard reading 'Exhibit Open Until 8 PM Tonight', a digital display saying 'Artworks Available for Purchase', and a information stand reading 'Join Our Free Guided Tour at 2 PM'",
+            "carrier_list": [
+                "placard",
+                "display",
+                "stand"
+            ],
+            "sentence_list": [
+                "a placard reading 'Exhibit Open Until 8 PM Tonight'.",
+                "a digital display saying 'Artworks Available for Purchase'.",
+                "a information stand reading 'Join Our Free Guided Tour at 2 PM'."
+            ]
+        },
+        {
+            "index": 256,
+            "prompt": "A travel agency storefront with a window display that reads 'Book Your Dream Vacation Now', a brochure stand with 'Exclusive Deals on Summer Tours', and a sign near the door stating 'Visit Our Website for More Offers'",
+            "carrier_list": [
+                "display",
+                "stand",
+                "sign"
+            ],
+            "sentence_list": [
+                "a window display that reads 'Book Your Dream Vacation Now'.",
+                "a brochure stand with 'Exclusive Deals on Summer Tours'.",
+                "a sign near the door stating 'Visit Our Website for More Offers'."
+            ]
+        },
+        {
+            "index": 257,
+            "prompt": "A university lecture hall entrance with a notice board showing 'Classes Begin Next Monday', a hallway banner reading 'Join Our Clubs and Societies', and a digital screen stating 'Check Out the New Semester Schedule'",
+            "carrier_list": [
+                "board",
+                "banner",
+                "screen"
+            ],
+            "sentence_list": [
+                "a notice board showing 'Classes Begin Next Monday'.",
+                "a hallway banner reading 'Join Our Clubs and Societies'.",
+                "a digital screen stating 'Check Out the New Semester Schedule'."
+            ]
+        },
+        {
+            "index": 258,
+            "prompt": "A street food stand with a sign that says 'Serving Hot Dogs and Fries', a chalkboard displaying 'Happy Hour: 2 PM to 4 PM', and a counter sign reading 'Try Our Special Sauce Today'",
+            "carrier_list": [
+                "sign",
+                "chalkboard",
+                "sign"
+            ],
+            "sentence_list": [
+                "a sign that says 'Serving Hot Dogs and Fries'.",
+                "a chalkboard displaying 'Happy Hour: 2 PM to 4 PM'.",
+                "a counter sign reading 'Try Our Special Sauce Today'."
+            ]
+        },
+        {
+            "index": 259,
+            "prompt": "A clothing store entrance with a large banner reading 'Winter Collection Now Available', a rack tag showing 'Buy One, Get One 50 percent Off', and a window sign stating 'Flash Sale This Weekend Only'",
+            "carrier_list": [
+                "banner",
+                "tag",
+                "sign"
+            ],
+            "sentence_list": [
+                "a large banner reading 'Winter Collection Now Available'.",
+                "a rack tag showing 'Buy One, Get One 50 percent Off'.",
+                "a window sign stating 'Flash Sale This Weekend Only'."
+            ]
+        },
+        {
+            "index": 260,
+            "prompt": "A street corner with a signpost showing 'Main Street to Downtown', a coffee shop window displaying 'Special Offer: Buy 1 Get 1 Free', and a bus stop ad saying 'Next Bus in 5 Minutes'.",
+            "carrier_list": [
+                "signpost",
+                "window",
+                "ad"
+            ],
+            "sentence_list": [
+                "a signpost showing 'Main Street to Downtown'.",
+                "a coffee shop window displaying 'Special Offer: Buy 1 Get 1 Free'.",
+                "a bus stop ad saying 'Next Bus in 5 Minutes'."
+            ]
+        },
+        {
+            "index": 261,
+            "prompt": "A bookstore shelf with a label reading 'Top 10 Must-Reads of 2025', a promotional poster on the wall that says 'Sign Up for Free Book Club', and a checkout counter with a sign saying 'Discounts Available for Members'.",
+            "carrier_list": [
+                "label",
+                "poster",
+                "sign"
+            ],
+            "sentence_list": [
+                "a bookstore shelf with a label reading 'Top 10 Must-Reads of 2025'.",
+                "a promotional poster on the wall that says 'Sign Up for Free Book Club'.",
+                "a checkout counter with a sign saying 'Discounts Available for Members'."
+            ]
+        },
+        {
+            "index": 262,
+            "prompt": "A movie theater lobby featuring a sign that reads 'Now Showing: The Great Adventure', a ticket booth displaying 'Buy 2 Tickets, Get 1 Free', and a poster saying 'Coming Soon: A Thrilling Mystery'.",
+            "carrier_list": [
+                "sign",
+                "booth",
+                "poster"
+            ],
+            "sentence_list": [
+                "a sign that reads 'Now Showing: The Great Adventure'.",
+                "a ticket booth displaying 'Buy 2 Tickets, Get 1 Free'.",
+                "a poster saying 'Coming Soon: A Thrilling Mystery'."
+            ]
+        },
+        {
+            "index": 263,
+            "prompt": "A city park with a large banner reading 'Annual Art Festival Starts Today', a kiosk with a sign saying 'Fresh Juice Available Here', and a playground fence with 'Safety First: Please Supervise Children'.",
+            "carrier_list": [
+                "banner",
+                "kiosk",
+                "fence"
+            ],
+            "sentence_list": [
+                "a large banner reading 'Annual Art Festival Starts Today'.",
+                "a kiosk with a sign saying 'Fresh Juice Available Here'.",
+                "a playground fence with 'Safety First: Please Supervise Children'."
+            ]
+        },
+        {
+            "index": 264,
+            "prompt": "a gym entrance door poster reads 'Join Today, Start Your Fitness Journey', a fitness class board displaying 'Yoga at 6 PM Tonight', and a water cooler sign saying 'Stay Hydrated: Free Refills'.",
+            "carrier_list": [
+                "poster",
+                "board",
+                "sign"
+            ],
+            "sentence_list": [
+                "a gym entrance door poster reads 'Join Today, Start Your Fitness Journey'.",
+                "a fitness class board displaying 'Yoga at 6 PM Tonight'.",
+                "a water cooler sign saying 'Stay Hydrated: Free Refills'."
+            ]
+        },
+        {
+            "index": 265,
+            "prompt": "A street food cart with a menu board displaying 'Tasty Treats: 5 dollars for Any 3 Items', a billboard showing 'Grand Opening: 50 percent Off Today', and a napkin dispenser with 'Enjoy Every Bite!'.",
+            "carrier_list": [
+                "board",
+                "billboard",
+                "dispenser"
+            ],
+            "sentence_list": [
+                "a menu board displaying 'Tasty Treats: 5 dollars for Any 3 Items'.",
+                "a billboard showing 'Grand Opening: 50 percent Off Today'.",
+                "a napkin dispenser with 'Enjoy Every Bite!'."
+            ]
+        },
+        {
+            "index": 266,
+            "prompt": "A university campus building with a sign reading 'Graduate Programs Available Now', a notice board saying 'Spring Semester Starts on March 15', and a digital screen announcing 'Upcoming Campus Career Fair'.",
+            "carrier_list": [
+                "sign",
+                "board",
+                "screen"
+            ],
+            "sentence_list": [
+                "a sign reading 'Graduate Programs Available Now'.",
+                "a notice board saying 'Spring Semester Starts on March 15'.",
+                "a digital screen announcing 'Upcoming Campus Career Fair'."
+            ]
+        },
+        {
+            "index": 267,
+            "prompt": "A busy shopping mall with an overhead sign that reads 'Fashion Week Starts Tomorrow', a store window displaying '50 percent Off All Summer Clothes', and an escalator banner that says 'Take the Lift to Level 3'.",
+            "carrier_list": [
+                "sign",
+                "window",
+                "banner"
+            ],
+            "sentence_list": [
+                "an overhead sign that reads 'Fashion Week Starts Tomorrow'.",
+                "a store window displaying '50 percent Off All Summer Clothes'.",
+                "an escalator banner that says 'Take the Lift to Level 3'."
+            ]
+        },
+        {
+            "index": 268,
+            "prompt": "A cafe with a chalkboard sign that says 'Freshly Brewed Coffee: 2.99', a wall poster reading 'Happy Hour: 3 PM to 6 PM', and a table tent with 'Today’s Special: Croissant and Coffee'.",
+            "carrier_list": [
+                "sign",
+                "poster",
+                "tent"
+            ],
+            "sentence_list": [
+                "a chalkboard sign that says 'Freshly Brewed Coffee: 2.99'.",
+                "a wall poster reading 'Happy Hour: 3 PM to 6 PM'.",
+                "a table tent with 'Today’s Special: Croissant and Coffee'."
+            ]
+        },
+        {
+            "index": 269,
+            "prompt": "A local bakery with a front window sign saying 'Homemade Pastries, Freshly Baked Daily', a counter menu displaying 'Special Offer: Buy 2 Get 1 Free on Muffins', and a delivery box with 'Order Now for Fast Delivery'.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "box"
+            ],
+            "sentence_list": [
+                "a front window sign saying 'Homemade Pastries, Freshly Baked Daily'.",
+                "a counter menu displaying 'Special Offer: Buy 2 Get 1 Free on Muffins'.",
+                "a delivery box with 'Order Now for Fast Delivery'."
+            ]
+        },
+        {
+            "index": 270,
+            "prompt": "A vibrant city square featuring a fountain with 'Enjoy the Sunny Day', a café sign displaying 'Fresh Coffee Available', and a streetlamp adorned with 'Night Market Tonight'.",
+            "carrier_list": [
+                "fountain",
+                "sign",
+                "streetlamp"
+            ],
+            "sentence_list": [
+                "a fountain with 'Enjoy the Sunny Day'.",
+                "a café sign displaying 'Fresh Coffee Available'.",
+                "a streetlamp adorned with 'Night Market Tonight'."
+            ]
+        },
+        {
+            "index": 271,
+            "prompt": "an advertisement board shows 'Catch the Express Train', a bench has a plaque reading 'Rest and Relax Here', and a digital screen announces 'Next Train Arrives at 5 PM'.",
+            "carrier_list": [
+                "board",
+                "plaque",
+                "screen"
+            ],
+            "sentence_list": [
+                "an advertisement board shows 'Catch the Express Train'.",
+                "a bench has a plaque reading 'Rest and Relax Here'.",
+                "a digital screen announces 'Next Train Arrives at 5 PM'."
+            ]
+        },
+        {
+            "index": 272,
+            "prompt": "On a sunny beach scene with a lifeguard tower marked 'Safety First Always', a beach umbrella labeled 'Shade Provided Here', and a signpost directing 'Surf Lessons Every Morning'.",
+            "carrier_list": [
+                "tower",
+                "umbrella",
+                "signpost"
+            ],
+            "sentence_list": [
+                "a lifeguard tower marked 'Safety First Always'.",
+                "a beach umbrella labeled 'Shade Provided Here'.",
+                "a signpost directing 'Surf Lessons Every Morning'."
+            ]
+        },
+        {
+            "index": 273,
+            "prompt": "Inside a modern gym where the entrance banner states 'Join Our Fitness Community', a treadmill displays 'Run Your Best Miles', and the locker room door reads 'Change Here Safely'.",
+            "carrier_list": [
+                "banner",
+                "treadmill",
+                "door"
+            ],
+            "sentence_list": [
+                "the entrance banner states 'Join Our Fitness Community'.",
+                "a treadmill displays 'Run Your Best Miles'.",
+                "the locker room door reads 'Change Here Safely'."
+            ]
+        },
+        {
+            "index": 274,
+            "prompt": "At a lively amusement park featuring a roller coaster sign with 'Thrill Seekers Welcome', a ticket booth announces 'Buy Tickets Here', and a souvenir shop window displays 'Memories to Take Home'.",
+            "carrier_list": [
+                "sign",
+                "booth",
+                "window"
+            ],
+            "sentence_list": [
+                "a roller coaster sign with 'Thrill Seekers Welcome'.",
+                "a ticket booth announces 'Buy Tickets Here'.",
+                "a souvenir shop window displays 'Memories to Take Home'."
+            ]
+        },
+        {
+            "index": 275,
+            "prompt": "Within a cozy coffee shop where the menu board lists 'Daily Fresh Pastries', a sign outside reads 'Open for Breakfast', and a window decal says 'Free WiFi Available'.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "decal"
+            ],
+            "sentence_list": [
+                "the menu board lists 'Daily Fresh Pastries'.",
+                "a sign outside reads 'Open for Breakfast'.",
+                "a window decal says 'Free WiFi Available'."
+            ]
+        },
+        {
+            "index": 276,
+            "prompt": "On a high school hallway scene with a locker door labeled 'Class of 2025', a bulletin board announcing 'School Dance This Friday', and a trophy case displaying 'Championship Winners'.",
+            "carrier_list": [
+                "door",
+                "board",
+                "case"
+            ],
+            "sentence_list": [
+                "a locker door labeled 'Class of 2025'.",
+                "a bulletin board announcing 'School Dance This Friday'.",
+                "a trophy case displaying 'Championship Winners'."
+            ]
+        },
+        {
+            "index": 277,
+            "prompt": "At a movie theater entrance featuring a banner with 'New Action Movie Tonight', a ticket counter sign reads 'Purchase Tickets Here', and a snack bar menu displays 'Popcorn and Drinks Available'.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "menu"
+            ],
+            "sentence_list": [
+                "a banner with 'New Action Movie Tonight'.",
+                "a ticket counter sign reads 'Purchase Tickets Here'.",
+                "a snack bar menu displays 'Popcorn and Drinks Available'."
+            ]
+        },
+        {
+            "index": 278,
+            "prompt": "In a trendy fashion boutique, a storefront window showcases 'Latest Summer Collection', a fitting room sign says 'Try On Inside', and a sale banner announces '50 percent Off Selected Items'.",
+            "carrier_list": [
+                "window",
+                "sign",
+                "banner"
+            ],
+            "sentence_list": [
+                "a storefront window showcases 'Latest Summer Collection'.",
+                "a fitting room sign says 'Try On Inside'.",
+                "a sale banner announces '50 percent Off Selected Items'."
+            ]
+        },
+        {
+            "index": 279,
+            "prompt": "On a bustling farmers market with a stall sign stating 'Fresh Organic Vegetables', a banner overhead reads 'Local Produce Every Saturday', and a flyer stand displays 'Recipe Ideas Available Here'.",
+            "carrier_list": [
+                "sign",
+                "banner",
+                "stand"
+            ],
+            "sentence_list": [
+                "a stall sign stating 'Fresh Organic Vegetables'.",
+                "a banner overhead reads 'Local Produce Every Saturday'.",
+                "a flyer stand displays 'Recipe Ideas Available Here'."
+            ]
+        },
+        {
+            "index": 280,
+            "prompt": "A city street with a billboard displaying 'Grand Sale on All Items', a cafe window sign that says 'Freshly Brewed Coffee Daily', and a storefront featuring 'Opening Hours: 9 AM - 9 PM'.",
+            "carrier_list": [
+                "billboard",
+                "sign",
+                "storefront"
+            ],
+            "sentence_list": [
+                "a billboard displaying 'Grand Sale on All Items'.",
+                "a cafe window sign that says 'Freshly Brewed Coffee Daily'.",
+                "a storefront featuring 'Opening Hours: 9 AM - 9 PM'."
+            ]
+        },
+        {
+            "index": 281,
+            "prompt": "A park entrance with a large sign stating 'Explore Nature at Your Own Pace', a bench with a plaque reading 'Remember to Breathe and Relax', and a lamp post with 'Stay Safe and Healthy' written on it.",
+            "carrier_list": [
+                "sign",
+                "plaque",
+                "post"
+            ],
+            "sentence_list": [
+                "a large sign stating 'Explore Nature at Your Own Pace'.",
+                "a bench with a plaque reading 'Remember to Breathe and Relax'.",
+                "a lamp post with 'Stay Safe and Healthy' written on it."
+            ]
+        },
+        {
+            "index": 282,
+            "prompt": "A busy train station with a digital board showing 'Train to Downtown Departs in 5 Minutes', a kiosk with 'Tickets Available Here' on it, and a platform display saying 'Next Stop: Central Park'.",
+            "carrier_list": [
+                "board",
+                "kiosk",
+                "display"
+            ],
+            "sentence_list": [
+                "a digital board showing 'Train to Downtown Departs in 5 Minutes'.",
+                "a kiosk with 'Tickets Available Here' on it.",
+                "a platform display saying 'Next Stop: Central Park'."
+            ]
+        },
+        {
+            "index": 283,
+            "prompt": "An office lobby with a wall-mounted poster saying 'We Value Your Feedback', a reception desk with 'Ask Us for Assistance' on it, and a door with 'Conference Room 2' written above it.",
+            "carrier_list": [
+                "poster",
+                "desk",
+                "door"
+            ],
+            "sentence_list": [
+                "a wall-mounted poster saying 'We Value Your Feedback'.",
+                "a reception desk with 'Ask Us for Assistance' on it.",
+                "a door with 'Conference Room 2' written above it."
+            ]
+        },
+        {
+            "index": 284,
+            "prompt": "A gym entrance with a banner reading 'Join Our Fitness Community Today', a treadmill display showing 'Calories Burned: 150', and a wall poster that says 'Stay Motivated Every Day'.",
+            "carrier_list": [
+                "banner",
+                "display",
+                "poster"
+            ],
+            "sentence_list": [
+                "a banner reading 'Join Our Fitness Community Today'.",
+                "a treadmill display showing 'Calories Burned: 150'.",
+                "a wall poster that says 'Stay Motivated Every Day'."
+            ]
+        },
+        {
+            "index": 285,
+            "prompt": "A bookshop window featuring 'New Arrivals Just In', a shelf tag reading 'Discounted Books on Sale', and a table display showing 'Summer Reading Program Starts Soon'.",
+            "carrier_list": [
+                "window",
+                "tag",
+                "display"
+            ],
+            "sentence_list": [
+                "a bookshop window featuring 'New Arrivals Just In'.",
+                "a shelf tag reading 'Discounted Books on Sale'.",
+                "a table display showing 'Summer Reading Program Starts Soon'."
+            ]
+        },
+        {
+            "index": 286,
+            "prompt": "A restaurant window with 'Happy Hour: 4 PM - 6 PM', a chalkboard menu displaying 'Today’s Special: Grilled Salmon', and a door sign that says 'Reservations Recommended'.",
+            "carrier_list": [
+                "window",
+                "menu",
+                "sign"
+            ],
+            "sentence_list": [
+                "a restaurant window with 'Happy Hour: 4 PM - 6 PM'.",
+                "a chalkboard menu displaying 'Today’s Special: Grilled Salmon'.",
+                "a door sign that says 'Reservations Recommended'."
+            ]
+        },
+        {
+            "index": 287,
+            "prompt": "A movie theater with a banner showing 'Now Showing: Action Blockbuster', a ticket counter sign reading 'Buy Tickets Here', and a lobby display saying 'Free Popcorn with Every Movie Ticket'.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "display"
+            ],
+            "sentence_list": [
+                "a banner showing 'Now Showing: Action Blockbuster'.",
+                "a ticket counter sign reading 'Buy Tickets Here'.",
+                "a lobby display saying 'Free Popcorn with Every Movie Ticket'."
+            ]
+        },
+        {
+            "index": 288,
+            "prompt": "A tech store window with 'Latest Gadgets Available Now', a product tag on a laptop reading '20 percent Off This Week Only', and a flyer on the door saying 'Exclusive Offers for New Customers'.",
+            "carrier_list": [
+                "window",
+                "tag",
+                "flyer"
+            ],
+            "sentence_list": [
+                "a tech store window with 'Latest Gadgets Available Now'.",
+                "a product tag on a laptop reading '20 percent Off This Week Only'.",
+                "a flyer on the door saying 'Exclusive Offers for New Customers'."
+            ]
+        },
+        {
+            "index": 289,
+            "prompt": "A sports stadium with a giant screen reading 'Today’s Match: Local Team vs. Rivals', a concession stand sign that says 'Hot Dogs and Drinks Available', and an entrance sign stating 'Welcome to the Game'.",
+            "carrier_list": [
+                "screen",
+                "sign",
+                "sign"
+            ],
+            "sentence_list": [
+                "a giant screen reading 'Today’s Match: Local Team vs. Rivals'.",
+                "a concession stand sign that says 'Hot Dogs and Drinks Available'.",
+                "an entrance sign stating 'Welcome to the Game'."
+            ]
+        },
+        {
+            "index": 290,
+            "prompt": "A bustling coffee shop with a sign that reads 'Fresh Brews Daily', a chalkboard menu displaying 'Daily Special: Espresso', and a window poster announcing 'Live Music Every Friday'.",
+            "carrier_list": [
+                "sign",
+                "menu",
+                "poster"
+            ],
+            "sentence_list": [
+                "a sign that reads 'Fresh Brews Daily'.",
+                "a chalkboard menu displaying 'Daily Special: Espresso'.",
+                "a window poster announcing 'Live Music Every Friday'."
+            ]
+        },
+        {
+            "index": 291,
+            "prompt": "On a movie theater banner showing 'Summer Blockbusters 2025', a ticket booth sign stating 'Buy Your Tickets Here', and a sidewalk banner promoting 'Discounts for Students'.",
+            "carrier_list": [
+                "banner",
+                "sign",
+                "banner"
+            ],
+            "sentence_list": [
+                "a movie theater banner showing 'Summer Blockbusters 2025'.",
+                "a ticket booth sign stating 'Buy Your Tickets Here'.",
+                "a sidewalk banner promoting 'Discounts for Students'."
+            ]
+        },
+        {
+            "index": 292,
+            "prompt": "A vibrant gym entrance with a banner saying 'Get Fit Today', a locker room door labeled 'Members Only', and a window advertisement featuring 'Join Our 6-Week Challenge'.",
+            "carrier_list": [
+                "banner",
+                "door",
+                "advertisement"
+            ],
+            "sentence_list": [
+                "a banner saying 'Get Fit Today'.",
+                "a locker room door labeled 'Members Only'.",
+                "a window advertisement featuring 'Join Our 6-Week Challenge'."
+            ]
+        },
+        {
+            "index": 293,
+            "prompt": "Inside a high school hallway with lockers sporting 'Welcome Back Students', a bulletin board announcing 'Club Fair This Thursday', and a classroom door marked 'Math 101 Starts Now'.",
+            "carrier_list": [
+                "locker",
+                "board",
+                "door"
+            ],
+            "sentence_list": [
+                "lockers sporting 'Welcome Back Students'.",
+                "a bulletin board announcing 'Club Fair This Thursday'.",
+                "a classroom door marked 'Math 101 Starts Now'."
+            ]
+        },
+        {
+            "index": 294,
+            "prompt": "A colorful children playground with a sign reading 'Safe Play Area', a bench engraved with 'Rest and Enjoy', and a tree decorated with 'Happy Kids Zone'.",
+            "carrier_list": [
+                "sign",
+                "bench",
+                "tree"
+            ],
+            "sentence_list": [
+                "a sign reading 'Safe Play Area'.",
+                "a bench engraved with 'Rest and Enjoy'.",
+                "a tree decorated with 'Happy Kids Zone'."
+            ]
+        },
+        {
+            "index": 295,
+            "prompt": "At a farmer market stall displaying 'Fresh Organic Produce', a banner overhead saying 'Local Farmers Sell Here', and a price tag labeled 'Best Prices Guaranteed'.",
+            "carrier_list": [
+                "stall",
+                "banner",
+                "tag"
+            ],
+            "sentence_list": [
+                "a farmer market stall displaying 'Fresh Organic Produce'.",
+                "a banner overhead saying 'Local Farmers Sell Here'.",
+                "a price tag labeled 'Best Prices Guaranteed'."
+            ]
+        },
+        {
+            "index": 296,
+            "prompt": "A busy subway station with a digital board showing 'Next Train in 5 Minutes', a platform sign indicating 'Platform 2', and an advertisement promoting 'Travel Smart Passes'.",
+            "carrier_list": [
+                "board",
+                "sign",
+                "advertisement"
+            ],
+            "sentence_list": [
+                "a digital board showing 'Next Train in 5 Minutes'.",
+                "a platform sign indicating 'Platform 2'.",
+                "an advertisement promoting 'Travel Smart Passes'."
+            ]
+        },
+        {
+            "index": 297,
+            "prompt": "Within a university library featuring a door labeled 'Quiet Study Area', a shelf sign reading 'New Arrivals This Month', and a poster advertising 'Author Meet and Greet'.",
+            "carrier_list": [
+                "door",
+                "sign",
+                "poster"
+            ],
+            "sentence_list": [
+                "a door labeled 'Quiet Study Area'.",
+                "a shelf sign reading 'New Arrivals This Month'.",
+                "a poster advertising 'Author Meet and Greet'."
+            ]
+        },
+        {
+            "index": 298,
+            "prompt": "At a seaside boardwalk with a kiosk displaying 'Ice Cream Flavors Galore', a signpost pointing to 'Beach Activities Ahead', and a banner promoting 'Sunset Cruises Tonight'.",
+            "carrier_list": [
+                "kiosk",
+                "signpost",
+                "banner"
+            ],
+            "sentence_list": [
+                "a kiosk displaying 'Ice Cream Flavors Galore'.",
+                "a signpost pointing to 'Beach Activities Ahead'.",
+                "a banner promoting 'Sunset Cruises Tonight'."
+            ]
+        },
+        {
+            "index": 299,
+            "prompt": "In a tech conference hall with a stage banner that says 'Innovate 2025 Summit', an exhibitor booth labeled 'Future Tech Solutions', and a registration desk sign reading 'Welcome Attendees'.",
+            "carrier_list": [
+                "banner",
+                "booth",
+                "sign"
+            ],
+            "sentence_list": [
+                "a stage banner that says 'Innovate 2025 Summit'.",
+                "an exhibitor booth labeled 'Future Tech Solutions'.",
+                "a registration desk sign reading 'Welcome Attendees'."
+            ]
+        },
+        {
+            "index": 300,
+            "prompt": "A bustling downtown plaza, a café menu displaying 'Daily Special: Pumpkin Latte', a subway entrance sign reading 'Central Station 5 Minutes Away', a newsstand poster announcing 'New Bestseller Released'.",
+            "carrier_list": [
+                "menu",
+                "sign",
+                "poster"
+            ],
+            "sentence_list": [
+                "a café menu displaying 'Daily Special: Pumpkin Latte'.",
+                "a subway entrance sign reading 'Central Station 5 Minutes Away'.",
+                "a newsstand poster announcing 'New Bestseller Released'."
+            ]
+        }
+    ]
+}

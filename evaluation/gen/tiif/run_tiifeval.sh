@@ -10,7 +10,6 @@ export TRANSFORMERS_VERBOSITY=error
 
 # Generation settings
 MODEL_PATH="${MODEL_PATH:-sensenova/SenseNova-U1-8B-MoT-SFT}"
-TIIF_BENCH_ROOT="${TIIF_BENCH_ROOT:?TIIF_BENCH_ROOT must point at the upstream TIIF-Bench repo}"
 OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/outputs/sensenova/tiif}"
 
 NUM_NODES="${NUM_NODES:-1}"
@@ -36,8 +35,8 @@ GRID_ROWS="${GRID_ROWS:-1}"
 GRID_COLS="${GRID_COLS:-1}"
 
 TIIFBENCH_SPLIT="${TIIFBENCH_SPLIT:-testmini}"
-TIIFBENCH_PROMPT_DIR="${TIIFBENCH_PROMPT_DIR:-${TIIF_BENCH_ROOT}/data/${TIIFBENCH_SPLIT}_prompts}"
-TIIFBENCH_EVAL_PROMPT_DIR="${TIIFBENCH_EVAL_PROMPT_DIR:-${TIIF_BENCH_ROOT}/data/${TIIFBENCH_SPLIT}_eval_prompts}"
+TIIFBENCH_PROMPT_DIR="${TIIFBENCH_PROMPT_DIR:-${SCRIPT_DIR}/data/${TIIFBENCH_SPLIT}_prompts}"
+TIIFBENCH_EVAL_PROMPT_DIR="${TIIFBENCH_EVAL_PROMPT_DIR:-${SCRIPT_DIR}/data/${TIIFBENCH_SPLIT}_eval_prompts}"
 TIIFBENCH_EVAL_MODEL="${TIIFBENCH_EVAL_MODEL:-gpt-4o}"
 TIIFBENCH_AZURE_ENDPOINT="${TIIFBENCH_AZURE_ENDPOINT:-}"
 TIIFBENCH_API_VERSION="${TIIFBENCH_API_VERSION:-2025-01-01-preview}"
@@ -101,14 +100,12 @@ if [[ -z "${API_KEY:-}" ]]; then
   exit 1
 fi
 
-cd "$TIIF_BENCH_ROOT"
-
 mkdir -p "$RESULTS_DIR"
 EVAL_JSON_DIR="${RESULTS_DIR}/eval_json"
 mkdir -p "$EVAL_JSON_DIR"
 
 eval_cmd=(
-  python eval/eval_with_vlm_mp.py
+  python "${SCRIPT_DIR}/eval/eval_with_vlm_mp.py"
   --jsonl_dir "$TIIFBENCH_EVAL_PROMPT_DIR"
   --image_dir "$IMAGE_DIR"
   --eval_model "$TIIFBENCH_EVAL_MODEL_TAG"
@@ -123,7 +120,7 @@ fi
 
 "${eval_cmd[@]}"
 
-python eval/summary_results.py --input_dir "$EVAL_JSON_DIR"
-python eval/summary_dimension_results.py \
+python "${SCRIPT_DIR}/eval/summary_results.py" --input_dir "$EVAL_JSON_DIR"
+python "${SCRIPT_DIR}/eval/summary_dimension_results.py" \
   --input_excel "${EVAL_JSON_DIR}/result_summary.xlsx" \
   --output_txt "${RESULTS_DIR}/result_summary_dimension.txt"

@@ -1,0 +1,8 @@
+{"type": "3d_spatial_relation", "yn_question_list": ["Is there an airplane in the image?  ", "Is there a giraffe in the image?  ", "Is the airplane in front of the giraffe?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "3d_spatial_relation", "yn_question_list": ["Is there a balloon in the image?  ", "Is there a desk in the image?  ", "Is the balloon behind the desk?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "3d_spatial_relation", "yn_question_list": ["Is there a girl in the image?  ", "Is there a desk in the image?  ", "Is the girl in front of the desk?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "3d_spatial_relation", "yn_question_list": ["Is there a cup in the image?  ", "Is there a woman in the image?  ", "Is the cup behind the woman?  "], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "3d_spatial_relation", "yn_question_list": ["Is there a table in the image?  ", "Is there a painting in the image?  ", "Is the table in front of the painting?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "3d_spatial_relation", "yn_question_list": ["Is there a refrigerator in the image?  ", "Is there a plate in the image?  ", "Is the refrigerator in front of the plate?  "], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "3d_spatial_relation", "yn_question_list": ["Is there a cup in the image?  ", "Is there a desk in the image?  ", "Is the desk behind the cup?"], "yn_answer_list": ["yes", "yes", "yes"]}
+{"type": "3d_spatial_relation", "yn_question_list": ["Is there a girl in the image?  ", "Is there a key in the image?  ", "Is the key behind the girl?"], "yn_answer_list": ["yes", "yes", "yes"]}

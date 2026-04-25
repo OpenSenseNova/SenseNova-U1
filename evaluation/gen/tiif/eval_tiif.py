@@ -43,9 +43,7 @@ def get_jsonl_files(input_folder, specific_file=None):
     if specific_file is not None:
         return [os.path.join(input_folder, specific_file)]
     return sorted(
-        os.path.join(input_folder, filename)
-        for filename in os.listdir(input_folder)
-        if filename.endswith(".jsonl")
+        os.path.join(input_folder, filename) for filename in os.listdir(input_folder) if filename.endswith(".jsonl")
     )
 
 
@@ -81,9 +79,7 @@ class T2IInferenceEngine:
 
         self.model.eval()
 
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            model_path, trust_remote_code=True
-        )
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 
     def chat(
         self,
@@ -111,11 +107,7 @@ class T2IInferenceEngine:
         )
 
         image = self._denorm(output.float())
-        image = (
-            (image.clamp(0, 1).permute(0, 2, 3, 1).cpu().numpy() * 255.0)
-            .round()
-            .astype(np.uint8)
-        )
+        image = (image.clamp(0, 1).permute(0, 2, 3, 1).cpu().numpy() * 255.0).round().astype(np.uint8)
 
         if batch_size == 1:
             return Image.fromarray(image[0])

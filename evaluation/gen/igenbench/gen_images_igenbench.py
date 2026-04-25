@@ -36,7 +36,9 @@ def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate IGenBench images with SenseNova-U1.")
     parser.add_argument("--model-path", required=True, help="Local checkpoint path or HF model id.")
     parser.add_argument("--output-dir", required=True, help="Directory to save generated images.")
-    parser.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR), help="IGenBench directory with per-item JSON files.")
+    parser.add_argument(
+        "--data-dir", default=str(DEFAULT_DATA_DIR), help="IGenBench directory with per-item JSON files."
+    )
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--dtype", default="bfloat16", choices=["bfloat16", "float16", "float32"])
     parser.add_argument("--cfg-scale", type=float, default=4.0)
@@ -83,10 +85,7 @@ def main() -> None:
     from examples.t2i.inference import SenseNovaU1T2I
 
     sensenova_u1.set_attn_backend(args.attn_backend)
-    print(
-        f"[igenbench] attn_backend={args.attn_backend!r} "
-        f"effective={sensenova_u1.effective_attn_backend()!r}"
-    )
+    print(f"[igenbench] attn_backend={args.attn_backend!r} effective={sensenova_u1.effective_attn_backend()!r}")
 
     engine = SenseNovaU1T2I(
         model_path=args.model_path,
@@ -117,15 +116,9 @@ def main() -> None:
         )
         images[0].save(out_path)
         generated += 1
-        print(
-            f"[saved] prompt_id={prompt_id} "
-            f"size={width}x{height} chart_type={item.get('chart_type')} -> {out_path}"
-        )
+        print(f"[saved] prompt_id={prompt_id} size={width}x{height} chart_type={item.get('chart_type')} -> {out_path}")
 
-    print(
-        f"[igenbench] done: items={len(items)} "
-        f"generated={generated} skipped={skipped} output_dir={output_dir}"
-    )
+    print(f"[igenbench] done: items={len(items)} generated={generated} skipped={skipped} output_dir={output_dir}")
 
 
 if __name__ == "__main__":
