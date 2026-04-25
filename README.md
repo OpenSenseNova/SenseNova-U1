@@ -20,34 +20,59 @@
 
 ## 🌟 Overview
 
-🚀 **SenseNova-U1**, a native unified paradigm (based on **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**) where models no longer translate between modalities, but think and act across them natively. 
-Multimodal AI is shifting from integration to unification—where capabilities emerge from within.
-Our work sits within the *pre-train–driven Chat era*, yet gestures toward the next step: *post-train–driven Agent era*.
+🚀 **SenseNova U1** is a new series of native multimodal models that unifies multimodal understanding, reasoning, and generation within a single architecture. 
+It marks a fundamental paradigm shift in multimodal AI: **from modality integration to true unification**. Rather than relying on adapters to translate between modalities, SenseNova U1 models think and act across language and vision natively.
+
+The unification of visual understanding and generation opens tremendous possibilities. SenseNova U1 sits in the stage of data-driven learning (like ChatGPT), yet gestures toward the next stage, that is, Agentic learning and thinking in a natively multimodal way.
 
 
 #### 🏗️ *Key Pillars:*      
 
-- 🖼️ **Near-Lossless Visual Interface**: Preserving semantic richness + pixel fidelity (no VAEs or Vision Encoders) !  
+At the core of SenseNova U1 is **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**, a novel architecture designed from first principles for multimodal AI: language and visual information are inherently and deeply correlated. 
+NEO-Unify eliminates both Visual Encoder (VE) and Variational Auto-Encoder (VAE), replacing them with a unified representation.
 
-- 🧠 **Native Mixture-of-Transformers**: Modality-agnostic reasoning with high efficiency and minimal conflict !   
+This architecture has several important features:
 
-- 🔗 **Unified End-to-End Learning**: Modeling directly on pixels + text inputs from the first principles !   
+- 🖼️ Preserve semantic richness while maintaining pixel-level visual fidelity.
+- 🧠 Across-modality reasoning with high efficiency and minimal conflict, with a native mixture of transformers. 
+- 🔗 Language and visual information can be modeled directly as a unified compound.  
 
 
 #### ✨ *What This Unlocks:*
 
-- 🏆 **Open-source SOTA efficiency**: U1 sets a new open-source SOTA for unified understanding and generation, and even at a small scale, delivers performance comparable to commercial models with outstanding cost efficiency.
+Powered by this new core architecture, SenseNova U1 delivers exceptional efficiency in multimodal learning and modeling:
 
-- 📖 **Native interleaved image-text generation**: U1 can generate coherent interleaved text and images in a single flow, unlocking use case such as practical guides and travel diaries that combine clear communication with vivid storytelling, and turn complex information into easy-to-grasp visuals.
+- 🏆 **Open-source SoTA in both understanding and generation**: SenseNova U1 sets a new standard for unified multimodal understanding and generation, achieving state-of-the-art performance among open-source models across a wide range of understanding, reasoning, and generation benchmarks.
+  
+- 📖 **Native interleaved image-text generation**: SenseNova U1 can generate coherent interleaved text and images in a single flow with one model, enabling use cases such as practical guides and travel diaries that combine clear communication with vivid storytelling and transform complex information into intuitive visuals.
+  
+- 📰 **High-density information rendering**: SenseNova U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for knowledge illustrations, posters, presentations, comics, resumes, and other information-rich formats.
 
-- 📰 **High-density information rendering**: U1 demonstrates strong capabilities in dense visual communication, generating richly structured layouts for knowledge illustration, posters, PPTs, comics, resumes, and other information-rich formats.
 
 #### 🌍 *Beyond Multimodality:* 
 
 - 🤖 Vision–Language–Action (VLA)
 - 🌐 World Modeling (WM)
 
-In this release, we open-sourced the *Lite*-series models as a first step, with stronger models and further exploration still to come.
+## 🦁 Models
+
+In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
+
+- SenseNova U1-8B-MoT — dense backbone
+- SenseNova U1-A3B-MoT — MoE backbone
+
+
+| Model | Params | HF Weights |
+| :---- | :------- | :--------- |
+| SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
+| SenseNova-U1-8B-MoT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
+| SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 link |
+| SenseNova-U1-A3B-MoT | A3B MoT | 🤗 link |
+
+Note that the **SFT models** are trained in four stages: (1) *Understanding Warmup*, (2) *Generation Pre-training*, (3) *Unified Mid-training*, and (4) *Unified Supervised Fine-tuning*. The **final models** are obtained from the base model following an initial round of T2I reinforcement learning (RL) training.
+
+Although these models are relatively compact by today’s standards, they already demonstrate strong potential across a wide range of tasks, delivering performance comparable to commercial models while offering outstanding cost efficiency. That being said, We plan to release larger-scale models in future, which, we believe, can deliver stronger capabilities and higher performance.
+
 
 ## 📣 Updated News
 
@@ -61,17 +86,6 @@ In this release, we open-sourced the *Lite*-series models as a first step, with 
 
 - [ ] Final weights and technical report of SenseNova-U1
 
-
-## 🦁 Model Zoo
-
-| Model | Params | HF Weights |
-| :---- | :------- | :--------- |
-| SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
-| SenseNova-U1-8B-MoT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
-| SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 link |
-| SenseNova-U1-A3B-MoT | A3B MoT | 🤗 link |
-
-Note that the **SFT models** are trained in four stages: (1) *Understanding Warmup*, (2) *Generation Pre-training*, (3) *Unified Mid-training*, and (4) *Unified Supervised Fine-tuning*. The **final models** are obtained from the base model following an initial round of T2I reinforcement learning (RL) training.
 
 ## 🎨 Showcases
 
