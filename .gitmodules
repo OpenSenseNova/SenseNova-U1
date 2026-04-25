@@ -1,0 +1,8 @@
+[submodule "evaluation/easi/lightllm-stack/LightLLM"]
+	path = evaluation/easi/lightllm-stack/LightLLM
+	url = https://github.com/ModelTC/LightLLM.git
+	branch = neo_plus_clean
+[submodule "evaluation/easi/EASI"]
+	path = evaluation/easi/EASI
+	url = https://github.com/EvolvingLMMs-Lab/EASI.git
+	branch = main
