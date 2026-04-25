@@ -154,6 +154,17 @@ def main():
         help="Directory containing TIIF-Bench prompt JSONL files.",
     )
     parser.add_argument("--resolution", type=int, default=1024)
+    parser.add_argument(
+        "--save_size",
+        type=int,
+        default=None,
+        help=(
+            "If set, downsample each generated grid to this resolution per cell "
+            "(LANCZOS) before writing it to disk. Useful for the "
+            "'generate at 2048, evaluate at 1024' protocol. Defaults to "
+            "--resolution (no resize)."
+        ),
+    )
     parser.add_argument("--cfg_scale", type=float, default=4.0)
     parser.add_argument(
         "--cfg_norm",
@@ -239,6 +250,13 @@ def main():
                 batch_size=args.batch_size,
                 output_grid_size=(args.rows, args.cols),
             )
+
+            if args.save_size is not None and args.save_size != args.resolution:
+                scale = args.save_size / args.resolution
+                target_w = max(1, round(grid_image.width * scale))
+                target_h = max(1, round(grid_image.height * scale))
+                grid_image = grid_image.resize((target_w, target_h), Image.Resampling.LANCZOS)
+
             grid_image.save(save_path)
 
     dist.barrier()

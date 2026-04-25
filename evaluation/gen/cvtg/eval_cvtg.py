@@ -133,6 +133,17 @@ if __name__ == "__main__":
         help="Directory to save generated images.",
     )
     parser.add_argument("--image_size", "--resolution", dest="image_size", type=int, default=2048)
+    parser.add_argument(
+        "--save_size",
+        type=int,
+        default=None,
+        help=(
+            "If set, downsample each generated image to this resolution "
+            "(LANCZOS) before writing it to disk. Useful for the "
+            "'generate at 2048, evaluate at 1024' protocol. Defaults to "
+            "--image_size (no resize)."
+        ),
+    )
     parser.add_argument("--num_steps", type=int, default=50)
     parser.add_argument("--cfg_scale", type=float, default=7.0)
     parser.add_argument("--timestep_shift", type=float, default=1.0)
@@ -152,6 +163,7 @@ if __name__ == "__main__":
     output_path = args.output_dir
     os.makedirs(output_path, exist_ok=True)
     image_size = (args.image_size, args.image_size)
+    save_size = args.save_size if args.save_size and args.save_size != args.image_size else None
     enable_timestep_shift = args.timestep_shift >= 1.0
 
     max_memory = None
@@ -197,6 +209,9 @@ if __name__ == "__main__":
             image_size=image_size,
             num_steps=args.num_steps,
         )
+
+        if save_size is not None:
+            grid_image = grid_image.resize((save_size, save_size), Image.Resampling.LANCZOS)
 
         os.makedirs(cur_output_folder, exist_ok=True)
         grid_image.save(output_file)

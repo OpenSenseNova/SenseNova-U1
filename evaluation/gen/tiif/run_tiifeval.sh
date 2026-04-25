@@ -26,6 +26,7 @@ fi
 GPUS="${GPUS:-8}"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1,2,3,4,5,6,7}"
 IMAGE_SIZE="${IMAGE_SIZE:-1024}"
+SAVE_SIZE="${SAVE_SIZE:-}"
 NUM_STEPS="${NUM_STEPS:-50}"
 CFG_SCALE="${CFG_SCALE:-4.0}"
 CFG_NORM="${CFG_NORM:-global}"
@@ -84,6 +85,9 @@ if (( RUN_GENERATION != 0 )); then
   )
   if [[ -n "$TIIFBENCH_SPECIFIC_FILE" ]]; then
     GEN_ARGS+=(--specific_file "$TIIFBENCH_SPECIFIC_FILE")
+  fi
+  if [[ -n "$SAVE_SIZE" ]]; then
+    GEN_ARGS+=(--save_size "$SAVE_SIZE")
   fi
   CUDA_VISIBLE_DEVICES="$CUDA_VISIBLE_DEVICES" torchrun --nproc_per_node="$GPUS" eval_tiif.py "${GEN_ARGS[@]}"
 fi

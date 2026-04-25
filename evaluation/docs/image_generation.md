@@ -166,6 +166,7 @@ Common overrides (set as env vars before the launcher):
 | `OUTPUT_DIR` | `<repo>/outputs/sensenova/cvtg` | Generated-image + results dir |
 | `PADDLEOCR_SOURCE_DIR` | — | Pre-downloaded PaddleOCR cache (copied to `$HOME/.paddleocr` if missing) |
 | `IMAGE_SIZE` / `CFG_SCALE` / `TIMESTEP_SHIFT` / `NUM_STEPS` | `2048` / `7.0` / `1.0` / `50` | Sampling config |
+| `SAVE_SIZE` | unset (= `IMAGE_SIZE`) | Downsample with LANCZOS to this resolution before writing PNGs. Set to `1024` to use the "generate at 2048, evaluate at 1024" protocol. |
 | `CVTG_SUBSETS` / `CVTG_AREAS` | `CVTG,CVTG-Style` / `2,3,4,5` | Which splits to run |
 | `CUDA_VISIBLE_DEVICES` | `0,1,2,3,4,5,6,7` | GPUs available for model sharding |
 | `DEVICE_MAP` / `MAX_MEMORY_PER_GPU_GB` | `auto` / `70` | HF `device_map` strategy and per-GPU memory cap |
@@ -208,6 +209,7 @@ Required / common overrides:
 | `TIIFBENCH_EVAL_MODEL` | `gpt-4o` | Judge model |
 | `API_KEY` (+ optional `TIIFBENCH_AZURE_ENDPOINT` / `TIIFBENCH_API_VERSION`) | — | Judge API credentials |
 | `IMAGE_SIZE` / `CFG_SCALE` / `CFG_NORM` / `TIMESTEP_SHIFT` / `NUM_STEPS` | `1024` / `4.0` / `global` / `3.0` / `50` | Sampling config |
+| `SAVE_SIZE` | unset (= `IMAGE_SIZE`) | Downsample with LANCZOS to this resolution before writing PNGs. Set to `1024` (with `IMAGE_SIZE=2048`) to use the "generate at 2048, evaluate at 1024" protocol. |
 | `GPUS` / `CUDA_VISIBLE_DEVICES` | `8` / `0..7` | GPU layout (generation uses `torchrun`) |
 | `NUM_NODES` / `NODE_RANK` | `1` / `0` | Multi-node sharding (eval runs only on node 0) |
 | `RUN_GENERATION` / `RUN_EVAL` | `1` / `1` | Stage toggles |

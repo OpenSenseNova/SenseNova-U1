@@ -25,6 +25,7 @@ DEVICE_MAP="${DEVICE_MAP:-auto}"
 MAX_MEMORY_PER_GPU_GB="${MAX_MEMORY_PER_GPU_GB:-70}"
 
 IMAGE_SIZE="${IMAGE_SIZE:-2048}"
+SAVE_SIZE="${SAVE_SIZE:-}"
 NUM_STEPS="${NUM_STEPS:-50}"
 CFG_SCALE="${CFG_SCALE:-7.0}"
 TIMESTEP_SHIFT="${TIMESTEP_SHIFT:-1.0}"
@@ -47,6 +48,9 @@ GEN_ARGS=(
 )
 if [[ -n "$TARGET_KEYS" ]]; then
   GEN_ARGS+=(--target_keys "$TARGET_KEYS")
+fi
+if [[ -n "$SAVE_SIZE" ]]; then
+  GEN_ARGS+=(--save_size "$SAVE_SIZE")
 fi
 
 count_visible_gpus() {
