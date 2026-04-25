@@ -40,7 +40,7 @@ This architecture has several important features:
 
 #### ✨ *What This Unlocks:*
 
-Powered by this new core architecture, SenseNova U1 delivers exceptional efficiency in multimodal learning and modeling:
+Powered by this new core architecture, SenseNova U1 delivers exceptional efficiency in multimodal learning:
 
 - 🏆 **Open-source SoTA in both understanding and generation**: SenseNova U1 sets a new standard for unified multimodal understanding and generation, achieving state-of-the-art performance among open-source models across a wide range of understanding, reasoning, and generation benchmarks.
   
