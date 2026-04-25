@@ -1,15 +1,16 @@
 import argparse
-import os
-import json
-import glob
-import time
-import re
-from tqdm import tqdm
-import math
-import random
-from concurrent.futures import ThreadPoolExecutor, wait
 import base64
+import glob
+import json
+import math
+import os
+import random
+import re
+import time
+from concurrent.futures import ThreadPoolExecutor, wait
+
 from openai import AzureOpenAI
+from tqdm import tqdm
 
 # ===================== 你原始的提示词 100% 不变 =====================
 raw_prompt = """

@@ -2,16 +2,17 @@
 
 import argparse
 import json
+import logging
 import os
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
-import logging
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
-from PIL import Image
-from tqdm import tqdm
 import torch
 import torch.distributed as dist
+from PIL import Image
+from tqdm import tqdm
 
 
 def convert_numpy_types(obj):
@@ -78,9 +79,10 @@ class UnifiedMetricsEvaluator:
                 import paddle
 
                 paddle.device.set_device(f"gpu:{paddle_gpu_id}")
-            from paddleocr import PaddleOCR
-            import Levenshtein
             import difflib
+
+            import Levenshtein
+            from paddleocr import PaddleOCR
 
             self.models["ocr"] = PaddleOCR(
                 use_angle_cls=True,
@@ -95,11 +97,12 @@ class UnifiedMetricsEvaluator:
 
         # Try to import official CLIP
         try:
+            import warnings
+
             import clip
-            from sklearn.preprocessing import normalize
             import sklearn.preprocessing
             from packaging import version
-            import warnings
+            from sklearn.preprocessing import normalize
 
             clip_model, clip_preprocess = clip.load("ViT-L/14", device=self.device, jit=False)
             clip_model.eval()
@@ -236,11 +239,12 @@ class UnifiedMetricsEvaluator:
             return [0.0] * len(image_paths)
 
         try:
+            import warnings
+
             import clip
-            from sklearn.preprocessing import normalize
             import sklearn.preprocessing
             from packaging import version
-            import warnings
+            from sklearn.preprocessing import normalize
 
             # Batch process text (add prefix)
             processed_texts = []
@@ -305,11 +309,12 @@ class UnifiedMetricsEvaluator:
             return 0.0
 
         try:
+            import warnings
+
             import clip
-            from sklearn.preprocessing import normalize
             import sklearn.preprocessing
             from packaging import version
-            import warnings
+            from sklearn.preprocessing import normalize
 
             # Add prefix, consistent with original CLIPScore script
             prefix = "A photo depicts "
