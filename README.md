@@ -242,32 +242,23 @@ Note that the **SFT models** are trained in four stages: (1) *Understanding Warm
 <summary>📝 Visual Understanding</summary>
 
 <p align="center">
-  <img src="docs/assets/benchmarks/understanding_radial.webp" alt="Understanding Radial">
-</p>
-
-> **Visual Understanding details:**
-
-<p align="center">
   <img src="docs/assets/benchmarks/understanding.webp" alt="Understanding Benchmarks">
 </p>
 
 </details>
 
 <details>
-<summary>🖼️ Visual Generation & ♻️ Interleaved Generation</summary>
-
-<p align="center">
-  <img src="docs/assets/benchmarks/generation_radial.webp" alt="Generation Radial" width="48%">
-  <img src="docs/assets/benchmarks/interleaved_radial.webp" alt="Interleaved Radial" width="48%">
-</p>
-
-> **Visual Generation details:**
+<summary>🖼️ Visual Generation</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
 </p>
 
-> **Interleaved Generation details:**
+
+</details>
+
+<details>
+<summary>♻️ Interleaved Generation</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/interleaved.webp" alt="Interleaved Benchmarks">
