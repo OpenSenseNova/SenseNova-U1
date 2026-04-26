@@ -16,21 +16,20 @@
   <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
 </p>
 
+<p align="center">
+  <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
+</p>
+
 ## 🌟 Overview
 
 🚀 **SenseNova U1** is a new series of native multimodal models that unifies multimodal understanding, reasoning, and generation within a single architecture. 
 It marks a fundamental paradigm shift in multimodal AI: **from modality integration to true unification**. Rather than relying on adapters to translate between modalities, SenseNova U1 models think and act across language and vision natively.
 
-<p align="center">
-  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
-</p>
-
 The unification of visual understanding and generation opens tremendous possibilities. SenseNova U1 sits in the stage of data-driven learning (like ChatGPT), yet gestures toward the next stage, that is, Agentic learning (like OpenClaw) and thinking in a natively multimodal way.
 
 <p align="center">
-  <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
+  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
 </p>
-
 
 #### 🏗️ *Key Pillars:*      
 
@@ -339,6 +338,26 @@ Although these models are relatively compact by today’s standards, they alread
 </details>
 
 > Evaluation scripts and benchmark reproduction guides are added in [`evaluation`](./evaluation/README.md).
+
+## ⚠️ Ongoing Improvements
+
+While our system demonstrates strong performance across a range of tasks, several limitations remain and point to directions for further improvement:
+
+* **Visual Understanding**:   
+  The current model supports a context length of up to 32K tokens, which may constrain performance in scenarios requiring longer or more complex visual contexts.
+
+* **Human-centric Generation**:   
+  Fine-grained details of human bodies can be challenging, particularly when humans occupy a small portion of the scene or are involved in intricate interactions with objects.
+
+* **Text-based Generation**:   
+  Text rendering may occasionally contain inaccuracies, and the model can exhibit sensitivity to prompt phrasing in text-intensive scenarios.
+
+* **Interleaved Generation**:   
+
+  * As an experimental feature, interleaved generation is still evolving and may not yet match the performance of dedicated text-to-image (T2I) pipelines.
+  * **Beta status:** Reinforcement learning has not been specifically optimized for interleaved tasks, and current performance is comparable to supervised fine-tuning (SFT).
+
+We view these areas as active directions for ongoing development and expect continued improvements in future iterations.
 
 
 ## 🛠️ Quick Start
