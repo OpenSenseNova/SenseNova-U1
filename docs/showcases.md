@@ -252,8 +252,6 @@ Reproducible prompts are in [`examples/vqa/data/samples.jsonl`](../examples/vqa/
 
 #### 📝 *Visual Understanding (Agentic)*
 
-Reproducible prompts are in [`examples/vqa/data/samples_agentic.jsonl`](../examples/vqa/data/samples_agentic.jsonl).
-
 | |
 | :---: |
 | [<img alt="vqa agentic case" src="./assets/showcases/vqa/agentic_case.webp">](./assets/showcases/vqa/agentic_case.webp) |
