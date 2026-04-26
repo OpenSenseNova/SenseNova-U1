@@ -153,9 +153,12 @@ visible GPUs via HuggingFace `device_map`.
 bash evaluation/gen/cvtg/run_cvtgeval.sh
 ```
 
-The CVTG-2K prompts ship under [`cvtg/data/`](../gen/cvtg/data/) and the
-LAION aesthetic-predictor head [`sa_0_4_vit_l_14_linear.pth`](../gen/cvtg/sa_0_4_vit_l_14_linear.pth)
-sits next to the eval script — no external download is required.
+Prepare the CVTG-2K data from
+[`dnkdnk/CVTG-2K`](https://huggingface.co/datasets/dnkdnk/CVTG-2K)
+and place it under [`cvtg/data/`](../gen/cvtg/data/). The LAION
+aesthetic-predictor head
+[`sa_0_4_vit_l_14_linear.pth`](../gen/cvtg/sa_0_4_vit_l_14_linear.pth)
+sits next to the eval script.
 
 Common overrides (set as env vars before the launcher):
 
