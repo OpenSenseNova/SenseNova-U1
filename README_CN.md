@@ -368,6 +368,8 @@
 
 体验 SenseNova-U1 最便捷的方式是通过 **[SenseNova-Studio](https://unify.light-ai.top/)** —— 一个 🆓 免费的在线体验平台，无需安装、无需 GPU，直接在浏览器中即可试用。
 
+> **注：** U1-Fast 是基于 SenseNova U1 的加速版本，专供信息图（Infographics）生成。
+
 
 ### 🦞 使用 SenseNova-Skills（OpenClaw）
 

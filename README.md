@@ -365,6 +365,8 @@ We view these areas as active directions and expect continued improvements in fu
 
 The fastest way to experience SenseNova-U1 is through **[SenseNova-Studio](https://unify.light-ai.top/)** — a 🆓 free online playground where you can try the model directly in your browser, no installation or GPU required.
 
+> **Note:** U1-Fast is an accelerated version dedicated to infographic generation.
+
 
 ### 🦞 Use with SenseNova-Skills (OpenClaw)
 
