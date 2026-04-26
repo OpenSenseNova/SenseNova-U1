@@ -2,8 +2,8 @@
 # Download SenseNova-U1 weights from HuggingFace into <repo_root>/models/.
 #
 # Usage:
-#   bash evaluation/easi/scripts/download_weights.sh mini-beta   # SenseNova-U1-Mini-Beta (reasoning)
-#   bash evaluation/easi/scripts/download_weights.sh mini-sft    # SenseNova-U1-Mini-SFT  (non-reasoning SFT)
+#   bash evaluation/easi/scripts/download_weights.sh 8b-mot       # SenseNova-U1-8B-MoT (reasoning)
+#   bash evaluation/easi/scripts/download_weights.sh 8b-mot-sft   # SenseNova-U1-8B-MoT-SFT  (non-reasoning SFT)
 #   bash evaluation/easi/scripts/download_weights.sh all
 #
 # Requires: .venv-lightllm activated (has huggingface_hub installed).
@@ -50,16 +50,16 @@ download() {
   ${DL} "${repo_id}" --local-dir "${local_dir}"
 }
 
-target="${1:-mini-beta}"
+target="${1:-8b-mot}"
 case "${target}" in
-  mini-beta) download "SenseNova/SenseNova-U1-Mini-Beta" ;;
-  mini-sft)  download "SenseNova/SenseNova-U1-Mini-SFT"  ;;
+  8b-mot)     download "SenseNova/SenseNova-U1-8B-MoT" ;;
+  8b-mot-sft) download "SenseNova/SenseNova-U1-8B-MoT-SFT"  ;;
   all)
-    download "SenseNova/SenseNova-U1-Mini-Beta"
-    download "SenseNova/SenseNova-U1-Mini-SFT"
+    download "SenseNova/SenseNova-U1-8B-MoT"
+    download "SenseNova/SenseNova-U1-8B-MoT-SFT"
     ;;
   *)
-    echo "[error] unknown target: ${target}. Use: mini-beta | mini-sft | all" >&2
+    echo "[error] unknown target: ${target}. Use: 8b-mot | 8b-mot-sft | all" >&2
     exit 1
     ;;
 esac

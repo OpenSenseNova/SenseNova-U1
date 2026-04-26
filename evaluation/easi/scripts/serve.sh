@@ -4,7 +4,7 @@
 # Two modes, picked automatically by DP:
 #
 #   DP=1 (default)  — single LightLLM instance bound directly to the canonical
-#                     per-model port (mini-beta → 8000, mini-sft → 8001).
+#                     per-model port (8b-mot → 8000, 8b-mot-sft → 8001).
 #                     No load balancer, no extra process.
 #
 #   DP>1            — DP tp-sharded replicas on backend ports (8100+, step 10)
@@ -15,15 +15,15 @@
 # Total GPUs used = DP × TP, assigned contiguously from GPU 0 unless GPUS set.
 #
 # Usage:
-#   bash evaluation/easi/scripts/serve.sh                               # DP=1, mini-beta, GPUs 0-1, port 8000
-#   MODEL=mini-sft GPUS=2,3 TP=2 bash evaluation/easi/scripts/serve.sh  # mini-sft on 8001
-#   TP=8 GPUS=0,1,2,3,4,5,6,7 bash evaluation/easi/scripts/serve.sh     # single big instance
-#   DP=4 TP=2 bash evaluation/easi/scripts/serve.sh                     # 4 replicas × tp=2, LB on 8000
-#   DP=4 TP=2 MODEL=mini-sft bash evaluation/easi/scripts/serve.sh      # 4 replicas, LB on 8001
+#   bash evaluation/easi/scripts/serve.sh                                # DP=1, 8b-mot, GPUs 0-1, port 8000
+#   MODEL=8b-mot-sft GPUS=2,3 TP=2 bash evaluation/easi/scripts/serve.sh # 8b-mot-sft on 8001
+#   TP=8 GPUS=0,1,2,3,4,5,6,7 bash evaluation/easi/scripts/serve.sh      # single big instance
+#   DP=4 TP=2 bash evaluation/easi/scripts/serve.sh                      # 4 replicas × tp=2, LB on 8000
+#   DP=4 TP=2 MODEL=8b-mot-sft bash evaluation/easi/scripts/serve.sh     # 4 replicas, LB on 8001
 #
 # Env vars:
-#   MODEL               mini-beta | mini-sft               (default: mini-beta)
-#   MODEL_DIR           explicit path, overrides MODEL     (default: ./models/SenseNova-U1-Mini-<Beta|SFT>)
+#   MODEL               8b-mot | 8b-mot-sft                (default: 8b-mot)
+#   MODEL_DIR           explicit path, overrides MODEL     (default: ./models/SenseNova-U1-8B-MoT[-SFT])
 #   DP                  # of replicas                      (default: 1)
 #   TP                  tensor parallel degree / replica   (default: 2)
 #   GPUS                CSV of CUDA_VISIBLE_DEVICES ids    (default: 0,1,...,DP*TP-1)
@@ -66,24 +66,24 @@ VENV_DIR="${REPO_ROOT}/.venv-lightllm"
 # ---------------------------------------------------------------------------
 # 1) Resolve model defaults
 # ---------------------------------------------------------------------------
-MODEL="${MODEL:-mini-beta}"
+MODEL="${MODEL:-8b-mot}"
 case "${MODEL}" in
-  mini-beta)
-    DEFAULT_DIR="${REPO_ROOT}/models/SenseNova-U1-Mini-Beta"
+  8b-mot)
+    DEFAULT_DIR="${REPO_ROOT}/models/SenseNova-U1-8B-MoT"
     DEFAULT_LB_PORT=8000
     DEFAULT_BACKEND_BASE=8100
-    DEFAULT_MODEL_NAME="sensenova-u1-mini-beta"
+    DEFAULT_MODEL_NAME="sensenova-u1-8b-mot"
     DEFAULT_REASONING="qwen3"
     ;;
-  mini-sft)
-    DEFAULT_DIR="${REPO_ROOT}/models/SenseNova-U1-Mini-SFT"
+  8b-mot-sft)
+    DEFAULT_DIR="${REPO_ROOT}/models/SenseNova-U1-8B-MoT-SFT"
     DEFAULT_LB_PORT=8001
     DEFAULT_BACKEND_BASE=8101
-    DEFAULT_MODEL_NAME="sensenova-u1-mini-sft"
+    DEFAULT_MODEL_NAME="sensenova-u1-8b-mot-sft"
     DEFAULT_REASONING="qwen3"
     ;;
   *)
-    echo "[error] MODEL must be 'mini-beta' or 'mini-sft' (got: ${MODEL})" >&2
+    echo "[error] MODEL must be '8b-mot' or '8b-mot-sft' (got: ${MODEL})" >&2
     exit 1
     ;;
 esac

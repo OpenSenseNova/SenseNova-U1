@@ -27,7 +27,7 @@
 
 #### 🖼️ *文生图（推理）*
 
-可复现的 prompt 位于 [`examples/t2i/data/sample_reasoning.jsonl`](../examples/t2i/data/sample_reasoning.jsonl)。
+可复现的 prompt 位于 [`examples/t2i/data/samples_reasoning.jsonl`](../examples/t2i/data/samples_reasoning.jsonl)。
 
 <table>
   <tr>
@@ -210,11 +210,19 @@
 | [<img alt="interleave case 01" src="./assets/showcases/interleave/case_0001_makeup_three_looks.webp">](./assets/showcases/interleave/case_0001_makeup_three_looks.webp) |
 | [<img alt="interleave case 07" src="./assets/showcases/interleave/case_0007_bowie_slide_design.webp">](./assets/showcases/interleave/case_0007_bowie_slide_design.webp) |
 
+#### ♻️ *图文交错生成（推理）*
+
+| |
+| :---: |
+| [<img alt="interleave reasoning case 2" src="./assets/showcases/interleave/reasoning_case2.png">](./assets/showcases/interleave/reasoning_case2.png) |
+
 ---
 
 ## 视觉理解
 
 涵盖空间推理、多图比较、OCR、几何以及知识密集型问答的通用视觉理解能力：
+
+可复现的 prompt 位于 [`examples/vqa/data/samples.jsonl`](../examples/vqa/data/samples.jsonl)。
 
 | |
 | :---: |
