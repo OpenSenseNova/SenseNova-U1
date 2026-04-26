@@ -268,6 +268,11 @@
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
 </p>
 
+<p align="center">
+  <img src="docs/assets/perform_vs_speed.png" alt="Generation Performance vs Speed" width="900">
+  <br>
+  <sub>商业模型与开源模型在视觉生成任务上的性能与延迟对比。</sub>
+</p>
 
 </details>
 

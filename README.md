@@ -311,6 +311,12 @@ Although these models are relatively compact by today’s standards, they alread
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
 </p>
 
+<p align="center">
+  <img src="docs/assets/perform_vs_speed.png" alt="Generation Performance vs Speed" width="900">
+  <br>
+  <sub>Generation performance vs. latency across commercial and open-source models.</sub>
+</p>
+
 </details>
 
 <details>
