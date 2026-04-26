@@ -69,7 +69,7 @@ if __name__ == "__main__":
         "--model_path",
         type=str,
         required=True,
-        help="Local checkpoint path or HF model id.",
+        help="HuggingFace Hub id (e.g. sensenova/SenseNova-U1-8B-MoT) or a local path.",
     )
     parser.add_argument(
         "--benchmark_root",

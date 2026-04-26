@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Generate images using SenseNova-U1-8B-MoT-SFT.
-MODEL_PATH="sensenova/SenseNova-U1-8B-MoT-SFT"
+MODEL_PATH="sensenova/SenseNova-U1-8B-MoT"
 IMAGE_OUTPUT_DIR="outputs/sensenova/igenbench"
 EVAL_OUTPUT_DIR="outputs/sensenova/igenbench_eval"
 

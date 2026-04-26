@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Generate images using SenseNova-U1-8B-MoT-SFT.
-MODEL_PATH="sensenova/SenseNova-U1-8B-MoT-SFT"
+# Generate images using SenseNova-U1-8B-MoT.
+MODEL_PATH="sensenova/SenseNova-U1-8B-MoT"
 IMAGE_OUTPUT_DIR="outputs/sensenova/bizgeneval"
 EVAL_OUTPUT_DIR="outputs/sensenova/bizgeneval_eval"
 
