@@ -17,8 +17,8 @@ These two engines exchange generation state through pinned shared memory and hig
 
 This design provides practical benefits in production:
 
-- Independent parallelism (for example, understanding with `TP=2`, generation
-  with `CFG=2` or `SP=2`).
+- Independent parallelism (for example, understanding with `TP=2` (Tensor Parallel=2), generation
+  with `CFG=2` (CFG Parallel=2) or `SP=2` (Sequence Parallel=2)).
 - Independent resource allocation (different GPU counts and memory budgets).
 - Independent scaling for text-heavy vs. image-heavy traffic.
 - Better operational isolation and simpler performance tuning.
@@ -32,7 +32,7 @@ In most production setups, `Separate` is the default choice because it gives cle
 
 ### Attention for Multimodal Prefill of NEO-Unify
 
-NEO-Unify's prefill attention is not standard causal attention. Text tokens remain causal, while image tokens attend to the full text prefix together with the entire image span. To support this hybrid masking pattern, we modified both attention implementations in our stack: the Triton kernel and the official FA3 codebase. Our FA3 branch is available at [WANDY666/flash-attention](https://github.com/WANDY666/flash-attention).
+NEO-Unify's prefill attention is not standard causal attention. Text tokens remain causal, while image tokens attend to the full text prefix together with the entire image span. To support this hybrid masking pattern, we modified both attention implementations in our stack: the Triton kernel and the official FlashAttention3 (FA3) codebase. Our FA3 branch is available at [WANDY666/flash-attention](https://github.com/WANDY666/flash-attention).
 
 Concretely, we introduced an optional image_token_tag argument that adjusts the mask row by row. Text rows keep the standard causal mask. Image rows, instead of using plain causal truncation, are allowed to attend to all preceding text tokens and all image tokens within the image span.
 
@@ -47,23 +47,27 @@ The benchmark below compares two implementations for Neo-style multimodal prefil
   integration cost and faster iteration.
 - **FA3 implementation**: higher absolute performance on supported hardware.
 
-| batch | max_seq_len | image_token_num | triton (ms) | fa3 (ms) | speedup (×) |
-| ----: | ----------: | --------------: | -------------: | ----------: | ----------: |
-|     8 |        4096 |              88 |          1.95 |       0.81 |       **2.41×** |
-|     8 |        8192 |             171 |          6.55 |       2.68 |       **2.45×** |
-|     8 |       65536 |             150 |         43.30 |      14.95 |       **2.90×** |
-|    16 |        4096 |             379 |          4.12 |       1.68 |       **2.46×** |
-|    16 |        8192 |             246 |         17.76 |       7.40 |       **2.40×** |
-|    16 |       65536 |             206 |        107.74 |      33.66 |       **3.20×** |
-|    32 |        4096 |             726 |          8.46 |       3.46 |       **2.44×** |
-|    32 |        8192 |             536 |         31.74 |      13.24 |       **2.40×** |
-|    32 |       65536 |             417 |        171.00 |      58.26 |       **2.94×** |
-|    64 |        4096 |            1170 |         16.08 |       6.88 |       **2.34×** |
-|    64 |        8192 |            1177 |         55.48 |      22.91 |       **2.42×** |
-|    64 |       65536 |            1291 |        348.89 |     124.82 |       **2.80×** |
-|   128 |        4096 |            2057 |         30.89 |      12.53 |       **2.47×** |
-|   128 |        8192 |            2196 |        104.73 |      43.22 |       **2.42×** |
-|   128 |       65536 |            2205 |        706.60 |     241.67 |       **2.92×** |
+<div align="center">
+
+|  batch  | max_seq_len | image_token_num | triton (ms) | FA3 (ms) | speedup (×) |
+|:-------:|:-----------:|:---------------:|:-----------:|:--------:|:-----------:|
+|    8    |     4096    |       88        |    1.95     |   0.81   |  **2.41×**  |
+|    8    |     8192    |       171       |    6.55     |   2.68   |  **2.45×**  |
+|    8    |    65536    |       150       |   43.30     |  14.95   |  **2.90×**  |
+|   16    |     4096    |       379       |    4.12     |   1.68   |  **2.46×**  |
+|   16    |     8192    |       246       |   17.76     |   7.40   |  **2.40×**  |
+|   16    |    65536    |       206       |  107.74     |  33.66   |  **3.20×**  |
+|   32    |     4096    |       726       |    8.46     |   3.46   |  **2.44×**  |
+|   32    |     8192    |       536       |   31.74     |  13.24   |  **2.40×**  |
+|   32    |    65536    |       417       |  171.00     |  58.26   |  **2.94×**  |
+|   64    |     4096    |       1170      |   16.08     |   6.88   |  **2.34×**  |
+|   64    |     8192    |       1177      |   55.48     |  22.91   |  **2.42×**  |
+|   64    |    65536    |       1291      |  348.89     | 124.82   |  **2.80×**  |
+|  128    |     4096    |       2057      |   30.89     |  12.53   |  **2.47×**  |
+|  128    |     8192    |       2196      |  104.73     |  43.22   |  **2.42×**  |
+|  128    |    65536    |       2205      |  706.60     | 241.67   |  **2.92×**  |
+
+</div>
 
 
 ### Deployment
@@ -76,13 +80,18 @@ see [`deployment.md`](./deployment.md).
 
 The table below is the benchmark template for **2048x2048** image generation.
 Fill in measured numbers for each machine and deployment profile.
+Note: TP2+CFG2 means Tensor Parallel=2 + CFG Parallel=2.
 
-| GPU | Deployment Config | Per-step Latency (s/step) | End-to-end Latency (s) |
-| ---------- | ----------------- | --------------------------: | ---------------------: |
+<div align="center">
+
+| GPU  | Deployment Config | Per-step Latency (s/step) | End-to-end Latency (s) |
+|:----:|:-----------------:|:-------------------------:|:----------------------:|
 | H100 | TP2+CFG2 / colocate | 0.158 | 9.23 |
 | H200 | TP2+CFG2 / colocate | 0.152 | 9.54 |
 | 5090 | TP2+CFG2 / separate | 0.415 | 23.04 |
 | L40S | TP2+CFG2 / separate | 0.443 | 25.62 |
+
+</div>
 
 In NEO-Unify, the KV cache for the generation stage is provided by the understanding module, so T2I (generation) and I2I (editing) have very similar runtime characteristics. For brevity, we report only T2I latency here.
 
@@ -93,13 +102,18 @@ The table below compares the latency of a single diffusion step for
 **2048x2048** image generation with **CFG enabled**. Unless otherwise noted,
 all measurements are taken on **H100**; the `NEO-Unify (TP2+CFG2)` result uses
 `2x H100`.
+Note: TP2+CFG2 means Tensor Parallel=2 + CFG Parallel=2.
 
-| Model | Understanding | Generation | Per-step latency (s/step) |
-| ----- | ------------: | ---------: | -------------------------: |
-| Qwen-Image-2512 | 7B | 20B | 1.478 |
-| Z-Image | 4B | 6B | 1.110 |
-| GLM-Image | 9B | 7B | 1.394 |
-| ERNIE-Image | 8B | 8B | 1.565 |
-| LongCat-Image | 8B | 6B | 0.796 |
-| NEO-Unify (1x, no TP/CFG parallel) | 8B | 8B | 0.312 |
+<div align="center">
+
+|       Model       | Understanding | Generation | Per-step latency (s/step) |
+|:-----------------:|:-------------:|:----------:|:-------------------------:|
+| Qwen-Image-2512   |      7B       |     20B    |           1.478           |
+| Z-Image           |      4B       |     6B     |           1.110           |
+| GLM-Image         |      9B       |     7B     |           1.394           |
+| ERNIE-Image       |      8B       |     8B     |           1.565           |
+| LongCat-Image     |      8B       |     6B     |           0.796           |
+| NEO-Unify (1x, no TP/CFG parallelism) | 8B | 8B | 0.312 |
 | NEO-Unify (TP2+CFG2) | 8B | 8B | 0.158 |
+
+</div>
