@@ -25,7 +25,6 @@ from functools import partial
 # evaluation/easi/EASI/VLMEvalKit/vlmeval/. Linter warnings in-tree are expected.
 from vlmeval.api.gpt import GPT4V  # type: ignore[import-not-found]
 
-
 entries = {
     "SenseNova-U1-Mini-Beta-Local": partial(
         GPT4V,

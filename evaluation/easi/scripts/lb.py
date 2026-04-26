@@ -33,8 +33,7 @@ from contextlib import asynccontextmanager
 import httpx
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.responses import StreamingResponse, JSONResponse
-
+from fastapi.responses import JSONResponse, StreamingResponse
 
 BACKENDS: list[str] = [b.strip().rstrip("/") for b in os.environ.get("BACKENDS", "").split(",") if b.strip()]
 if not BACKENDS:
