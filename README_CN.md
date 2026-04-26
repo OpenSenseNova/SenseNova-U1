@@ -37,6 +37,21 @@
 
 #### ✨ *能力突破:*
 
+基于全新的核心架构，SenseNova U1 在多模态学习中展现出卓越效率：
+
+<div align="center" style="margin-bottom: 18px;">
+  <div style="display: inline-block; width: 48%; vertical-align: top; margin-right: 1%;">
+    <img src="docs/assets/perform_vs_speed_avg8.png" alt="8 项任务上的预测延迟与平均性能对比" width="100%">
+    <br>
+    <sub>OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
+  </div>
+  <div style="display: inline-block; width: 48%; vertical-align: top; margin-left: 1%;">
+    <img src="docs/assets/perform_vs_speed_avg3.png" alt="信息图基准上的预测延迟与平均性能对比" width="100%">
+    <br>
+    <sub>信息图生成基准 BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
+  </div>
+</div>
+
 - 🏆 **开源 SOTA 级效率优势**：U1 在统一理解与生成上刷新开源 SOTA，即使在较小模型规模下，仍可实现媲美商用模型的表现，并具备出色的性价比。
 
 - 📖 **原生图文交错生成**：U1 可以在单次生成流程中连贯地产出图文交错内容，支持视生活指南等高效信息传达场景，也支持旅行日记等更具叙事感与表现力的内容创作，把复杂信息浓缩成一眼看懂的图示。
@@ -266,12 +281,6 @@
 
 <p align="center">
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
-</p>
-
-<p align="center">
-  <img src="docs/assets/perform_vs_speed.png" alt="Generation Performance vs Speed" width="900">
-  <br>
-  <sub>商业模型与开源模型在视觉生成任务上的性能与延迟对比。</sub>
 </p>
 
 </details>
