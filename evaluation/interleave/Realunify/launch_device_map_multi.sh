@@ -4,7 +4,7 @@ set -euo pipefail
 # Large-model launcher for RealUnify.
 # Default: 2 GPUs per worker, multiple workers on one node, manual shard split.
 
-STEP="${STEP:-3000_ema}"
+STEP="${STEP:-<STEP_TAG>}"
 MODEL_NAME="${MODEL_NAME:-<YOUR_MODEL_NAME>}"
 MODEL_PATH="${MODEL_PATH:-<MODEL_ROOT>/${MODEL_NAME}/hf_step${STEP}}"
 

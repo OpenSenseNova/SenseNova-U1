@@ -7,7 +7,7 @@
 # ============================================================================
 
 # Model path (override via env: MODEL_NAME=xxx STEP=yyy bash run.sh ...)
-STEP="${STEP:-3000_ema}"
+STEP="${STEP:-<STEP_TAG>}"
 MODEL_NAME="${MODEL_NAME:-<YOUR_MODEL_NAME>}"
 MODEL_PATH="${MODEL_PATH:-<MODEL_ROOT>/${MODEL_NAME}/hf_step${STEP}}"
 
