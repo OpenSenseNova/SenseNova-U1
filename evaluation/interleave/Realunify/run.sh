@@ -1,5 +1,5 @@
 #!/bin/bash
-# Inference helper for the RealUnify benchmark
+# NEO Model Inference for RealUnify Benchmark
 # Usage examples for different scenarios
 
 # ============================================================================
@@ -7,7 +7,7 @@
 # ============================================================================
 
 # Model path (override via env: MODEL_NAME=xxx STEP=yyy bash run.sh ...)
-STEP="${STEP:-<STEP_TAG>}"
+STEP="${STEP:-3000_ema}"
 MODEL_NAME="${MODEL_NAME:-<YOUR_MODEL_NAME>}"
 MODEL_PATH="${MODEL_PATH:-<MODEL_ROOT>/${MODEL_NAME}/hf_step${STEP}}"
 
@@ -27,7 +27,7 @@ timestep_shift=3.0
 cfg_norm=none
 CFG_INTERVAL_TAG=$(printf "%s_%s" "$cfg_interval_start" "$cfg_interval_end" | sed "s/-/neg/g; s/\.//g")
 TIMESTEP_TAG=$(printf "%s" "$timestep_shift" | sed "s/-/neg/g; s/\.//g")
-OUTPUT_DIR="${OUTPUT_DIR:-<OUTPUT_ROOT>/realunify/${MODEL_NAME}_${STEP}_cfg_${img_cfg_scale//./}_${cfg_scale//./}_interval_${CFG_INTERVAL_TAG}_ts_${TIMESTEP_TAG}_norm_${cfg_norm}}"
+OUTPUT_DIR=<OUTPUT_ROOT>/realunify/${MODEL_NAME}_${STEP}_cfg_${img_cfg_scale//./}_${cfg_scale//./}_interval_${CFG_INTERVAL_TAG}_ts_${TIMESTEP_TAG}_norm_${cfg_norm}
 
 # Data path (default)
 DATA_PATH="${DATA_PATH:-<DATA_ROOT>/RealUnify/GEU_step_processed.jsonl}"
@@ -42,16 +42,16 @@ seed=42
 
 run_test() {
     python Realunify/inference_realunify.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}/test" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${DATA_PATH} \
+        --output_dir ${OUTPUT_DIR}/test \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
-        --timestep_shift "${timestep_shift}" \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
         --num_steps 50 \
         --limit 5 \
         --seed 42
@@ -63,16 +63,16 @@ run_test() {
 
 run_single_gpu() {
     python Realunify/inference_realunify.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${DATA_PATH} \
+        --output_dir ${OUTPUT_DIR} \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
-        --timestep_shift "${timestep_shift}" \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
         --num_steps 50 \
         --seed 42
 }
@@ -85,19 +85,19 @@ run_multi_gpu() {
     NUM_GPUS=${1:-8}
 
     torchrun \
-        --nproc_per_node="${NUM_GPUS}" \
+        --nproc_per_node=${NUM_GPUS} \
         --master_port=29500 \
         Realunify/inference_realunify.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${DATA_PATH} \
+        --output_dir ${OUTPUT_DIR} \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
-        --timestep_shift "${timestep_shift}" \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
         --num_steps 50 \
         --seed 42
 }
@@ -108,16 +108,16 @@ run_multi_gpu() {
 
 run_resume() {
     python Realunify/inference_realunify.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${DATA_PATH} \
+        --output_dir ${OUTPUT_DIR} \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
-        --timestep_shift "${timestep_shift}" \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
         --num_steps 50 \
         --resume \
         --seed 42
@@ -129,16 +129,16 @@ run_resume() {
 
 run_custom() {
     python Realunify/inference_realunify.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}/custom" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${DATA_PATH} \
+        --output_dir ${OUTPUT_DIR}/custom \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
         --cfg_scale 2.0 \
         --img_cfg_scale 1.5 \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
-        --timestep_shift "${timestep_shift}" \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
         --num_steps 100 \
         --seed 42
 }
@@ -153,11 +153,11 @@ run_score() {
 
     if [ -n "${OUTPUT_FILE}" ]; then
         python Realunify/calculate_score.py \
-            --input_file "${INPUT_FILE}" \
-            --output_file "${OUTPUT_FILE}"
+            --input_file ${INPUT_FILE} \
+            --output_file ${OUTPUT_FILE}
     else
         python Realunify/calculate_score.py \
-            --input_file "${INPUT_FILE}"
+            --input_file ${INPUT_FILE}
     fi
 }
 
@@ -167,15 +167,16 @@ run_score() {
 
 run_interleave_test() {
     python Realunify/inference_realunify.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}/interleave_test" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${DATA_PATH} \
+        --output_dir ${OUTPUT_DIR}/interleave_test \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
         --num_steps 50 \
         --inference_mode interleave \
         --timestep_shift 1.0 \
@@ -189,15 +190,16 @@ run_interleave_test() {
 
 run_interleave() {
     python Realunify/inference_realunify.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}/interleave" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${DATA_PATH} \
+        --output_dir ${OUTPUT_DIR}/interleave \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
         --num_steps 50 \
         --inference_mode interleave \
         --timestep_shift 1.0 \
@@ -212,18 +214,19 @@ run_interleave_multi() {
     NUM_GPUS=${1:-8}
 
     torchrun \
-        --nproc_per_node="${NUM_GPUS}" \
+        --nproc_per_node=${NUM_GPUS} \
         --master_port=29501 \
         Realunify/inference_realunify.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}/interleave" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${DATA_PATH} \
+        --output_dir ${OUTPUT_DIR}/interleave \
         --min_pixels 1048576 \
         --max_pixels 4194304 \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
         --num_steps 50 \
         --inference_mode interleave \
         --timestep_shift 1.0 \
@@ -237,33 +240,33 @@ run_interleave_multi() {
 run_ueg() {
     local mode=${1:-understand_t2i}
     python Realunify/inference_realunify_ueg.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${UEG_DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}/ueg_${mode}" \
-        --inference_mode "${mode}" \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
-        --timestep_shift "${timestep_shift}" \
-        --num_steps "${num_steps}" \
-        --seed "${seed}"
+        --model_path ${MODEL_PATH} \
+        --data_path ${UEG_DATA_PATH} \
+        --output_dir ${OUTPUT_DIR}/ueg_${mode} \
+        --inference_mode ${mode} \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
+        --num_steps ${num_steps} \
+        --seed ${seed}
 }
 
 run_ueg_test() {
     local mode=${1:-understand_t2i}
     python Realunify/inference_realunify_ueg.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${UEG_DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}/ueg_${mode}_test" \
-        --inference_mode "${mode}" \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
-        --timestep_shift "${timestep_shift}" \
-        --num_steps "${num_steps}" \
-        --seed "${seed}" \
+        --model_path ${MODEL_PATH} \
+        --data_path ${UEG_DATA_PATH} \
+        --output_dir ${OUTPUT_DIR}/ueg_${mode}_test \
+        --inference_mode ${mode} \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
+        --num_steps ${num_steps} \
+        --seed ${seed} \
         --limit 5
 }
 
@@ -271,28 +274,28 @@ run_ueg_multi() {
     local mode=${1:-understand_t2i}
     local num_gpus=${2:-8}
     torchrun \
-        --nproc_per_node="${num_gpus}" \
+        --nproc_per_node=${num_gpus} \
         --master_port=29502 \
         Realunify/inference_realunify_ueg.py \
-        --model_path "${MODEL_PATH}" \
-        --data_path "${UEG_DATA_PATH}" \
-        --output_dir "${OUTPUT_DIR}/ueg_${mode}" \
-        --inference_mode "${mode}" \
-        --cfg_scale "${cfg_scale}" \
-        --img_cfg_scale "${img_cfg_scale}" \
-        --cfg_interval "${cfg_interval_start}" "${cfg_interval_end}" \
-        --cfg_norm "${cfg_norm}" \
-        --timestep_shift "${timestep_shift}" \
-        --num_steps "${num_steps}" \
-        --seed "${seed}"
+        --model_path ${MODEL_PATH} \
+        --data_path ${UEG_DATA_PATH} \
+        --output_dir ${OUTPUT_DIR}/ueg_${mode} \
+        --inference_mode ${mode} \
+        --cfg_scale ${cfg_scale} \
+        --img_cfg_scale ${img_cfg_scale} \
+        --cfg_interval ${cfg_interval_start} ${cfg_interval_end} \
+        --cfg_norm ${cfg_norm} \
+        --timestep_shift ${timestep_shift} \
+        --num_steps ${num_steps} \
+        --seed ${seed}
 }
 
 run_ueg_score() {
     local input_file=${1}
     local num_workers=${2:-16}
     python Realunify/calculate_score_ueg.py \
-        --input_file "${input_file}" \
-        --num_workers "${num_workers}"
+        --input_file ${input_file} \
+        --num_workers ${num_workers}
 }
 
 # ============================================================================
@@ -306,11 +309,11 @@ case "$1" in
         run_score "${OUTPUT_DIR}/test/realunify_results.jsonl"
         ;;
     "single")
-        run_single_gpu
-        run_score "${OUTPUT_DIR}/realunify_results.jsonl"
+        run_interleave_multi 8
+        run_score "${OUTPUT_DIR}/interleave/realunify_results.jsonl"
         ;;
     "multi")
-        run_multi_gpu "${2}"
+        run_multi_gpu ${2}
         run_score "${OUTPUT_DIR}/realunify_results.jsonl"
         ;;
     "resume")
@@ -322,7 +325,7 @@ case "$1" in
         run_score "${OUTPUT_DIR}/custom/realunify_results.jsonl"
         ;;
     "score")
-        run_score "${2:-}" "${3:-}"
+        run_score ${2} ${3}
         ;;
     "interleave_test")
         run_interleave_test
@@ -333,7 +336,7 @@ case "$1" in
         run_score "${OUTPUT_DIR}/interleave/realunify_results.jsonl"
         ;;
     "interleave_multi")
-        run_interleave_multi "${2}"
+        run_interleave_multi ${2}
         run_score "${OUTPUT_DIR}/interleave/realunify_results.jsonl"
         ;;
     "device_map_multi")
@@ -353,14 +356,14 @@ case "$1" in
         run_ueg_score "${2}" "${3:-16}"
         ;;
     *)
-        echo "Inference helper for the RealUnify benchmark"
+        echo "NEO Model Inference for RealUnify Benchmark"
         echo ""
         echo "Usage: $0 <command> [options]"
         echo ""
         echo "Commands:"
         echo "  test             - Run test with 5 samples (two-step mode)"
-        echo "  single           - Single GPU full run (two-step mode)"
-        echo "  multi            - Multi-GPU run (default: 8, two-step mode)"
+        echo "  single           - Default run on 8 GPUs in interleave mode"
+        echo "  multi            - Run on multiple GPUs (default: 8, two-step mode)"
         echo "                     Usage: $0 multi [num_gpus]"
         echo "  resume           - Resume from previous run"
         echo "  custom           - Run with custom parameters"
@@ -380,7 +383,7 @@ case "$1" in
         echo "                     Usage: $0 ueg_test [understand_t2i|interleave|t2i]"
         echo "  ueg_multi        - UEG multi-GPU inference"
         echo "                     Usage: $0 ueg_multi [mode] [num_gpus]"
-        echo "  ueg_score        - Score UEG results (requires GeminiAPI implementation)"
+        echo "  ueg_score        - Score UEG results (Gemini judge)"
         echo "                     Usage: $0 ueg_score <results.json> [num_workers]"
         echo ""
         echo "Modes:"

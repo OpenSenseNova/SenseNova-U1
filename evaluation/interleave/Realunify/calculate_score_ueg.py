@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Score RealUnify UEG inference results using a Gemini-based judge.
+Score RealUnify UEG inference results using Gemini judge.
 
 Input: JSON (or JSONL) file with fields per sample:
   - generated_image (str or list[str])
@@ -10,9 +10,8 @@ Input: JSON (or JSONL) file with fields per sample:
 Output (saved next to input):
   - <input>_scored.json   full per-sample scores + judge outputs
 
-NOTE: This script is a scoring scaffold and requires a GeminiAPI class
-      for judge model calls. You must provide your own implementation
-      or API wrapper before use.
+NOTE: This script requires a GeminiAPI class for judge model calls.
+      You need to provide your own implementation or API wrapper.
 """
 
 import argparse
@@ -187,9 +186,8 @@ def calculate_score(input_file, num_workers=16):
     # NOTE: You need to provide your own GeminiAPI implementation
     # gemini_api = GeminiAPI()
     raise NotImplementedError(
-        "GeminiAPI is not included in this repository. "
-        "Provide your own Gemini judge wrapper with a "
-        "generate_text(prompt, image_paths, temperature) method before running UEG scoring."
+        "GeminiAPI is not included. Please provide your own implementation "
+        "of a Gemini judge API wrapper with a generate_text(prompt, image_paths, temperature) method."
     )
 
     scored = []

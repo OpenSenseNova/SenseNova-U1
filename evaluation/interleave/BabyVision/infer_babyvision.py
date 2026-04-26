@@ -47,10 +47,10 @@ MAX_FAILURE_DETAILS = 20
 
 DEFAULT_MAX_NEW_TOKENS = 32768
 DEFAULT_STOP_SEQUENCES = [" <|endoftext|>", " <|im_start|>", " <|im_end|>"]
-DEFAULT_DO_SAMPLE = True
-DEFAULT_TEMPERATURE = 0.7
+DEFAULT_DO_SAMPLE = False
+DEFAULT_TEMPERATURE = 0
 DEFAULT_TOP_P = 0.95
-DEFAULT_REPETITION_PENALTY = 1.1
+DEFAULT_REPETITION_PENALTY = 1.05
 DEFAULT_MIN_PIXELS = 2097152
 DEFAULT_MAX_PIXELS = 16777216
 GENERATION_CONFIG = {
@@ -262,7 +262,7 @@ def build_generation_parameters():
         "max_new_tokens": GENERATION_CONFIG["max_new_tokens"],
         "do_sample": GENERATION_CONFIG["do_sample"],
         "stop_sequences": DEFAULT_STOP_SEQUENCES,
-        "add_output_think_tokens": True,
+        "add_output_think_tokens": False,
     }
     if GENERATION_CONFIG["temperature"] is not None:
         parameters["temperature"] = GENERATION_CONFIG["temperature"]
@@ -585,7 +585,7 @@ def test_babyvison(args):
             question = question + '\nPut your final answer inside <answer></answer>.'
             # + "\nThink about the question and give your final answer in <answer>Answer</answer> format."
 
-            query = build_query(question, 1, system_prompt=SYSTEM_PROMPT)
+            query = build_query(question, 1, system_prompt=None)
             payload = build_payload(query, [img_path])
 
             last_err = ""

@@ -4,14 +4,15 @@ import os
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
-from openai import AzureOpenAI
-
+from urllib import error as urllib_error
+from urllib import parse as urllib_parse
+from urllib import request as urllib_request
 
 DEFAULT_API_KEY = os.getenv("BABYVISION_JUDGE_API_KEY", os.getenv("AZURE_OPENAI_API_KEY", ""))
 DEFAULT_ENDPOINT = os.getenv("BABYVISION_JUDGE_ENDPOINT", os.getenv("AZURE_OPENAI_ENDPOINT", ""))
 DEFAULT_API_VERSION = os.getenv("BABYVISION_JUDGE_API_VERSION", os.getenv("AZURE_OPENAI_API_VERSION", "2025-01-01-preview"))
 DEFAULT_MODEL = os.getenv("BABYVISION_JUDGE_MODEL", "gpt-4.1")
+REQUEST_TIMEOUT = 60
 
 
 PROMPT_TEMPLATE = """You are an answer extraction and judging assistant.
@@ -106,6 +107,78 @@ def infer_output_path(input_path):
     return input_path + "_eval.json"
 
 
+def is_azure_endpoint(endpoint):
+    endpoint = (endpoint or "").strip().lower()
+    return "/openai" in endpoint or ".openai.azure.com" in endpoint
+
+
+def build_request(endpoint, api_key, api_version, model_name, prompt):
+    endpoint = endpoint.rstrip("/")
+    headers = {"Content-Type": "application/json"}
+    params = {}
+
+    if is_azure_endpoint(endpoint):
+        if "/openai/deployments/" in endpoint:
+            url = f"{endpoint}/chat/completions"
+        elif endpoint.endswith("/openai"):
+            url = f"{endpoint}/deployments/{model_name}/chat/completions"
+        else:
+            url = f"{endpoint}/openai/deployments/{model_name}/chat/completions"
+        headers["api-key"] = api_key
+        params["api-version"] = api_version
+        body = {
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "max_tokens": 256,
+        }
+    else:
+        if not endpoint.endswith("/v1"):
+            endpoint = f"{endpoint}/v1"
+        url = f"{endpoint}/chat/completions"
+        headers["Authorization"] = f"Bearer {api_key}"
+        body = {
+            "model": model_name,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "max_tokens": 256,
+        }
+
+    return url, headers, params, body
+
+
+def post_json(url, headers, params, body, timeout):
+    if params:
+        url = f"{url}?{urllib_parse.urlencode(params)}"
+    data = json.dumps(body).encode("utf-8")
+    request = urllib_request.Request(url, data=data, headers=headers, method="POST")
+    with urllib_request.urlopen(request, timeout=timeout) as response:
+        raw = response.read().decode("utf-8")
+    return json.loads(raw)
+
+
+def response_text(resp_json):
+    if not isinstance(resp_json, dict):
+        raise TypeError(f"Unexpected response type from judge API: {type(resp_json).__name__}")
+
+    choices = resp_json.get("choices")
+    if not choices:
+        raise ValueError(f"No choices found in judge response: {resp_json}")
+
+    message = choices[0].get("message", {})
+    content = message.get("content")
+    if isinstance(content, str):
+        return content.strip()
+    if isinstance(content, list):
+        text_parts = []
+        for item in content:
+            if isinstance(item, dict) and item.get("type") == "text" and item.get("text"):
+                text_parts.append(item["text"])
+        if text_parts:
+            return "".join(text_parts).strip()
+
+    raise ValueError(f"Unsupported judge response content: {resp_json}")
+
+
 def load_data(path):
     with open(path, "r", encoding="utf-8") as f:
         if path.endswith(".jsonl"):
@@ -167,7 +240,7 @@ def rule_extract_answer(model_response):
     return None
 
 
-def process_one(client, model_name, retries, idx, entry, extractor="rule_then_llm", judge_only=False):
+def process_one(endpoint, api_key, api_version, model_name, retries, idx, entry, extractor="rule_then_llm", judge_only=False):
     question = get_field(entry, "question", "Question") or ""
     ground_truth = get_field(entry, "answer", "GroundTruth") or ""
     model_response = get_field(entry, "model_response", "ModelResult") or ""
@@ -203,14 +276,9 @@ def process_one(client, model_name, retries, idx, entry, extractor="rule_then_ll
 
     for attempt in range(retries):
         try:
-            resp = client.chat.completions.create(
-                model=model_name,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0,
-                max_tokens=256,
-                timeout=60,
-            )
-            payload = extract_json_block(resp.choices[0].message.content.strip())
+            url, headers, params, body = build_request(endpoint, api_key, api_version, model_name, prompt)
+            resp_json = post_json(url, headers, params, body, REQUEST_TIMEOUT)
+            payload = extract_json_block(response_text(resp_json))
             if judge_only:
                 extracted_answer = existing_extract
             elif use_judge_only_prompt:
@@ -222,6 +290,8 @@ def process_one(client, model_name, retries, idx, entry, extractor="rule_then_ll
             if attempt == retries - 1:
                 raise RuntimeError(f"Failed after {retries} retries: {exc}") from exc
             message = str(exc).lower()
+            if isinstance(exc, urllib_error.HTTPError):
+                message = f"{message} {exc.code}"
             if "429" in message or "too many requests" in message or "too_many_requests" in message:
                 time.sleep(5 * (attempt + 1))
             else:
@@ -239,12 +309,6 @@ def main():
     output_path = args.output
     if output_path is None:
         output_path = infer_output_path(args.input)
-
-    client = AzureOpenAI(
-        azure_endpoint=args.endpoint,
-        api_key=args.api_key,
-        api_version=args.api_version,
-    )
 
     data = load_data(args.input)
 
@@ -281,7 +345,18 @@ def main():
 
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = {
-            pool.submit(process_one, client, args.model, args.retries, idx, entry, args.extractor, judge_only): (idx, judge_only)
+            pool.submit(
+                process_one,
+                args.endpoint,
+                args.api_key,
+                args.api_version,
+                args.model,
+                args.retries,
+                idx,
+                entry,
+                args.extractor,
+                judge_only,
+            ): (idx, judge_only)
             for idx, entry, judge_only in tasks
         }
         done = 0

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Inference for the RealUnify benchmark
+NEO Model Inference for RealUnify Benchmark
 
 Two-step pipeline:
 1. Edit image using input_image + edit_prompt (it2i_generate)
@@ -764,9 +764,9 @@ def resolve_output_path(output_dir: str, base_filename: str, shard_rank: Optiona
 # ============================================================================
 
 def main():
-    parser = argparse.ArgumentParser(description="Inference for the RealUnify benchmark")
+    parser = argparse.ArgumentParser(description="NEO Model Inference for RealUnify Benchmark")
     parser.add_argument("--model_path", type=str, required=True,
-                        help="Path to the model")
+                        help="Path to NEO model")
     parser.add_argument("--data_path", type=str, default=REALUNIFY_DATA_PATH,
                         help="Path to RealUnify benchmark JSONL")
     parser.add_argument("--output_dir", type=str, default="./output",

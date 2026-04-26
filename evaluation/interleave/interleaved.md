@@ -19,8 +19,13 @@ evaluation/interleave
 - `OpenING/eval_opening.py`
 - `OpenING/summarize_GPT_scores.py`
 - `Unimmmu/inference_unimmmu.py`
+- `Unimmmu/calculate_score.py`
+- `Unimmmu/merge_shards.py`
 - `Realunify/inference_realunify.py`
 - `Realunify/inference_realunify_ueg.py`
+- `Realunify/calculate_score.py`
+- `Realunify/calculate_score_ueg.py`
+- `Realunify/merge_shards.py`
 
 ### 执行方式
 
@@ -117,19 +122,19 @@ python3 BabyVision/infer_babyvision.py \
   --model-name local-model \
   --data-path /path/to/meta_data.jsonl \
   --image-root /path/to/babyvision_images \
-  --output-dir ./babyvision_results \
+  --output-dir ./output/babyvision_understand \
   --generate-urls http://127.0.0.1:8000/generate \
   --workers 32 \
   --max-retries 3 \
   --backend-max-retries 20 \
   --request-timeout 600 \
   --max-new-tokens 32768 \
-  --do-sample \
-  --temperature 0.7 \
+  --no-do-sample \
+  --temperature 0 \
   --top-p 0.95 \
-  --repetition-penalty 1.1 \
-  --min-pixels 2097152 \
-  --max-pixels 16777216
+  --repetition-penalty 1.05 \
+  --min-pixels 262144 \
+  --max-pixels 4194304
 ```
 
 #### 参数说明
@@ -170,13 +175,14 @@ BabyVision/eval_babyvision.py
 
 ```bash
 python3 BabyVision/eval_babyvision.py \
-  --input /path/to/babyvision_local-model.jsonl \
-  --output /path/to/babyvision_local-model_eval.jsonl \
+  --input ./output/babyvision_understand/babyvision_local-model.jsonl \
+  --output  ./output/babyvision_understand/babyvision_local-model_eval.jsonl \
   --endpoint https://your-judge-endpoint \
   --api-key your_api_key \
   --model gpt-4.1 \
+  --force \
   --workers 16 \
-  --retries 3
+  --retries 3 
 ```
 
 #### 参数说明
@@ -211,7 +217,7 @@ BabyVision/compute_score.py
 
 ```bash
 python3 BabyVision/compute_score.py \
-  /path/to/babyvision_local-model_eval.jsonl
+  ./output/babyvision_understand/babyvision_local-model_eval.jsonl
 ```
 
 #### 参数说明
@@ -237,7 +243,7 @@ python3 BabyVision/compute_score.py \
 python3 OpenING/infer_opening.py \
   --mode opening \
   --model_path /path/to/model \
-  --save_dir /path/to/OpenING/gen_outputs/opening_output \
+  --save_dir ./output/opening_interleave/opening_output \
   --meta-path /path/to/OpenING-benchmark \
   --data-file-name test_data.jsonl \
   --think_mode think \
@@ -265,7 +271,7 @@ for LOCAL_RANK in 0 1 2 3 4 5 6 7; do
   CUDA_VISIBLE_DEVICES=${LOCAL_RANK} python3 OpenING/infer_opening.py \
     --mode opening \
     --model_path /path/to/model \
-    --save_dir /path/to/OpenING/gen_outputs/opening_output \
+    --save_dir ./output/opening_interleave/opening_output \
     --meta-path /path/to/OpenING-benchmark \
     --data-file-name test_data.jsonl \
     --think_mode think \
@@ -346,19 +352,17 @@ OpenING 支持基于 GPT judge 的主观评测。仓库内评测脚本为：
 OpenING/eval_opening.py
 ```
 
-推荐从 OpenING 仓库根目录执行，并显式指定输出目录、结果文件、并发数和保存间隔：
+可在任意目录执行。为与全文保持一致，以下示例仍假设当前工作目录为 `evaluation/interleave`，并显式传 `--opening_root`：
 
 ```bash
-cd /path/to/OpenING
-
 export OPENING_JUDGE_BASE_URL=http://127.0.0.1:8000
 export OPENING_JUDGE_API_KEY=your_api_key
 
-python3 /path/to/SenseNova-U1/evaluation/interleave/OpenING/eval_opening.py \
+python3 OpenING/eval_opening.py \
   --mode output_dir \
   --opening_root /path/to/OpenING \
-  --output_dir /path/to/OpenING/gen_outputs/opening_output \
-  --output_file /path/to/OpenING/Interleaved_Arena/gpt-score_results_opening_output.json \
+  --output_dir ./output/opening_interleave/opening_output \
+  --output_file /path/to/OpenING/gpt-score_results_opening_output.json \
   --workers 4 \
   --save_every 10
 ```
@@ -368,7 +372,7 @@ python3 /path/to/SenseNova-U1/evaluation/interleave/OpenING/eval_opening.py \
 #### 参数说明
 
 - `--mode output_dir`：按模型输出目录进行评测
-- `--opening_root`：OpenING 工作目录根路径
+- `--opening_root`：OpenING 工作目录根路径；默认取当前工作目录，若已在 OpenING 根目录执行可省略
 - `--benchmark_dir`：可选，显式指定 `OpenING-benchmark` 目录
 - `--output_dir`：待评测的 OpenING 输出目录，支持单个 `*_output` 目录或包含多个模型输出目录的父目录
 - `--output_file`：GPT judge 结果保存路径
@@ -439,13 +443,14 @@ python3 Unimmmu/inference_unimmmu.py \
 多 GPU：
 
 ```bash
-torchrun --nproc_per_node=2 Unimmmu/inference_unimmmu.py \
+torchrun --nproc_per_node=2 --master_port=29503 Unimmmu/inference_unimmmu.py \
   --model_path /path/to/model \
   --data_path /path/to/unimmmu_direct.jsonl \
   --output_dir ./output/unimmmu_interleave \
   --inference_mode interleave \
   --cfg_scale 4.0 \
   --img_cfg_scale 1.0 \
+  --timestep_shift 1.0 \
   --num_steps 50
 ```
 
@@ -492,8 +497,9 @@ python3 Unimmmu/merge_shards.py \
 - 结果文件：`unimmmu_results.jsonl`
 - 字段：`hash_uid`、`task`、`model_response`、`inference_mode`、`generated_images`
 - `interleave` 模式生成的图片会保存到 `<output_dir>/images/<task>/`
-- 分片运行时，中间结果写入 `<output_dir>/shards/`
+- 使用 `--num_shards` 与 `--shard_rank` 手动分片时，中间结果写入 `<output_dir>/shards/`
 - 使用 `--resume` 时，脚本会按 `hash_uid` 自动跳过已完成样本
+- 当前实现中，`--resume` 发生在手动分片之前；若要稳定补跑单个 shard，建议删除该 shard 输出后不带 `--resume` 重跑
 
 ### 评测
 
@@ -556,7 +562,7 @@ python3 Realunify/inference_realunify.py \
 多 GPU：
 
 ```bash
-torchrun --nproc_per_node=2 Realunify/inference_realunify.py \
+torchrun --nproc_per_node=2 --master_port=29501 Realunify/inference_realunify.py \
   --model_path /path/to/model \
   --data_path /path/to/GEU_step_processed.jsonl \
   --output_dir ./output/realunify_interleave \
@@ -579,6 +585,15 @@ python3 Realunify/inference_realunify.py \
   --max_memory_per_gpu_gb 60 \
   --cfg_scale 4.0 \
   --num_steps 50
+```
+
+分片合并：
+
+```bash
+python3 Realunify/merge_shards.py \
+  --data_path /path/to/GEU_step_processed.jsonl \
+  --shard_dir ./output/realunify_interleave/shards \
+  --output_file ./output/realunify_interleave/realunify_results.jsonl
 ```
 
 如需固定输出图片尺寸，可额外传入：
@@ -606,10 +621,11 @@ python3 Realunify/inference_realunify.py \
 
 - 结果文件：`realunify_results.jsonl`
 - 字段：`hash_uid`、`task_type`、`model_response`、`answer`、`generated_image`、`generated_images`
-- `step` 模式会写出编辑后图片路径 `generated_image`
+- `step` 模式会写出 `generated_image`，其值为 `[input_image, edited_image]`
 - `interleave` 模式会写出生成图片列表 `generated_images`
-- 分片运行时，中间结果写入 `<output_dir>/shards/`
+- 使用 `--num_shards` 与 `--shard_rank` 手动分片时，中间结果写入 `<output_dir>/shards/`
 - 使用 `--resume` 时，脚本会按 `hash_uid` 自动跳过已完成样本
+- 当前实现中，`--resume` 发生在手动分片之前；若要稳定补跑单个 shard，建议删除该 shard 输出后不带 `--resume` 重跑
 
 ### 评测
 
@@ -669,6 +685,7 @@ python3 Realunify/inference_realunify_ueg.py \
   --output_dir ./output/ueg_interleave \
   --inference_mode interleave \
   --cfg_scale 4.0 \
+  --timestep_shift 3.0 \
   --num_steps 50
 ```
 
@@ -693,12 +710,14 @@ python3 Realunify/inference_realunify_ueg.py \
 - `--limit`：仅运行前 N 条样本
 - `--device_map auto`：让 HuggingFace 自动分配多卡；使用该模式时请单进程运行
 - `--max_memory_per_gpu_gb`：配合 `--device_map` 使用，限制单卡显存上限
+- 当前脚本没有 `--num_shards` / `--shard_rank` 手动分片参数；多进程切分依赖 `torchrun` 提供的 distributed rank
 
 #### 输出与行为说明
 
 - 输出文件：`ueg_results.jsonl`、`ueg_results.json`
 - 字段：`index`、`task_type`、`generated_image`、`question_list`
 - 结果会保留生成图片路径与后续问答列表，供 judge 评分
+- 当前实现使用 `index` 生成 `hash_uid` 供 `--resume` 使用；若原始数据存在重复 `index`，续跑与去重行为会按该键生效
 
 ### 评测
 
@@ -743,13 +762,14 @@ python3 Realunify/calculate_score_ueg.py \
 ```bash
 MODEL_PATH=/path/to/hf_model
 
-torchrun --nproc_per_node=2 Realunify/inference_realunify.py \
+torchrun --nproc_per_node=2 --master_port=29501 Realunify/inference_realunify.py \
   --model_path ${MODEL_PATH} \
   --data_path /path/to/GEU_step_processed.jsonl \
   --output_dir ./output/realunify_interleave \
   --inference_mode interleave \
   --cfg_scale 4.0 \
   --img_cfg_scale 1.0 \
+  --timestep_shift 1.0 \
   --num_steps 50
 
 python3 Realunify/inference_realunify_ueg.py \
@@ -760,13 +780,14 @@ python3 Realunify/inference_realunify_ueg.py \
   --cfg_scale 4.0 \
   --num_steps 50
 
-torchrun --nproc_per_node=2 Unimmmu/inference_unimmmu.py \
+torchrun --nproc_per_node=2 --master_port=29503 Unimmmu/inference_unimmmu.py \
   --model_path ${MODEL_PATH} \
   --data_path /path/to/unimmmu_direct.jsonl \
   --output_dir ./output/unimmmu_interleave \
   --inference_mode interleave \
   --cfg_scale 4.0 \
   --img_cfg_scale 1.0 \
+  --timestep_shift 1.0 \
   --num_steps 50
 ```
 
