@@ -235,7 +235,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--model_path",
         required=True,
-        help="HuggingFace Hub id (e.g. OpenSenseNova/SenseNova-U1-8B-MoT) or a local path.",
+        help="HuggingFace Hub id (e.g. sensenova/SenseNova-U1-8B-MoT) or a local path.",
     )
 
     src = p.add_mutually_exclusive_group(required=True)
