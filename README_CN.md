@@ -235,8 +235,8 @@
 
 | |
 | :---: |
-| [<img alt="interleave case 03" src="./docs/assets/showcases/interleave/case_03.webp">](./docs/assets/showcases/interleave/case_03.webp) |
-| [<img alt="interleave case 04" src="./docs/assets/showcases/interleave/case_04.webp">](./docs/assets/showcases/interleave/case_04.webp) |
+| [<img alt="interleave case 05" src="./docs/assets/showcases/interleave/case_0005_matchgirl_warm_au.webp">](./docs/assets/showcases/interleave/case_0005_matchgirl_warm_au.webp) |
+| [<img alt="interleave case 06" src="./docs/assets/showcases/interleave/case_0006_orange_cat_travel.webp">](./docs/assets/showcases/interleave/case_0006_orange_cat_travel.webp) |
 
 </details>
 

@@ -200,15 +200,34 @@ def _save_outputs(
     images: Sequence[Image.Image],
     out_dir: Path,
     stem: str,
-) -> None:
+    input_images: Sequence[Image.Image] = (),
+    prompt: str = "",
+) -> list[str]:
+    """Persist the prompt + model output + generated images and (optionally)
+    the user-supplied input images so a result can be reproduced from disk
+    alone. Returns the relative filenames of saved input images."""
     out_dir.mkdir(parents=True, exist_ok=True)
     text_path = out_dir / f"{stem}.txt"
-    text_path.write_text(text, encoding="utf-8")
+    if prompt:
+        text_path.write_text(
+            f"# PROMPT\n{prompt}\n\n# OUTPUT\n{text}\n",
+            encoding="utf-8",
+        )
+    else:
+        text_path.write_text(text, encoding="utf-8")
     print(f"[saved] {text_path}")
+    input_names: list[str] = []
+    for i, img in enumerate(input_images):
+        name = f"{stem}_input_{i}.png"
+        img_path = out_dir / name
+        img.save(img_path)
+        input_names.append(name)
+        print(f"[saved] {img_path}")
     for i, img in enumerate(images):
         img_path = out_dir / f"{stem}_image_{i}.png"
         img.save(img_path)
         print(f"[saved] {img_path}")
+    return input_names
 
 
 def _sample_images(sample: dict, image_root: str = "") -> list[Image.Image]:
@@ -401,7 +420,14 @@ def main() -> None:
                 seed=args.seed,
             )
         print(f"[text] {text}")
-        _save_outputs(text, images, out_dir, args.stem)
+        _save_outputs(
+            text,
+            images,
+            out_dir,
+            args.stem,
+            input_images=input_images,
+            prompt=args.prompt,
+        )
         profiler.report()
         return
 
@@ -451,13 +477,21 @@ def main() -> None:
                 )
 
             stem = f"{i + 1:04d}" + ("_think" if think_mode else "_no_think")
-            _save_outputs(text, images, out_dir, stem)
+            input_names = _save_outputs(
+                text,
+                images,
+                out_dir,
+                stem,
+                input_images=input_images,
+                prompt=prompt,
+            )
             rf.write(
                 json.dumps(
                     {
                         "index": i,
                         "prompt": prompt,
                         "text": text,
+                        "input_images": input_names,
                         "images": [f"{stem}_image_{j}.png" for j in range(len(images))],
                         "width": w,
                         "height": h,
