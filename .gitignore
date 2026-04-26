@@ -47,9 +47,6 @@ htmlcov/
 *.safetensors
 *.ckpt
 checkpoints/
-
-# Vendored eval assets (whitelist — small enough to ship in-tree)
-!evaluation/gen/cvtg/sa_0_4_vit_l_14_linear.pth
 outputs/
 wandb/
 logs/
