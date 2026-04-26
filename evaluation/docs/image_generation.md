@@ -195,9 +195,11 @@ API_KEY=sk-... \
   bash evaluation/gen/tiif/run_tiifeval.sh
 ```
 
-The TIIF-Bench prompts (`testmini` and `test` splits) and the three eval
-helper scripts ship under [`tiif/data/`](../gen/tiif/data/) and
-[`tiif/eval/`](../gen/tiif/eval/) — no external download is required.
+Prepare the TIIF-Bench data from
+[`A113N-W3I/TIIF-Bench`](https://github.com/A113N-W3I/TIIF-Bench)
+and place the prompts under
+[`tiif/data/`](../gen/tiif/data/). The three eval helper scripts live under
+[`tiif/eval/`](../gen/tiif/eval/).
 
 Required / common overrides:
 
