@@ -2,13 +2,21 @@ import argparse
 import json
 import os
 import random
+import sys
+from pathlib import Path
 
 import numpy as np
 import torch
 from PIL import Image
 from tqdm import tqdm
-from transformers import AutoModel, AutoTokenizer
 
+if __package__ in {None, ""}:
+    repo_root = Path(__file__).resolve().parents[3]
+    sys.path.insert(0, str(repo_root))
+    sys.path.insert(0, str(repo_root / "src"))
+
+import sensenova_u1
+from examples.t2i.inference import SenseNovaU1T2I, _warn_if_unsupported
 
 def set_random_seeds(seed_value):
     random.seed(seed_value)
@@ -55,63 +63,6 @@ def load_cvtg_samples(benchmark_root, subsets, areas, target_keys=None):
     return data
 
 
-NORM_MEAN = [0.5, 0.5, 0.5]
-NORM_STD = [0.5, 0.5, 0.5]
-
-
-class T2IInferenceEngine:
-    def __init__(self, model_path, device_map="auto", max_memory=None):
-        model_kwargs = dict(
-            torch_dtype=torch.bfloat16,
-            trust_remote_code=True,
-            device_map=device_map,
-            low_cpu_mem_usage=True,
-        )
-        if max_memory is not None:
-            model_kwargs["max_memory"] = max_memory
-
-        self.model = AutoModel.from_pretrained(model_path, **model_kwargs)
-        self.model.eval()
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-
-    def chat(
-        self,
-        prompt,
-        cfg_scale=1.0,
-        enable_timestep_shift=True,
-        timestep_shift=1.0,
-        image_size=(256, 256),
-        num_steps=50,
-    ):
-        with torch.inference_mode():
-            output = self.model.t2i_generate(
-                self.tokenizer,
-                prompt,
-                image_size=image_size,
-                cfg_scale=cfg_scale,
-                timestep_shift=timestep_shift,
-                enable_timestep_shift=enable_timestep_shift,
-                num_steps=num_steps,
-                batch_size=1,
-            )
-
-        image = self._denorm(output)
-        image = image.detach().to(device="cpu", dtype=torch.float32)
-        image = (image.clamp(0, 1).permute(0, 2, 3, 1).numpy() * 255.0).round().astype(np.uint8)
-        grid_image = Image.fromarray(image[0])
-
-        del output
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-
-        return grid_image
-
-    def _denorm(self, x: torch.Tensor, mean=NORM_MEAN, std=NORM_STD):
-        mean = torch.tensor(mean, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
-        std = torch.tensor(std, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
-        return (x * std + mean).clamp(0, 1)
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -145,15 +96,37 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument("--num_steps", type=int, default=50)
-    parser.add_argument("--cfg_scale", type=float, default=7.0)
-    parser.add_argument("--timestep_shift", type=float, default=1.0)
+    parser.add_argument("--cfg_scale", type=float, default=4.0)
     parser.add_argument(
-        "--device_map",
-        type=str,
-        default="auto",
-        help="HF device_map for sharding the model across visible GPUs.",
+        "--cfg_norm",
+        default="none",
+        choices=["none", "global", "channel", "cfg_zero_star"],
     )
-    parser.add_argument("--max_memory_per_gpu_gb", type=int, default=None)
+    parser.add_argument("--timestep_shift", type=float, default=3.0)
+    parser.add_argument(
+        "--cfg_interval",
+        type=float,
+        nargs=2,
+        default=[0.0, 1.0],
+        metavar=("LO", "HI"),
+    )
+    parser.add_argument(
+        "--device",
+        type=str,
+        default="cuda",
+        help="Device used by examples/t2i/inference.py::SenseNovaU1T2I.",
+    )
+    parser.add_argument(
+        "--dtype",
+        default="bfloat16",
+        choices=["bfloat16", "float16", "float32"],
+    )
+    parser.add_argument(
+        "--attn_backend",
+        default="auto",
+        choices=["auto", "flash", "sdpa"],
+        help="Attention backend forwarded to sensenova_u1.set_attn_backend.",
+    )
     parser.add_argument("--subsets", type=str, default="CVTG,CVTG-Style")
     parser.add_argument("--areas", type=str, default="2,3,4,5")
     parser.add_argument("--target_keys", type=str, default=None)
@@ -164,16 +137,16 @@ if __name__ == "__main__":
     os.makedirs(output_path, exist_ok=True)
     image_size = (args.image_size, args.image_size)
     save_size = args.save_size if args.save_size and args.save_size != args.image_size else None
-    enable_timestep_shift = args.timestep_shift >= 1.0
+    cfg_interval = tuple(args.cfg_interval)
+    dtype = {"bfloat16": torch.bfloat16, "float16": torch.float16, "float32": torch.float32}[args.dtype]
 
-    max_memory = None
-    if args.max_memory_per_gpu_gb is not None:
-        max_memory = {gpu_idx: f"{args.max_memory_per_gpu_gb}GiB" for gpu_idx in range(torch.cuda.device_count())}
+    sensenova_u1.set_attn_backend(args.attn_backend)
+    print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
 
-    engine = T2IInferenceEngine(
+    engine = SenseNovaU1T2I(
         args.model_path,
-        device_map=args.device_map,
-        max_memory=max_memory,
+        device=args.device,
+        dtype=dtype,
     )
 
     subsets = parse_csv(args.subsets, str) or ["CVTG", "CVTG-Style"]
@@ -189,6 +162,7 @@ if __name__ == "__main__":
 
     set_random_seeds(args.seed)
     print(f"Processing {len(data)} samples")
+    _warn_if_unsupported(*image_size)
 
     for sample in tqdm(data):
         prompt = sample["prompt"]
@@ -201,14 +175,17 @@ if __name__ == "__main__":
         if os.path.exists(output_file):
             continue
 
-        grid_image = engine.chat(
+        grid_image = engine.generate(
             prompt,
-            cfg_scale=args.cfg_scale,
-            enable_timestep_shift=enable_timestep_shift,
-            timestep_shift=args.timestep_shift,
             image_size=image_size,
+            cfg_scale=args.cfg_scale,
+            cfg_norm=args.cfg_norm,
+            timestep_shift=args.timestep_shift,
+            cfg_interval=cfg_interval,
             num_steps=args.num_steps,
-        )
+            batch_size=1,
+            seed=args.seed,
+        )[0]
 
         if save_size is not None:
             grid_image = grid_image.resize((save_size, save_size), Image.Resampling.LANCZOS)

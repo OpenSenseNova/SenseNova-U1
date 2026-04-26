@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import random
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +10,14 @@ import torch
 import torch.distributed as dist
 from PIL import Image
 from tqdm import tqdm
-from transformers import AutoModel, AutoTokenizer
+
+if __package__ in {None, ""}:
+    repo_root = Path(__file__).resolve().parents[3]
+    sys.path.insert(0, str(repo_root))
+    sys.path.insert(0, str(repo_root / "src"))
+
+import sensenova_u1
+from examples.t2i.inference import SenseNovaU1T2I, _warn_if_unsupported
 
 
 def set_random_seeds(seed_value, rank=0):
@@ -63,74 +71,33 @@ def load_all_samples(jsonl_files):
     return all_samples, file_sample_counts
 
 
-NORM_MEAN = [0.5, 0.5, 0.5]
-NORM_STD = [0.5, 0.5, 0.5]
+def resolve_dtype(name):
+    return {
+        "bfloat16": torch.bfloat16,
+        "float16": torch.float16,
+        "float32": torch.float32,
+    }[name]
 
 
-class T2IInferenceEngine:
-    def __init__(self, model_path, device="cuda"):
-        self.device = device
+def make_grid_image(images, output_grid_size=None):
+    if len(images) == 1:
+        return images[0]
 
-        self.model = AutoModel.from_pretrained(
-            model_path,
-            torch_dtype=torch.bfloat16,
-            trust_remote_code=True,
-        ).to(self.device)
+    rows, cols = output_grid_size if output_grid_size is not None else (1, len(images))
+    if rows * cols < len(images):
+        raise ValueError(f"rows * cols must cover batch_size, got rows={rows}, cols={cols}, batch_size={len(images)}")
 
-        self.model.eval()
-
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-
-    def chat(
-        self,
-        prompt,
-        cfg_scale=1.0,
-        enable_timestep_shift=True,
-        timestep_shift=1,
-        cfg_norm="none",
-        image_size=(256, 256),
-        num_steps=50,
-        batch_size=1,
-        output_grid_size=None,
-    ):
-        output = self.model.t2i_generate(
-            self.tokenizer,
-            prompt,
-            image_size=image_size,
-            cfg_scale=cfg_scale,
-            timestep_shift=timestep_shift,
-            enable_timestep_shift=enable_timestep_shift,
-            cfg_norm=cfg_norm,
-            num_steps=num_steps,
-            batch_size=batch_size,
-            cfg_interval=(0, 1),
-        )
-
-        image = self._denorm(output.float())
-        image = (image.clamp(0, 1).permute(0, 2, 3, 1).cpu().numpy() * 255.0).round().astype(np.uint8)
-
-        if batch_size == 1:
-            return Image.fromarray(image[0])
-
-        rows, cols = output_grid_size if output_grid_size is not None else (1, batch_size)
-        pad = 2
-        W, H = image_size
-        grid = np.zeros(
-            (rows * H + (rows - 1) * pad, cols * W + (cols - 1) * pad, 3),
-            dtype=np.uint8,
-        )
-        for idx in range(batch_size):
-            r, c = divmod(idx, cols)
-            y = r * (H + pad)
-            x = c * (W + pad)
-            grid[y : y + H, x : x + W] = image[idx]
-        return Image.fromarray(grid)
-
-    def _denorm(self, x: torch.Tensor, mean=NORM_MEAN, std=NORM_STD):
-        """x: [B,3,H,W] normalized ((img-mean)/std). returns [0,1] clamped."""
-        mean = torch.tensor(mean, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
-        std = torch.tensor(std, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
-        return (x * std + mean).clamp(0, 1)
+    pad = 2
+    width, height = images[0].size
+    grid = Image.new(
+        "RGB",
+        (cols * width + (cols - 1) * pad, rows * height + (rows - 1) * pad),
+        color=(0, 0, 0),
+    )
+    for idx, image in enumerate(images):
+        row, col = divmod(idx, cols)
+        grid.paste(image, (col * (width + pad), row * (height + pad)))
+    return grid
 
 
 def main():
@@ -173,10 +140,19 @@ def main():
         choices=["none", "global", "channel", "cfg_zero_star"],
     )
     parser.add_argument("--timestep_shift", type=float, default=3.0)
+    parser.add_argument(
+        "--cfg_interval",
+        type=float,
+        nargs=2,
+        default=[0.0, 1.0],
+        metavar=("LO", "HI"),
+    )
     parser.add_argument("--num_steps", type=int, default=50)
     parser.add_argument("--batch_size", type=int, default=1)
     parser.add_argument("--rows", type=int, default=1)
     parser.add_argument("--cols", type=int, default=1)
+    parser.add_argument("--dtype", default="bfloat16", choices=["bfloat16", "float16", "float32"])
+    parser.add_argument("--attn_backend", default="auto", choices=["auto", "flash", "sdpa"])
     parser.add_argument("--specific_file", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--num_shards", type=int, default=1)
@@ -189,14 +165,28 @@ def main():
         raise ValueError(
             f"shard_rank must be in [0, num_shards), got shard_rank={args.shard_rank}, num_shards={args.num_shards}"
         )
-
-    enable_timestep_shift = args.timestep_shift >= 1
+    if args.rows * args.cols < args.batch_size:
+        raise ValueError(
+            f"rows * cols must cover batch_size, got rows={args.rows}, cols={args.cols}, "
+            f"batch_size={args.batch_size}"
+        )
 
     local_rank, world_size, rank = setup_distributed()
     device = f"cuda:{local_rank}"
     set_random_seeds(args.seed, rank)
+    image_size = (args.resolution, args.resolution)
+    cfg_interval = tuple(args.cfg_interval)
 
-    engine = T2IInferenceEngine(args.model_path, device=device)
+    sensenova_u1.set_attn_backend(args.attn_backend)
+    if rank == 0:
+        print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
+        _warn_if_unsupported(*image_size)
+
+    engine = SenseNovaU1T2I(
+        args.model_path,
+        device=device,
+        dtype=resolve_dtype(args.dtype),
+    )
 
     jsonl_files = get_jsonl_files(args.input_folder, args.specific_file)
     os.makedirs(args.output_dir, exist_ok=True)
@@ -239,17 +229,18 @@ def main():
             if save_path.exists():
                 continue
 
-            grid_image = engine.chat(
-                prompt=prompt,
+            images = engine.generate(
+                prompt,
+                image_size=image_size,
                 cfg_scale=args.cfg_scale,
                 cfg_norm=args.cfg_norm,
-                enable_timestep_shift=enable_timestep_shift,
                 timestep_shift=args.timestep_shift,
-                image_size=(args.resolution, args.resolution),
+                cfg_interval=cfg_interval,
                 num_steps=args.num_steps,
                 batch_size=args.batch_size,
-                output_grid_size=(args.rows, args.cols),
+                seed=args.seed,
             )
+            grid_image = make_grid_image(images, output_grid_size=(args.rows, args.cols))
 
             if args.save_size is not None and args.save_size != args.resolution:
                 scale = args.save_size / args.resolution
