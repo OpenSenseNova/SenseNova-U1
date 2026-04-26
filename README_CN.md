@@ -14,32 +14,44 @@
 <p align="center">
   <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
 </p>
+<p align="center">
+  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
+</p>
+
 
 ## 🌟 概述
 
 🚀 **SenseNova-U1** 是基于 **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)** 打造的原生统一多模态范式：模型不再需要在不同模态之间来回"翻译"，而是以原生方式在模态之间思考与行动。
 多模态 AI 不再是把多个独立系统拼接起来，而是构建一个统一系统，并相信所需要的能力会从中自然涌现。
+我们的工作立足于*预训练主导的Chat时代*，也指向了下一阶段: *后训练主导的Agent时代*。
 
 
 #### 🏗️ *核心支柱：*
 
-- 🖼️ 近无损视觉接口：同时保留语义丰富度与像素保真度（无需 VAE 或 Vision Encoder）！
+- 🖼️ **近无损视觉接口**：同时保留语义丰富度与像素保真度（无需 VAE 或 Vision Encoder）！
 
-- 🧠 原生混合 Transformer 架构（MoT）：模态无关的推理，高效率、低冲突！
+- 🧠 **原生混合 Transformer 架构（MoT）**：模态无关的推理，高效率、低冲突！
 
-- 🔗 统一端到端学习：从第一性原理出发，直接对像素与文本进行建模！
+- 🔗 **统一端到端学习**：从第一性原理出发，直接对像素与文本进行建模！
 
+#### ✨ *能力突破:*
 
-#### 🌍 *超越多模态：*
+- 🏆 **开源 SOTA 级效率优势**：U1 在统一理解与生成上刷新开源 SOTA，即使在较小模型规模下，仍可实现媲美商用模型的表现，并具备出色的性价比。
+
+- 📖 **原生图文交错生成**：U1 可以在单次生成流程中连贯地产出图文交错内容，支持视生活指南等高效信息传达场景，也支持旅行日记等更具叙事感与表现力的内容创作，把复杂信息浓缩成一眼看懂的图示。
+
+- 📰 **高密度信息生成能力**：U1 在高密度视觉信息表达方面展现出强大能力，能够生成结构丰富、排版复杂的内容，适用于知识图解、海报、PPT、漫画、简历等多种信息密集型场景。
+
+#### 🌍 *不止于多模态：*
 
 - 🤖 视觉-语言-动作（VLA）
-
 - 🌐 世界建模（WM）
 
+在本次发布中，我们率先开源了 *Lite* 系列模型作为第一步，未来还将沿着这一方向继续探索，并推出更强大的模型。
 
 ## 📣 最新动态
 
-- `[2026.04.23]` 首发 [SenseNova-U1-Mini-SFT](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta) 与 [SenseNova-U1-Mini-Beta](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta) 模型权重。
+- `[2026.04.23]` 首发 [SenseNova-U1-8B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) 与 [SenseNova-U1-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) 模型权重。
 
 - `[2026.04.23]` 首发 SenseNova-U1 的[推理代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README_CN.md)。
 
@@ -54,10 +66,10 @@
 
 | 模型 | 参数量 | HF 权重 |
 | :---- | :------- | :--------- |
-| SenseNova-U1-Mini-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-Mini-SFT) |
-| SenseNova-U1-Mini-Beta | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta) |
-| SenseNova-U1-Flash-SFT | A3B MoT | 🤗 链接 |
-| SenseNova-U1-Flash-Beta | A3B MoT | 🤗 链接 |
+| SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
+| SenseNova-U1-8B-MoT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
+| SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 链接 |
+| SenseNova-U1-A3B-MoT | A3B MoT | 🤗 链接 |
 
 其中 **SFT 模型**经过四个阶段训练：(1) *理解预热*，(2) *生成预训练*，(3) *统一中期训练*，(4) *统一监督微调*。**Beta 模型**是在基座模型之上进行了一轮 T2I 强化学习（RL）训练后得到的版本。
 
@@ -102,11 +114,44 @@
 <details>
 <summary>🖼️ 文生图（信息图）</summary>
 
-| | | |
-| :---: | :---: | :---: |
-| [<img width="300" alt="t2i landscape 0001" src="./docs/assets/showcases/t2i_infographic/0001_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./docs/assets/showcases/t2i_infographic/0002_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./docs/assets/showcases/t2i_infographic/0003_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0003_2720x1536.webp) |
-| [<img width="300" alt="t2i square 0004" src="./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp) |
-| [<img width="200" alt="t2i portrait 0007" src="./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp) |
+<table align="center">
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0004.webp"><img width="300" alt="t2i landscape 0001" src="./docs/assets/showcases/t2i_infographic/0004.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0012.webp"><img width="300" alt="t2i landscape 0002" src="./docs/assets/showcases/t2i_infographic/0012.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0005.webp"><img width="300" alt="t2i landscape 0003" src="./docs/assets/showcases/t2i_infographic/0005.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0018.webp"><img width="300" alt="t2i landscape 0004" src="./docs/assets/showcases/t2i_infographic/0018.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0024.webp"><img width="300" alt="t2i landscape 0005" src="./docs/assets/showcases/t2i_infographic/0024.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0013.webp"><img width="300" alt="t2i landscape 0006" src="./docs/assets/showcases/t2i_infographic/0013.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0006.webp"><img width="300" alt="t2i landscape 0007" src="./docs/assets/showcases/t2i_infographic/0006.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0015.webp"><img width="300" alt="t2i landscape 0008" src="./docs/assets/showcases/t2i_infographic/0015.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0025.webp"><img width="300" alt="t2i landscape 0009" src="./docs/assets/showcases/t2i_infographic/0025.webp"></a></td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0000.webp"><img width="220" alt="t2i landscape 0010" src="./docs/assets/showcases/t2i_infographic/0000.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0003.webp"><img width="220" alt="t2i landscape 0011" src="./docs/assets/showcases/t2i_infographic/0003.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0001.webp"><img width="220" alt="t2i landscape 0012" src="./docs/assets/showcases/t2i_infographic/0001.webp"></a></td>
+      <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0022.webp"><img width="220" alt="t2i landscape 0012" src="./docs/assets/showcases/t2i_infographic/0022.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0016.webp"><img width="220" alt="t2i image 0022" src="./docs/assets/showcases/t2i_infographic/0016.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0010.webp"><img width="220" alt="t2i image 0020" src="./docs/assets/showcases/t2i_infographic/0010.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0007.webp"><img width="220" alt="t2i image 0021" src="./docs/assets/showcases/t2i_infographic/0007.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0021.webp"><img width="220" alt="t2i image 0023" src="./docs/assets/showcases/t2i_infographic/0021.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0009.webp"><img width="220" alt="t2i image 0024" src="./docs/assets/showcases/t2i_infographic/0009.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0020.webp"><img width="220" alt="t2i image 0025" src="./docs/assets/showcases/t2i_infographic/0020.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0008.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0027" src="./docs/assets/showcases/t2i_infographic/0002.webp"></a></td>
+  </tr>
+</table>
 
 </details>
 
@@ -194,6 +239,16 @@
 > 📸 **更多视觉理解样例：** 参见 [视觉理解画廊](./docs/showcases_CN.md#visual-understanding)。
 
 
+<details>
+<summary>🦾 视觉语言动作</summary>
+
+[![YouTube](https://img.shields.io/badge/Video%201-%23FF0000.svg?logo=YouTube&logoColor=white)](https://www.youtube.com/watch?v=3mvBPPgv8vo)
+[![YouTube](https://img.shields.io/badge/Video%202-%23FF0000.svg?logo=YouTube&logoColor=white)](https://www.youtube.com/watch?v=2QZY8gf0Vsk)
+[![YouTube](https://img.shields.io/badge/Video%203-%23FF0000.svg?logo=YouTube&logoColor=white)](https://www.youtube.com/watch?v=tznVbuYf0yw)
+
+</details>
+
+
 ## 📊 核心评测
 
 <details>
@@ -241,7 +296,7 @@
 
 > 安装与使用详情请参考 [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills)。
 
-<details open>
+<details>
 <summary>✨ 通过我们 Skills 和 Studio 制作的有趣案例</summary>
 <p align="center">
   <img src="docs/assets/showcases/t2i_infographic/u1-case.webp" alt="Interleaved Benchmarks">
@@ -257,7 +312,7 @@
 <summary>📝 视觉理解</summary>
 
 ```bash
-python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
+python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
 ```
 
 </details>
@@ -268,7 +323,7 @@ python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta -
 <summary>🖼️ 文生图</summary>
 
 ```bash
-python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "这张信息图的标题是"SenseNova-U1"，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题"SenseNova-U1"。标题正下方是浅石板灰色的等宽字体副标题"新一代端到端统一多模态大模型家族"。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题"Overview"。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字"多模态模型家族，统一文本/图像理解和生成"。向下是由两个相连的同心圆组成的架构图标，配有文字"基于NEO-Unify架构（端到端统一理解和生成）"。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本"无需视觉编码器(VE)和变分自编码器(VAE)"。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题"两个模型版本"。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注"SenseNova-U1-Mini"，下方是等宽字体说明"18B参数密集模型"。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注"SenseNova-U1-Flash"，下方是等宽字体说明"38B参数，3B激活的混合专家(MoE)模型"。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字"将在HF等平台公开"，右侧放置一个带有折角的书面报告图标搭配文字"将发布技术报告"。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题"Highlights"。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文"原生统一架构，无VE和VAE"。第二个色块内是一个顶端带有星星的奖杯图标，配文"单一统一模型在理解和生成任务上均达到SOTA性能"。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文"强大的原生交错推理能力（模型原生生成图像进行推理）"。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文"能生成复杂信息图表，成本仅为商业模型的1/10"。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
+python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "这张信息图的标题是"SenseNova-U1"，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题"SenseNova-U1"。标题正下方是浅石板灰色的等宽字体副标题"新一代端到端统一多模态大模型家族"。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题"Overview"。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字"多模态模型家族，统一文本/图像理解和生成"。向下是由两个相连的同心圆组成的架构图标，配有文字"基于NEO-Unify架构（端到端统一理解和生成）"。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本"无需视觉编码器(VE)和变分自编码器(VAE)"。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题"两个模型版本"。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注"SenseNova-U1-Mini"，下方是等宽字体说明"18B参数密集模型"。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注"SenseNova-U1-Flash"，下方是等宽字体说明"38B参数，3B激活的混合专家(MoE)模型"。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字"将在HF等平台公开"，右侧放置一个带有折角的书面报告图标搭配文字"将发布技术报告"。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题"Highlights"。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文"原生统一架构，无VE和VAE"。第二个色块内是一个顶端带有星星的奖杯图标，配文"单一统一模型在理解和生成任务上均达到SOTA性能"。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文"强大的原生交错推理能力（模型原生生成图像进行推理）"。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文"能生成复杂信息图表，成本仅为商业模型的1/10"。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
 ```
 
 </details>
@@ -280,7 +335,7 @@ python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta -
 <summary>✏️ 图像编辑</summary>
 
 ```bash
-python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.jpg --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
+python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.jpg --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
 ```
 
 </details>
@@ -293,7 +348,7 @@ python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-Mini-Be
 <summary>♻️ 图文交错生成</summary>
 
 ```bash
-python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
+python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
 ```
 </details>
 
@@ -321,6 +376,23 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 ```bibtex
 
 ``` -->
+
+## 🌐 加入社区！
+
+加入我们的社区，分享反馈、获取支持，并第一时间了解 SenseNova-U1 的最新进展 — 期待与你交流！
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center"><b><a href="https://discord.gg/cxkwXWjp">Discord</a></b></td>
+    <td align="center"><b>微信交流群</b></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://discord.gg/cxkwXWjp"><img src="docs/assets/discord_qr.webp" width="160"/></a></td>
+    <td align="center"><img src="docs/assets/wechat_qr.webp" width="160"/></td>
+  </tr>
+</table>
+</div>
 
 ## ⚖️ 许可证
 
