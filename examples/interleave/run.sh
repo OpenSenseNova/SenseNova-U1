@@ -44,3 +44,14 @@ python "${example_dir}/inference.py" \
     --image_root "${example_dir}/data/images" \
     --output_dir "${output_dir}/jsonl" \
     --profile
+
+# 4) Reasoning samples (VBVR-Bench): visual reasoning with input images.
+#    Each sample requires multi-step visual generation given an input image.
+
+python "${example_dir}/inference.py" \
+    --model_path "${model_path}" \
+    --jsonl "${example_dir}/data/samples_reasoning.jsonl" \
+    --image_root "${repo_root}" \
+    --output_dir "${output_dir}/reasoning" \
+    --no-think_mode \
+    --profile
