@@ -9,6 +9,7 @@
   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
+  <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
@@ -267,6 +268,11 @@
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
 </p>
 
+<p align="center">
+  <img src="docs/assets/perform_vs_speed.png" alt="Generation Performance vs Speed" width="900">
+  <br>
+  <sub>商业模型与开源模型在视觉生成任务上的性能与延迟对比。</sub>
+</p>
 
 </details>
 

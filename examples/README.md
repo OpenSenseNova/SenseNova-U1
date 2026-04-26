@@ -15,23 +15,28 @@ examples/
 │   ├── inference.py
 │   └── data/
 │       ├── samples.jsonl
+|       ├── samples_reasoning.jsonl 
 │       └── samples_infographic.jsonl
 ├── editing/                   # image editing (it2i)
 │   ├── inference.py
 │   ├── resize_inputs.py       # offline pre-resize helper (recommended)
 │   └── data/
 │       ├── samples.jsonl
-│       └── images/
+│       ├── samples_reasoning.jsonl
+│       ├── images/
+│       └── images_reasonning/
 ├── interleave/                # interleaved text+image gen  (runnable)
 │   ├── inference.py
 │   ├── run.sh
 │   └── data/
-│       ├── sample.jsonl
-│       └── images/
+│       ├── samples.jsonl
+│       ├── samples_reasoning.jsonl
+│       ├── images/
+│       └── images_reasonning/
 └── vqa/                       # visual understanding / VQA
     ├── inference.py
     └── data/
-        ├── questions.jsonl
+        ├── samples.jsonl
         └── images/
 ```
 
@@ -194,13 +199,13 @@ Each line is one sample:
 ```bash
 python examples/interleave/inference.py \
     --model_path SenseNova/SenseNova-U1-8B-MoT \
-    --jsonl examples/interleave/data/sample.jsonl \
+    --jsonl examples/interleave/data/samples.jsonl \
     --image_root examples/interleave/data/images\
     --resolution "16:9" \
     --output_dir outputs/interleave/jsonl
 ```
 
-See [`interleave/data/sample.jsonl`](./interleave/data/sample.jsonl) for a
+See [`interleave/data/samples.jsonl`](./interleave/data/samples.jsonl) for a
 two-sample starter (one text-only, one image-conditioned).
 
 ## Visual Understanding (VQA)
@@ -229,7 +234,7 @@ Batched questions from a JSONL file (each line must contain `image` and `questio
 ```bash
 python examples/vqa/inference.py \
     --model_path SenseNova/SenseNova-U1-8B-MoT \
-    --jsonl examples/vqa/data/questions.jsonl \
+    --jsonl examples/vqa/data/samples.jsonl \
     --output_dir outputs/vqa/ \
     --max_new_tokens 8192 \
     --do_sample \
@@ -242,7 +247,7 @@ python examples/vqa/inference.py \
 
 Results are written to `outputs/vqa/answers.jsonl`, one JSON object per line with `id`, `image`, `question`, and `answer` fields.
 
-See [`vqa/data/questions.jsonl`](./vqa/data/questions.jsonl) for a starter file.
+See [`vqa/data/samples.jsonl`](./vqa/data/samples.jsonl) for a starter file.
 
 ### Generation parameters
 
