@@ -220,7 +220,6 @@ Reproducible prompts are in
 | |
 | :---: |
 | [<img alt="interleave case 01" src="./assets/showcases/interleave/case_0001_makeup_three_looks.webp">](./assets/showcases/interleave/case_0001_makeup_three_looks.webp) |
-| [<img alt="interleave case 02" src="./assets/showcases/interleave/case_0002_cliffside_library.webp">](./assets/showcases/interleave/case_0002_cliffside_library.webp) |
 | [<img alt="interleave case 03" src="./assets/showcases/interleave/case_0003_beachfront_villa.webp">](./assets/showcases/interleave/case_0003_beachfront_villa.webp) |
 | [<img alt="interleave case 04" src="./assets/showcases/interleave/case_0004_scented_candle_promo.webp">](./assets/showcases/interleave/case_0004_scented_candle_promo.webp) |
 | [<img alt="interleave case 05" src="./assets/showcases/interleave/case_0005_matchgirl_warm_au.webp">](./assets/showcases/interleave/case_0005_matchgirl_warm_au.webp) |
