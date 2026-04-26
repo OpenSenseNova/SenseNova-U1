@@ -9,7 +9,7 @@ export CUBLAS_WORKSPACE_CONFIG="${CUBLAS_WORKSPACE_CONFIG:-:4096:8}"
 export TRANSFORMERS_VERBOSITY=error
 
 # Generation settings
-MODEL_PATH="${MODEL_PATH:-sensenova/SenseNova-U1-8B-MoT-SFT}"
+MODEL_PATH="${MODEL_PATH:-sensenova/SenseNova-U1-8B-MoT}"
 OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/outputs/sensenova/tiif}"
 
 NUM_NODES="${NUM_NODES:-1}"

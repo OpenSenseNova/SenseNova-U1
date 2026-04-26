@@ -8,7 +8,7 @@ cd "$SCRIPT_DIR"
 export CUBLAS_WORKSPACE_CONFIG="${CUBLAS_WORKSPACE_CONFIG:-:4096:8}"
 
 # Generation settings
-MODEL_PATH="${MODEL_PATH:-sensenova/SenseNova-U1-8B-MoT-SFT}"
+MODEL_PATH="${MODEL_PATH:-sensenova/SenseNova-U1-8B-MoT}"
 BENCHMARK_ROOT="${BENCHMARK_ROOT:-${SCRIPT_DIR}/data}"
 OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/outputs/sensenova/cvtg}"
 
