@@ -22,12 +22,12 @@ examples/
 │   ├── inference.py
 │   ├── run.sh
 │   └── data/
-│       ├── sample.jsonl
+│       ├── samples.jsonl
 │       └── images/
 └── vqa/                       # visual understanding / VQA
     ├── inference.py
     └── data/
-        ├── questions.jsonl
+        ├── samples.jsonl
         └── images/
 ```
 
@@ -37,7 +37,7 @@ examples/
 
 ```bash
 python examples/t2i/inference.py \
-  --model_path SenseNova/SenseNova-U1-Mini-Beta \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
   --prompt "这张信息图的标题是"SenseNova-U1"，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题"SenseNova-U1"。标题正下方是浅石板灰色的等宽字体副标题"新一代端到端统一多模态大模型家族"。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题"Overview"。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字"多模态模型家族，统一文本/图像理解和生成"。向下是由两个相连的同心圆组成的架构图标，配有文字"基于NEO-Unify架构（端到端统一理解和生成）"。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本"无需视觉编码器(VE)和变分自编码器(VAE)"。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题"两个模型版本"。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注"SenseNova-U1-Mini"，下方是等宽字体说明"18B参数密集模型"。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注"SenseNova-U1-Flash"，下方是等宽字体说明"38B参数，3B激活的混合专家(MoE)模型"。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字"将在HF等平台公开"，右侧放置一个带有折角的书面报告图标搭配文字"将发布技术报告"。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题"Highlights"。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文"原生统一架构，无VE和VAE"。第二个色块内是一个顶端带有星星的奖杯图标，配文"单一统一模型在理解和生成任务上均达到SOTA性能"。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文"强大的原生交错推理能力（模型原生生成图像进行推理）"。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文"能生成复杂信息图表，成本仅为商业模型的1/10"。" \
   --width 2048 --height 2048 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -49,7 +49,7 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path SenseNova/SenseNova-U1-Mini-Beta \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
     --jsonl examples/t2i/data/samples.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -84,7 +84,7 @@ SenseNova-U1 在约 2K 像素的分辨率档位上训练。尽管支持任意的
 # export U1_ENHANCE_MODEL=gemini-3.1-pro
 
 python examples/t2i/inference.py \
-  --model_path SenseNova/SenseNova-U1-Mini-Beta \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
   --prompt "如何制作咖啡的教程" \
   --enhance --print_enhance \
   --output output.png
@@ -110,7 +110,7 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/editing/inference.py \
-  --model_path SenseNova/SenseNova-U1-Mini-Beta \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
   --prompt "Change the animal's fur color to a darker shade." \
   --image examples/editing/data/images/1.jpg \
   --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
@@ -123,7 +123,7 @@ python examples/editing/inference.py \
 
 ```bash
 python examples/editing/inference.py \
-    --model_path SenseNova/SenseNova-U1-Mini-Beta \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
     --jsonl examples/editing/data/samples.jsonl \
     --output_dir outputs/editing/ \
     --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
@@ -150,7 +150,7 @@ CFG 默认值：`--cfg_scale 4.0`（文本引导强度），`--img_cfg_scale 1.0
 ### 1) 单样本，仅文本 prompt
 ```bash
 python examples/interleave/inference.py \
-  --model_path SenseNova/SenseNova-U1-Mini-Beta \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
   --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
   --resolution "16:9" \
   --output_dir outputs/interleave/text \
@@ -161,7 +161,7 @@ python examples/interleave/inference.py \
 
 ```bash
 python examples/interleave/inference.py \
-  --model_path SenseNova/SenseNova-U1-Mini-Beta \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
   --prompt "<image>\n图文交错生成小猫游览故宫的场景" \
   --image examples/interleave/data/images/image0.jpg \
   --output_dir outputs/interleave/text_image \
@@ -179,7 +179,7 @@ python examples/interleave/inference.py \
 
 ```bash
 python examples/interleave/inference.py \
-    --model_path SenseNova/SenseNova-U1-Mini-Beta \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
     --jsonl examples/interleave/data/sample.jsonl \
     --image_root examples/interleave/data/images\
     --resolution "16:9" \
@@ -194,7 +194,7 @@ python examples/interleave/inference.py \
 
 ```bash
 python examples/vqa/inference.py \
-  --model_path SenseNova/SenseNova-U1-Mini-Beta \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
   --image examples/vqa/data/images/menu.jpg \
   --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." \
   --output outputs/menu_answer.txt \
@@ -213,8 +213,8 @@ python examples/vqa/inference.py \
 
 ```bash
 python examples/vqa/inference.py \
-    --model_path SenseNova/SenseNova-U1-Mini-Beta \
-    --jsonl examples/vqa/data/questions.jsonl \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --jsonl examples/vqa/data/samples.jsonl \
     --output_dir outputs/vqa/ \
     --max_new_tokens 8192 \
     --do_sample \
@@ -227,7 +227,7 @@ python examples/vqa/inference.py \
 
 结果会写入 `outputs/vqa/answers.jsonl`，每行一个 JSON 对象，包含 `id`、`image`、`question` 和 `answer` 字段。
 
-起步样例可参考 [`vqa/data/questions.jsonl`](./vqa/data/questions.jsonl)。
+起步样例可参考 [`vqa/data/samples.jsonl`](./vqa/data/samples.jsonl)。
 
 ### 生成参数
 

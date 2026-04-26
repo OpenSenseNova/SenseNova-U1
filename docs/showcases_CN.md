@@ -197,16 +197,18 @@
 
 下方每个案例均为 `model.interleave_gen` 的一次完整响应：模型先在 `<think>...</think>` 推理块中生成若干中间图像，再输出最终图文交错的答案。
 
-可复现的 prompt 位于 [`examples/interleave/data/samples.jsonl`](../examples/interleave/data/sample.jsonl)。
+可复现的 prompt 位于 [`examples/interleave/data/samples.jsonl`](../examples/interleave/data/samples.jsonl)。
+所有示例均带 think 推理生成；为可视化简洁，部分示例未展示思维链。
 
 
 | |
 | :---: |
-| [<img alt="interleave case 01" src="./assets/showcases/interleave/case_01.webp">](./assets/showcases/interleave/case_01.webp) |
-| [<img alt="interleave case 02" src="./assets/showcases/interleave/case_02.webp">](./assets/showcases/interleave/case_02.webp) |
-| [<img alt="interleave case 03" src="./assets/showcases/interleave/case_03.webp">](./assets/showcases/interleave/case_03.webp) |
-| [<img alt="interleave case 04" src="./assets/showcases/interleave/case_04.webp">](./assets/showcases/interleave/case_04.webp) |
-| [<img alt="interleave case 05" src="./assets/showcases/interleave/case_05.webp">](./assets/showcases/interleave/case_05.webp) |
+| [<img alt="interleave case 03" src="./assets/showcases/interleave/case_0003_beachfront_villa.webp">](./assets/showcases/interleave/case_0003_beachfront_villa.webp) |
+| [<img alt="interleave case 04" src="./assets/showcases/interleave/case_0004_scented_candle_promo.webp">](./assets/showcases/interleave/case_0004_scented_candle_promo.webp) |
+| [<img alt="interleave case 05" src="./assets/showcases/interleave/case_0005_matchgirl_warm_au.webp">](./assets/showcases/interleave/case_0005_matchgirl_warm_au.webp) |
+| [<img alt="interleave case 06" src="./assets/showcases/interleave/case_0006_orange_cat_travel.webp">](./assets/showcases/interleave/case_0006_orange_cat_travel.webp) |
+| [<img alt="interleave case 01" src="./assets/showcases/interleave/case_0001_makeup_three_looks.webp">](./assets/showcases/interleave/case_0001_makeup_three_looks.webp) |
+| [<img alt="interleave case 07" src="./assets/showcases/interleave/case_0007_bowie_slide_design.webp">](./assets/showcases/interleave/case_0007_bowie_slide_design.webp) |
 
 ---
 

@@ -1,0 +1,17 @@
+diff --git a/vlmeval/config.py b/vlmeval/config.py
+index e6ae86c..6f35947 100644
+--- a/vlmeval/config.py
++++ b/vlmeval/config.py
+@@ -2170,3 +2170,12 @@ model_groups.extend([bagel_series, spatial_related_models, sensenova_si_series])
+ 
+ for grp in model_groups:
+     supported_VLM.update(grp)
++
++# --- SenseNova-U1 local LightLLM endpoints (injected by SenseNova-U1 repo) ---
++# Edit: evaluation/easi/config/sensenova_models.py  (then re-run setup.sh)
++try:
++    from .sensenova_models import entries as _sensenova_u1_entries
++    supported_VLM.update(_sensenova_u1_entries)
++except Exception as _sensenova_u1_err:  # pragma: no cover
++    import sys as _sys
++    print(f"[sensenova-u1-config] failed to load local entries: {_sensenova_u1_err}", file=_sys.stderr)

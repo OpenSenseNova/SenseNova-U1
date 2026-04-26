@@ -40,7 +40,6 @@ python "${example_dir}/inference.py" \
 
 python "${example_dir}/inference.py" \
     --model_path "${model_path}" \
-    --jsonl "${example_dir}/data/sample.jsonl" \
-    --image_root "${example_dir}/data/images" \
+    --jsonl "${example_dir}/data/samples.jsonl" \
     --output_dir "${output_dir}/jsonl" \
     --profile
