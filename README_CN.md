@@ -39,18 +39,20 @@
 
 基于全新的核心架构，SenseNova U1 在多模态学习中展现出卓越效率：
 
-<div align="center" style="margin-bottom: 18px;">
-  <div style="display: inline-block; width: 48%; vertical-align: top; margin-right: 1%;">
-    <img src="docs/assets/perform_vs_speed_avg8.png" alt="8 项任务上的预测延迟与平均性能对比" width="100%">
-    <br>
-    <sub>OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
-  </div>
-  <div style="display: inline-block; width: 48%; vertical-align: top; margin-left: 1%;">
-    <img src="docs/assets/perform_vs_speed_avg3.png" alt="信息图基准上的预测延迟与平均性能对比" width="100%">
-    <br>
-    <sub>信息图生成基准 BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
-  </div>
-</div>
+<p align="center">
+  <table>
+    <tr>
+      <td align="center" valign="top" width="50%">
+        <img src="docs/assets/perform_vs_speed_avg8.png" alt="8 项任务上的生成延迟与平均性能对比" width="440"><br>
+        <sub>OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
+      </td>
+      <td align="center" valign="top" width="50%">
+        <img src="docs/assets/perform_vs_speed_avg3.png" alt="信息图基准上的生成延迟与平均性能对比" width="440"><br>
+        <sub>信息图生成基准 BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
+      </td>
+    </tr>
+  </table>
+</p>
 
 - 🏆 **开源 SOTA 级效率优势**：U1 在统一理解与生成上刷新开源 SOTA，即使在较小模型规模下，仍可实现媲美商用模型的表现，并具备出色的性价比。
 
