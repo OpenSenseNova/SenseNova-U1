@@ -9,13 +9,11 @@
   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
+  <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
   <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
-</p>
-<p align="center">
-  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
 </p>
 
 ## 🌟 Overview
@@ -23,7 +21,15 @@
 🚀 **SenseNova U1** is a new series of native multimodal models that unifies multimodal understanding, reasoning, and generation within a single architecture. 
 It marks a fundamental paradigm shift in multimodal AI: **from modality integration to true unification**. Rather than relying on adapters to translate between modalities, SenseNova U1 models think and act across language and vision natively.
 
+<p align="center">
+  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
+</p>
+
 The unification of visual understanding and generation opens tremendous possibilities. SenseNova U1 sits in the stage of data-driven learning (like ChatGPT), yet gestures toward the next stage, that is, Agentic learning (like OpenClaw) and thinking in a natively multimodal way.
+
+<p align="center">
+  <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
+</p>
 
 
 #### 🏗️ *Key Pillars:*      
@@ -37,10 +43,22 @@ This architecture has several important features:
 - 🖼️ Preserve semantic richness while maintaining pixel-level visual fidelity.     
 - 🧠 Reason across modalities with high efficiency & minimal conflict via native MoTs. 
 
-
 #### ✨ *What This Unlocks:*
 
 Powered by this new core architecture, SenseNova U1 delivers exceptional efficiency in multimodal learning:
+
+<div align="center" style="margin-bottom: 18px;">
+  <div style="display: inline-block; width: 48%; vertical-align: top; margin-right: 1%;">
+    <img src="docs/assets/perform_vs_speed_avg8.png" alt="Prediction latency vs averaging performance across 8 tasks" width="100%">
+    <br>
+    <sub>Prediction Latency vs. Averaging Performance on OneIG (EN, ZH), LongText (EN, ZH), CVTG, BizGenEval (Easy, Hard), and IGenBench.</sub>
+  </div>
+  <div style="display: inline-block; width: 48%; vertical-align: top; margin-left: 1%;">
+    <img src="docs/assets/perform_vs_speed_avg3.png" alt="Prediction latency vs averaging performance on infographic benchmarks" width="100%">
+    <br>
+    <sub>Prediction Latency vs. Averaging Performance on Infographic Benchmarks, i.e., BizGenEval (Easy, Hard), and IGenBench.</sub>
+  </div>
+</div>
 
 - 🏆 **Open-source SoTA in both understanding and generation**: SenseNova U1 sets a new standard for unified multimodal understanding and generation, achieving state-of-the-art performance among open-source models across a wide range of understanding, reasoning, and generation benchmarks.
   

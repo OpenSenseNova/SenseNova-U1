@@ -9,6 +9,7 @@
   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
+  <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
@@ -35,6 +36,21 @@
 - 🔗 **统一端到端学习**：从第一性原理出发，直接对像素与文本进行建模！
 
 #### ✨ *能力突破:*
+
+基于全新的核心架构，SenseNova U1 在多模态学习中展现出卓越效率：
+
+<div align="center" style="margin-bottom: 18px;">
+  <div style="display: inline-block; width: 48%; vertical-align: top; margin-right: 1%;">
+    <img src="docs/assets/perform_vs_speed_avg8.png" alt="8 项任务上的预测延迟与平均性能对比" width="100%">
+    <br>
+    <sub>OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
+  </div>
+  <div style="display: inline-block; width: 48%; vertical-align: top; margin-left: 1%;">
+    <img src="docs/assets/perform_vs_speed_avg3.png" alt="信息图基准上的预测延迟与平均性能对比" width="100%">
+    <br>
+    <sub>信息图生成基准 BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
+  </div>
+</div>
 
 - 🏆 **开源 SOTA 级效率优势**：U1 在统一理解与生成上刷新开源 SOTA，即使在较小模型规模下，仍可实现媲美商用模型的表现，并具备出色的性价比。
 
@@ -266,7 +282,6 @@
 <p align="center">
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
 </p>
-
 
 </details>
 

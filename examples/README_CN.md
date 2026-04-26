@@ -22,12 +22,12 @@ examples/
 │   ├── inference.py
 │   ├── run.sh
 │   └── data/
-│       ├── sample.jsonl
+│       ├── samples.jsonl
 │       └── images/
 └── vqa/                       # visual understanding / VQA
     ├── inference.py
     └── data/
-        ├── questions.jsonl
+        ├── samples.jsonl
         └── images/
 ```
 
@@ -214,7 +214,7 @@ python examples/vqa/inference.py \
 ```bash
 python examples/vqa/inference.py \
     --model_path SenseNova/SenseNova-U1-8B-MoT \
-    --jsonl examples/vqa/data/questions.jsonl \
+    --jsonl examples/vqa/data/samples.jsonl \
     --output_dir outputs/vqa/ \
     --max_new_tokens 8192 \
     --do_sample \
@@ -227,7 +227,7 @@ python examples/vqa/inference.py \
 
 结果会写入 `outputs/vqa/answers.jsonl`，每行一个 JSON 对象，包含 `id`、`image`、`question` 和 `answer` 字段。
 
-起步样例可参考 [`vqa/data/questions.jsonl`](./vqa/data/questions.jsonl)。
+起步样例可参考 [`vqa/data/samples.jsonl`](./vqa/data/samples.jsonl)。
 
 ### 生成参数
 
