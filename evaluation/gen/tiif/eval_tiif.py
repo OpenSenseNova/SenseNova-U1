@@ -167,8 +167,7 @@ def main():
         )
     if args.rows * args.cols < args.batch_size:
         raise ValueError(
-            f"rows * cols must cover batch_size, got rows={args.rows}, cols={args.cols}, "
-            f"batch_size={args.batch_size}"
+            f"rows * cols must cover batch_size, got rows={args.rows}, cols={args.cols}, batch_size={args.batch_size}"
         )
 
     local_rank, world_size, rank = setup_distributed()

@@ -18,6 +18,7 @@ if __package__ in {None, ""}:
 import sensenova_u1
 from examples.t2i.inference import SenseNovaU1T2I, _warn_if_unsupported
 
+
 def set_random_seeds(seed_value):
     random.seed(seed_value)
     os.environ["PYTHONHASHSEED"] = str(seed_value)
