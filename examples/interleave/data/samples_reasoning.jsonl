@@ -1,0 +1,2 @@
+{"prompt": "xxxx"}
+{"prompt": "<image>\nxxxx", "image": ["./examples/interleave/data/images_reasoning/xxxx.jpg"]}

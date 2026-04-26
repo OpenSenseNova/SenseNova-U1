@@ -32,7 +32,7 @@ Reproducible prompts are in
 #### 🖼️ *Text-to-Image (Reasoning)*
 
 Reproducible prompts are in
-[`examples/t2i/data/sample_reasoning.jsonl`](../examples/t2i/data/sample_reasoning.jsonl).
+[`examples/t2i/data/samples_reasoning.jsonl`](../examples/t2i/data/samples_reasoning.jsonl).
 
 <table>
   <tr>
@@ -121,7 +121,7 @@ Reproducible prompts are in
 ## Image Editing
 
 Side-by-side compare montages below show `input(s) | output`, with the
-edit instruction rendered along the bottom of each compare tile. The same
+edit instruction rendered along the bottom. The same
 unified model handles single-image attribute / style / relighting edits
 and multi-reference (subject + accessory + pose) composition.
 
@@ -211,8 +211,10 @@ the model first runs a `<think>...</think>` reasoning block that produces
 intermediate images, then emits the final interleaved text-and-image
 answer.     
 
+#### ♻️ *Interleaved Generation (General)*
+
 Reproducible prompts are in
-[`examples/interleave/data/samples.jsonl`](../examples/interleave/data/sample.jsonl).
+[`examples/interleave/data/samples.jsonl`](../examples/interleave/data/samples.jsonl).
 
 
 | |
@@ -223,21 +225,32 @@ Reproducible prompts are in
 | [<img alt="interleave case 04" src="./assets/showcases/interleave/case_04.webp">](./assets/showcases/interleave/case_04.webp) |
 | [<img alt="interleave case 05" src="./assets/showcases/interleave/case_05.webp">](./assets/showcases/interleave/case_05.webp) |
 
+
+#### ♻️ *Interleaved Generation (Reasoning)*
+
+Reproducible prompts are in
+[`examples/interleave/data/samples_reasoning.jsonl`](../examples/interleave/data/samples_reasoning.jsonl).
+
+| |
+| :---: |
+| [<img alt="interleave case 05" src="./assets/showcases/interleave/reasoning_case2.png">](./assets/showcases/interleave/reasoning_case2.png) |
+
+
 ---
 
 ## Visual Understanding
 
 General visual understanding across spatial reasoning, multi-image comparison, OCR, geometry, and knowledge-intensive QA:
 
-#### 📝 *General Cases*
+#### 📝 *Visual Understanding (General)*
 
-Reproducible prompts are in [`examples/vqa/data/questions.jsonl`](../examples/vqa/data/questions.jsonl).
+Reproducible prompts are in [`examples/vqa/data/samples.jsonl`](../examples/vqa/data/samples.jsonl).
 
 | |
 | :---: |
 | [<img alt="vqa general cases" src="./assets/showcases/vqa/general_case_all.webp">](./assets/showcases/vqa/general_case_all.webp) |
 
-#### 📝 *Agentic Cases*
+#### 📝 *Visual Understanding (Agentic)*
 
 | |
 | :---: |
