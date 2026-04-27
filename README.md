@@ -441,31 +441,6 @@ python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-8B-M
 > See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
 
 
-### 🧨 Run with Diffusers Adapter (Experimental)
-
-For users who prefer a `DiffusionPipeline`-style API, we provide an experimental
-adapter in [`examples/diffusers`](./examples/diffusers). The adapter keeps the
-canonical model implementation in `sensenova_u1` and wraps it with familiar
-Diffusers parameter names such as `guidance_scale`, `num_inference_steps`, and
-`num_images_per_prompt`.
-
-```python
-import torch
-
-from examples.diffusers import SenseNovaU1Pipeline
-
-pipe = SenseNovaU1Pipeline.from_pretrained(
-    "SenseNova/SenseNova-U1-8B-MoT",
-    torch_dtype=torch.bfloat16,
-    device="cuda",
-)
-image = pipe("A clean technical infographic introducing SenseNova-U1.").images[0]
-```
-
-> See [`examples/diffusers/README.md`](./examples/diffusers/README.md) for
-> text-to-image, image editing, and interleaved generation examples.
-
-
 ### ⚡ Run with LightLLM + LightX2V (Recommended)
 
 For production serving, we co-design a dedicated inference stack on top of **[LightLLM](https://github.com/ModelTC/lightllm)** (understanding) and **[LightX2V](https://github.com/ModelTC/lightx2v)** (generation). The two engines are disaggregated so that each path can use its own parallelism and resource budget, with a low-overhead transfer channel in between.
