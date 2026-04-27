@@ -188,6 +188,12 @@ Although relatively compact by today’s standards, these models already show st
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0027" src="./docs/assets/showcases/t2i_infographic/0002.webp"></a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0031.webp"><img width="230" alt="t2i image 0028" src="./docs/assets/showcases/t2i_infographic/0031.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0030.webp"><img width="230" alt="t2i image 0029" src="./docs/assets/showcases/t2i_infographic/0030.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0032.webp"><img width="230" alt="t2i image 0030" src="./docs/assets/showcases/t2i_infographic/0032.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0029.webp"><img width="230" alt="t2i image 0031" src="./docs/assets/showcases/t2i_infographic/0029.webp"></a></td>
+  </tr>
 </table>
 
 </details>  
