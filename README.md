@@ -89,7 +89,7 @@ Although relatively compact by today’s standards, these models already show st
 
 ## 📣 Updated News
 
-- `[2026.04.27]` Initial release of the weights for [SenseNova-U1-8B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) and [SenseNova-U1-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT).  
+- `[2026.04.27]` SenseNova-U1-8B-MoT-SFT and SenseNova-U1-8B-MoT will be released.  
 
 - `[2026.04.27]` Initial release of the [inference code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README.md) for SenseNova-U1.   
 
