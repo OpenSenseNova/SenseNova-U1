@@ -13,10 +13,17 @@ dist/
 
 # Environments
 .venv/
+.venv-lightllm/
 venv/
 env/
 ENV/
 .env
+
+# Benchmarking subpackage state (evaluation/easi/)
+# Submodules (LightLLM, EASI) + patches/ are tracked — nothing to ignore there.
+# Models dir (./models/) weights excluded via *.safetensors below.
+evaluation/easi/logs/
+models/
 
 # uv
 .uv/

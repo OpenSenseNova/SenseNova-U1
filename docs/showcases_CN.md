@@ -27,7 +27,7 @@
 
 #### 🖼️ *文生图（推理）*
 
-可复现的 prompt 位于 [`examples/t2i/data/sample_reasoning.jsonl`](../examples/t2i/data/sample_reasoning.jsonl)。
+可复现的 prompt 位于 [`examples/t2i/data/samples_reasoning.jsonl`](../examples/t2i/data/samples_reasoning.jsonl)。
 
 <table>
   <tr>
@@ -66,13 +66,51 @@
 
 可复现的 prompt 位于 [`examples/t2i/data/samples_infographic.jsonl`](../examples/t2i/data/samples_infographic.jsonl)。
 
-| | | |
-| :---: | :---: | :---: |
-| [<img width="300" alt="t2i landscape 0001" src="./assets/showcases/t2i_infographic/0001_2720x1536.webp">](./assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./assets/showcases/t2i_infographic/0002_2720x1536.webp">](./assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./assets/showcases/t2i_infographic/0003_2720x1536.webp">](./assets/showcases/t2i_infographic/0003_2720x1536.webp) |
-| [<img width="300" alt="t2i square 0004" src="./assets/showcases/t2i_infographic/0004_2048x2048.webp">](./assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./assets/showcases/t2i_infographic/0005_2048x2048.webp">](./assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./assets/showcases/t2i_infographic/0006_2048x2048.webp">](./assets/showcases/t2i_infographic/0006_2048x2048.webp) |
-| [<img width="200" alt="t2i portrait 0007" src="./assets/showcases/t2i_infographic/0007_1536x2720.webp">](./assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./assets/showcases/t2i_infographic/0008_1536x2720.webp">](./assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./assets/showcases/t2i_infographic/0009_1536x2720.webp">](./assets/showcases/t2i_infographic/0009_1536x2720.webp) |
+<table align="center">
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0004.webp"><img width="300" alt="t2i landscape 0001" src="./assets/showcases/t2i_infographic/0004.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0012.webp"><img width="300" alt="t2i landscape 0002" src="./assets/showcases/t2i_infographic/0012.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0005.webp"><img width="300" alt="t2i landscape 0003" src="./assets/showcases/t2i_infographic/0005.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0018.webp"><img width="300" alt="t2i landscape 0004" src="./assets/showcases/t2i_infographic/0018.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0024.webp"><img width="300" alt="t2i landscape 0005" src="./assets/showcases/t2i_infographic/0024.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0013.webp"><img width="300" alt="t2i landscape 0006" src="./assets/showcases/t2i_infographic/0013.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0006.webp"><img width="300" alt="t2i landscape 0007" src="./assets/showcases/t2i_infographic/0006.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0015.webp"><img width="300" alt="t2i landscape 0008" src="./assets/showcases/t2i_infographic/0015.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0025.webp"><img width="300" alt="t2i landscape 0009" src="./assets/showcases/t2i_infographic/0025.webp"></a></td>
+  </tr>
+</table>
 
----
+<table align="center">
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0000.webp"><img width="220" alt="t2i landscape 0010" src="./assets/showcases/t2i_infographic/0000.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0003.webp"><img width="220" alt="t2i landscape 0011" src="./assets/showcases/t2i_infographic/0003.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0001.webp"><img width="220" alt="t2i landscape 0012" src="./assets/showcases/t2i_infographic/0001.webp"></a></td>
+      <td align="center"><a href="./assets/showcases/t2i_infographic/0022.webp"><img width="220" alt="t2i landscape 0013" src="./assets/showcases/t2i_infographic/0022.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0016.webp"><img width="220" alt="t2i image 0014" src="./assets/showcases/t2i_infographic/0016.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0010.webp"><img width="220" alt="t2i image 0015" src="./assets/showcases/t2i_infographic/0010.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0007.webp"><img width="220" alt="t2i image 0016" src="./assets/showcases/t2i_infographic/0007.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0021.webp"><img width="220" alt="t2i image 0017" src="./assets/showcases/t2i_infographic/0021.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0009.webp"><img width="220" alt="t2i image 0018" src="./assets/showcases/t2i_infographic/0009.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0020.webp"><img width="220" alt="t2i image 0019" src="./assets/showcases/t2i_infographic/0020.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0008.webp"><img width="220" alt="t2i image 0020" src="./assets/showcases/t2i_infographic/0008.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0021" src="./assets/showcases/t2i_infographic/0002.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0011.webp"><img width="230" alt="t2i image 0022" src="./assets/showcases/t2i_infographic/0011.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0023.webp"><img width="230" alt="t2i image 0023" src="./assets/showcases/t2i_infographic/0023.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0027.webp"><img width="230" alt="t2i image 0024" src="./assets/showcases/t2i_infographic/0027.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0026.webp"><img width="230" alt="t2i image 0025" src="./assets/showcases/t2i_infographic/0026.webp"></a></td>
+  </tr>
+</table>
+
 
 ## 图像编辑
 
@@ -159,22 +197,32 @@
 
 下方每个案例均为 `model.interleave_gen` 的一次完整响应：模型先在 `<think>...</think>` 推理块中生成若干中间图像，再输出最终图文交错的答案。
 
-可复现的 prompt 位于 [`examples/interleave/data/samples.jsonl`](../examples/interleave/data/sample.jsonl)。
+可复现的 prompt 位于 [`examples/interleave/data/samples.jsonl`](../examples/interleave/data/samples.jsonl)。
+所有示例均带 think 推理生成；为可视化简洁，部分示例未展示思维链。
 
 
 | |
 | :---: |
-| [<img alt="interleave case 01" src="./assets/showcases/interleave/case_01.webp">](./assets/showcases/interleave/case_01.webp) |
-| [<img alt="interleave case 02" src="./assets/showcases/interleave/case_02.webp">](./assets/showcases/interleave/case_02.webp) |
-| [<img alt="interleave case 03" src="./assets/showcases/interleave/case_03.webp">](./assets/showcases/interleave/case_03.webp) |
-| [<img alt="interleave case 04" src="./assets/showcases/interleave/case_04.webp">](./assets/showcases/interleave/case_04.webp) |
-| [<img alt="interleave case 05" src="./assets/showcases/interleave/case_05.webp">](./assets/showcases/interleave/case_05.webp) |
+| [<img alt="interleave case 03" src="./assets/showcases/interleave/case_0003_beachfront_villa.webp">](./assets/showcases/interleave/case_0003_beachfront_villa.webp) |
+| [<img alt="interleave case 04" src="./assets/showcases/interleave/case_0004_scented_candle_promo.webp">](./assets/showcases/interleave/case_0004_scented_candle_promo.webp) |
+| [<img alt="interleave case 05" src="./assets/showcases/interleave/case_0005_matchgirl_warm_au.webp">](./assets/showcases/interleave/case_0005_matchgirl_warm_au.webp) |
+| [<img alt="interleave case 06" src="./assets/showcases/interleave/case_0006_orange_cat_travel.webp">](./assets/showcases/interleave/case_0006_orange_cat_travel.webp) |
+| [<img alt="interleave case 01" src="./assets/showcases/interleave/case_0001_makeup_three_looks.webp">](./assets/showcases/interleave/case_0001_makeup_three_looks.webp) |
+| [<img alt="interleave case 07" src="./assets/showcases/interleave/case_0007_bowie_slide_design.webp">](./assets/showcases/interleave/case_0007_bowie_slide_design.webp) |
+
+#### ♻️ *图文交错生成（推理）*
+
+| |
+| :---: |
+| [<img alt="interleave reasoning case 2" src="./assets/showcases/interleave/reasoning_case2.png">](./assets/showcases/interleave/reasoning_case2.png) |
 
 ---
 
 ## 视觉理解
 
 涵盖空间推理、多图比较、OCR、几何以及知识密集型问答的通用视觉理解能力：
+
+可复现的 prompt 位于 [`examples/vqa/data/samples.jsonl`](../examples/vqa/data/samples.jsonl)。
 
 | |
 | :---: |

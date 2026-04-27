@@ -1,0 +1,42 @@
+diff --git a/lightllm/server/build_prompt.py b/lightllm/server/build_prompt.py
+index 21c1cde6..843f2832 100644
+--- a/lightllm/server/build_prompt.py
++++ b/lightllm/server/build_prompt.py
+@@ -63,11 +63,37 @@ def _normalize_tool_call_arguments(messages: list) -> None:
+                             pass
+ 
+ 
++def _flatten_multimodal_content(messages: list) -> None:
++    # OpenAI-style chat requests may send content as a list of parts
++    # ({"type": "text", ...}, {"type": "image_url", ...}). Most HF chat
++    # templates (Qwen, LLaMA, ...) call string methods on `content` directly
++    # and crash on lists. Flatten into a plain string with placeholder tokens
++    # so the template can render; the image data itself is already extracted
++    # upstream via `_get_images_and_audios` and fed through MultimodalParams.
++    for msg in messages:
++        content = msg.get("content")
++        if not isinstance(content, list):
++            continue
++        parts: list = []
++        for item in content:
++            if not isinstance(item, dict):
++                continue
++            t = item.get("type")
++            if t == "text":
++                parts.append(item.get("text", "") or "")
++            elif t == "image_url":
++                parts.append("<image>")
++            elif t == "audio_url":
++                parts.append("<audio>")
++        msg["content"] = "\n".join(p for p in parts if p != "")
++
++
+ async def build_prompt(request, tools) -> str:
+     global tokenizer
+     # pydantic格式转成dict， 否则，当根据tokenizer_config.json拼template时，Jinja判断无法识别
+     messages = [m.model_dump(by_alias=True, exclude_none=True) for m in request.messages]
+     _normalize_tool_call_arguments(messages)
++    _flatten_multimodal_content(messages)
+ 
+     kwargs = {"conversation": messages}
+     if request.character_settings:

@@ -9,57 +9,94 @@
   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
+  <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
   <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
 </p>
 
+<p align="center">
+  <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
+</p>
+
 ## 🌟 概述
 
-🚀 **SenseNova-U1** 是基于 **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)** 打造的原生统一多模态范式：模型不再需要在不同模态之间来回"翻译"，而是以原生方式在模态之间思考与行动。
-多模态 AI 不再是把多个独立系统拼接起来，而是构建一个统一系统，并相信所需要的能力会从中自然涌现。
+🚀 **SenseNova U1** 是全新一代原生多模态模型系列，在单一架构中统一了多模态理解、推理与生成。
+它代表着多模态 AI 的根本性范式转变：**从模态集成走向真正的统一**。SenseNova U1 不再依赖适配器在不同模态之间进行翻译，而是以原生方式跨语言与视觉进行思考与行动。
 
+视觉理解与生成的统一开启了巨大的可能性。SenseNova U1 立足于**数据驱动学习阶段**（如 ChatGPT），并指向下一阶段——**智能体学习阶段**（如 OpenClaw），以原生多模态的方式进行学习、思考和行动。
+
+<p align="center">
+  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
+</p>
 
 #### 🏗️ *核心支柱：*
 
-- 🖼️ 近无损视觉接口：同时保留语义丰富度与像素保真度（无需 VAE 或 Vision Encoder）！
+SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)** —— 一个为多模态 AI 而设计、从第一性原理出发的全新架构：*它彻底摒弃了视觉编码器（VE）与变分自编码器（VAE），因为像素与文字信息在本质上是深度相关的。* 其主要特性如下：
 
-- 🧠 原生混合 Transformer 架构（MoT）：模态无关的推理，高效率、低冲突！
+- 🔗 端到端地将语言与视觉信息建模为统一整体。
+- 🖼️ 在保留语义丰富度的同时，维持像素级的视觉保真度。
+- 🧠 通过原生 MoT 实现跨模态推理，效率高、冲突少。
 
-- 🔗 统一端到端学习：从第一性原理出发，直接对像素与文本进行建模！
+#### ✨ *能力突破：*
 
+基于这一全新的核心架构，SenseNova U1 在多模态学习中展现出卓越的效率：
 
-#### 🌍 *超越多模态：*
+<p align="center">
+  <img src="docs/assets/perform_vs_speed_avg8.png" width="48%" />
+  <img src="docs/assets/perform_vs_speed_avg3.png" width="48%" />
+</p>
+
+<p align="center">
+  <sub>
+    左图：在 OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。<br>
+    右图：在信息图基准（BizGenEval、IGenBench）上的预测延迟与平均性能对比。
+  </sub>
+</p>
+
+- 🏆 **理解与生成均达到开源 SoTA**：SenseNova U1 在统一多模态理解与生成上树立了新的标杆，在多种理解、推理与生成基准上均达到开源模型中最先进的水平，比肩商用大模型。
+
+- 📖 **原生图文交错生成**：SenseNova U1 可以用单一模型在单次生成流程中连贯产出图文交错内容，支持生活指南、旅行日记等既需要清晰表达又富有叙事性与表现力的场景，把复杂信息浓缩为直观的图示。
+
+- 📰 **高密度信息呈现**：SenseNova U1 在高密度视觉信息表达上展现出强大能力，能够生成结构丰富、排版复杂的内容，适用于知识图解、海报、PPT、漫画、简历等多种信息密集型场景。
+
+#### 🌍 *不止于多模态：*
 
 - 🤖 视觉-语言-动作（VLA）
-
 - 🌐 世界建模（WM）
+
+## 🦁 模型库
+
+在本次发布中，我们开源了 SenseNova U1 Lite 系列，共两个规格：
+
+- SenseNova U1-8B-MoT — 密集主干网络
+- SenseNova U1-A3B-MoT — MoE 主干网络
+
+
+| 模型 | 参数量 | HF 权重 |
+| :---- | :------- | :--------- |
+| SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
+| SenseNova-U1-8B-MoT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
+| SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 链接 |
+| SenseNova-U1-A3B-MoT | A3B MoT | 🤗 链接 |
+
+其中 **SFT 模型**（*×32 下采样比例*）经过四个阶段训练：(1) *理解预热*，(2) *生成预训练*，(3) *统一中期训练*，(4) *统一监督微调*。**最终模型**是在基座模型之上进行了一轮 T2I 强化学习（RL）训练后得到的版本。
+
+目前这些模型在规模上相对紧凑，但已在多种任务上展现出强劲性能，与商用模型相当且具备出色的性价比。未来还将推出规模更大的版本，进一步提升能力。
 
 
 ## 📣 最新动态
 
-- `[2026.04.23]` 首发 [SenseNova-U1-Mini-SFT](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta) 与 [SenseNova-U1-Mini-Beta](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta) 模型权重。
+- `[2026.04.27]` 首发 [SenseNova-U1-8B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) 与 [SenseNova-U1-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) 模型权重。
 
-- `[2026.04.23]` 首发 SenseNova-U1 的[推理代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README_CN.md)。
+- `[2026.04.27]` 首发 SenseNova-U1 的[推理代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README_CN.md)。
 
 ## 📋 后续计划
 
 - [ ] SenseNova-U1 训练代码
 
 - [ ] SenseNova-U1 最终版权重与技术报告
-
-
-## 🦁 模型库
-
-| 模型 | 参数量 | HF 权重 |
-| :---- | :------- | :--------- |
-| SenseNova-U1-Mini-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-Mini-SFT) |
-| SenseNova-U1-Mini-Beta | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-Mini-Beta) |
-| SenseNova-U1-Flash-SFT | A3B MoT | 🤗 链接 |
-| SenseNova-U1-Flash-Beta | A3B MoT | 🤗 链接 |
-
-其中 **SFT 模型**经过四个阶段训练：(1) *理解预热*，(2) *生成预训练*，(3) *统一中期训练*，(4) *统一监督微调*。**Beta 模型**是在基座模型之上进行了一轮 T2I 强化学习（RL）训练后得到的版本。
 
 ## 🎨 效果展示
 
@@ -95,6 +132,16 @@
     <td><div style="max-height: 200px; overflow-y: auto;">1. <b>Instruction Understanding:</b> The core subjects are a small piece of dry wood and a dense iron block positioned within a transparent water tank. The wood is floating on the surface while the iron block is submerged at the bottom. 2. <b>Reasoning Process:</b> The wood is less dense than water so it will float, while the iron is denser and will sink to the bottom. 3. <b>Establish the frame:</b> The composition is a vertical medium shot centering the rectangular tank within the frame. The camera angle is eye-level to clearly display the water line and the submerged base. Focus is sharp across the entire depth of the tank to ensure both materials are distinct. 4. <b>Build the environment:</b> The scene is contained entirely within the clear glass walls of the water tank. The water fills the majority of the volume, providing a medium for the floating wood and sunken iron block. The background remains out of focus to keep attention on the tank's interior. 5. <b>Set the lighting and color:</b> Soft natural light illuminates the scene from the left, creating gentle reflections on the water surface. The color palette features the brown grain of the wood contrasting against the dark grey metallic finish of the iron. Shadows are soft and diffused through the liquid. 6. <b>Explicit Prompt:</b> A realistic photo of a transparent water tank showing a piece of wood floating on the surface and an iron block resting at the bottom.</div></td>
     <td style="vertical-align: top;"><img src="./docs/assets/showcases/t2i_reasoning/5_reasoning.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
   </tr>
+  <tr>
+    <td style="vertical-align: top;">A typical dish from the country where Naples is located</td>
+    <td><div style="max-height: 200px; overflow-y: auto;">1. <b>Instruction Understanding:</b> The core subject is a Neapolitan pizza presented as a typical dish. The context specifies Naples, Italy, as the country of origin for this food item. 2. <b>Reasoning Process:</b> Naples is in Italy, and a classic dish is a Neapolitan pizza. 3. <b>Establish the frame:</b> The Neapolitan pizza is captured in a close-up shot that fills the central frame. The angle is slightly elevated to show the round form of the dish clearly. 4. <b>Set the lighting and color:</b> Soft lighting illuminates the surface of the Neapolitan pizza to reveal texture. Warm tones dominate the color palette, emphasizing the baked nature of the dish. 5. <b>Lock the style:</b> The image utilizes a realistic photographic style with sharp focus on the main subject. The finish appears natural and appetizing, suitable for food documentation. 6. <b>Explicit Prompt:</b> A delicious Neapolitan pizza with a soft, charred crust, tomato sauce, and fresh mozzarella, served on a rustic wooden table, realistic food photography.</div></td>
+    <td style="vertical-align: top;"><img src="./docs/assets/showcases/t2i_reasoning/2_reasoning.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">A solution of calcium carbonate reacting with acetic acid</td>
+    <td><div style="max-height: 200px; overflow-y: auto;">1. <b>Instruction Understanding:</b> The core subject is a solution of calcium carbonate and acetic acid. The prompt specifies the reacting state of the chemical mixture. 2. <b>Reasoning Process:</b> The reaction produces carbon dioxide gas, which would be visible as a steady stream of bubbles rising through the liquid. 3. <b>Establish the frame:</b> The camera frames the solution closely to capture the details of the reaction. The composition centers on the liquid where the gas is visible. 4. <b>Set the lighting and color:</b> The liquid appears clear, allowing the white bubbles to stand out distinctly. The lighting is bright and even to illuminate the stream of gas. 5. <b>Lock the style:</b> The image maintains a realistic photographic style suitable for scientific observation. The focus is sharp on the reacting solution and bubbles. 6. <b>Explicit Prompt:</b> A test tube filled with a clear liquid and a rapid, effervescent stream of carbon dioxide bubbles rising to the surface, laboratory experiment.</div></td>
+    <td style="vertical-align: top;"><img src="./docs/assets/showcases/t2i_reasoning/7_reasoning.png" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+  </tr>
 </table>
 
 </details>
@@ -102,15 +149,48 @@
 <details>
 <summary>🖼️ 文生图（信息图）</summary>
 
-| | | |
-| :---: | :---: | :---: |
-| [<img width="300" alt="t2i landscape 0001" src="./docs/assets/showcases/t2i_infographic/0001_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0001_2720x1536.webp) | [<img width="300" alt="t2i landscape 0002" src="./docs/assets/showcases/t2i_infographic/0002_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0002_2720x1536.webp) | [<img width="300" alt="t2i landscape 0003" src="./docs/assets/showcases/t2i_infographic/0003_2720x1536.webp">](./docs/assets/showcases/t2i_infographic/0003_2720x1536.webp) |
-| [<img width="300" alt="t2i square 0004" src="./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0004_2048x2048.webp) | [<img width="300" alt="t2i square 0005" src="./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0005_2048x2048.webp) | [<img width="300" alt="t2i square 0006" src="./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp">](./docs/assets/showcases/t2i_infographic/0006_2048x2048.webp) |
-| [<img width="200" alt="t2i portrait 0007" src="./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0007_1536x2720.webp) | [<img width="200" alt="t2i portrait 0008" src="./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0008_1536x2720.webp) | [<img width="200" alt="t2i portrait 0009" src="./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp">](./docs/assets/showcases/t2i_infographic/0009_1536x2720.webp) |
+<table align="center">
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0004.webp"><img width="300" alt="t2i landscape 0001" src="./docs/assets/showcases/t2i_infographic/0004.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0012.webp"><img width="300" alt="t2i landscape 0002" src="./docs/assets/showcases/t2i_infographic/0012.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0005.webp"><img width="300" alt="t2i landscape 0003" src="./docs/assets/showcases/t2i_infographic/0005.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0018.webp"><img width="300" alt="t2i landscape 0004" src="./docs/assets/showcases/t2i_infographic/0018.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0024.webp"><img width="300" alt="t2i landscape 0005" src="./docs/assets/showcases/t2i_infographic/0024.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0019.webp"><img width="300" alt="t2i landscape 0006" src="./docs/assets/showcases/t2i_infographic/0019.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0006.webp"><img width="300" alt="t2i landscape 0007" src="./docs/assets/showcases/t2i_infographic/0006.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0015.webp"><img width="300" alt="t2i landscape 0008" src="./docs/assets/showcases/t2i_infographic/0015.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0025.webp"><img width="300" alt="t2i landscape 0009" src="./docs/assets/showcases/t2i_infographic/0025.webp"></a></td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0000.webp"><img width="220" alt="t2i landscape 0010" src="./docs/assets/showcases/t2i_infographic/0000.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0003.webp"><img width="220" alt="t2i landscape 0011" src="./docs/assets/showcases/t2i_infographic/0003.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0001.webp"><img width="220" alt="t2i landscape 0012" src="./docs/assets/showcases/t2i_infographic/0001.webp"></a></td>
+      <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0022.webp"><img width="220" alt="t2i landscape 0012" src="./docs/assets/showcases/t2i_infographic/0022.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0016.webp"><img width="220" alt="t2i image 0022" src="./docs/assets/showcases/t2i_infographic/0016.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0010.webp"><img width="220" alt="t2i image 0020" src="./docs/assets/showcases/t2i_infographic/0010.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0007.webp"><img width="220" alt="t2i image 0021" src="./docs/assets/showcases/t2i_infographic/0007.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0021.webp"><img width="220" alt="t2i image 0023" src="./docs/assets/showcases/t2i_infographic/0021.webp"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0014.webp"><img width="220" alt="t2i image 0024" src="./docs/assets/showcases/t2i_infographic/0014.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0025" src="./docs/assets/showcases/t2i_infographic/0028.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0027" src="./docs/assets/showcases/t2i_infographic/0002.webp"></a></td>
+  </tr>
+</table>
 
 </details>
 
-> 📸 **更多生成样例：** 参见 [文生图画廊](./docs/showcases_CN.md#text-to-image)。
+> 📸 **更多生成样例：** 参见 [文生图样例集](./docs/showcases_CN.md#文生图)。
 
 
 <details>
@@ -154,7 +234,7 @@
     <td style="vertical-align: top;"><img src="./examples/editing/data/images_reasoning/042_physics_change_the_water_to_high-con.jpg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
     <td><div style="max-height: 200px; overflow-y: auto;">
     1. <b>Source Image Analysis:</b> The source image shows an egg resting at the bottom of a glass of water. 2. <b>Instruction Understanding:</b> The instruction asks to change the medium to high-concentration saltwater. 3. <b>Reasoning Process:</b> Saltwater is denser than fresh water, which increases the buoyant force on the egg. 4. <b>Expected Visual Changes:</b> As density increases, the egg will overcome gravity and float higher or suspend in the middle of the liquid. 5. <b>Elements to Preserve:</b> The glass and the egg's appearance should remain consistent, focusing on the shift in the egg's vertical position. 6. <b>Explicit Edit Prompt:</b> Edit the position of the egg so it is floating in the middle of the liquid instead of resting on the bottom, while keeping the glass and the egg's appearance unchanged.</div></td>
-    <td style="vertical-align: top;"><img src="./docs/assets/showcases/editing/042_physics_change_the_water_to_high_con_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
+    <td style="vertical-align: top;"><img src="./docs/assets/showcases/editing/042_physics_change_the_water_to_high-con_result.jpeg" style="max-width: 100%; max-height: 100%; object-fit: contain;"></td>
   </tr>
   <tr>
     <td style="vertical-align: top;">What the fruit looks like when ripe in the picture</td>
@@ -167,31 +247,60 @@
 
 </details>
 
-> 📸 **更多编辑样例：** 参见 [图像编辑画廊](./docs/showcases_CN.md#image-editing)。
+> 📸 **更多编辑样例：** 参见 [图像编辑样例集](./docs/showcases_CN.md#图像编辑)。
 
 <details>
-<summary>♻️ 图文交错生成</summary>
+<summary>♻️ 图文交错生成（通用）</summary>
 
 | |
 | :---: |
-| [<img alt="interleave case 03" src="./docs/assets/showcases/interleave/case_03.webp">](./docs/assets/showcases/interleave/case_03.webp) |
-| [<img alt="interleave case 04" src="./docs/assets/showcases/interleave/case_04.webp">](./docs/assets/showcases/interleave/case_04.webp) |
+| [<img alt="interleave case 05" src="./docs/assets/showcases/interleave/case_0005_matchgirl_warm_au.webp">](./docs/assets/showcases/interleave/case_0005_matchgirl_warm_au.webp) |
+| [<img alt="interleave case 06" src="./docs/assets/showcases/interleave/case_0006_orange_cat_travel.webp">](./docs/assets/showcases/interleave/case_0006_orange_cat_travel.webp) |
 
 </details>
 
-> 📸 **更多图文交错样例：** 参见 [图文交错生成画廊](./docs/showcases_CN.md#interleaved-generation)。
 
 <details>
-<summary>📝 视觉理解</summary>
+<summary>♻️ 图文交错生成（推理）</summary>
 
 | |
 | :---: |
-| [<img alt="vqa agentic case" src="./docs/assets/showcases/vqa/agentic_case.webp">](./docs/assets/showcases/vqa/agentic_case.webp) |
+| [<img alt="interleave reasoning case" src="./docs/assets/showcases/interleave/reasoning_case1.png">](./docs/assets/showcases/interleave/reasoning_case1.png) |
+
+</details>
+
+> 📸 **更多图文交错样例：** 参见 [图文交错生成样例集](./docs/showcases_CN.md#图文交错生成)。
+
+<details>
+<summary>📝 视觉理解（通用）</summary>
+
+| |
+| :---: |
 | [<img alt="vqa general cases" src="./docs/assets/showcases/vqa/general_case.webp">](./docs/assets/showcases/vqa/general_case.webp) |
 
 </details>
 
-> 📸 **更多视觉理解样例：** 参见 [视觉理解画廊](./docs/showcases_CN.md#visual-understanding)。
+<details>
+<summary>📝 视觉理解（智能体）</summary>
+
+| |
+| :---: |
+| [<img alt="vqa agentic case" src="./docs/assets/showcases/vqa/agentic_case.webp">](./docs/assets/showcases/vqa/agentic_case.webp) |
+
+
+</details>
+
+> 📸 **更多视觉理解样例：** 参见 [视觉理解样例集](./docs/showcases_CN.md#视觉理解)。
+
+
+<details>
+<summary>🦾 视觉语言动作</summary>
+
+[![YouTube](./docs/assets/showcases/vla/1.png)](https://www.youtube.com/watch?v=3mvBPPgv8vo)
+[![YouTube](./docs/assets/showcases/vla/2.png)](https://www.youtube.com/watch?v=2QZY8gf0Vsk)
+[![YouTube](./docs/assets/showcases/vla/3.png)](https://www.youtube.com/watch?v=tznVbuYf0yw)
+
+</details>
 
 
 ## 📊 核心评测
@@ -212,11 +321,10 @@
   <img src="docs/assets/benchmarks/generation.webp" alt="Generation Benchmarks">
 </p>
 
-
 </details>
 
 <details>
-<summary>♻️ 图文交错生成</summary>
+<summary>♻️ 视觉推理</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/interleaved.webp" alt="Interleaved Benchmarks">
@@ -227,12 +335,36 @@
 > 评测脚本与榜单复现指南已提供在 [`evaluation`](./evaluation/README_CN.md)。
 
 
+## ⚠️ 进行中的改进
+
+尽管在各项任务上表现优异，当前版本仍有若干已知局限有待改进：
+
+* **视觉理解**：
+  当前模型支持的上下文长度最长为 **32K** tokens，在需要更长或更复杂视觉上下文的场景下可能受到限制。
+
+* **人体生成**：
+  对人体细粒度细节的处理仍有挑战，尤其是当人物在画面中占比较小，或与周围物体存在复杂交互时。
+
+* **文字生成**：
+  文字渲染有时会出现拼写错误、字符变形或格式不一致的问题，且对 prompt 的措辞较为敏感，在文字密集场景下尤为明显。
+
+* **图文交错生成**：
+
+  * 作为实验性功能，图文交错生成仍在持续演进中，性能可能尚未达到专用文生图（T2I）流程的水平。
+
+  * **Beta 状态：** 强化学习尚未针对图像编辑、推理及图文交错任务进行专项优化，当前性能与 SFT 模型相当。
+
+我们将上述方向列为持续迭代的重点，期待在后续版本中不断改进。
+
+
 ## 🛠️ 快速开始
 
 
 ### 🌐 使用 SenseNova-Studio
 
 体验 SenseNova-U1 最便捷的方式是通过 **[SenseNova-Studio](https://unify.light-ai.top/)** —— 一个 🆓 免费的在线体验平台，无需安装、无需 GPU，直接在浏览器中即可试用。
+
+> **注：** U1-Fast 是基于 SenseNova U1 的加速版本，专供信息图（Infographics）生成。
 
 
 ### 🦞 使用 SenseNova-Skills（OpenClaw）
@@ -241,10 +373,10 @@
 
 > 安装与使用详情请参考 [SenseNova-Skills README](https://github.com/OpenSenseNova/SenseNova-Skills)。
 
-<details open>
+<details>
 <summary>✨ 通过我们 Skills 和 Studio 制作的有趣案例</summary>
 <p align="center">
-  <img src="docs/assets/showcases/t2i_infographic/u1-case.webp" alt="Interleaved Benchmarks">
+  <img src="docs/assets/showcases/t2i_infographic/u1-case2.webp" alt="Skill Cases">
 </p>
 
 </details>
@@ -257,30 +389,30 @@
 <summary>📝 视觉理解</summary>
 
 ```bash
-python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
+python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
 ```
 
 </details>
 
-> 批量推理、生成参数和 JSONL 格式请参见 [`examples/README_CN.md`](./examples/README_CN.md#visual-understanding-vqa)。
+> 批量推理、生成参数和 JSONL 格式请参见 [`examples/README_CN.md`](./examples/README_CN.md#视觉理解vqa)。
 
 <details>
 <summary>🖼️ 文生图</summary>
 
 ```bash
-python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "这张信息图的标题是"SenseNova-U1"，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题"SenseNova-U1"。标题正下方是浅石板灰色的等宽字体副标题"新一代端到端统一多模态大模型家族"。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题"Overview"。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字"多模态模型家族，统一文本/图像理解和生成"。向下是由两个相连的同心圆组成的架构图标，配有文字"基于NEO-Unify架构（端到端统一理解和生成）"。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本"无需视觉编码器(VE)和变分自编码器(VAE)"。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题"两个模型版本"。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注"SenseNova-U1-Mini"，下方是等宽字体说明"18B参数密集模型"。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注"SenseNova-U1-Flash"，下方是等宽字体说明"38B参数，3B激活的混合专家(MoE)模型"。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字"将在HF等平台公开"，右侧放置一个带有折角的书面报告图标搭配文字"将发布技术报告"。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题"Highlights"。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文"原生统一架构，无VE和VAE"。第二个色块内是一个顶端带有星星的奖杯图标，配文"单一统一模型在理解和生成任务上均达到SOTA性能"。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文"强大的原生交错推理能力（模型原生生成图像进行推理）"。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文"能生成复杂信息图表，成本仅为商业模型的1/10"。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
+python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "这张信息图的标题是"SenseNova-U1"，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题"SenseNova-U1"。标题正下方是浅石板灰色的等宽字体副标题"新一代端到端统一多模态大模型家族"。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题"Overview"。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字"多模态模型家族，统一文本/图像理解和生成"。向下是由两个相连的同心圆组成的架构图标，配有文字"基于NEO-Unify架构（端到端统一理解和生成）"。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本"无需视觉编码器(VE)和变分自编码器(VAE)"。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题"两个模型规格"。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注"SenseNova-U1-8B-MoT"，下方是等宽字体说明"8B MoT 密集主干模型"。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注"SenseNova-U1-A3B-MoT"，下方是等宽字体说明"A3B MoT 混合专家（MoE）主干模型"。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字"将在HF等平台公开"，右侧放置一个带有折角的书面报告图标搭配文字"将发布技术报告"。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题"Highlights"。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文"原生统一架构，无VE和VAE"。第二个色块内是一个顶端带有星星的奖杯图标，配文"单一统一模型在理解和生成任务上均达到SOTA性能"。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文"强大的原生交错推理能力（模型原生生成图像进行推理）"。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文"能生成复杂信息图表，成本仅为商业模型的1/10"。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
 ```
 
 </details>
 
-> 默认分辨率为 2048×2048（1:1）。其它长宽比请参见[支持的分辨率档位](./examples/README_CN.md#supported-resolution-buckets)。
+> 默认分辨率为 2048×2048（1:1）。其它长宽比请参见[支持的分辨率档位](./examples/README_CN.md#推荐分辨率档位)。
 
 
 <details>
 <summary>✏️ 图像编辑</summary>
 
 ```bash
-python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.jpg --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
+python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.jpg --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
 ```
 
 </details>
@@ -293,7 +425,7 @@ python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-Mini-Be
 <summary>♻️ 图文交错生成</summary>
 
 ```bash
-python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-Mini-Beta --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
+python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
 ```
 </details>
 
@@ -304,7 +436,7 @@ python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-Mini
 
 面向生产环境的部署，我们在 **[LightLLM](https://github.com/ModelTC/lightllm)**（理解）和 **[LightX2V](https://github.com/ModelTC/lightx2v)**（生成）之上协同设计了一套专用推理栈。两个引擎以解耦方式运行，可以各自使用独立的并行策略与资源配额，中间通过低开销传输通道连接。
 
-在单节点 `TP2 + CFG2` 配置下，该推理栈在 H100 / H200 上为 **2048×2048** 图像提供约 **~0.15 s/step**、**~9 s 端到端**的表现；相较 Triton 基线，我们基于 FA3 的混合掩码注意力带来 ~**2.4–3.2×** 的 prefill 加速。完整的单卡性能数据见 [`docs/inference_infra.md`](./docs/inference_infra_CN.md)。
+在单节点 `TP2 + CFG2` 配置下，该推理栈在 H100 / H200 上为 **2048×2048** 图像提供约 **~0.15 s/step**、**~9 s 端到端**的表现；相较 Triton 基线，我们基于 FA3 的混合掩码注意力带来 ~**2.4–3.2×** 的 prefill 加速。完整的单卡性能数据见 [`docs/inference_infra_CN.md`](./docs/inference_infra_CN.md)。
 
 我们提供了官方 Docker 镜像，一行命令即可完成部署：
 
@@ -321,6 +453,23 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 ```bibtex
 
 ``` -->
+
+## 🌐 加入社区！
+
+加入我们的社区，分享反馈、获取支持，并第一时间了解 SenseNova-U1 的最新进展 — 期待与你交流！
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center"><b><a href="https://discord.gg/cxkwXWjp">Discord</a></b></td>
+    <td align="center"><b>微信交流群</b></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://discord.gg/cxkwXWjp"><img src="docs/assets/discord_qr.webp" width="160"/></a></td>
+    <td align="center"><img src="docs/assets/wechat_qr.webp" width="160"/></td>
+  </tr>
+</table>
+</div>
 
 ## ⚖️ 许可证
 
