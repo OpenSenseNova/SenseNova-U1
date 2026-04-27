@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/arXiv-Coming-b31b1b.svg" alt="arXiv"></a>
-  <a href="#"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Coming-yellow" alt="HuggingFace Model"></a>
+  <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
   <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
@@ -77,8 +77,8 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
-| SenseNova-U1-8B-MoT-SFT | 8B MoT | Coming soon |
-| SenseNova-U1-8B-MoT | 8B MoT | Coming soon |
+| SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
+| SenseNova-U1-8B-MoT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 link |
 | SenseNova-U1-A3B-MoT | A3B MoT | 🤗 link |
 
@@ -89,7 +89,7 @@ Although relatively compact by today’s standards, these models already show st
 
 ## 📣 Updated News
 
-- `[2026.04.27]` SenseNova-U1-8B-MoT-SFT and SenseNova-U1-8B-MoT will be released.
+- `[2026.04.27]` Initial release of the weights for [SenseNova-U1-8B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) and [SenseNova-U1-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT).
 
 - `[2026.04.27]` Initial release of the [inference code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README.md) for SenseNova-U1.   
 
@@ -439,6 +439,31 @@ python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-8B-M
 </details>
 
 > See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
+
+
+### 🧨 Run with Diffusers Adapter (Experimental)
+
+For users who prefer a `DiffusionPipeline`-style API, we provide an experimental
+adapter in [`examples/diffusers`](./examples/diffusers). The adapter keeps the
+canonical model implementation in `sensenova_u1` and wraps it with familiar
+Diffusers parameter names such as `guidance_scale`, `num_inference_steps`, and
+`num_images_per_prompt`.
+
+```python
+import torch
+
+from examples.diffusers import SenseNovaU1Pipeline
+
+pipe = SenseNovaU1Pipeline.from_pretrained(
+    "SenseNova/SenseNova-U1-8B-MoT",
+    torch_dtype=torch.bfloat16,
+    device="cuda",
+)
+image = pipe("A clean technical infographic introducing SenseNova-U1.").images[0]
+```
+
+> See [`examples/diffusers/README.md`](./examples/diffusers/README.md) for
+> text-to-image, image editing, and interleaved generation examples.
 
 
 ### ⚡ Run with LightLLM + LightX2V (Recommended)

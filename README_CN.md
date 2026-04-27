@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/arXiv-Coming-b31b1b.svg" alt="arXiv"></a>
-  <a href="#"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Coming-yellow" alt="HuggingFace Model"></a>
+  <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
   <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
@@ -76,8 +76,8 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 
 | 模型 | 参数量 | HF 权重 |
 | :---- | :------- | :--------- |
-| SenseNova-U1-8B-MoT-SFT | 8B MoT | 即将发布 |
-| SenseNova-U1-8B-MoT | 8B MoT | 即将发布 |
+| SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
+| SenseNova-U1-8B-MoT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 链接 |
 | SenseNova-U1-A3B-MoT | A3B MoT | 🤗 链接 |
 
@@ -88,7 +88,7 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 
 ## 📣 最新动态
 
-- `[2026.04.27]` SenseNova-U1-8B-MoT-SFT 与 SenseNova-U1-8B-MoT 即将公开。
+- `[2026.04.27]` 首发 [SenseNova-U1-8B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) 与 [SenseNova-U1-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) 模型权重。
 
 - `[2026.04.27]` 首发 SenseNova-U1 的[推理代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README_CN.md)。
 
