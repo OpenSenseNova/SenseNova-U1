@@ -241,7 +241,7 @@ Reproducible prompts are in
 
 | |
 | :---: |
-| [<img alt="interleave case 05" src="./assets/showcases/interleave/reasoning_case2.png">](./assets/showcases/interleave/reasoning_case2.png) |
+| [<img alt="interleave case 05" src="./assets/showcases/interleave/reasoning.png">](./assets/showcases/interleave/reasoning.png) |
 
 
 ---
