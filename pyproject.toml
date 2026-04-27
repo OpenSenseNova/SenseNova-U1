@@ -108,4 +108,7 @@ extend-exclude = [
     "src/sensenova_u1/models/neo_unify",
     # Vendored verbatim from SenseNova-Skills; keep diff-clean for easy uprev.
     "src/sensenova_u1/prompt_enhance/adapters",
+    # Third-party submodules — keep diff-clean from upstream.
+    "evaluation/easi/EASI",
+    "evaluation/easi/lightllm-stack/LightLLM",
 ]

@@ -304,8 +304,7 @@ if [ "${SKIP_LIGHTLLM}" = "1" ]; then
   log "      python scripts/submissions/run_easi_eval.py --model SenseNova-U1-8B-MoT-Local --benchmarks blink"
 else
   log "  - launch server (weights auto-downloaded on first call):"
-  log "      bash evaluation/easi/scripts/serve.sh                   # 8b-mot     → port 8000"
-  log "      MODEL=8b-mot-sft bash evaluation/easi/scripts/serve.sh  # 8b-mot-sft → port 8001"
+  log "      bash evaluation/easi/scripts/serve.sh                 # 8b-mot → port 8000"
   log "      # or multi-replica DP (same script, DP env flips mode):"
   log "      DP=4 TP=2 bash evaluation/easi/scripts/serve.sh"
   log ""
