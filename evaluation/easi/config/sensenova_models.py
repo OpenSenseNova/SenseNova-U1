@@ -16,8 +16,8 @@ VLMEvalKit as `vlmeval/sensenova_models.py`, then applies a one-line patch to
 So any edits here just need a re-run of setup.sh (idempotent) to propagate.
 
 Port assignments MUST match `evaluation/easi/scripts/serve.sh`:
-    mini-beta -> 8000    (thinking/reasoning variant)
-    mini-sft  -> 8001    (SFT / non-reasoning variant)
+    8b-mot     -> 8000    (thinking/reasoning variant)
+    8b-mot-sft -> 8001    (SFT / non-reasoning variant)
 """
 from functools import partial
 
@@ -26,9 +26,9 @@ from functools import partial
 from vlmeval.api.gpt import GPT4V  # type: ignore[import-not-found]
 
 entries = {
-    "SenseNova-U1-Mini-Beta-Local": partial(
+    "SenseNova-U1-8B-MoT-Local": partial(
         GPT4V,
-        model="sensenova-u1-mini-beta",
+        model="sensenova-u1-8b-mot",
         api_base="http://localhost:8000/v1/chat/completions",
         key="dummy",
         temperature=0,
@@ -36,9 +36,9 @@ entries = {
         retry=10,
         verbose=False,
     ),
-    "SenseNova-U1-Mini-SFT-Local": partial(
+    "SenseNova-U1-8B-MoT-SFT-Local": partial(
         GPT4V,
-        model="sensenova-u1-mini-sft",
+        model="sensenova-u1-8b-mot-sft",
         api_base="http://localhost:8001/v1/chat/completions",
         key="dummy",
         temperature=0,
