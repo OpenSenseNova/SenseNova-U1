@@ -160,7 +160,7 @@ Although relatively compact by today’s standards, these models already show st
   <tr>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0018.webp"><img width="300" alt="t2i landscape 0004" src="./docs/assets/showcases/t2i_infographic/0018.webp"></a></td>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0024.webp"><img width="300" alt="t2i landscape 0005" src="./docs/assets/showcases/t2i_infographic/0024.webp"></a></td>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0013.webp"><img width="300" alt="t2i landscape 0006" src="./docs/assets/showcases/t2i_infographic/0013.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0019.webp"><img width="300" alt="t2i landscape 0006" src="./docs/assets/showcases/t2i_infographic/0019.webp"></a></td>
   </tr>
   <tr>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0006.webp"><img width="300" alt="t2i landscape 0007" src="./docs/assets/showcases/t2i_infographic/0006.webp"></a></td>
@@ -183,9 +183,9 @@ Although relatively compact by today’s standards, these models already show st
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0021.webp"><img width="220" alt="t2i image 0023" src="./docs/assets/showcases/t2i_infographic/0021.webp"></a></td>
   </tr>
   <tr>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0009.webp"><img width="220" alt="t2i image 0024" src="./docs/assets/showcases/t2i_infographic/0009.webp"></a></td>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0020.webp"><img width="220" alt="t2i image 0025" src="./docs/assets/showcases/t2i_infographic/0020.webp"></a></td>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0008.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0014.webp"><img width="220" alt="t2i image 0024" src="./docs/assets/showcases/t2i_infographic/0014.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0025" src="./docs/assets/showcases/t2i_infographic/0028.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0027" src="./docs/assets/showcases/t2i_infographic/0002.webp"></a></td>
   </tr>
 </table>
@@ -378,7 +378,7 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 <summary>✨ Some interesting cases produced through our Skills and Studio</summary>
 
 <p align="center">
-  <img width="800" alt="u1 case" src="./docs/assets/showcases/t2i_infographic/u1-case.webp">
+  <img src="docs/assets/showcases/t2i_infographic/u1-case2.webp" alt="Skill Cases">
 </p>
 
 </details>
