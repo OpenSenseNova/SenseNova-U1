@@ -76,8 +76,8 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 
 | 模型 | 参数量 | HF 权重 |
 | :---- | :------- | :--------- |
-| SenseNova-U1-8B-MoT-SFT | 8B MoT | 🤗 链接 |
-| SenseNova-U1-8B-MoT | 8B MoT | 🤗 链接 |
+| SenseNova-U1-8B-MoT-SFT | 8B MoT | 🤗 链接 (*权重即将发布*)|
+| SenseNova-U1-8B-MoT | 8B MoT | 🤗 链接 (*权重即将发布*) |
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 链接 |
 | SenseNova-U1-A3B-MoT | A3B MoT | 🤗 链接 |
 

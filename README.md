@@ -77,8 +77,8 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
-| SenseNova-U1-8B-MoT-SFT | 8B MoT | 🤗 link |
-| SenseNova-U1-8B-MoT | 8B MoT | 🤗 link |
+| SenseNova-U1-8B-MoT-SFT | 8B MoT | 🤗 link (*Will be released soon*) |
+| SenseNova-U1-8B-MoT | 8B MoT | 🤗 link (*Will be released soon*) |
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 link |
 | SenseNova-U1-A3B-MoT | A3B MoT | 🤗 link |
 
