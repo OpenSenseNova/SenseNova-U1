@@ -16,15 +16,14 @@ VLMEvalKit as `vlmeval/sensenova_models.py`, then applies a one-line patch to
 So any edits here just need a re-run of setup.sh (idempotent) to propagate.
 
 Port assignments MUST match `evaluation/easi/scripts/serve.sh`:
-    8b-mot     -> 8000    (thinking/reasoning variant)
-    8b-mot-sft -> 8001    (SFT / non-reasoning variant)
+    8b-mot -> 8000    (thinking/reasoning variant)
 """
+
 from functools import partial
 
 # This import only resolves once setup.sh has copied this file into
 # evaluation/easi/EASI/VLMEvalKit/vlmeval/. Linter warnings in-tree are expected.
 from vlmeval.api.gpt import GPT4V  # type: ignore[import-not-found]
-
 
 entries = {
     "SenseNova-U1-8B-MoT-Local": partial(
@@ -33,17 +32,7 @@ entries = {
         api_base="http://localhost:8000/v1/chat/completions",
         key="dummy",
         temperature=0,
-        max_tokens=8192,           # thinking mode needs headroom
-        retry=10,
-        verbose=False,
-    ),
-    "SenseNova-U1-8B-MoT-SFT-Local": partial(
-        GPT4V,
-        model="sensenova-u1-8b-mot-sft",
-        api_base="http://localhost:8001/v1/chat/completions",
-        key="dummy",
-        temperature=0,
-        max_tokens=8192,          # SFT also emits <think>...</think>; needs headroom
+        max_tokens=8192,  # thinking mode needs headroom
         retry=10,
         verbose=False,
     ),

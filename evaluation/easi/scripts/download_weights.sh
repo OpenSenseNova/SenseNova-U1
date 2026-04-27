@@ -2,9 +2,7 @@
 # Download SenseNova-U1 weights from HuggingFace into <repo_root>/models/.
 #
 # Usage:
-#   bash evaluation/easi/scripts/download_weights.sh 8b-mot       # SenseNova-U1-8B-MoT (reasoning)
-#   bash evaluation/easi/scripts/download_weights.sh 8b-mot-sft   # SenseNova-U1-8B-MoT-SFT  (non-reasoning SFT)
-#   bash evaluation/easi/scripts/download_weights.sh all
+#   bash evaluation/easi/scripts/download_weights.sh 8b-mot   # sensenova/SenseNova-U1-8B-MoT (reasoning)
 #
 # Requires: .venv-lightllm activated (has huggingface_hub installed).
 # First-time use: `uv pip install huggingface_hub` if `hf` command not found.
@@ -52,14 +50,9 @@ download() {
 
 target="${1:-8b-mot}"
 case "${target}" in
-  8b-mot)     download "SenseNova/SenseNova-U1-8B-MoT" ;;
-  8b-mot-sft) download "SenseNova/SenseNova-U1-8B-MoT-SFT"  ;;
-  all)
-    download "SenseNova/SenseNova-U1-8B-MoT"
-    download "SenseNova/SenseNova-U1-8B-MoT-SFT"
-    ;;
+  8b-mot) download "sensenova/SenseNova-U1-8B-MoT" ;;
   *)
-    echo "[error] unknown target: ${target}. Use: 8b-mot | 8b-mot-sft | all" >&2
+    echo "[error] unknown target: ${target}. Use: 8b-mot" >&2
     exit 1
     ;;
 esac

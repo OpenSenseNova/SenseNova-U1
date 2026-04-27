@@ -115,6 +115,12 @@ Reproducible prompts are in
     <td align="center"><a href="./assets/showcases/t2i_infographic/0027.webp"><img width="230" alt="t2i image 0024" src="./assets/showcases/t2i_infographic/0027.webp"></a></td>
     <td align="center"><a href="./assets/showcases/t2i_infographic/0026.webp"><img width="230" alt="t2i image 0025" src="./assets/showcases/t2i_infographic/0026.webp"></a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0029.webp"><img width="230" alt="t2i image 0022" src="./assets/showcases/t2i_infographic/0029.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0030.webp"><img width="230" alt="t2i image 0023" src="./assets/showcases/t2i_infographic/0030.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0031.webp"><img width="230" alt="t2i image 0024" src="./assets/showcases/t2i_infographic/0031.webp"></a></td>
+    <td align="center"><a href="./assets/showcases/t2i_infographic/0032.webp"><img width="230" alt="t2i image 0025" src="./assets/showcases/t2i_infographic/0032.webp"></a></td>
+  </tr>
 </table>
 
 

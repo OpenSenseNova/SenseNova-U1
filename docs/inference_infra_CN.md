@@ -76,7 +76,8 @@ Docker 镜像、启动命令与 API 测试的简明操作手册，请参见 [`de
 
 ### 生成性能
 
-下表为 **2048x2048** 图像生成的基准模板，列出了不同机型与部署配置下的实测数据。
+下表给出 **SenseNova-U1-8B-MoT(NEO-Unify)** 在
+**2048x2048** 图像生成任务上的基准模版。列出了不同机型与部署配置下的实测数据。
 注：TP2+CFG2 表示张量并行=2 + CFG 并行=2。
 
 <div align="center">
@@ -94,7 +95,7 @@ Docker 镜像、启动命令与 API 测试的简明操作手册，请参见 [`de
 
 ### 跨模型速度对比
 
-下表对比了在启用**CFG**条件下，生成 **2048x2048** 图像时单个 diffusion step 的延迟。除特别说明外，所有数据均在 **H100** 上测得；其中 `NEO-Unify (TP2+CFG2)` 使用的是 `2x H100`。
+下表对比了在启用**CFG**条件下，生成 **2048x2048** 图像时单个 diffusion step 的延迟。除特别说明外，所有数据均在 **H100** 上测得；其中 `SenseNova-U1-8B-MoT (NEO-Unify, TP2+CFG2)` 使用的是 `2x H100`。
 注：TP2+CFG2 表示张量并行=2 + CFG 并行=2。
 
 <div align="center">
@@ -106,7 +107,7 @@ Docker 镜像、启动命令与 API 测试的简明操作手册，请参见 [`de
 | GLM-Image                 |    9B    |    7B    |       1.394       |
 | ERNIE-Image               |    8B    |    8B    |       1.565       |
 | LongCat-Image             |    8B    |    6B    |       0.796       |
-| NEO-Unify (1x，无TP/CFG并行) |   8B    |    8B    |       0.312       |
-| NEO-Unify (TP2+CFG2) |    8B    |    8B    |       0.158       |
+| SenseNova-U1-8B-MoT (NEO-Unify) |   8B    |    8B    |       0.312       |
+| SenseNova-U1-8B-MoT (NEO-Unify, TP2+CFG2) |    8B    |    8B    |       0.158       |
 
 </div>
