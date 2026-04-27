@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
+  <img src="docs/assets/teaser.webp" alt="SenseNova-U1" width="900">
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@
 视觉理解与生成的统一开启了巨大的可能性。SenseNova U1 立足于**数据驱动学习阶段**（如 ChatGPT），并指向下一阶段——**智能体学习阶段**（如 OpenClaw），以原生多模态的方式进行学习、思考和行动。
 
 <p align="center">
-  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
+  <img src="docs/assets/teaser_1.webp" alt="radar plot" width="900">
 </p>
 
 #### 🏗️ *核心支柱：*
@@ -44,8 +44,8 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 基于这一全新的核心架构，SenseNova U1 在多模态学习中展现出卓越的效率：
 
 <p align="center">
-  <img src="docs/assets/perform_vs_speed_avg8.png" width="48%" />
-  <img src="docs/assets/perform_vs_speed_avg3.png" width="48%" />
+  <img src="docs/assets/perform_vs_speed_avg8.webp" width="48%" />
+  <img src="docs/assets/perform_vs_speed_avg3.webp" width="48%" />
 </p>
 
 <p align="center">
