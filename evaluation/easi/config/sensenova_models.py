@@ -19,6 +19,7 @@ Port assignments MUST match `evaluation/easi/scripts/serve.sh`:
     8b-mot     -> 8000    (thinking/reasoning variant)
     8b-mot-sft -> 8001    (SFT / non-reasoning variant)
 """
+
 from functools import partial
 
 # This import only resolves once setup.sh has copied this file into
@@ -32,7 +33,7 @@ entries = {
         api_base="http://localhost:8000/v1/chat/completions",
         key="dummy",
         temperature=0,
-        max_tokens=8192,           # thinking mode needs headroom
+        max_tokens=8192,  # thinking mode needs headroom
         retry=10,
         verbose=False,
     ),
@@ -42,7 +43,7 @@ entries = {
         api_base="http://localhost:8001/v1/chat/completions",
         key="dummy",
         temperature=0,
-        max_tokens=8192,          # SFT also emits <think>...</think>; needs headroom
+        max_tokens=8192,  # SFT also emits <think>...</think>; needs headroom
         retry=10,
         verbose=False,
     ),
