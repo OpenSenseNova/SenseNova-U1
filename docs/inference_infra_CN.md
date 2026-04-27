@@ -76,8 +76,8 @@ Docker 镜像、启动命令与 API 测试的简明操作手册，请参见 [`de
 
 ### 生成性能
 
-下表给出基于 **NEO-Unify** 架构的 **SenseNova-U1-8B-MoT** 在
-**2048x2048** 图像生成任务上的延迟数据。
+下表给出 **SenseNova-U1-8B-MoT(NEO-Unify)** 在
+**2048x2048** 图像生成任务上的基准模版。列出了不同机型与部署配置下的实测数据。
 注：TP2+CFG2 表示张量并行=2 + CFG 并行=2。
 
 <div align="center">

@@ -79,7 +79,7 @@ see [`deployment.md`](./deployment.md).
 ### Generation Performance
 
 The table below reports **2048x2048** image generation latency for
-**SenseNova-U1-8B-MoT**, built on the **NEO-Unify** architecture.
+**SenseNova-U1-8B-MoT(NEO-Unify)**. Fill in measured numbers for each machine and deployment profile.
 Note: TP2+CFG2 means Tensor Parallel=2 + CFG Parallel=2.
 
 <div align="center">
