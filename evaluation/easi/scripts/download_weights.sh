@@ -2,9 +2,7 @@
 # Download SenseNova-U1 weights from HuggingFace into <repo_root>/models/.
 #
 # Usage:
-#   bash evaluation/easi/scripts/download_weights.sh mini-beta   # SenseNova-U1-Mini-Beta (reasoning)
-#   bash evaluation/easi/scripts/download_weights.sh mini-sft    # SenseNova-U1-Mini-SFT  (non-reasoning SFT)
-#   bash evaluation/easi/scripts/download_weights.sh all
+#   bash evaluation/easi/scripts/download_weights.sh 8b-mot   # sensenova/SenseNova-U1-8B-MoT (reasoning)
 #
 # Requires: .venv-lightllm activated (has huggingface_hub installed).
 # First-time use: `uv pip install huggingface_hub` if `hf` command not found.
@@ -50,16 +48,13 @@ download() {
   ${DL} "${repo_id}" --local-dir "${local_dir}"
 }
 
-target="${1:-mini-beta}"
+target="${1:-8b-mot}"
 case "${target}" in
-  mini-beta) download "SenseNova/SenseNova-U1-Mini-Beta" ;;
-  mini-sft)  download "SenseNova/SenseNova-U1-Mini-SFT"  ;;
-  all)
-    download "SenseNova/SenseNova-U1-Mini-Beta"
-    download "SenseNova/SenseNova-U1-Mini-SFT"
-    ;;
+  8b-mot)    download "sensenova/SenseNova-U1-8B-MoT"   ;;
+  # Mini-SFT variant — disabled for now. Uncomment to re-enable.
+  # mini-sft)  download "SenseNova/SenseNova-U1-Mini-SFT" ;;
   *)
-    echo "[error] unknown target: ${target}. Use: mini-beta | mini-sft | all" >&2
+    echo "[error] unknown target: ${target}. Use: 8b-mot" >&2
     exit 1
     ;;
 esac

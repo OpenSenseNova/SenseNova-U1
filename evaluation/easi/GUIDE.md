@@ -177,39 +177,24 @@ Helper script: `evaluation/easi/scripts/serve.sh`. Auto-activates `.venv-lightll
 
 | `MODEL` value | HF repo | Port | `--reasoning_parser` default | Advertised `model` name |
 | :--- | :--- | :---: | :--- | :--- |
-| `mini-beta` *(default)* | `SenseNova/SenseNova-U1-Mini-Beta` | 8000 | `qwen3` (strips `<think>…</think>`) | `sensenova-u1-mini-beta` |
-| `mini-sft`  | `SenseNova/SenseNova-U1-Mini-SFT`  | 8001 | disabled (non-reasoning) | `sensenova-u1-mini-sft` |
+| `8b-mot` *(default)* | `sensenova/SenseNova-U1-8B-MoT` | 8000 | `qwen3` (strips `<think>…</think>`) | `sensenova-u1-8b-mot` |
 
 ### Defaults
 ```bash
-# mini-beta, GPUs 0-1, tp=2, port 8000
+# 8b-mot, GPUs 0-1, tp=2, port 8000
 bash evaluation/easi/scripts/serve.sh
-```
-
-### SFT variant on different GPUs (no port override needed)
-```bash
-MODEL=mini-sft GPUS=2,3 TP=2 bash evaluation/easi/scripts/serve.sh   # auto-picks port 8001
 ```
 
 ### Max throughput on 8× H100 (single model)
 ```bash
-MODEL=mini-beta GPUS=0,1,2,3,4,5,6,7 TP=8 bash evaluation/easi/scripts/serve.sh
-```
-
-### Running both variants side-by-side
-```bash
-# terminal 1 — mini-beta on GPUs 0-3, port 8000
-MODEL=mini-beta GPUS=0,1,2,3 TP=4 bash evaluation/easi/scripts/serve.sh
-
-# terminal 2 — mini-sft on GPUs 4-7, port 8001
-MODEL=mini-sft  GPUS=4,5,6,7 TP=4 bash evaluation/easi/scripts/serve.sh
+MODEL=8b-mot GPUS=0,1,2,3,4,5,6,7 TP=8 bash evaluation/easi/scripts/serve.sh
 ```
 
 ### Env vars (full list)
 
 | Var | Default | Notes |
 | :--- | :--- | :--- |
-| `MODEL` | `mini-beta` | `mini-beta` or `mini-sft`. Ignored if `MODEL_DIR` is set |
+| `MODEL` | `8b-mot` | `8b-mot`. Ignored if `MODEL_DIR` is set |
 | `MODEL_DIR` | `./models/SenseNova-U1-Mini-<Beta\|SFT>` | Absolute path overrides |
 | `GPUS` | `0,1` | Comma-separated `CUDA_VISIBLE_DEVICES` |
 | `TP` | `2` | Tensor-parallel degree; must equal `GPUS` count |
@@ -229,7 +214,7 @@ Triton / CUDA kernels compile on first request; the first `/v1/chat/completions`
 # after startup log shows "Uvicorn running on http://0.0.0.0:8000"
 curl -s http://localhost:8000/v1/models | head
 curl -s http://localhost:8000/v1/chat/completions -H 'Content-Type: application/json' \
-  -d '{"model":"sensenova-u1-mini-beta","messages":[{"role":"user","content":"hi"}]}' | head -c 500
+  -d '{"model":"sensenova-u1-8b-mot","messages":[{"role":"user","content":"hi"}]}' | head -c 500
 ```
 
 For a proper multimodal smoke test (image + text), use [`examples/serving/client.py`](../../examples/serving/client.py):
@@ -251,7 +236,7 @@ python examples/serving/client.py \
 
 ```bash
 source .venv-lightllm/bin/activate     # hf CLI lives in this venv
-bash evaluation/easi/scripts/download_weights.sh mini-beta   # or mini-sft, or all
+bash evaluation/easi/scripts/download_weights.sh 8b-mot
 ```
 
 Weights land at `./models/SenseNova-U1-<Mini|Flash>-Beta/`. `./models/` is gitignored. Set `export HF_TOKEN=hf_...` if the HF repo is gated.
@@ -303,7 +288,7 @@ Verify:
 ```bash
 source evaluation/easi/EASI/.venv/bin/activate
 python -c 'from vlmeval.config import supported_VLM; print([k for k in supported_VLM if "SenseNova-U1-" in k])'
-# ['SenseNova-U1-Mini-Beta-Local', 'SenseNova-U1-Mini-SFT-Local']
+# ['SenseNova-U1-8B-MoT-Local']
 ```
 
 ### Why not edit `config.py` directly?
@@ -342,7 +327,7 @@ entries = {
 | `api_base` | str | Full path to the chat-completions endpoint, including `/v1/chat/completions`. Works for any OpenAI-compatible server (LightLLM, vLLM, SGLang, TGI, OpenRouter, Anthropic-via-openai-shim, etc.) |
 | `key` | str | Bearer token. Use `"dummy"` for auth-less local servers |
 | `temperature` | float | `0` for deterministic benchmarking; set > 0 if a benchmark needs sampling |
-| `max_tokens` | int | Generation cap. Thinking models (e.g. SenseNova-U1-Mini-Beta) need ≥ 8192 so they don't truncate mid-`<think>` |
+| `max_tokens` | int | Generation cap. Thinking models (e.g. SenseNova-U1-8B-MoT) need ≥ 8192 so they don't truncate mid-`<think>` |
 | `top_p` | float | Nucleus sampling cutoff; default 1.0 (no trim) |
 | `retry` | int | HTTP-level retries on 5xx / timeout. 10 is generous |
 | `wait` | float | Seconds between retries; defaults to exponential backoff |
@@ -357,9 +342,9 @@ Full kwarg list: `evaluation/easi/EASI/VLMEvalKit/vlmeval/api/gpt.py`.
 
 **Local LightLLM (default)** — what `setup.sh` ships out of the box:
 ```python
-"SenseNova-U1-Mini-Beta-Local": partial(
+"SenseNova-U1-8B-MoT-Local": partial(
     GPT4V,
-    model="sensenova-u1-mini-beta",
+    model="sensenova-u1-8b-mot",
     api_base="http://localhost:8000/v1/chat/completions",
     key="dummy", temperature=0, max_tokens=32768, retry=10, verbose=False,
 ),
@@ -367,9 +352,9 @@ Full kwarg list: `evaluation/easi/EASI/VLMEvalKit/vlmeval/api/gpt.py`.
 
 **Remote endpoint (infra team or production)**:
 ```python
-"SenseNova-U1-Mini-Beta-Prod": partial(
+"SenseNova-U1-8B-MoT-Prod": partial(
     GPT4V,
-    model="sensenova-u1-mini-beta",
+    model="sensenova-u1-8b-mot",
     api_base="https://sensenova-u1.internal.example.com/v1/chat/completions",
     key="sk-your-real-token",
     temperature=0, max_tokens=32768, retry=5, verbose=False,
@@ -386,9 +371,9 @@ class _SenseNovaNoThinking(GPT4V):
         return super().generate_inner(inputs, **kwargs)
 
 entries = {
-    "SenseNova-U1-Mini-Beta-Local-NoThink": partial(
+    "SenseNova-U1-8B-MoT-Local-NoThink": partial(
         _SenseNovaNoThinking,
-        model="sensenova-u1-mini-beta",
+        model="sensenova-u1-8b-mot",
         api_base="http://localhost:8000/v1/chat/completions",
         key="dummy", temperature=0, max_tokens=2048, retry=10, verbose=False,
     ),
@@ -407,17 +392,8 @@ cd evaluation/easi/EASI
 **Single benchmark**:
 ```bash
 python scripts/submissions/run_easi_eval.py \
-  --model SenseNova-U1-Mini-Beta-Local \
-  --output-dir eval_results_sensenova-u1-mini-beta_viewspatial \
-  --api-nproc 16 \
-  --benchmarks viewspatial
-```
-
-**SFT variant (port 8001)**:
-```bash
-python scripts/submissions/run_easi_eval.py \
-  --model SenseNova-U1-Mini-SFT-Local \
-  --output-dir eval_results_sensenova-u1-mini-sft_viewspatial \
+  --model SenseNova-U1-8B-MoT-Local \
+  --output-dir eval_results_sensenova-u1-8b-mot_viewspatial \
   --api-nproc 16 \
   --benchmarks viewspatial
 ```
@@ -425,18 +401,18 @@ python scripts/submissions/run_easi_eval.py \
 **Full EASI-8 suite** (omit `--benchmarks`):
 ```bash
 python scripts/submissions/run_easi_eval.py \
-  --model SenseNova-U1-Mini-Beta-Local \
-  --output-dir eval_results_sensenova-u1-mini-beta \
+  --model SenseNova-U1-8B-MoT-Local \
+  --output-dir eval_results_sensenova-u1-8b-mot \
   --api-nproc 16
 ```
 
 **Multiple benchmarks**:
 ```bash
 python scripts/submissions/run_easi_eval.py \
-  --model SenseNova-U1-Mini-Beta-Local \
+  --model SenseNova-U1-8B-MoT-Local \
   --benchmarks viewspatial,blink,3dsrbench \
   --api-nproc 16 \
-  --output-dir eval_results_sensenova-u1-mini-beta
+  --output-dir eval_results_sensenova-u1-8b-mot
 ```
 
 Benchmark keys (EASI-8): `vsi_bench, mmsi_bench, mindcube_tiny, viewspatial, site_image, site_video, blink, 3dsrbench, embspatial`. Alias `site` expands to `site_image + site_video`.
@@ -550,12 +526,12 @@ sudo apt-get install -y libnuma1 libnuma-dev
 bash evaluation/easi/scripts/setup.sh
 
 # launch (auto-downloads weights on first run)
-bash evaluation/easi/scripts/serve.sh            # mini-beta → port 8000
+bash evaluation/easi/scripts/serve.sh            # 8b-mot → port 8000
 
 # benchmark (second shell, after server up)
 source evaluation/easi/EASI/.venv/bin/activate
 cd evaluation/easi/EASI
 python scripts/submissions/run_easi_eval.py \
-  --model SenseNova-U1-Mini-Beta-Local \
+  --model SenseNova-U1-8B-MoT-Local \
   --benchmarks blink --api-nproc 16
 ```
