@@ -213,6 +213,7 @@ This step converts raw judge results into a comparison-friendly CSV and can opti
 ## 5. Unimmmu
 
 `Unimmmu` supports both understanding-only and interleaved generation paths, but the interleaved mode is the one covered here.
+/path/to/unimmmu_direct.jsonl download link : [UniMMMU_Direct](https://huggingface.co/datasets/kiranjc/UniMMMU_for_SenseNova-U1/resolve/main/unimmmu_tool_call_release.jsonl)
 
 Reference inference command:
 
