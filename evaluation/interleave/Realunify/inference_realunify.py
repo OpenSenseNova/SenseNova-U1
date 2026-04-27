@@ -9,22 +9,23 @@ Two-step pipeline:
 Output format: InternVL JSONL with multi-turn conversations
 """
 
+import argparse
+import gc
+import inspect
+import json
+import math
 import os
+import random
 import re
 import sys
-import json
-import inspect
-import argparse
-import random
-import math
-import gc
-from typing import List, Tuple, Dict, Any, Optional
-from tqdm import tqdm
-from PIL import Image
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 import torch
 import torch.distributed as dist
 import torchvision.transforms as T
+from PIL import Image
+from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
 # ============================================================================
@@ -51,9 +52,10 @@ After the think block, always provide a concise, user-facing final answer. The a
 # Utility Functions
 # ============================================================================
 
+
 def set_random_seeds(seed_value):
     random.seed(seed_value)
-    os.environ['PYTHONHASHSEED'] = str(seed_value)
+    os.environ["PYTHONHASHSEED"] = str(seed_value)
     np.random.seed(seed_value)
     torch.manual_seed(seed_value)
     torch.cuda.manual_seed_all(seed_value)
@@ -75,10 +77,10 @@ def floor_by_factor(number: int, factor: int) -> int:
 
 def parse_square_image_size(value):
     raw_value = str(value).strip().lower()
-    if 'x' in raw_value:
-        width_str, height_str = raw_value.split('x', 1)
-    elif '*' in raw_value:
-        width_str, height_str = raw_value.split('*', 1)
+    if "x" in raw_value:
+        width_str, height_str = raw_value.split("x", 1)
+    elif "*" in raw_value:
+        width_str, height_str = raw_value.split("*", 1)
     else:
         width_str = raw_value
         height_str = raw_value
@@ -97,20 +99,17 @@ def parse_square_image_size(value):
     return width
 
 
-def resolve_target_image_size(width: int, height: int, target_image_size: Optional[int], min_pixels: int, max_pixels: int):
+def resolve_target_image_size(
+    width: int, height: int, target_image_size: Optional[int], min_pixels: int, max_pixels: int
+):
     if target_image_size is not None:
         return target_image_size, target_image_size
-    resized_h, resized_w = smart_resize(
-        height, width, factor=32,
-        min_pixels=min_pixels,
-        max_pixels=max_pixels
-    )
+    resized_h, resized_w = smart_resize(height, width, factor=32, min_pixels=min_pixels, max_pixels=max_pixels)
     return resized_h, resized_w
 
 
 def smart_resize(
-    height: int, width: int, factor: int = 32,
-    min_pixels: int = 256 * 32 * 32, max_pixels: int = 16384 * 32 * 32
+    height: int, width: int, factor: int = 32, min_pixels: int = 256 * 32 * 32, max_pixels: int = 16384 * 32 * 32
 ) -> tuple:
     """Smart resize from Qwen2.5-VL"""
     if max(height, width) / min(height, width) > 200:
@@ -135,7 +134,7 @@ def setup_distributed():
     local_rank = int(os.environ.get("LOCAL_RANK", 0))
     torch.cuda.set_device(local_rank)
 
-    if 'RANK' in os.environ:
+    if "RANK" in os.environ:
         dist.init_process_group(backend="nccl")
         world_size = dist.get_world_size()
         rank = dist.get_rank()
@@ -151,9 +150,8 @@ def setup_distributed():
 # Image Processing Functions
 # ============================================================================
 
-def dynamic_preprocess_native_resolution(
-    image, size_factor=32, min_pixels=65536, max_pixels=4194304, **kwargs
-):
+
+def dynamic_preprocess_native_resolution(image, size_factor=32, min_pixels=65536, max_pixels=4194304, **kwargs):
     width, height = image.size
     resized_height, resized_width = smart_resize(
         height,
@@ -174,7 +172,7 @@ def preprocess_pixel_values(pixel_values, patch_size=16):
     flatten_pixel_values = (
         pixel_values.view(c, grid_h, patch_size, grid_w, patch_size)
         .permute(1, 3, 0, 2, 4)
-        .reshape(grid_h * grid_w, c * patch_size ** 2)
+        .reshape(grid_h * grid_w, c * patch_size**2)
     )
 
     grid_hw = torch.tensor([[grid_h, grid_w]]).to(device=pixel_values.device)
@@ -192,8 +190,7 @@ def get_contrasting_background(image):
 
 
 def load_image_native(
-    image_file, patch_size=16, downsample_ratio=0.5,
-    min_pixels=65536, max_pixels=4194304, upscale=False, device="cuda"
+    image_file, patch_size=16, downsample_ratio=0.5, min_pixels=65536, max_pixels=4194304, upscale=False, device="cuda"
 ):
     """Load and preprocess image for model.chat()"""
     image = Image.open(image_file)
@@ -211,19 +208,18 @@ def load_image_native(
     if upscale:
         image = image.resize((image.width * 2, image.height * 2), Image.BILINEAR)
 
-    transform = T.Compose([
-        T.Lambda(lambda img: img.convert("RGB") if img.mode != "RGB" else img),
-        T.ToTensor(),
-        T.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
-    ])
+    transform = T.Compose(
+        [
+            T.Lambda(lambda img: img.convert("RGB") if img.mode != "RGB" else img),
+            T.ToTensor(),
+            T.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+        ]
+    )
 
     new_image = dynamic_preprocess_native_resolution(
-        image, size_factor=int(patch_size // downsample_ratio),
-        min_pixels=min_pixels, max_pixels=max_pixels
+        image, size_factor=int(patch_size // downsample_ratio), min_pixels=min_pixels, max_pixels=max_pixels
     )
-    pixel_values, grid_hw = preprocess_pixel_values(
-        transform(new_image).to(torch.float32), patch_size=patch_size
-    )
+    pixel_values, grid_hw = preprocess_pixel_values(transform(new_image).to(torch.float32), patch_size=patch_size)
 
     grid_hw = grid_hw.to(device)
     pixel_values = pixel_values.to(device).to(torch.bfloat16)
@@ -238,10 +234,10 @@ def load_image_native(
 
 def _build_think_kwargs(model_func, think_pattern):
     params = inspect.signature(model_func).parameters
-    if 'think_pattern' in params:
-        return {'think_pattern': think_pattern}
-    elif 'think_mode' in params:
-        return {'think_mode': think_pattern == 'think'}
+    if "think_pattern" in params:
+        return {"think_pattern": think_pattern}
+    elif "think_mode" in params:
+        return {"think_mode": think_pattern == "think"}
     return {}
 
 
@@ -307,10 +303,10 @@ class NEOInferenceEngine:
         cfg_scale: float = 1.0,
         img_cfg_scale: float = 1.0,
         cfg_interval: Tuple[float, float] = (0.1, 1.0),
-        cfg_norm: str = 'none',
+        cfg_norm: str = "none",
         image_size: Tuple[int, int] = (256, 256),
         num_steps: int = 50,
-        batch_size: int = 1
+        batch_size: int = 1,
     ) -> Image.Image:
         """
         Image editing: Interleaved -> I
@@ -346,11 +342,7 @@ class NEOInferenceEngine:
         return Image.fromarray(image[0])
 
     def chat_understanding(
-        self,
-        image_path: str,
-        question: str,
-        max_new_tokens: int = 512,
-        do_sample: bool = False
+        self, image_path: str, question: str, max_new_tokens: int = 512, do_sample: bool = False
     ) -> str:
         """
         Image understanding/QA: Image + Text -> Text
@@ -369,29 +361,24 @@ class NEOInferenceEngine:
             image_path,
             patch_size=16,
             downsample_ratio=0.5,
-            min_pixels=256*256,
-            max_pixels=4096*4096,
+            min_pixels=256 * 256,
+            max_pixels=4096 * 4096,
             upscale=False,
-            device=self.device
+            device=self.device,
         )
 
         # Format question with image tag
         if not question.startswith("<image>"):
             question = "<image>\n" + question
 
-        generation_config = dict(
-            do_sample=do_sample,
-            max_new_tokens=max_new_tokens,
-            top_p=None,
-            num_beams=1
-        )
+        generation_config = dict(do_sample=do_sample, max_new_tokens=max_new_tokens, top_p=None, num_beams=1)
 
         response = self.model.chat(
             self.tokenizer,
             pixel_values=pixel_values,
             grid_hw=grid_hw,
             question=question,
-            generation_config=generation_config
+            generation_config=generation_config,
         )
 
         return response
@@ -413,10 +400,10 @@ class NEOInferenceEngine:
         cfg_scale: float = 1.0,
         img_cfg_scale: float = 1.0,
         cfg_interval: Tuple[float, float] = (0.1, 1.0),
-        cfg_norm: str = 'none',
+        cfg_norm: str = "none",
         timestep_shift: float = 1.0,
         num_steps: int = 50,
-        system_message: str = ''
+        system_message: str = "",
     ) -> Tuple[str, List[Image.Image]]:
         """
         Interleaved generation: predicts both text and images.
@@ -435,7 +422,7 @@ class NEOInferenceEngine:
             Tuple of (generated_text, list_of_generated_images)
         """
         # Clear any existing KV cache before generation (if model supports it)
-        if hasattr(self.model, 'clear_kv_cache'):
+        if hasattr(self.model, "clear_kv_cache"):
             self.model.clear_kv_cache()
 
         text, images = self.model.interleave_gen(
@@ -450,7 +437,7 @@ class NEOInferenceEngine:
             timestep_shift=timestep_shift,
             num_steps=num_steps,
             system_message=system_message,
-            **_build_think_kwargs(self.model.interleave_gen, 'think')
+            **_build_think_kwargs(self.model.interleave_gen, "think"),
         )
 
         # Convert tensors to PIL images and clear GPU memory
@@ -467,10 +454,11 @@ class NEOInferenceEngine:
 # RealUnify Data Loading
 # ============================================================================
 
+
 def load_realunify_data(data_path: str = REALUNIFY_DATA_PATH) -> List[Dict]:
     """Load RealUnify benchmark data from JSONL"""
     data = []
-    with open(data_path, 'r', encoding='utf-8') as f:
+    with open(data_path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line:
@@ -483,12 +471,12 @@ def load_completed_ids(output_path: str) -> set:
     """Load completed sample IDs for resume"""
     completed = set()
     if os.path.exists(output_path):
-        with open(output_path, 'r', encoding='utf-8') as f:
+        with open(output_path, "r", encoding="utf-8") as f:
             for line in f:
                 try:
                     item = json.loads(line.strip())
-                    if 'hash_uid' in item:
-                        completed.add(item['hash_uid'])
+                    if "hash_uid" in item:
+                        completed.add(item["hash_uid"])
                 except:
                     continue
     return completed
@@ -500,14 +488,15 @@ def extract_final_answer(generated_text: str) -> str:
     Example: '<think>aaa<image></think>bbb' -> 'bbb'
     If no </think> tag, return the full text.
     """
-    if '</think>' in generated_text:
-        return generated_text.split('</think>')[-1].strip()
+    if "</think>" in generated_text:
+        return generated_text.split("</think>")[-1].strip()
     return generated_text.strip()
 
 
 # ============================================================================
 # Step-wise Pipeline
 # ============================================================================
+
 
 def process_realunify_step(
     engine: NEOInferenceEngine,
@@ -521,7 +510,7 @@ def process_realunify_step(
     timestep_shift: float = 1.0,
     min_pixels: int = 1024 * 1024,
     max_pixels: int = 2048 * 2048,
-    target_image_size: Optional[int] = None
+    target_image_size: Optional[int] = None,
 ) -> Optional[Dict]:
     """
     Process a single RealUnify sample with two-step pipeline
@@ -531,12 +520,12 @@ def process_realunify_step(
 
     Note: Output image size matches input image size (after smart_resize)
     """
-    hash_uid = item.get('hash_uid', 'unknown')
-    task_type = item.get('task_type', 'unknown')
-    input_image_path = item.get('input_image', '')
-    edit_prompt = item.get('edit_prompt', '')
-    evaluation_prompt = item.get('evaluation_prompt', '')
-    answer = item.get('answer', '')
+    hash_uid = item.get("hash_uid", "unknown")
+    task_type = item.get("task_type", "unknown")
+    input_image_path = item.get("input_image", "")
+    edit_prompt = item.get("edit_prompt", "")
+    evaluation_prompt = item.get("evaluation_prompt", "")
+    answer = item.get("answer", "")
 
     try:
         # Create output directory for images
@@ -548,13 +537,11 @@ def process_realunify_step(
             print(f"Warning: Input image not found: {input_image_path}")
             return None
 
-        input_image = Image.open(input_image_path).convert('RGB')
+        input_image = Image.open(input_image_path).convert("RGB")
 
         # Compute valid image size from input image (output matches input)
         w, h = input_image.size
-        resized_h, resized_w = resolve_target_image_size(
-            w, h, target_image_size, min_pixels, max_pixels
-        )
+        resized_h, resized_w = resolve_target_image_size(w, h, target_image_size, min_pixels, max_pixels)
         image_size = (resized_w, resized_h)  # (W, H) format for it2i_generate
 
         # Resize input image to match output size
@@ -571,7 +558,7 @@ def process_realunify_step(
             img_cfg_scale=img_cfg_scale,
             cfg_interval=cfg_interval,
             cfg_norm=cfg_norm,
-            num_steps=num_steps
+            num_steps=num_steps,
         )
 
         # Save edited image
@@ -581,38 +568,30 @@ def process_realunify_step(
 
         # Step 2: Image QA using edited image
         response = engine.chat_understanding(
-            image_path=edited_image_path,
-            question=evaluation_prompt,
-            max_new_tokens=512
+            image_path=edited_image_path, question=evaluation_prompt, max_new_tokens=512
         )
 
         # Build InternVL format output
         result = {
-            "image": [
-                os.path.abspath(input_image_path),
-                os.path.abspath(edited_image_path)
-            ],
+            "image": [os.path.abspath(input_image_path), os.path.abspath(edited_image_path)],
             "conversations": [
                 {"from": "human", "value": f"<image>\n{edit_prompt}"},
                 {"from": "gpt", "value": "<image>\n"},
                 {"from": "human", "value": f"<image>\n{evaluation_prompt}"},
-                {"from": "gpt", "value": response}
+                {"from": "gpt", "value": response},
             ],
             # Scoring fields
             "model_response": response,
-            "generated_image": [
-                os.path.abspath(input_image_path),
-                os.path.abspath(edited_image_path)
-            ],
+            "generated_image": [os.path.abspath(input_image_path), os.path.abspath(edited_image_path)],
             "task_type": task_type,
             "answer": answer,
             "hash_uid": hash_uid,
             # Additional metadata
-            "index": item.get('index', -1),
-            "question": item.get('question', ''),
-            "option": item.get('option', []),
+            "index": item.get("index", -1),
+            "question": item.get("question", ""),
+            "option": item.get("option", []),
             "edit_prompt": edit_prompt,
-            "evaluation_prompt": evaluation_prompt
+            "evaluation_prompt": evaluation_prompt,
         }
 
         return result
@@ -620,6 +599,7 @@ def process_realunify_step(
     except Exception as e:
         print(f"Error processing {hash_uid}: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -636,7 +616,7 @@ def process_realunify_interleave(
     timestep_shift: float = 1.0,
     min_pixels: int = 1024 * 1024,
     max_pixels: int = 2048 * 2048,
-    target_image_size: Optional[int] = None
+    target_image_size: Optional[int] = None,
 ) -> Optional[Dict]:
     """
     Process a single RealUnify sample with interleave mode.
@@ -648,12 +628,12 @@ def process_realunify_interleave(
 
     Note: edit_prompt is not used; the model handles editing internally.
     """
-    hash_uid = item.get('hash_uid', 'unknown')
-    task_type = item.get('task_type', 'unknown')
-    input_image_path = item.get('input_image', '')
-    edit_prompt = item.get('edit_prompt', '')
-    evaluation_prompt = item.get('evaluation_prompt', '')
-    answer = item.get('answer', '')
+    hash_uid = item.get("hash_uid", "unknown")
+    task_type = item.get("task_type", "unknown")
+    input_image_path = item.get("input_image", "")
+    edit_prompt = item.get("edit_prompt", "")
+    evaluation_prompt = item.get("evaluation_prompt", "")
+    answer = item.get("answer", "")
 
     try:
         # Create output directory for images
@@ -665,13 +645,11 @@ def process_realunify_interleave(
             print(f"Warning: Input image not found: {input_image_path}")
             return None
 
-        input_image = Image.open(input_image_path).convert('RGB')
+        input_image = Image.open(input_image_path).convert("RGB")
 
         # Compute valid image size from input image
         w, h = input_image.size
-        resized_h, resized_w = resolve_target_image_size(
-            w, h, target_image_size, min_pixels, max_pixels
-        )
+        resized_h, resized_w = resolve_target_image_size(w, h, target_image_size, min_pixels, max_pixels)
         image_size = (resized_w, resized_h)  # (W, H) format
 
         # Resize input image
@@ -691,7 +669,7 @@ def process_realunify_interleave(
             cfg_norm=cfg_norm,
             timestep_shift=timestep_shift,
             num_steps=num_steps,
-            system_message=INTERLEAVE_SYSTEM_PROMPT
+            system_message=INTERLEAVE_SYSTEM_PROMPT,
         )
 
         # Save generated images
@@ -714,7 +692,7 @@ def process_realunify_interleave(
             "conversations": [
                 {"from": "system", "value": INTERLEAVE_SYSTEM_PROMPT},
                 {"from": "human", "value": f"<image>\n{evaluation_prompt}"},
-                {"from": "gpt", "value": generated_text}
+                {"from": "gpt", "value": generated_text},
             ],
             # Scoring fields
             "model_response": final_answer,  # Only final answer for scoring
@@ -724,12 +702,12 @@ def process_realunify_interleave(
             "hash_uid": hash_uid,
             "inference_mode": "interleave",
             # Additional metadata
-            "index": item.get('index', -1),
-            "question": item.get('question', ''),
-            "option": item.get('option', []),
+            "index": item.get("index", -1),
+            "question": item.get("question", ""),
+            "option": item.get("option", []),
             "edit_prompt": edit_prompt,
             "evaluation_prompt": evaluation_prompt,
-            "full_generated_text": generated_text  # Full text including thinking
+            "full_generated_text": generated_text,  # Full text including thinking
         }
 
         return result
@@ -737,6 +715,7 @@ def process_realunify_interleave(
     except Exception as e:
         print(f"Error processing {hash_uid}: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -744,8 +723,8 @@ def process_realunify_interleave(
 def save_result(result: Dict, output_path: str):
     """Save result to JSONL file"""
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, 'a', encoding='utf-8') as f:
-        f.write(json.dumps(result, ensure_ascii=False) + '\n')
+    with open(output_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(result, ensure_ascii=False) + "\n")
 
 
 def resolve_output_path(output_dir: str, base_filename: str, shard_rank: Optional[int] = None) -> str:
@@ -754,7 +733,7 @@ def resolve_output_path(output_dir: str, base_filename: str, shard_rank: Optiona
         return os.path.join(output_dir, base_filename)
 
     stem, ext = os.path.splitext(base_filename)
-    shard_dir = os.path.join(output_dir, 'shards')
+    shard_dir = os.path.join(output_dir, "shards")
     os.makedirs(shard_dir, exist_ok=True)
     return os.path.join(shard_dir, f"{stem}_shard_{shard_rank:03d}{ext}")
 
@@ -763,51 +742,69 @@ def resolve_output_path(output_dir: str, base_filename: str, shard_rank: Optiona
 # Main Function
 # ============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(description="NEO Model Inference for RealUnify Benchmark")
-    parser.add_argument("--model_path", type=str, required=True,
-                        help="Path to NEO model")
-    parser.add_argument("--data_path", type=str, default=REALUNIFY_DATA_PATH,
-                        help="Path to RealUnify benchmark JSONL")
-    parser.add_argument("--output_dir", type=str, default="./output",
-                        help="Output directory")
-    parser.add_argument("--min_pixels", type=int, default=1024*1024,
-                        help="Minimum pixels for image resize (default: 1024*1024)")
-    parser.add_argument("--max_pixels", type=int, default=2048*2048,
-                        help="Maximum pixels for image resize (default: 2048*2048)")
-    parser.add_argument("--target_image_size", type=parse_square_image_size, default=None,
-                        help="Force square image size for generation/editing (e.g. 1024 or 1024x1024). If None, keep smart_resize strategy.")
-    parser.add_argument("--cfg_scale", type=float, default=4.0,
-                        help="CFG scale for text guidance")
-    parser.add_argument("--img_cfg_scale", type=float, default=1.0,
-                        help="CFG scale for image guidance")
-    parser.add_argument("--cfg_interval", type=float, nargs=2, default=[0.0, 1.0],
-                        metavar=('START', 'END'),
-                        help="CFG interval as two floats: start end")
-    parser.add_argument("--cfg_norm", type=str, default='none',
-                        choices=['none', 'global', 'channel'],
-                        help="CFG normalization mode (default: none)")
-    parser.add_argument("--num_steps", type=int, default=50,
-                        help="Number of generation steps")
-    parser.add_argument("--limit", type=int, default=None,
-                        help="Limit number of samples for testing")
-    parser.add_argument("--resume", action="store_true",
-                        help="Resume from previous run")
-    parser.add_argument("--num_shards", type=int, default=None,
-                        help="Total number of logical shards for manual sharding")
-    parser.add_argument("--shard_rank", type=int, default=None,
-                        help="Current logical shard rank for manual sharding")
-    parser.add_argument("--seed", type=int, default=42,
-                        help="Random seed")
-    parser.add_argument("--inference_mode", type=str, default="step",
-                        choices=["step", "interleave"],
-                        help="Inference mode: 'step' for two-step, 'interleave' for direct")
-    parser.add_argument("--timestep_shift", type=float, default=3.0,
-                        help="Timestep shift for interleave generation")
-    parser.add_argument("--device_map", type=str, default=None,
-                        help="Optional HuggingFace device_map (e.g. 'auto'). Default keeps original single-device/DDP behavior")
-    parser.add_argument("--max_memory_per_gpu_gb", type=int, default=None,
-                        help="Optional per-GPU max memory in GiB when using --device_map")
+    parser.add_argument("--model_path", type=str, required=True, help="Path to NEO model")
+    parser.add_argument("--data_path", type=str, default=REALUNIFY_DATA_PATH, help="Path to RealUnify benchmark JSONL")
+    parser.add_argument("--output_dir", type=str, default="./output", help="Output directory")
+    parser.add_argument(
+        "--min_pixels", type=int, default=1024 * 1024, help="Minimum pixels for image resize (default: 1024*1024)"
+    )
+    parser.add_argument(
+        "--max_pixels", type=int, default=2048 * 2048, help="Maximum pixels for image resize (default: 2048*2048)"
+    )
+    parser.add_argument(
+        "--target_image_size",
+        type=parse_square_image_size,
+        default=None,
+        help="Force square image size for generation/editing (e.g. 1024 or 1024x1024). If None, keep smart_resize strategy.",
+    )
+    parser.add_argument("--cfg_scale", type=float, default=4.0, help="CFG scale for text guidance")
+    parser.add_argument("--img_cfg_scale", type=float, default=1.0, help="CFG scale for image guidance")
+    parser.add_argument(
+        "--cfg_interval",
+        type=float,
+        nargs=2,
+        default=[0.0, 1.0],
+        metavar=("START", "END"),
+        help="CFG interval as two floats: start end",
+    )
+    parser.add_argument(
+        "--cfg_norm",
+        type=str,
+        default="none",
+        choices=["none", "global", "channel"],
+        help="CFG normalization mode (default: none)",
+    )
+    parser.add_argument("--num_steps", type=int, default=50, help="Number of generation steps")
+    parser.add_argument("--limit", type=int, default=None, help="Limit number of samples for testing")
+    parser.add_argument("--resume", action="store_true", help="Resume from previous run")
+    parser.add_argument(
+        "--num_shards", type=int, default=None, help="Total number of logical shards for manual sharding"
+    )
+    parser.add_argument("--shard_rank", type=int, default=None, help="Current logical shard rank for manual sharding")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed")
+    parser.add_argument(
+        "--inference_mode",
+        type=str,
+        default="step",
+        choices=["step", "interleave"],
+        help="Inference mode: 'step' for two-step, 'interleave' for direct",
+    )
+    parser.add_argument("--timestep_shift", type=float, default=3.0, help="Timestep shift for interleave generation")
+    parser.add_argument(
+        "--device_map",
+        type=str,
+        default=None,
+        help="Optional HuggingFace device_map (e.g. 'auto'). Default keeps original single-device/DDP behavior",
+    )
+    parser.add_argument(
+        "--max_memory_per_gpu_gb",
+        type=int,
+        default=None,
+        help="Optional per-GPU max memory in GiB when using --device_map",
+    )
 
     args = parser.parse_args()
 
@@ -819,7 +816,9 @@ def main():
     # Initialize runtime mode
     if args.device_map is not None:
         if int(os.environ.get("WORLD_SIZE", 1)) != 1:
-            raise ValueError("device_map mode must be run as a single process. Use python directly or torchrun --nproc_per_node=1.")
+            raise ValueError(
+                "device_map mode must be run as a single process. Use python directly or torchrun --nproc_per_node=1."
+            )
         world_size, rank = 1, 0
         device = None
     else:
@@ -828,10 +827,7 @@ def main():
 
     max_memory = None
     if args.device_map is not None and args.max_memory_per_gpu_gb is not None:
-        max_memory = {
-            gpu_idx: f"{args.max_memory_per_gpu_gb}GiB"
-            for gpu_idx in range(torch.cuda.device_count())
-        }
+        max_memory = {gpu_idx: f"{args.max_memory_per_gpu_gb}GiB" for gpu_idx in range(torch.cuda.device_count())}
 
     # Load model
     engine = NEOInferenceEngine(
@@ -853,12 +849,12 @@ def main():
     # Resume: filter completed samples
     if args.resume:
         completed = load_completed_ids(output_path)
-        data = [item for item in data if item.get('hash_uid') not in completed]
+        data = [item for item in data if item.get("hash_uid") not in completed]
         print(f"Resume mode: {len(completed)} completed, {len(data)} remaining")
 
     # Limit samples for testing
     if args.limit:
-        data = data[:args.limit]
+        data = data[: args.limit]
         print(f"Limited to {len(data)} samples")
 
     # Logical/manual sharding takes precedence over torch.distributed sharding
@@ -869,7 +865,7 @@ def main():
             raise ValueError(f"num_shards must be positive, got {args.num_shards}")
         if not (0 <= args.shard_rank < args.num_shards):
             raise ValueError(f"shard_rank must be in [0, num_shards), got {args.shard_rank}/{args.num_shards}")
-        data = data[args.shard_rank::args.num_shards]
+        data = data[args.shard_rank :: args.num_shards]
         print(f"Logical shard {args.shard_rank}/{args.num_shards}: processing {len(data)} samples")
     elif world_size > 1:
         data = data[rank::world_size]
@@ -897,7 +893,7 @@ def main():
                 timestep_shift=args.timestep_shift,
                 min_pixels=args.min_pixels,
                 max_pixels=args.max_pixels,
-                target_image_size=args.target_image_size
+                target_image_size=args.target_image_size,
             )
         else:
             result = process_realunify_step(
@@ -912,7 +908,7 @@ def main():
                 num_steps=args.num_steps,
                 min_pixels=args.min_pixels,
                 max_pixels=args.max_pixels,
-                target_image_size=args.target_image_size
+                target_image_size=args.target_image_size,
             )
 
         if result:
@@ -936,13 +932,13 @@ def main():
 
     # Rank 0 summary
     if rank == 0:
-        print("\n" + "="*50)
+        print("\n" + "=" * 50)
         print("Inference completed!")
         print(f"Output directory: {args.output_dir}")
         print(f"Results file: {output_path}")
         if args.num_shards is not None:
             print(f"Logical sharding: shard_rank={args.shard_rank}, num_shards={args.num_shards}")
-        print("="*50)
+        print("=" * 50)
 
 
 if __name__ == "__main__":

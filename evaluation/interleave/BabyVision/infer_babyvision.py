@@ -1,16 +1,18 @@
 import argparse
-import os
-import json
 import base64
 import io
+import json
 import math
-import time
+import os
 import random
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 import regex
 import requests
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
+
 
 def _env_int(name, default):
     value = os.environ.get(name)
@@ -70,7 +72,7 @@ SYSTEM_PROMPT = (
 
 # 全局 Session 复用 TCP 连接
 _session = requests.Session()
-_session.headers.update({'Content-Type': 'application/json'})
+_session.headers.update({"Content-Type": "application/json"})
 
 
 def _positive_int(value):
@@ -110,9 +112,7 @@ def summarize_failures(failures, limit=MAX_FAILURE_DETAILS):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Run multimodal inference against the /generate endpoints."
-    )
+    parser = argparse.ArgumentParser(description="Run multimodal inference against the /generate endpoints.")
     parser.add_argument(
         "--model-name",
         type=str,
@@ -290,7 +290,7 @@ def extract_boxed_answer(text):
     if text is None:
         return None
 
-    pattern = r'<answer>\s*(.*?)\s*</answer>'
+    pattern = r"<answer>\s*(.*?)\s*</answer>"
     matches = regex.findall(pattern, text, flags=regex.DOTALL | regex.IGNORECASE)
     if matches:
         return matches[-1].strip()
@@ -336,17 +336,8 @@ def build_query(prompt, num_images=1, system_prompt=None):
     img_tags = "<img></img>\n" * num_images
     system_block = ""
     if system_prompt:
-        system_block = (
-            f"<|im_start|>system\n"
-            f"{system_prompt}<|im_end|>\n"
-        )
-    return (
-        f"{system_block}"
-        f"<|im_start|>user\n"
-        f"{img_tags}"
-        f"{prompt}<|im_end|>\n"
-        f"<|im_start|>assistant\n"
-    )
+        system_block = f"<|im_start|>system\n{system_prompt}<|im_end|>\n"
+    return f"{system_block}<|im_start|>user\n{img_tags}{prompt}<|im_end|>\n<|im_start|>assistant\n"
 
 
 def round_by_factor(number, factor):
@@ -379,7 +370,9 @@ def smart_resize(height, width, factor=32, min_pixels=DEFAULT_MIN_PIXELS, max_pi
     return h_bar, w_bar
 
 
-def dynamic_preprocess_native_resolution(image, size_factor=32, min_pixels=DEFAULT_MIN_PIXELS, max_pixels=DEFAULT_MAX_PIXELS):
+def dynamic_preprocess_native_resolution(
+    image, size_factor=32, min_pixels=DEFAULT_MIN_PIXELS, max_pixels=DEFAULT_MAX_PIXELS
+):
     width, height = image.size
     resized_height, resized_width = smart_resize(
         height,
@@ -395,8 +388,8 @@ def encode_image_base64(img_path, min_pixels, max_pixels):
     try:
         from PIL import Image
     except ImportError:
-        with open(img_path, 'rb') as f:
-            return base64.b64encode(f.read()).decode('utf-8')
+        with open(img_path, "rb") as f:
+            return base64.b64encode(f.read()).decode("utf-8")
 
     with Image.open(img_path) as image:
         original_format = (image.format or "").upper()
@@ -413,7 +406,7 @@ def encode_image_base64(img_path, min_pixels, max_pixels):
             image.save(buffer, format="JPEG", quality=95)
         else:
             image.save(buffer, format="PNG")
-        return base64.b64encode(buffer.getvalue()).decode('utf-8')
+        return base64.b64encode(buffer.getvalue()).decode("utf-8")
 
 
 def build_payload(query, image_paths):
@@ -432,7 +425,7 @@ def build_payload(query, image_paths):
         "parameters": build_generation_parameters(),
         "multimodal_params": {
             "images": images,
-        }
+        },
     }
 
 
@@ -450,8 +443,8 @@ def call_vllm_with_retry(payload, urls, request_timeout, max_retries=20):
                     body_preview = response.text[:300]
                     return False, f"Invalid JSON response from {url}: {exc}; body={body_preview}"
                 text = None
-                if isinstance(resp_json, dict) and 'generated_text' in resp_json:
-                    gt = resp_json['generated_text']
+                if isinstance(resp_json, dict) and "generated_text" in resp_json:
+                    gt = resp_json["generated_text"]
                     if isinstance(gt, str):
                         text = gt
                     elif isinstance(gt, list):
@@ -460,7 +453,7 @@ def call_vllm_with_retry(payload, urls, request_timeout, max_retries=20):
                             if isinstance(item, str):
                                 parts.append(item)
                             elif isinstance(item, dict):
-                                parts.append(item.get('text', json.dumps(item, ensure_ascii=False)))
+                                parts.append(item.get("text", json.dumps(item, ensure_ascii=False)))
                             else:
                                 parts.append(str(item))
                         text = "".join(parts)
@@ -474,7 +467,7 @@ def call_vllm_with_retry(payload, urls, request_timeout, max_retries=20):
                     if isinstance(first, str):
                         text = first
                     elif isinstance(first, dict):
-                        text = first.get('generated_text', json.dumps(first, ensure_ascii=False))
+                        text = first.get("generated_text", json.dumps(first, ensure_ascii=False))
                     else:
                         text = str(first)
                 else:
@@ -493,6 +486,7 @@ def call_vllm_with_retry(payload, urls, request_timeout, max_retries=20):
         time.sleep(wait_time)
         wait_time = min(wait_time * 1.5, 60)
     return False, f"Max retries ({max_retries}) exceeded"
+
 
 def validate_args(args):
     if not os.path.isfile(args.data_path):
@@ -523,7 +517,7 @@ def test_babyvison(args):
 
     print(f"Loading BabyVision data from {data_path} ...")
     data = []
-    with open(data_path, 'r', encoding='utf-8') as f:
+    with open(data_path, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 data.append(json.loads(line))
@@ -534,45 +528,44 @@ def test_babyvison(args):
     failures = []
 
     for model in SUPPORTED_MODELS:
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"Model: {model}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         output_path = os.path.join(output_dir, f"babyvision_{_safe_model_name(model)}.jsonl")
 
         processed_ids = set()
         if os.path.exists(output_path):
-            with open(output_path, 'r', encoding='utf-8') as f:
+            with open(output_path, "r", encoding="utf-8") as f:
                 for line_no, line in enumerate(f, start=1):
                     if line.strip():
                         try:
-                            processed_ids.add(json.loads(line)['taskId'])
+                            processed_ids.add(json.loads(line)["taskId"])
                         except Exception as exc:
                             detail = (
-                                f"[resume] model={model} output={output_path} line={line_no}: "
-                                f"invalid JSONL row: {exc}"
+                                f"[resume] model={model} output={output_path} line={line_no}: invalid JSONL row: {exc}"
                             )
                             failures.append(detail)
                             raise RuntimeError(detail) from exc
             print(f"Resuming... {len(processed_ids)} items already processed.")
 
-        pending = [item for item in data if item['taskId'] not in processed_ids]
+        pending = [item for item in data if item["taskId"] not in processed_ids]
         if not pending:
             print(f"[SKIP] {model}: all done")
             continue
         print(f"Pending: {len(pending)} items")
 
         def process_item(item, _model=model):
-            img_path = os.path.join(image_root, item['image'])
+            img_path = os.path.join(image_root, item["image"])
             if not os.path.exists(img_path):
                 return None, f"[img] taskId={item['taskId']}: File Not Found: {img_path}"
 
-            if item['ansType'] == "blank":
-                question = item['question']
-                answer = item['blankAns']
+            if item["ansType"] == "blank":
+                question = item["question"]
+                answer = item["blankAns"]
             else:
-                question = item['question'] + "\nChoices:\n" + format_choices(item['options'])
-                choice_ans = str(item['choiceAns']).strip()
+                question = item["question"] + "\nChoices:\n" + format_choices(item["options"])
+                choice_ans = str(item["choiceAns"]).strip()
                 if choice_ans.isdigit():
                     idx = int(choice_ans)
                     if 1 <= idx <= 26:
@@ -582,7 +575,7 @@ def test_babyvison(args):
                 else:
                     answer = choice_ans
 
-            question = question + '\nPut your final answer inside <answer></answer>.'
+            question = question + "\nPut your final answer inside <answer></answer>."
             # + "\nThink about the question and give your final answer in <answer>Answer</answer> format."
 
             query = build_query(question, 1, system_prompt=None)
@@ -599,17 +592,17 @@ def test_babyvison(args):
                     )
                 except Exception as exc:
                     last_err = str(exc)
-                    time.sleep(2 ** attempt)
+                    time.sleep(2**attempt)
                     continue
 
                 if success:
                     model_response = result
                     extracted_answer = extract_boxed_answer(model_response)
                     return {
-                        "taskId": item['taskId'],
-                        "type": item['type'],
-                        "subtype": item['subtype'],
-                        "ansType": item['ansType'],
+                        "taskId": item["taskId"],
+                        "type": item["type"],
+                        "subtype": item["subtype"],
+                        "ansType": item["ansType"],
                         "question": question,
                         "answer": answer,
                         "model": _model,
@@ -619,19 +612,18 @@ def test_babyvison(args):
                     }, ""
 
                 last_err = str(result)
-                time.sleep(2 ** attempt)
+                time.sleep(2**attempt)
 
             return None, (
-                f"[api] taskId={item['taskId']}: Failed after {sample_max_retries} retries, "
-                f"last_err={last_err}"
+                f"[api] taskId={item['taskId']}: Failed after {sample_max_retries} retries, last_err={last_err}"
             )
 
         success_count = 0
         fail_count = 0
 
         with ThreadPoolExecutor(max_workers=workers) as executor:
-            futures = {executor.submit(process_item, item): item['taskId'] for item in pending}
-            with open(output_path, 'a', encoding='utf-8') as f_out:
+            futures = {executor.submit(process_item, item): item["taskId"] for item in pending}
+            with open(output_path, "a", encoding="utf-8") as f_out:
                 pbar = tqdm(as_completed(futures), total=len(pending), desc=model)
                 for future in pbar:
                     try:
@@ -677,7 +669,6 @@ def main():
     configure_generation(args)
     result = test_babyvison(args)
     return 1 if result["fail_count"] else 0
-
 
 
 if __name__ == "__main__":

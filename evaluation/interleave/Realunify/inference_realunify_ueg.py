@@ -10,32 +10,33 @@ Three inference modes:
 Output: InternVL JSONL + JSON (compatible with external scoring script)
 """
 
+import argparse
+import gc
+import json
 import os
 import sys
-import json
-import gc
-import argparse
-from typing import List, Tuple, Dict, Optional
-from tqdm import tqdm
-from PIL import Image
+from typing import Dict, List, Optional, Tuple
+
 import torch
 import torch.distributed as dist
+from PIL import Image
+from tqdm import tqdm
 
 # Import from inference_realunify.py
 _REALUNIFY_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _REALUNIFY_DIR)
 from inference_realunify import (
-    NEOInferenceEngine,
     INTERLEAVE_SYSTEM_PROMPT,
-    setup_distributed,
-    set_random_seeds,
-    save_result,
-    load_completed_ids,
-    extract_final_answer,
-    resolve_output_path,
+    NEOInferenceEngine,
     _build_think_kwargs,
-    parse_square_image_size,
+    extract_final_answer,
+    load_completed_ids,
     load_image_native,
+    parse_square_image_size,
+    resolve_output_path,
+    save_result,
+    set_random_seeds,
+    setup_distributed,
 )
 
 # ============================================================================
@@ -49,6 +50,7 @@ UEG_DATA_PATH = "<DATA_ROOT>/RealUnify/UEG_step.json"
 # Engine Extension
 # ============================================================================
 
+
 class UEGInferenceEngine(NEOInferenceEngine):
     """Extended engine with t2i and text-only chat capabilities."""
 
@@ -59,8 +61,8 @@ class UEGInferenceEngine(NEOInferenceEngine):
         cfg_scale: float = 1.0,
         img_cfg_scale: float = 1.0,
         cfg_interval: Tuple[float, float] = (0.1, 1.0),
-        cfg_norm: str = 'none',
-        num_steps: int = 50
+        cfg_norm: str = "none",
+        num_steps: int = 50,
     ) -> Image.Image:
         """Text -> Image generation via model.t2i_generate()."""
         output = self.model.t2i_generate(
@@ -75,12 +77,7 @@ class UEGInferenceEngine(NEOInferenceEngine):
         )
         return self._tensor_to_pil(output)
 
-    def chat_text(
-        self,
-        prompt: str,
-        max_new_tokens: int = 512,
-        do_sample: bool = False
-    ) -> str:
+    def chat_text(self, prompt: str, max_new_tokens: int = 512, do_sample: bool = False) -> str:
         """Text-only chat (no image input). Used for prompt refinement.
 
         Creates a small dummy image so the vision model runs without error,
@@ -88,6 +85,7 @@ class UEGInferenceEngine(NEOInferenceEngine):
         not injected into the text sequence.
         """
         import tempfile
+
         # Create a small dummy image (32x32 white)
         dummy_img = Image.new("RGB", (32, 32), (255, 255, 255))
         dummy_path = os.path.join(tempfile.gettempdir(), "_ueg_dummy.png")
@@ -95,23 +93,23 @@ class UEGInferenceEngine(NEOInferenceEngine):
 
         device = next(self.model.parameters()).device
         pixel_values, grid_hw = load_image_native(
-            dummy_path, patch_size=16, downsample_ratio=0.5,
-            min_pixels=256, max_pixels=4096, upscale=False, device=device
+            dummy_path,
+            patch_size=16,
+            downsample_ratio=0.5,
+            min_pixels=256,
+            max_pixels=4096,
+            upscale=False,
+            device=device,
         )
 
-        generation_config = dict(
-            do_sample=do_sample,
-            max_new_tokens=max_new_tokens,
-            top_p=None,
-            num_beams=1
-        )
+        generation_config = dict(do_sample=do_sample, max_new_tokens=max_new_tokens, top_p=None, num_beams=1)
         # No <image> tag in prompt -- vision features computed but not used
         response = self.model.chat(
             self.tokenizer,
             pixel_values=pixel_values,
             grid_hw=grid_hw,
             question=prompt,
-            generation_config=generation_config
+            generation_config=generation_config,
         )
         return response
 
@@ -119,6 +117,7 @@ class UEGInferenceEngine(NEOInferenceEngine):
 # ============================================================================
 # Prompt Preprocessing
 # ============================================================================
+
 
 def extract_raw_prompt(new_prompt: str) -> str:
     """Extract raw generation prompt from UEG new_prompt.
@@ -130,7 +129,7 @@ def extract_raw_prompt(new_prompt: str) -> str:
     text = new_prompt
     idx = text.find(prefix)
     if idx >= 0:
-        text = text[idx + len(prefix):]
+        text = text[idx + len(prefix) :]
     nn_idx = text.find("\n\n")
     if nn_idx >= 0:
         text = text[:nn_idx]
@@ -141,19 +140,21 @@ def extract_raw_prompt(new_prompt: str) -> str:
 # Data Loading
 # ============================================================================
 
+
 def load_ueg_data(data_path: str) -> List[Dict]:
     """Load UEG benchmark data from JSON."""
-    with open(data_path, 'r', encoding='utf-8') as f:
+    with open(data_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     # Add hash_uid from index (for resume compatibility)
     for item in data:
-        item['hash_uid'] = str(item['index'])
+        item["hash_uid"] = str(item["index"])
     return data
 
 
 # ============================================================================
 # Processing Functions
 # ============================================================================
+
 
 def process_ueg_understand_t2i(
     engine: UEGInferenceEngine,
@@ -171,8 +172,8 @@ def process_ueg_understand_t2i(
     Step 1: Refine prompt via text-only chat (new_prompt -> refined prompt)
     Step 2: Generate image from refined prompt via t2i
     """
-    hash_uid = item.get('hash_uid', 'unknown')
-    task_type = item.get('task_type', 'unknown')
+    hash_uid = item.get("hash_uid", "unknown")
+    task_type = item.get("task_type", "unknown")
 
     try:
         images_dir = os.path.join(output_dir, "images", task_type)
@@ -189,7 +190,7 @@ def process_ueg_understand_t2i(
             img_cfg_scale=img_cfg_scale,
             cfg_interval=cfg_interval,
             cfg_norm=cfg_norm,
-            num_steps=num_steps
+            num_steps=num_steps,
         )
 
         # Save image
@@ -199,21 +200,21 @@ def process_ueg_understand_t2i(
         abs_img_path = os.path.abspath(img_path)
 
         result = {
-            "index": item.get('index', -1),
+            "index": item.get("index", -1),
             "image": [abs_img_path],
             "conversations": [
                 {"from": "human", "value": item["new_prompt"]},
                 {"from": "gpt", "value": refined_prompt},
                 {"from": "human", "value": refined_prompt},
-                {"from": "gpt", "value": "<image>"}
+                {"from": "gpt", "value": "<image>"},
             ],
             "generated_images": [abs_img_path],
             "generated_image": abs_img_path,
             "task_type": task_type,
-            "question_list": item.get('question_list', []),
+            "question_list": item.get("question_list", []),
             "hash_uid": hash_uid,
             "inference_mode": "understand_t2i",
-            "new_prompt": item.get('new_prompt', ''),
+            "new_prompt": item.get("new_prompt", ""),
             "model_response": refined_prompt,
             "mid_output": refined_prompt + "\n\n<image>",
         }
@@ -222,6 +223,7 @@ def process_ueg_understand_t2i(
     except Exception as e:
         print(f"Error processing {hash_uid}: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -242,8 +244,8 @@ def process_ueg_interleave(
 
     Preprocesses new_prompt to extract raw prompt, then uses interleave_gen.
     """
-    hash_uid = item.get('hash_uid', 'unknown')
-    task_type = item.get('task_type', 'unknown')
+    hash_uid = item.get("hash_uid", "unknown")
+    task_type = item.get("task_type", "unknown")
 
     try:
         images_dir = os.path.join(output_dir, "images", task_type)
@@ -261,7 +263,7 @@ def process_ueg_interleave(
             cfg_norm=cfg_norm,
             timestep_shift=timestep_shift,
             num_steps=num_steps,
-            system_message=INTERLEAVE_SYSTEM_PROMPT
+            system_message=INTERLEAVE_SYSTEM_PROMPT,
         )
 
         # Save generated images
@@ -278,20 +280,20 @@ def process_ueg_interleave(
         last_img = generated_image_paths[-1] if generated_image_paths else ""
 
         result = {
-            "index": item.get('index', -1),
+            "index": item.get("index", -1),
             "image": generated_image_paths,
             "conversations": [
                 {"from": "system", "value": INTERLEAVE_SYSTEM_PROMPT},
                 {"from": "human", "value": raw_prompt},
-                {"from": "gpt", "value": generated_text}
+                {"from": "gpt", "value": generated_text},
             ],
             "generated_images": generated_image_paths,
             "generated_image": last_img,
             "task_type": task_type,
-            "question_list": item.get('question_list', []),
+            "question_list": item.get("question_list", []),
             "hash_uid": hash_uid,
             "inference_mode": "interleave",
-            "new_prompt": item.get('new_prompt', ''),
+            "new_prompt": item.get("new_prompt", ""),
             "model_response": final_answer,
             "mid_output": generated_text,
             "full_generated_text": generated_text,
@@ -301,6 +303,7 @@ def process_ueg_interleave(
     except Exception as e:
         print(f"Error processing {hash_uid}: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -317,8 +320,8 @@ def process_ueg_t2i(
     image_size: Tuple[int, int] = (1024, 1024),
 ) -> Optional[Dict]:
     """Mode 3: Direct t2i generation with preprocessed prompt."""
-    hash_uid = item.get('hash_uid', 'unknown')
-    task_type = item.get('task_type', 'unknown')
+    hash_uid = item.get("hash_uid", "unknown")
+    task_type = item.get("task_type", "unknown")
 
     try:
         images_dir = os.path.join(output_dir, "images", task_type)
@@ -333,7 +336,7 @@ def process_ueg_t2i(
             img_cfg_scale=img_cfg_scale,
             cfg_interval=cfg_interval,
             cfg_norm=cfg_norm,
-            num_steps=num_steps
+            num_steps=num_steps,
         )
 
         img_filename = f"{hash_uid}_gen.png"
@@ -342,19 +345,16 @@ def process_ueg_t2i(
         abs_img_path = os.path.abspath(img_path)
 
         result = {
-            "index": item.get('index', -1),
+            "index": item.get("index", -1),
             "image": [abs_img_path],
-            "conversations": [
-                {"from": "human", "value": raw_prompt},
-                {"from": "gpt", "value": "<image>"}
-            ],
+            "conversations": [{"from": "human", "value": raw_prompt}, {"from": "gpt", "value": "<image>"}],
             "generated_images": [abs_img_path],
             "generated_image": abs_img_path,
             "task_type": task_type,
-            "question_list": item.get('question_list', []),
+            "question_list": item.get("question_list", []),
             "hash_uid": hash_uid,
             "inference_mode": "t2i",
-            "new_prompt": item.get('new_prompt', ''),
+            "new_prompt": item.get("new_prompt", ""),
             "model_response": "<image>",
             "mid_output": "<image>",
         }
@@ -363,6 +363,7 @@ def process_ueg_t2i(
     except Exception as e:
         print(f"Error processing {hash_uid}: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -371,26 +372,28 @@ def process_ueg_t2i(
 # Main
 # ============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(description="NEO Model Inference for RealUnify UEG Benchmark")
     parser.add_argument("--model_path", type=str, required=True)
     parser.add_argument("--data_path", type=str, default=UEG_DATA_PATH)
     parser.add_argument("--output_dir", type=str, required=True)
-    parser.add_argument("--inference_mode", type=str, required=True,
-                        choices=["understand_t2i", "interleave", "t2i"])
+    parser.add_argument("--inference_mode", type=str, required=True, choices=["understand_t2i", "interleave", "t2i"])
     parser.add_argument("--cfg_scale", type=float, default=4.0)
     parser.add_argument("--img_cfg_scale", type=float, default=1.0)
-    parser.add_argument("--cfg_interval", type=float, nargs=2, default=[0.0, 1.0],
-                        metavar=('START', 'END'))
-    parser.add_argument("--cfg_norm", type=str, default='none',
-                        choices=['none', 'global', 'channel'])
+    parser.add_argument("--cfg_interval", type=float, nargs=2, default=[0.0, 1.0], metavar=("START", "END"))
+    parser.add_argument("--cfg_norm", type=str, default="none", choices=["none", "global", "channel"])
     parser.add_argument("--num_steps", type=int, default=50)
     parser.add_argument("--timestep_shift", type=float, default=3.0)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--resume", action="store_true")
-    parser.add_argument("--target_image_size", type=parse_square_image_size, default=None,
-                        help="Force square image size (e.g. 1024). Default: 1024")
+    parser.add_argument(
+        "--target_image_size",
+        type=parse_square_image_size,
+        default=None,
+        help="Force square image size (e.g. 1024). Default: 1024",
+    )
     parser.add_argument("--device_map", type=str, default=None)
     parser.add_argument("--max_memory_per_gpu_gb", type=int, default=None)
 
@@ -415,10 +418,7 @@ def main():
 
     max_memory = None
     if args.device_map is not None and args.max_memory_per_gpu_gb is not None:
-        max_memory = {
-            gpu_idx: f"{args.max_memory_per_gpu_gb}GiB"
-            for gpu_idx in range(torch.cuda.device_count())
-        }
+        max_memory = {gpu_idx: f"{args.max_memory_per_gpu_gb}GiB" for gpu_idx in range(torch.cuda.device_count())}
 
     # Load model
     engine = UEGInferenceEngine(
@@ -439,12 +439,12 @@ def main():
     # Resume
     if args.resume:
         completed = load_completed_ids(output_jsonl)
-        data = [item for item in data if item.get('hash_uid') not in completed]
+        data = [item for item in data if item.get("hash_uid") not in completed]
         print(f"Resume mode: {len(completed)} completed, {len(data)} remaining")
 
     # Limit
     if args.limit:
-        data = data[:args.limit]
+        data = data[: args.limit]
         print(f"Limited to {len(data)} samples")
 
     # Distributed sharding
@@ -500,7 +500,7 @@ def main():
 
     # Save JSON for external scoring
     if rank == 0 or world_size == 1:
-        with open(output_json, 'w', encoding='utf-8') as f:
+        with open(output_json, "w", encoding="utf-8") as f:
             json.dump(all_results, f, ensure_ascii=False, indent=2)
         print(f"Saved {len(all_results)} results to {output_json}")
 

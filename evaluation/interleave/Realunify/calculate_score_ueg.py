@@ -15,12 +15,13 @@ NOTE: This script requires a GeminiAPI class for judge model calls.
 """
 
 import argparse
+import concurrent.futures as cf
 import json
 import os
 import sys
 import traceback
-import concurrent.futures as cf
 from copy import deepcopy
+
 from tqdm import tqdm
 
 # You need to provide your own GeminiAPI implementation
@@ -40,6 +41,7 @@ TASK_TYPES = [
 
 # ================= IO =================
 
+
 def load_json(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -51,12 +53,13 @@ def load_jsonl(file_path):
 
 
 def save_json(data, file_path):
-    os.makedirs(os.path.dirname(file_path) or '.', exist_ok=True)
+    os.makedirs(os.path.dirname(file_path) or ".", exist_ok=True)
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 # ================= Scoring =================
+
 
 def adapt_generated_image(item):
     """Normalize generated_image to a single string path."""
@@ -92,9 +95,7 @@ def process_one(item_0, gemini_api):
             )
 
             try:
-                response_text = gemini_api.generate_text(
-                    prompt, image_paths=[img], temperature=0.2
-                )
+                response_text = gemini_api.generate_text(prompt, image_paths=[img], temperature=0.2)
             except Exception:
                 traceback.print_exc()
                 response_text = ""
@@ -107,13 +108,15 @@ def process_one(item_0, gemini_api):
             if "no" in response_lower:
                 parsed = "no"
 
-            judge_outputs.append({
-                "question": origin_q,
-                "gt_answer": gt_answer,
-                "judge_raw_response": raw_response,
-                "judge_parsed_answer": parsed,
-                "correct": parsed == gt_answer,
-            })
+            judge_outputs.append(
+                {
+                    "question": origin_q,
+                    "gt_answer": gt_answer,
+                    "judge_raw_response": raw_response,
+                    "judge_parsed_answer": parsed,
+                    "correct": parsed == gt_answer,
+                }
+            )
 
             if parsed != gt_answer:
                 score = 0
@@ -161,14 +164,20 @@ def evaluate_accuracy(data):
     print("=" * 70)
 
     return {
-        "per_task": {t: {"correct": task_correct[t], "total": task_total[t],
-                         "accuracy": task_correct[t] / task_total[t] if task_total[t] > 0 else 0.0}
-                     for t in TASK_TYPES},
-        "total": {"correct": total_correct, "total": total_samples, "accuracy": total_acc}
+        "per_task": {
+            t: {
+                "correct": task_correct[t],
+                "total": task_total[t],
+                "accuracy": task_correct[t] / task_total[t] if task_total[t] > 0 else 0.0,
+            }
+            for t in TASK_TYPES
+        },
+        "total": {"correct": total_correct, "total": total_samples, "accuracy": total_acc},
     }
 
 
 # ================= Main =================
+
 
 def calculate_score(input_file, num_workers=16):
     """Main scoring entry point."""
@@ -210,8 +219,7 @@ def calculate_score(input_file, num_workers=16):
 
 def main():
     parser = argparse.ArgumentParser(description="Score RealUnify UEG results")
-    parser.add_argument("--input_file", type=str, required=True,
-                        help="Path to ueg_results.json (or .jsonl)")
+    parser.add_argument("--input_file", type=str, required=True, help="Path to ueg_results.json (or .jsonl)")
     parser.add_argument("--num_workers", type=int, default=16)
     args = parser.parse_args()
 

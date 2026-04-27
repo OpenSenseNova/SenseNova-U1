@@ -10,7 +10,9 @@ from urllib import request as urllib_request
 
 DEFAULT_API_KEY = os.getenv("BABYVISION_JUDGE_API_KEY", os.getenv("AZURE_OPENAI_API_KEY", ""))
 DEFAULT_ENDPOINT = os.getenv("BABYVISION_JUDGE_ENDPOINT", os.getenv("AZURE_OPENAI_ENDPOINT", ""))
-DEFAULT_API_VERSION = os.getenv("BABYVISION_JUDGE_API_VERSION", os.getenv("AZURE_OPENAI_API_VERSION", "2025-01-01-preview"))
+DEFAULT_API_VERSION = os.getenv(
+    "BABYVISION_JUDGE_API_VERSION", os.getenv("AZURE_OPENAI_API_VERSION", "2025-01-01-preview")
+)
 DEFAULT_MODEL = os.getenv("BABYVISION_JUDGE_MODEL", "gpt-4.1")
 REQUEST_TIMEOUT = 60
 
@@ -87,8 +89,14 @@ def parse_args():
         default="rule_then_llm",
         help="How to extract answers before judging",
     )
-    parser.add_argument("--force", action="store_true", help="Recompute even if extracted_answer/LLMJudgeResult already exist")
-    parser.add_argument("--judge-only", action="store_true", help="Only judge existing extracted_answer values; never re-extract from model_response")
+    parser.add_argument(
+        "--force", action="store_true", help="Recompute even if extracted_answer/LLMJudgeResult already exist"
+    )
+    parser.add_argument(
+        "--judge-only",
+        action="store_true",
+        help="Only judge existing extracted_answer values; never re-extract from model_response",
+    )
     return parser.parse_args()
 
 
@@ -240,7 +248,9 @@ def rule_extract_answer(model_response):
     return None
 
 
-def process_one(endpoint, api_key, api_version, model_name, retries, idx, entry, extractor="rule_then_llm", judge_only=False):
+def process_one(
+    endpoint, api_key, api_version, model_name, retries, idx, entry, extractor="rule_then_llm", judge_only=False
+):
     question = get_field(entry, "question", "Question") or ""
     ground_truth = get_field(entry, "answer", "GroundTruth") or ""
     model_response = get_field(entry, "model_response", "ModelResult") or ""
@@ -295,7 +305,7 @@ def process_one(endpoint, api_key, api_version, model_name, retries, idx, entry,
             if "429" in message or "too many requests" in message or "too_many_requests" in message:
                 time.sleep(5 * (attempt + 1))
             else:
-                time.sleep(1.5 ** attempt)
+                time.sleep(1.5**attempt)
 
 
 def main():
@@ -317,7 +327,9 @@ def main():
     extract_and_judge_count = 0
     skipped_without_extract = 0
     for idx, entry in enumerate(data):
-        already_has_extract = normalize_optional_text(get_field(entry, "extracted_answer", "ExtractedAnswer")) is not None
+        already_has_extract = (
+            normalize_optional_text(get_field(entry, "extracted_answer", "ExtractedAnswer")) is not None
+        )
         already_has_judge = get_field(entry, "LLMJudgeResult") is not None
         if args.judge_only:
             if already_has_extract and (args.force or not already_has_judge):
@@ -376,7 +388,9 @@ def main():
                 print(f"Processed {done}/{len(tasks)}")
 
     total = len(data)
-    extracted_nonempty = sum(1 for item in data if get_field(item, "extracted_answer", "ExtractedAnswer") not in (None, ""))
+    extracted_nonempty = sum(
+        1 for item in data if get_field(item, "extracted_answer", "ExtractedAnswer") not in (None, "")
+    )
     correct = sum(1 for item in data if item.get("LLMJudgeResult") is True)
 
     print(f"Extracted answers: {extracted_nonempty}/{total} = {100 * extracted_nonempty / max(total, 1):.2f}%")

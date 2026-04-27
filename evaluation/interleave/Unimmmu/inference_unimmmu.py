@@ -9,22 +9,23 @@ Two modes:
 Output format: JSONL compatible with unimmmu.calculate_score
 """
 
+import argparse
+import gc
+import inspect
+import json
+import math
 import os
+import random
 import re
 import sys
-import json
-import inspect
-import argparse
-import random
-import math
-import gc
-from typing import List, Tuple, Dict, Any, Optional
-from tqdm import tqdm
-from PIL import Image
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 import torch
 import torch.distributed as dist
 import torchvision.transforms as T
+from PIL import Image
+from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
 # ============================================================================
@@ -51,9 +52,10 @@ After the think block, always provide a concise, user-facing final answer. The a
 # Utility Functions (reused from Realunify)
 # ============================================================================
 
+
 def set_random_seeds(seed_value):
     random.seed(seed_value)
-    os.environ['PYTHONHASHSEED'] = str(seed_value)
+    os.environ["PYTHONHASHSEED"] = str(seed_value)
     np.random.seed(seed_value)
     torch.manual_seed(seed_value)
     torch.cuda.manual_seed_all(seed_value)
@@ -75,10 +77,10 @@ def floor_by_factor(number: int, factor: int) -> int:
 
 def parse_square_image_size(value):
     raw_value = str(value).strip().lower()
-    if 'x' in raw_value:
-        width_str, height_str = raw_value.split('x', 1)
-    elif '*' in raw_value:
-        width_str, height_str = raw_value.split('*', 1)
+    if "x" in raw_value:
+        width_str, height_str = raw_value.split("x", 1)
+    elif "*" in raw_value:
+        width_str, height_str = raw_value.split("*", 1)
     else:
         width_str = raw_value
         height_str = raw_value
@@ -97,20 +99,17 @@ def parse_square_image_size(value):
     return width
 
 
-def resolve_target_image_size(width: int, height: int, target_image_size: Optional[int], min_pixels: int, max_pixels: int):
+def resolve_target_image_size(
+    width: int, height: int, target_image_size: Optional[int], min_pixels: int, max_pixels: int
+):
     if target_image_size is not None:
         return target_image_size, target_image_size
-    resized_h, resized_w = smart_resize(
-        height, width, factor=32,
-        min_pixels=min_pixels,
-        max_pixels=max_pixels
-    )
+    resized_h, resized_w = smart_resize(height, width, factor=32, min_pixels=min_pixels, max_pixels=max_pixels)
     return resized_h, resized_w
 
 
 def smart_resize(
-    height: int, width: int, factor: int = 32,
-    min_pixels: int = 256 * 32 * 32, max_pixels: int = 16384 * 32 * 32
+    height: int, width: int, factor: int = 32, min_pixels: int = 256 * 32 * 32, max_pixels: int = 16384 * 32 * 32
 ) -> tuple:
     """Smart resize from Qwen2.5-VL"""
     if max(height, width) / min(height, width) > 200:
@@ -135,7 +134,7 @@ def setup_distributed():
     local_rank = int(os.environ.get("LOCAL_RANK", 0))
     torch.cuda.set_device(local_rank)
 
-    if 'RANK' in os.environ:
+    if "RANK" in os.environ:
         dist.init_process_group(backend="nccl")
         world_size = dist.get_world_size()
         rank = dist.get_rank()
@@ -151,9 +150,8 @@ def setup_distributed():
 # Image Processing Functions (reused from Realunify)
 # ============================================================================
 
-def dynamic_preprocess_native_resolution(
-    image, size_factor=32, min_pixels=65536, max_pixels=4194304, **kwargs
-):
+
+def dynamic_preprocess_native_resolution(image, size_factor=32, min_pixels=65536, max_pixels=4194304, **kwargs):
     width, height = image.size
     resized_height, resized_width = smart_resize(
         height,
@@ -174,7 +172,7 @@ def preprocess_pixel_values(pixel_values, patch_size=16):
     flatten_pixel_values = (
         pixel_values.view(c, grid_h, patch_size, grid_w, patch_size)
         .permute(1, 3, 0, 2, 4)
-        .reshape(grid_h * grid_w, c * patch_size ** 2)
+        .reshape(grid_h * grid_w, c * patch_size**2)
     )
 
     grid_hw = torch.tensor([[grid_h, grid_w]]).to(device=pixel_values.device)
@@ -192,8 +190,7 @@ def get_contrasting_background(image):
 
 
 def load_image_native(
-    image_file, patch_size=16, downsample_ratio=0.5,
-    min_pixels=65536, max_pixels=4194304, upscale=False, device="cuda"
+    image_file, patch_size=16, downsample_ratio=0.5, min_pixels=65536, max_pixels=4194304, upscale=False, device="cuda"
 ):
     """Load and preprocess image for model.chat()"""
     image = Image.open(image_file)
@@ -211,19 +208,18 @@ def load_image_native(
     if upscale:
         image = image.resize((image.width * 2, image.height * 2), Image.BILINEAR)
 
-    transform = T.Compose([
-        T.Lambda(lambda img: img.convert("RGB") if img.mode != "RGB" else img),
-        T.ToTensor(),
-        T.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
-    ])
+    transform = T.Compose(
+        [
+            T.Lambda(lambda img: img.convert("RGB") if img.mode != "RGB" else img),
+            T.ToTensor(),
+            T.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+        ]
+    )
 
     new_image = dynamic_preprocess_native_resolution(
-        image, size_factor=int(patch_size // downsample_ratio),
-        min_pixels=min_pixels, max_pixels=max_pixels
+        image, size_factor=int(patch_size // downsample_ratio), min_pixels=min_pixels, max_pixels=max_pixels
     )
-    pixel_values, grid_hw = preprocess_pixel_values(
-        transform(new_image).to(torch.float32), patch_size=patch_size
-    )
+    pixel_values, grid_hw = preprocess_pixel_values(transform(new_image).to(torch.float32), patch_size=patch_size)
 
     grid_hw = grid_hw.to(device)
     pixel_values = pixel_values.to(device).to(torch.bfloat16)
@@ -238,10 +234,10 @@ def load_image_native(
 
 def _build_think_kwargs(model_func, think_pattern):
     params = inspect.signature(model_func).parameters
-    if 'think_pattern' in params:
-        return {'think_pattern': think_pattern}
-    elif 'think_mode' in params:
-        return {'think_mode': think_pattern == 'think'}
+    if "think_pattern" in params:
+        return {"think_pattern": think_pattern}
+    elif "think_mode" in params:
+        return {"think_mode": think_pattern == "think"}
     return {}
 
 
@@ -316,7 +312,7 @@ class NEOInferenceEngine:
         max_new_tokens: int = 512,
         do_sample: bool = False,
         min_pixels: int = 65536,
-        max_pixels: int = 4194304
+        max_pixels: int = 4194304,
     ) -> str:
         """
         Single-image understanding/QA: Image + Text -> Text
@@ -328,25 +324,20 @@ class NEOInferenceEngine:
             min_pixels=min_pixels,
             max_pixels=max_pixels,
             upscale=False,
-            device=self.device
+            device=self.device,
         )
 
         if not question.startswith("<image>"):
             question = "<image>\n" + question
 
-        generation_config = dict(
-            do_sample=do_sample,
-            max_new_tokens=max_new_tokens,
-            top_p=None,
-            num_beams=1
-        )
+        generation_config = dict(do_sample=do_sample, max_new_tokens=max_new_tokens, top_p=None, num_beams=1)
 
         response = self.model.chat(
             self.tokenizer,
             pixel_values=pixel_values,
             grid_hw=grid_hw,
             question=question,
-            generation_config=generation_config
+            generation_config=generation_config,
         )
 
         return response
@@ -358,7 +349,7 @@ class NEOInferenceEngine:
         max_new_tokens: int = 512,
         do_sample: bool = False,
         min_pixels: int = 65536,
-        max_pixels: int = 4194304
+        max_pixels: int = 4194304,
     ) -> str:
         """
         Multi-image understanding: Multiple Images + Text -> Text
@@ -377,7 +368,7 @@ class NEOInferenceEngine:
                 min_pixels=min_pixels,
                 max_pixels=max_pixels,
                 upscale=False,
-                device=self.device
+                device=self.device,
             )
             all_pixel_values.append(pixel_values)
             all_grid_hw.append(grid_hw)
@@ -386,19 +377,14 @@ class NEOInferenceEngine:
         pixel_values = torch.cat(all_pixel_values, dim=0)
         grid_hw = torch.cat(all_grid_hw, dim=0)
 
-        generation_config = dict(
-            do_sample=do_sample,
-            max_new_tokens=max_new_tokens,
-            top_p=None,
-            num_beams=1
-        )
+        generation_config = dict(do_sample=do_sample, max_new_tokens=max_new_tokens, top_p=None, num_beams=1)
 
         response = self.model.chat(
             self.tokenizer,
             pixel_values=pixel_values,
             grid_hw=grid_hw,
             question=question,
-            generation_config=generation_config
+            generation_config=generation_config,
         )
 
         return response
@@ -411,10 +397,10 @@ class NEOInferenceEngine:
         cfg_scale: float = 1.0,
         img_cfg_scale: float = 1.0,
         cfg_interval: Tuple[float, float] = (0.1, 1.0),
-        cfg_norm: str = 'none',
+        cfg_norm: str = "none",
         timestep_shift: float = 1.0,
         num_steps: int = 50,
-        system_message: str = ''
+        system_message: str = "",
     ) -> Tuple[str, List[Image.Image]]:
         """
         Interleaved generation: predicts both text and images.
@@ -433,7 +419,7 @@ class NEOInferenceEngine:
             Tuple of (generated_text, list_of_generated_images)
         """
         # Clear any existing KV cache before generation
-        if hasattr(self.model, 'clear_kv_cache'):
+        if hasattr(self.model, "clear_kv_cache"):
             self.model.clear_kv_cache()
 
         text, images = self.model.interleave_gen(
@@ -448,7 +434,7 @@ class NEOInferenceEngine:
             timestep_shift=timestep_shift,
             num_steps=num_steps,
             system_message=system_message,
-            **_build_think_kwargs(self.model.interleave_gen, 'think')
+            **_build_think_kwargs(self.model.interleave_gen, "think"),
         )
 
         # Convert tensors to PIL images and clear GPU memory
@@ -465,10 +451,11 @@ class NEOInferenceEngine:
 # Unimmmu Data Loading & Parsing
 # ============================================================================
 
+
 def load_unimmmu_data(data_path: str = UNIMMMU_DATA_PATH) -> List[Dict]:
     """Load Unimmmu benchmark data from JSONL"""
     data = []
-    with open(data_path, 'r', encoding='utf-8') as f:
+    with open(data_path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line:
@@ -491,29 +478,29 @@ def parse_messages_to_prompt_and_images(item: Dict) -> Tuple[str, List[str]]:
     Returns:
         (prompt_text, image_paths)
     """
-    messages = item.get('messages', [])
+    messages = item.get("messages", [])
     prompt_parts = []
     image_paths = []
 
     for msg in messages:
-        if msg.get('role') != 'user':
+        if msg.get("role") != "user":
             continue
-        content = msg.get('content', [])
+        content = msg.get("content", [])
         if isinstance(content, str):
             prompt_parts.append(content)
         elif isinstance(content, list):
             for c in content:
                 if isinstance(c, dict):
-                    if c.get('type') == 'text':
-                        text = c.get('text', '')
+                    if c.get("type") == "text":
+                        text = c.get("text", "")
                         if text:
                             prompt_parts.append(text)
-                    elif c.get('type') == 'image_url':
-                        url = c.get('image_url', {}).get('url', '')
+                    elif c.get("type") == "image_url":
+                        url = c.get("image_url", {}).get("url", "")
                         if url:
                             image_paths.append(url)
 
-    prompt = prompt_parts[0] if prompt_parts else ''
+    prompt = prompt_parts[0] if prompt_parts else ""
     return prompt, image_paths
 
 
@@ -521,12 +508,12 @@ def load_completed_ids(output_path: str) -> set:
     """Load completed sample IDs for resume"""
     completed = set()
     if os.path.exists(output_path):
-        with open(output_path, 'r', encoding='utf-8') as f:
+        with open(output_path, "r", encoding="utf-8") as f:
             for line in f:
                 try:
                     item = json.loads(line.strip())
-                    if 'hash_uid' in item:
-                        completed.add(item['hash_uid'])
+                    if "hash_uid" in item:
+                        completed.add(item["hash_uid"])
                 except:
                     continue
     return completed
@@ -538,16 +525,16 @@ def extract_final_answer(generated_text: str) -> str:
     Example: '<think>aaa<image></think>bbb' -> 'bbb'
     If no </think> tag, return the full text.
     """
-    if '</think>' in generated_text:
-        return generated_text.split('</think>')[-1].strip()
+    if "</think>" in generated_text:
+        return generated_text.split("</think>")[-1].strip()
     return generated_text.strip()
 
 
 def save_result(result: Dict, output_path: str):
     """Save result to JSONL file"""
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, 'a', encoding='utf-8') as f:
-        f.write(json.dumps(result, ensure_ascii=False) + '\n')
+    with open(output_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(result, ensure_ascii=False) + "\n")
 
 
 def resolve_output_path(output_dir: str, base_filename: str, shard_rank: Optional[int] = None) -> str:
@@ -556,7 +543,7 @@ def resolve_output_path(output_dir: str, base_filename: str, shard_rank: Optiona
         return os.path.join(output_dir, base_filename)
 
     stem, ext = os.path.splitext(base_filename)
-    shard_dir = os.path.join(output_dir, 'shards')
+    shard_dir = os.path.join(output_dir, "shards")
     os.makedirs(shard_dir, exist_ok=True)
     return os.path.join(shard_dir, f"{stem}_shard_{shard_rank:03d}{ext}")
 
@@ -565,12 +552,13 @@ def resolve_output_path(output_dir: str, base_filename: str, shard_rank: Optiona
 # Processing Functions
 # ============================================================================
 
+
 def process_unimmmu_i2t(
     engine: NEOInferenceEngine,
     item: Dict,
     output_dir: str,
     min_pixels: int = 1024 * 1024,
-    max_pixels: int = 2048 * 2048
+    max_pixels: int = 2048 * 2048,
 ) -> Optional[Dict]:
     """
     Process a single Unimmmu sample with i2t mode (understanding only).
@@ -578,8 +566,8 @@ def process_unimmmu_i2t(
     No image generation -- only text response via model.chat().
     Supports 1-3 input images depending on task type.
     """
-    hash_uid = item.get('hash_uid', 'unknown')
-    task = item.get('task', 'unknown')
+    hash_uid = item.get("hash_uid", "unknown")
+    task = item.get("task", "unknown")
 
     try:
         # Parse messages to get prompt and image paths
@@ -614,32 +602,33 @@ def process_unimmmu_i2t(
             max_new_tokens=512,
             do_sample=False,
             min_pixels=min_pixels,
-            max_pixels=max_pixels
+            max_pixels=max_pixels,
         )
 
         # Build result -- preserve all original fields for scorer compatibility
         result = {
             "task": task,
-            "id": item.get('id', ''),
+            "id": item.get("id", ""),
             "hash_uid": hash_uid,
             "model_response": response,
-            "gt_text": item.get('gt_text', ''),
-            "reasoning_imgs": item.get('reasoning_imgs', []),
+            "gt_text": item.get("gt_text", ""),
+            "reasoning_imgs": item.get("reasoning_imgs", []),
             "inference_mode": "i2t",
         }
 
         # Preserve geometry-specific fields for scorer
         if task == "geometry":
-            result["task_type"] = item.get('task_type', '')
-            result["reasoning_qs"] = item.get('reasoning_qs', '')
-            result["auxiliary_qs"] = item.get('auxiliary_qs', '')
-            result["gt_auxiliary_imgs"] = item.get('gt_auxiliary_imgs', [])
+            result["task_type"] = item.get("task_type", "")
+            result["reasoning_qs"] = item.get("reasoning_qs", "")
+            result["auxiliary_qs"] = item.get("auxiliary_qs", "")
+            result["gt_auxiliary_imgs"] = item.get("gt_auxiliary_imgs", [])
 
         return result
 
     except Exception as e:
         print(f"Error processing {hash_uid}: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -656,7 +645,7 @@ def process_unimmmu_interleave(
     timestep_shift: float = 1.0,
     min_pixels: int = 1024 * 1024,
     max_pixels: int = 2048 * 2048,
-    target_image_size: Optional[int] = None
+    target_image_size: Optional[int] = None,
 ) -> Optional[Dict]:
     """
     Process a single Unimmmu sample with interleave mode.
@@ -664,8 +653,8 @@ def process_unimmmu_interleave(
     The model uses multimodal reasoning (thinking mode) to generate
     both text and images. System prompt is applied.
     """
-    hash_uid = item.get('hash_uid', 'unknown')
-    task = item.get('task', 'unknown')
+    hash_uid = item.get("hash_uid", "unknown")
+    task = item.get("task", "unknown")
 
     try:
         # Create output directory for generated images
@@ -687,11 +676,9 @@ def process_unimmmu_interleave(
                 print(f"Warning: Image not found: {img_path}")
                 continue
 
-            img = Image.open(img_path).convert('RGB')
+            img = Image.open(img_path).convert("RGB")
             w, h = img.size
-            resized_h, resized_w = resolve_target_image_size(
-                w, h, target_image_size, min_pixels, max_pixels
-            )
+            resized_h, resized_w = resolve_target_image_size(w, h, target_image_size, min_pixels, max_pixels)
             img = img.resize((resized_w, resized_h))
             input_images.append(img)
             valid_paths.append(img_path)
@@ -720,7 +707,7 @@ def process_unimmmu_interleave(
             cfg_norm=cfg_norm,
             timestep_shift=timestep_shift,
             num_steps=num_steps,
-            system_message=INTERLEAVE_SYSTEM_PROMPT
+            system_message=INTERLEAVE_SYSTEM_PROMPT,
         )
 
         # Save generated images
@@ -737,28 +724,29 @@ def process_unimmmu_interleave(
         # Build result -- preserve all original fields for scorer compatibility
         result = {
             "task": task,
-            "id": item.get('id', ''),
+            "id": item.get("id", ""),
             "hash_uid": hash_uid,
             "model_response": final_answer,
             "full_generated_text": generated_text,
             "generated_images": generated_image_paths,
-            "gt_text": item.get('gt_text', ''),
-            "reasoning_imgs": item.get('reasoning_imgs', []),
+            "gt_text": item.get("gt_text", ""),
+            "reasoning_imgs": item.get("reasoning_imgs", []),
             "inference_mode": "interleave",
         }
 
         # Preserve geometry-specific fields for scorer
         if task == "geometry":
-            result["task_type"] = item.get('task_type', '')
-            result["reasoning_qs"] = item.get('reasoning_qs', '')
-            result["auxiliary_qs"] = item.get('auxiliary_qs', '')
-            result["gt_auxiliary_imgs"] = item.get('gt_auxiliary_imgs', [])
+            result["task_type"] = item.get("task_type", "")
+            result["reasoning_qs"] = item.get("reasoning_qs", "")
+            result["auxiliary_qs"] = item.get("auxiliary_qs", "")
+            result["gt_auxiliary_imgs"] = item.get("gt_auxiliary_imgs", [])
 
         return result
 
     except Exception as e:
         print(f"Error processing {hash_uid}: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -767,51 +755,69 @@ def process_unimmmu_interleave(
 # Main Function
 # ============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(description="NEO Model Inference for Unimmmu Benchmark")
-    parser.add_argument("--model_path", type=str, required=True,
-                        help="Path to NEO model")
-    parser.add_argument("--data_path", type=str, default=UNIMMMU_DATA_PATH,
-                        help="Path to Unimmmu benchmark JSONL")
-    parser.add_argument("--output_dir", type=str, default="./output",
-                        help="Output directory")
-    parser.add_argument("--min_pixels", type=int, default=1024*1024,
-                        help="Minimum pixels for image resize (default: 1024*1024)")
-    parser.add_argument("--max_pixels", type=int, default=2048*2048,
-                        help="Maximum pixels for image resize (default: 2048*2048)")
-    parser.add_argument("--target_image_size", type=parse_square_image_size, default=None,
-                        help="Force square image size for generation/editing (e.g. 1024 or 1024x1024). If None, keep smart_resize strategy.")
-    parser.add_argument("--cfg_scale", type=float, default=4.0,
-                        help="CFG scale for text guidance")
-    parser.add_argument("--img_cfg_scale", type=float, default=1.0,
-                        help="CFG scale for image guidance")
-    parser.add_argument("--cfg_interval", type=float, nargs=2, default=[0.0, 1.0],
-                        metavar=('START', 'END'),
-                        help="CFG interval as two floats: start end")
-    parser.add_argument("--cfg_norm", type=str, default='none',
-                        choices=['none', 'global', 'channel'],
-                        help="CFG normalization mode (default: none)")
-    parser.add_argument("--num_steps", type=int, default=50,
-                        help="Number of generation steps")
-    parser.add_argument("--limit", type=int, default=None,
-                        help="Limit number of samples for testing")
-    parser.add_argument("--resume", action="store_true",
-                        help="Resume from previous run")
-    parser.add_argument("--num_shards", type=int, default=None,
-                        help="Total number of logical shards for manual sharding")
-    parser.add_argument("--shard_rank", type=int, default=None,
-                        help="Current logical shard rank for manual sharding")
-    parser.add_argument("--seed", type=int, default=42,
-                        help="Random seed")
-    parser.add_argument("--inference_mode", type=str, default="i2t",
-                        choices=["i2t", "interleave"],
-                        help="Inference mode: 'i2t' for understanding, 'interleave' for multimodal reasoning")
-    parser.add_argument("--timestep_shift", type=float, default=3.0,
-                        help="Timestep shift for interleave generation")
-    parser.add_argument("--device_map", type=str, default=None,
-                        help="Optional HuggingFace device_map (e.g. 'auto'). Default keeps original single-device/DDP behavior")
-    parser.add_argument("--max_memory_per_gpu_gb", type=int, default=None,
-                        help="Optional per-GPU max memory in GiB when using --device_map")
+    parser.add_argument("--model_path", type=str, required=True, help="Path to NEO model")
+    parser.add_argument("--data_path", type=str, default=UNIMMMU_DATA_PATH, help="Path to Unimmmu benchmark JSONL")
+    parser.add_argument("--output_dir", type=str, default="./output", help="Output directory")
+    parser.add_argument(
+        "--min_pixels", type=int, default=1024 * 1024, help="Minimum pixels for image resize (default: 1024*1024)"
+    )
+    parser.add_argument(
+        "--max_pixels", type=int, default=2048 * 2048, help="Maximum pixels for image resize (default: 2048*2048)"
+    )
+    parser.add_argument(
+        "--target_image_size",
+        type=parse_square_image_size,
+        default=None,
+        help="Force square image size for generation/editing (e.g. 1024 or 1024x1024). If None, keep smart_resize strategy.",
+    )
+    parser.add_argument("--cfg_scale", type=float, default=4.0, help="CFG scale for text guidance")
+    parser.add_argument("--img_cfg_scale", type=float, default=1.0, help="CFG scale for image guidance")
+    parser.add_argument(
+        "--cfg_interval",
+        type=float,
+        nargs=2,
+        default=[0.0, 1.0],
+        metavar=("START", "END"),
+        help="CFG interval as two floats: start end",
+    )
+    parser.add_argument(
+        "--cfg_norm",
+        type=str,
+        default="none",
+        choices=["none", "global", "channel"],
+        help="CFG normalization mode (default: none)",
+    )
+    parser.add_argument("--num_steps", type=int, default=50, help="Number of generation steps")
+    parser.add_argument("--limit", type=int, default=None, help="Limit number of samples for testing")
+    parser.add_argument("--resume", action="store_true", help="Resume from previous run")
+    parser.add_argument(
+        "--num_shards", type=int, default=None, help="Total number of logical shards for manual sharding"
+    )
+    parser.add_argument("--shard_rank", type=int, default=None, help="Current logical shard rank for manual sharding")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed")
+    parser.add_argument(
+        "--inference_mode",
+        type=str,
+        default="i2t",
+        choices=["i2t", "interleave"],
+        help="Inference mode: 'i2t' for understanding, 'interleave' for multimodal reasoning",
+    )
+    parser.add_argument("--timestep_shift", type=float, default=3.0, help="Timestep shift for interleave generation")
+    parser.add_argument(
+        "--device_map",
+        type=str,
+        default=None,
+        help="Optional HuggingFace device_map (e.g. 'auto'). Default keeps original single-device/DDP behavior",
+    )
+    parser.add_argument(
+        "--max_memory_per_gpu_gb",
+        type=int,
+        default=None,
+        help="Optional per-GPU max memory in GiB when using --device_map",
+    )
 
     args = parser.parse_args()
 
@@ -823,7 +829,9 @@ def main():
     # Initialize runtime mode
     if args.device_map is not None:
         if int(os.environ.get("WORLD_SIZE", 1)) != 1:
-            raise ValueError("device_map mode must be run as a single process. Use python directly or torchrun --nproc_per_node=1.")
+            raise ValueError(
+                "device_map mode must be run as a single process. Use python directly or torchrun --nproc_per_node=1."
+            )
         world_size, rank = 1, 0
         device = None
     else:
@@ -832,10 +840,7 @@ def main():
 
     max_memory = None
     if args.device_map is not None and args.max_memory_per_gpu_gb is not None:
-        max_memory = {
-            gpu_idx: f"{args.max_memory_per_gpu_gb}GiB"
-            for gpu_idx in range(torch.cuda.device_count())
-        }
+        max_memory = {gpu_idx: f"{args.max_memory_per_gpu_gb}GiB" for gpu_idx in range(torch.cuda.device_count())}
 
     # Load model
     engine = NEOInferenceEngine(
@@ -852,7 +857,7 @@ def main():
         # Print task distribution
         task_counts = {}
         for item in data:
-            t = item.get('task', 'unknown')
+            t = item.get("task", "unknown")
             task_counts[t] = task_counts.get(t, 0) + 1
         print(f"Task distribution: {task_counts}")
 
@@ -864,13 +869,13 @@ def main():
     # Resume: filter completed samples
     if args.resume:
         completed = load_completed_ids(output_path)
-        data = [item for item in data if item.get('hash_uid') not in completed]
+        data = [item for item in data if item.get("hash_uid") not in completed]
         if rank == 0:
             print(f"Resume mode: {len(completed)} completed, {len(data)} remaining")
 
     # Limit samples for testing
     if args.limit:
-        data = data[:args.limit]
+        data = data[: args.limit]
         if rank == 0:
             print(f"Limited to {len(data)} samples")
 
@@ -882,7 +887,7 @@ def main():
             raise ValueError(f"num_shards must be positive, got {args.num_shards}")
         if not (0 <= args.shard_rank < args.num_shards):
             raise ValueError(f"shard_rank must be in [0, num_shards), got {args.shard_rank}/{args.num_shards}")
-        data = data[args.shard_rank::args.num_shards]
+        data = data[args.shard_rank :: args.num_shards]
         print(f"Logical shard {args.shard_rank}/{args.num_shards}: processing {len(data)} samples")
     elif world_size > 1:
         data = data[rank::world_size]
@@ -910,7 +915,7 @@ def main():
                 timestep_shift=args.timestep_shift,
                 min_pixels=args.min_pixels,
                 max_pixels=args.max_pixels,
-                target_image_size=args.target_image_size
+                target_image_size=args.target_image_size,
             )
         else:
             result = process_unimmmu_i2t(
@@ -918,7 +923,7 @@ def main():
                 item=item,
                 output_dir=args.output_dir,
                 min_pixels=args.min_pixels,
-                max_pixels=args.max_pixels
+                max_pixels=args.max_pixels,
             )
 
         if result:
@@ -942,13 +947,13 @@ def main():
 
     # Rank 0 summary
     if rank == 0:
-        print("\n" + "="*50)
+        print("\n" + "=" * 50)
         print("Inference completed!")
         print(f"Output directory: {args.output_dir}")
         print(f"Results file: {output_path}")
         if args.num_shards is not None:
             print(f"Logical sharding: shard_rank={args.shard_rank}, num_shards={args.num_shards}")
-        print("="*50)
+        print("=" * 50)
 
 
 if __name__ == "__main__":

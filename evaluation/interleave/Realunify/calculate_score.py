@@ -6,9 +6,9 @@ Calculates accuracy for multiple-choice QA tasks.
 Compatible with output from inference_realunify.py
 """
 
-import os
-import json
 import argparse
+import json
+import os
 import re
 from collections import defaultdict
 
@@ -100,18 +100,14 @@ def evaluate_json_data(data_list):
         total = metrics["total"]
         correct = metrics["correct"]
         acc = (correct / total) if total > 0 else 0.0
-        final_results[task] = {
-            "correct": correct,
-            "total": total,
-            "acc": acc
-        }
+        final_results[task] = {"correct": correct, "total": total, "acc": acc}
 
     return final_results
 
 
 def print_report(results):
     """Print formatted evaluation report"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print(f"{'Task Type':<40} | {'Acc':<10} | {'Count'}")
     print("-" * 60)
 
@@ -122,40 +118,33 @@ def print_report(results):
 
     for task in sorted_tasks:
         metrics = results[task]
-        acc_percent = metrics['acc'] * 100
+        acc_percent = metrics["acc"] * 100
         print(f"{task:<40} | {acc_percent:>6.2f}%    | ({metrics['correct']}/{metrics['total']})")
 
-        total_correct += metrics['correct']
-        total_count += metrics['total']
+        total_correct += metrics["correct"]
+        total_count += metrics["total"]
 
     print("-" * 60)
     overall_acc = (total_correct / total_count * 100) if total_count > 0 else 0.0
     print(f"{'Overall':<40} | {overall_acc:>6.2f}%    | ({total_correct}/{total_count})")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
 
-    return {
-        "overall": {
-            "correct": total_correct,
-            "total": total_count,
-            "acc": overall_acc / 100
-        },
-        "by_task": results
-    }
+    return {"overall": {"correct": total_correct, "total": total_count, "acc": overall_acc / 100}, "by_task": results}
 
 
 def save_results(results, output_path):
     """Save results to JSON file"""
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
     print(f"Results saved to: {output_path}")
 
 
 def main():
     parser = argparse.ArgumentParser(description="Calculate RealUnify Benchmark Score")
-    parser.add_argument('--input_file', type=str, required=True,
-                        help='Path to the input JSONL file (inference results)')
-    parser.add_argument('--output_file', type=str, default=None,
-                        help='Path to save the score results (optional)')
+    parser.add_argument(
+        "--input_file", type=str, required=True, help="Path to the input JSONL file (inference results)"
+    )
+    parser.add_argument("--output_file", type=str, default=None, help="Path to save the score results (optional)")
 
     args = parser.parse_args()
 
@@ -183,6 +172,7 @@ def main():
     except Exception as e:
         print(f"An error occurred: {e}")
         import traceback
+
         traceback.print_exc()
 
 
