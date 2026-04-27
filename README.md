@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
+  <img src="docs/assets/teaser.webp" alt="SenseNova-U1" width="900">
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@ It marks a fundamental paradigm shift in multimodal AI: **from modality integrat
 The unification of visual understanding and generation opens tremendous possibilities. SenseNova U1 sits in the stage of **Data-driven Learning** (like ChatGPT), yet gestures toward the next stage, that is, **Agentic Learning** (like OpenClaw) and thinking in a natively multimodal way.
 
 <p align="center">
-  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
+  <img src="docs/assets/teaser_1.webp" alt="radar plot" width="900">
 </p>
 
 #### 🏗️ *Key Pillars:*      
@@ -44,8 +44,8 @@ At the core of SenseNova U1 is **[NEO-Unify](https://huggingface.co/blog/senseno
 Powered by this new core architecture, SenseNova U1 delivers exceptional efficiency in multimodal learning:
 
 <p align="center">
-  <img src="docs/assets/perform_vs_speed_avg8.png" width="48%" />
-  <img src="docs/assets/perform_vs_speed_avg3.png" width="48%" />
+  <img src="docs/assets/perform_vs_speed_avg8.webp" width="48%" />
+  <img src="docs/assets/perform_vs_speed_avg3.webp" width="48%" />
 </p>
 
 <p align="center">
