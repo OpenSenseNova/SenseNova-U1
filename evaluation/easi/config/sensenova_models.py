@@ -36,16 +36,4 @@ entries = {
         retry=10,
         verbose=False,
     ),
-    # Mini-SFT variant — disabled for now. Uncomment + restore the matching
-    # case in serve.sh and download_weights.sh to re-enable.
-    # "SenseNova-U1-Mini-SFT-Local": partial(
-    #     GPT4V,
-    #     model="sensenova-u1-mini-sft",
-    #     api_base="http://localhost:8001/v1/chat/completions",
-    #     key="dummy",
-    #     temperature=0,
-    #     max_tokens=8192,          # SFT also emits <think>...</think>; needs headroom
-    #     retry=10,
-    #     verbose=False,
-    # ),
 }

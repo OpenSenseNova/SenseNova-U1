@@ -73,14 +73,6 @@ case "${MODEL}" in
     DEFAULT_MODEL_NAME="sensenova-u1-8b-mot"
     DEFAULT_REASONING="qwen3"
     ;;
-  # Mini-SFT variant — disabled for now. Uncomment to re-enable.
-  # mini-sft)
-  #   DEFAULT_DIR="${REPO_ROOT}/models/SenseNova-U1-Mini-SFT"
-  #   DEFAULT_LB_PORT=8001
-  #   DEFAULT_BACKEND_BASE=8101
-  #   DEFAULT_MODEL_NAME="sensenova-u1-mini-sft"
-  #   DEFAULT_REASONING="qwen3"
-  #   ;;
   *)
     echo "[error] MODEL must be '8b-mot' (got: ${MODEL})" >&2
     exit 1

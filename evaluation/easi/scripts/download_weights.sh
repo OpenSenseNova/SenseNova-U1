@@ -50,9 +50,7 @@ download() {
 
 target="${1:-8b-mot}"
 case "${target}" in
-  8b-mot)    download "sensenova/SenseNova-U1-8B-MoT"   ;;
-  # Mini-SFT variant — disabled for now. Uncomment to re-enable.
-  # mini-sft)  download "SenseNova/SenseNova-U1-Mini-SFT" ;;
+  8b-mot) download "sensenova/SenseNova-U1-8B-MoT" ;;
   *)
     echo "[error] unknown target: ${target}. Use: 8b-mot" >&2
     exit 1
