@@ -383,7 +383,7 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 
 ### 🤗 使用 transformers 运行
 
-> **环境准备：** 按照[安装指南](./docs/installation_CN.md)克隆仓库并用 uv 安装依赖。
+> **环境准备：** 按照[安装指南](./docs/installation_CN.md)克隆仓库并用 [uv](https://github.com/astral-sh/uv) 安装依赖。
 
 <details open>
 <summary>📝 视觉理解</summary>

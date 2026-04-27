@@ -385,7 +385,7 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 
 ### 🤗 Run with transformers (Default)
 
-> **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with uv.
+> **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with [uv](https://github.com/astral-sh/uv).
 
 <details open>
 <summary>📝 Visual Understanding</summary>
