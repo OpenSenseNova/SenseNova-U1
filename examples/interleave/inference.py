@@ -80,7 +80,7 @@ def smart_resize(
     width: int,
     factor: int = 32,
     min_pixels: int = 512 * 512,
-    max_pixels: int = (4 * 2048 * 2048) // 8,
+    max_pixels: int = (4 * 2048 * 2048) // 4,
 ) -> tuple[int, int]:
     """Return ``(h, w)`` that are divisible by ``factor``, keep aspect ratio,
     and fall inside ``[min_pixels, max_pixels]``.
