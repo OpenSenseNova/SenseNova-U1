@@ -237,7 +237,6 @@ torchrun --nproc_per_node=2 --master_port=29503 Unimmmu/inference_unimmmu.py \
   --inference_mode interleave \
   --cfg_scale 4.0 \
   --img_cfg_scale 1.0 \
-  --timestep_shift 1.0 \
   --num_steps 50
 ```
 
@@ -300,7 +299,6 @@ python3 Realunify/inference_realunify.py \
   --inference_mode interleave \
   --cfg_scale 4.0 \
   --img_cfg_scale 1.0 \
-  --timestep_shift 1.0 \
   --num_steps 50
 ```
 
@@ -314,7 +312,6 @@ torchrun --nproc_per_node=2 --master_port=29501 Realunify/inference_realunify.py
   --inference_mode interleave \
   --cfg_scale 4.0 \
   --img_cfg_scale 1.0 \
-  --timestep_shift 1.0 \
   --num_steps 50
 ```
 
@@ -421,7 +418,6 @@ torchrun --nproc_per_node=2 --master_port=29501 Realunify/inference_realunify.py
   --inference_mode interleave \
   --cfg_scale 4.0 \
   --img_cfg_scale 1.0 \
-  --timestep_shift 1.0 \
   --num_steps 50
 
 python3 Realunify/inference_realunify_ueg.py \
@@ -439,7 +435,6 @@ torchrun --nproc_per_node=2 --master_port=29503 Unimmmu/inference_unimmmu.py \
   --inference_mode interleave \
   --cfg_scale 4.0 \
   --img_cfg_scale 1.0 \
-  --timestep_shift 1.0 \
   --num_steps 50
 ```
 
