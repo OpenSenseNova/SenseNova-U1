@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
+  <img src="docs/assets/teaser_2.webp" alt="visualization" width="900">
 </p>
 
 ## 🌟 Overview
