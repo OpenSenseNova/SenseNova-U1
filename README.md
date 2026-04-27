@@ -185,7 +185,7 @@ Although relatively compact by today’s standards, these models already show st
   <tr>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0014.webp"><img width="220" alt="t2i image 0024" src="./docs/assets/showcases/t2i_infographic/0014.webp"></a></td>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0025" src="./docs/assets/showcases/t2i_infographic/0028.webp"></a></td>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0033.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0033.webp"></a></td>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0027" src="./docs/assets/showcases/t2i_infographic/0002.webp"></a></td>
   </tr>
   <tr>
