@@ -20,50 +20,46 @@
   <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
 </p>
 
+## 🌟 概述
+
+🚀 **SenseNova U1** 是全新一代原生多模态模型系列，在单一架构中统一了多模态理解、推理与生成。
+它代表着多模态 AI 的根本性范式转变：**从模态集成走向真正的统一**。SenseNova U1 不再依赖适配器在不同模态之间进行翻译，而是以原生方式跨语言与视觉进行思考与行动。
+
+视觉理解与生成的统一开启了巨大的可能性。SenseNova U1 立足于**数据驱动学习阶段**（如 ChatGPT），并指向下一阶段——**智能体学习阶段**（如 OpenClaw），以原生多模态的方式进行学习、思考和行动。
+
 <p align="center">
   <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
 </p>
 
-
-## 🌟 概述
-
-🚀 **SenseNova-U1** 是基于 **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)** 打造的原生统一多模态范式：模型不再需要在不同模态之间来回"翻译"，而是以原生方式在模态之间思考与行动。
-多模态 AI 不再是把多个独立系统拼接起来，而是构建一个统一系统，并相信所需要的能力会从中自然涌现。
-我们的工作立足于*预训练主导的Chat时代*，也指向了下一阶段: *后训练主导的Agent时代*。
-
-
 #### 🏗️ *核心支柱：*
 
-- 🖼️ **近无损视觉接口**：同时保留语义丰富度与像素保真度（无需 VAE 或 Vision Encoder）！
+SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)** —— 一个为多模态 AI 而设计、从第一性原理出发的全新架构：*它彻底摒弃了视觉编码器（VE）与变分自编码器（VAE），因为像素与文字信息在本质上是深度相关的。* 其主要特性如下：
 
-- 🧠 **原生混合 Transformer 架构（MoT）**：模态无关的推理，高效率、低冲突！
+- 🔗 端到端地将语言与视觉信息建模为统一整体。
+- 🖼️ 在保留语义丰富度的同时，维持像素级的视觉保真度。
+- 🧠 通过原生 MoT 实现跨模态推理，效率高、冲突少。
 
-- 🔗 **统一端到端学习**：从第一性原理出发，直接对像素与文本进行建模！
+#### ✨ *能力突破：*
 
-#### ✨ *能力突破:*
-
-基于全新的核心架构，SenseNova U1 在多模态学习中展现出卓越效率：
+基于这一全新的核心架构，SenseNova U1 在多模态学习中展现出卓越的效率：
 
 <p align="center">
-  <table>
-    <tr>
-      <td align="center" valign="top" width="50%">
-        <img src="docs/assets/perform_vs_speed_avg8.png" alt="8 项任务上的生成延迟与平均性能对比" width="440"><br>
-        <sub>OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
-      </td>
-      <td align="center" valign="top" width="50%">
-        <img src="docs/assets/perform_vs_speed_avg3.png" alt="信息图基准上的生成延迟与平均性能对比" width="440"><br>
-        <sub>信息图生成基准 BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。</sub>
-      </td>
-    </tr>
-  </table>
+  <img src="docs/assets/perform_vs_speed_avg8.png" width="48%" />
+  <img src="docs/assets/perform_vs_speed_avg3.png" width="48%" />
 </p>
 
-- 🏆 **开源 SOTA 级效率优势**：U1 在统一理解与生成上刷新开源 SOTA，即使在较小模型规模下，仍可实现媲美商用模型的表现，并具备出色的性价比。
+<p align="center">
+  <sub>
+    左图：在 OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。<br>
+    右图：在信息图基准（BizGenEval、IGenBench）上的预测延迟与平均性能对比。
+  </sub>
+</p>
 
-- 📖 **原生图文交错生成**：U1 可以在单次生成流程中连贯地产出图文交错内容，支持视生活指南等高效信息传达场景，也支持旅行日记等更具叙事感与表现力的内容创作，把复杂信息浓缩成一眼看懂的图示。
+- 🏆 **理解与生成均达到开源 SoTA**：SenseNova U1 在统一多模态理解与生成上树立了新的标杆，在多种理解、推理与生成基准上均达到开源模型中最先进的水平，比肩商用大模型。
 
-- 📰 **高密度信息生成能力**：U1 在高密度视觉信息表达方面展现出强大能力，能够生成结构丰富、排版复杂的内容，适用于知识图解、海报、PPT、漫画、简历等多种信息密集型场景。
+- 📖 **原生图文交错生成**：SenseNova U1 可以用单一模型在单次生成流程中连贯产出图文交错内容，支持生活指南、旅行日记等既需要清晰表达又富有叙事性与表现力的场景，把复杂信息浓缩为直观的图示。
+
+- 📰 **高密度信息呈现**：SenseNova U1 在高密度视觉信息表达上展现出强大能力，能够生成结构丰富、排版复杂的内容，适用于知识图解、海报、PPT、漫画、简历等多种信息密集型场景。
 
 #### 🌍 *不止于多模态：*
 
