@@ -20,7 +20,7 @@ examples/
 │       ├── samples.jsonl
 │       ├── samples_reasoning.jsonl
 │       ├── images/
-│       └── images_reasonning/
+│       └── images_reasoning/
 ├── interleave/                # 图文交错生成（可直接运行）
 │   ├── inference.py
 │   ├── run.sh
@@ -28,7 +28,7 @@ examples/
 │       ├── samples.jsonl
 │       ├── samples_reasoning.jsonl
 │       ├── images/
-│       └── images_reasonning/
+│       └── images_reasoning/
 └── vqa/                       # 视觉理解 / VQA
     ├── inference.py
     └── data/
@@ -62,6 +62,53 @@ python examples/t2i/inference.py \
 ```
 
 可参考 [`t2i/data/samples.jsonl`](./t2i/data/samples.jsonl) 中的精简起步样例。完整参数列表请运行 `python examples/t2i/inference.py --help` 查看。
+
+面向信息图（infographic）的批量生成示例：
+
+```bash
+python examples/t2i/inference.py \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --jsonl examples/t2i/data/samples_infographic.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+    --profile
+```
+
+可参考 [`t2i/data/samples_infographic.jsonl`](./t2i/data/samples_infographic.jsonl) 复现信息图展示样例。
+
+### T2I 推理模式（think mode）
+
+模型支持在扩散去噪前先进行一段**推理**：会先自回归生成 `<think>...</think>`，随后再生成图像。
+
+单条 prompt（输出图像 + 推理文本）：
+
+```bash
+python examples/t2i/inference.py \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --prompt "A male peacock trying to attract a female" \
+  --width 2048 --height 2048 \
+  --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+  --seed 42 \
+  --think \
+  --print_think \
+  --output outputs/peacock.png
+```
+
+该命令会写出 `outputs/peacock.think.txt`，也支持用 `--think_output /path/to/reasoning.txt` 指定保存路径，或用 `--print_think` 直接打印到标准输出。
+
+```bash
+python examples/t2i/inference.py \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --jsonl examples/t2i/data/samples_reasoning.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+    --seed 42 \
+    --think \
+    --print_think \
+    --profile
+```
+
+JSONL 模式下，可在单条样本里设置 `"think": true`（即使全局没传 `--think` 也会对该条启用）；也可以直接传全局 `--think` 对所有样本启用。
 
 ### 推荐分辨率档位
 

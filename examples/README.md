@@ -24,7 +24,7 @@ examples/
 │       ├── samples.jsonl
 │       ├── samples_reasoning.jsonl
 │       ├── images/
-│       └── images_reasonning/
+│       └── images_reasoning/
 ├── interleave/                # interleaved text+image gen  (runnable)
 │   ├── inference.py
 │   ├── run.sh
@@ -32,7 +32,7 @@ examples/
 │       ├── samples.jsonl
 │       ├── samples_reasoning.jsonl
 │       ├── images/
-│       └── images_reasonning/
+│       └── images_reasoning/
 └── vqa/                       # visual understanding / VQA
     ├── inference.py
     └── data/
@@ -67,6 +67,53 @@ python examples/t2i/inference.py \
 ```
 
 See [`t2i/data/samples.jsonl`](./t2i/data/samples.jsonl) for a tiny starter file. Run `python examples/t2i/inference.py --help` for the full flag list.
+
+Infographic-focused batched generation:
+
+```bash
+python examples/t2i/inference.py \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --jsonl examples/t2i/data/samples_infographic.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+    --profile
+```
+
+See [`t2i/data/samples_infographic.jsonl`](./t2i/data/samples_infographic.jsonl) to reproduce the infographic showcases.
+
+### T2I reasoning (think mode)
+
+The model can run a **reasoning** phase before denoising: it autoregressively fills `<think>...</think>`, then generates the image.
+
+Single prompt (image + reasoning text):
+
+```bash
+python examples/t2i/inference.py \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --prompt "A male peacock trying to attract a female" \
+  --width 2048 --height 2048 \
+  --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+  --seed 42 \
+  --think \
+  --print_think \
+  --output outputs/peacock.png
+```
+
+This writes `outputs/peacock.think.txt` with the raw thinking tokens. Use `--think_output /path/to/reasoning.txt` to choose another path, or `--print_think` to echo it to stdout.
+
+```bash
+python examples/t2i/inference.py \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --jsonl examples/t2i/data/samples_reasoning.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+    --seed 42 \
+    --think \
+    --print_think \
+    --profile
+```
+
+JSONL: set `"think": true` per sample, or pass `--think` for all samples.
 
 ### Supported resolution buckets
 
