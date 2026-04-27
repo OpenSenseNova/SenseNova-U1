@@ -4,7 +4,7 @@
 # Two modes, picked automatically by DP:
 #
 #   DP=1 (default)  — single LightLLM instance bound directly to the canonical
-#                     per-model port (8b-mot → 8000, 8b-mot-sft → 8001).
+#                     per-model port (8b-mot → 8000).
 #                     No load balancer, no extra process.
 #
 #   DP>1            — DP tp-sharded replicas on backend ports (8100+, step 10)
@@ -15,26 +15,24 @@
 # Total GPUs used = DP × TP, assigned contiguously from GPU 0 unless GPUS set.
 #
 # Usage:
-#   bash evaluation/easi/scripts/serve.sh                                # DP=1, 8b-mot, GPUs 0-1, port 8000
-#   MODEL=8b-mot-sft GPUS=2,3 TP=2 bash evaluation/easi/scripts/serve.sh # 8b-mot-sft on 8001
-#   TP=8 GPUS=0,1,2,3,4,5,6,7 bash evaluation/easi/scripts/serve.sh      # single big instance
-#   DP=4 TP=2 bash evaluation/easi/scripts/serve.sh                      # 4 replicas × tp=2, LB on 8000
-#   DP=4 TP=2 MODEL=8b-mot-sft bash evaluation/easi/scripts/serve.sh     # 4 replicas, LB on 8001
+#   bash evaluation/easi/scripts/serve.sh                               # DP=1, 8b-mot, GPUs 0-1, port 8000
+#   TP=8 GPUS=0,1,2,3,4,5,6,7 bash evaluation/easi/scripts/serve.sh     # single big instance
+#   DP=4 TP=2 bash evaluation/easi/scripts/serve.sh                     # 4 replicas × tp=2, LB on 8000
 #
 # Env vars:
-#   MODEL               8b-mot | 8b-mot-sft                (default: 8b-mot)
-#   MODEL_DIR           explicit path, overrides MODEL     (default: ./models/SenseNova-U1-8B-MoT[-SFT])
+#   MODEL               8b-mot                             (default: 8b-mot)
+#   MODEL_DIR           explicit path, overrides MODEL     (default: ./models/SenseNova-U1-8B-MoT)
 #   DP                  # of replicas                      (default: 1)
 #   TP                  tensor parallel degree / replica   (default: 2)
 #   GPUS                CSV of CUDA_VISIBLE_DEVICES ids    (default: 0,1,...,DP*TP-1)
 #   HOST                bind address                       (default: 0.0.0.0)
-#   LB_PORT             canonical client-facing port       (default: per-model; 8000 / 8001)
+#   LB_PORT             canonical client-facing port       (default: 8000)
 #                       (alias: PORT — honored for backcompat when DP=1)
-#   BACKEND_BASE_PORT   first backend port when DP>1       (default: per-model; 8100 / 8101, step 10)
+#   BACKEND_BASE_PORT   first backend port when DP>1       (default: 8100, step 10)
 #   MAX_LEN             --max_req_total_len                (default: 32768)
 #   MEM_FRAC            --mem_fraction                     (default: 0.85)
 #   MODEL_NAME          advertised model name              (default: per-model)
-#   REASONING           --reasoning_parser                 (default: qwen3 for both)
+#   REASONING           --reasoning_parser                 (default: qwen3)
 #                         qwen3: strips <think>...</think> into reasoning_content
 #                         qwen3-thinking: force reasoning even w/o <think> tag
 #                         "" (empty): disable parser (raw content)
@@ -75,15 +73,8 @@ case "${MODEL}" in
     DEFAULT_MODEL_NAME="sensenova-u1-8b-mot"
     DEFAULT_REASONING="qwen3"
     ;;
-  8b-mot-sft)
-    DEFAULT_DIR="${REPO_ROOT}/models/SenseNova-U1-8B-MoT-SFT"
-    DEFAULT_LB_PORT=8001
-    DEFAULT_BACKEND_BASE=8101
-    DEFAULT_MODEL_NAME="sensenova-u1-8b-mot-sft"
-    DEFAULT_REASONING="qwen3"
-    ;;
   *)
-    echo "[error] MODEL must be '8b-mot' or '8b-mot-sft' (got: ${MODEL})" >&2
+    echo "[error] MODEL must be '8b-mot' (got: ${MODEL})" >&2
     exit 1
     ;;
 esac

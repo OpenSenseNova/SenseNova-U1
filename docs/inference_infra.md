@@ -78,8 +78,8 @@ see [`deployment.md`](./deployment.md).
 
 ### Generation Performance
 
-The table below is the benchmark template for **2048x2048** image generation.
-Fill in measured numbers for each machine and deployment profile.
+The table below reports **2048x2048** image generation latency for
+**SenseNova-U1-8B-MoT(NEO-Unify)**. Fill in measured numbers for each machine and deployment profile.
 Note: TP2+CFG2 means Tensor Parallel=2 + CFG Parallel=2.
 
 <div align="center">
@@ -100,7 +100,7 @@ In NEO-Unify, the KV cache for the generation stage is provided by the understan
 
 The table below compares the latency of a single diffusion step for
 **2048x2048** image generation with **CFG enabled**. Unless otherwise noted,
-all measurements are taken on **H100**; the `NEO-Unify (TP2+CFG2)` result uses
+all measurements are taken on **H100**; the `TP2+CFG2` result uses
 `2x H100`.
 Note: TP2+CFG2 means Tensor Parallel=2 + CFG Parallel=2.
 
@@ -113,7 +113,7 @@ Note: TP2+CFG2 means Tensor Parallel=2 + CFG Parallel=2.
 | GLM-Image         |      9B       |     7B     |           1.394           |
 | ERNIE-Image       |      8B       |     8B     |           1.565           |
 | LongCat-Image     |      8B       |     6B     |           0.796           |
-| NEO-Unify (1x, no TP/CFG parallelism) | 8B | 8B | 0.312 |
-| NEO-Unify (TP2+CFG2) | 8B | 8B | 0.158 |
+| SenseNova-U1-8B-MoT (Neo-Unify) | 8B | 8B | 0.312 |
+| SenseNova-U1-8B-MoT (Neo-Unify, TP2+CFG2) | 8B | 8B | 0.158 |
 
 </div>

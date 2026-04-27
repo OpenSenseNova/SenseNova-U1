@@ -27,8 +27,6 @@ Skip `--enhance` when:
 user prompt ──► LLM (system prompt = infographic expander) ──► expanded prompt ──► SenseNova-U1
 ```
 
-Upstream system prompt: [SenseNova-Skills / u1-infographic](https://github.com/OpenSenseNova/SenseNova-Skills/blob/main/skills/u1-infographic/references/prompts-expand-system.md).
-
 ## 3. Configuration
 
 All configuration is environment-variable based so the same script can
@@ -45,12 +43,23 @@ First, create a `.env` file and populate it with the four required parameters. T
 Add `--print_enhance` to echo the original + enhanced prompt for
 debugging.
 
+To use **SenseNova 6.7 Flash-Lite** as the enhancer, get an API key from
+[SenseNova Console · token-plan](https://platform.sensenova.cn/token-plan),
+then set:
+
+```bash
+U1_ENHANCE_BACKEND=chat_completions
+U1_ENHANCE_ENDPOINT=https://token.sensenova.cn/v1/chat/completions
+U1_ENHANCE_MODEL=sensenova-6.7-flash-lite
+U1_ENHANCE_API_KEY=<your SenseNova API key>
+```
+
 ### 3.1 Recommended backends
 
 | Model | Backend | Endpoint template | Notes |
 | :---- | :------ | :---------------- | :---- |
 | **Gemini 3.1 Pro** (Default) | `chat_completions` | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` | Best overall infographic quality in our internal bench. Excellent at structured / hierarchical content. |
-| SenseNova Agentic model | `chat_completions` | _(will be released soon)_ | Comparable to Gemini 3.1 Pro on zh content, cheaper per-token, preferred for production. |
+| SenseNova 6.7 Flash-Lite | `chat_completions` | `https://token.sensenova.cn/v1/chat/completions` | Near Gemini 3.1 Pro quality on Chinese content at lower per-token cost, preferred for production. |
 | Anthropic Claude (Sonnet/Opus) | `anthropic`        | `https://api.anthropic.com/v1/messages` | Strong typography discipline, slightly less "information-dense" out of the box. |
 | Kimi 2.5                      | `chat_completions` | `https://api.moonshot.cn/v1/chat/completions` | Good Chinese enhancements, weaker for English-dense infographics in our runs. |
 | Gemini 3.1 Flash-Lite (Third-party service) | `chat_completions` | `https://aigateway.edgecloudapp.com/v1/f194fd69361cd590f1fa136c9c90eca1/senseai` | The overall quality of the information chart is high and its generation speed is fast. |

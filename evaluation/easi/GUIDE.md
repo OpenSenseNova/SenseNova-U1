@@ -177,8 +177,7 @@ Helper script: `evaluation/easi/scripts/serve.sh`. Auto-activates `.venv-lightll
 
 | `MODEL` value | HF repo | Port | `--reasoning_parser` default | Advertised `model` name |
 | :--- | :--- | :---: | :--- | :--- |
-| `8b-mot` *(default)* | `SenseNova/SenseNova-U1-8B-MoT` | 8000 | `qwen3` (strips `<think>…</think>`) | `sensenova-u1-8b-mot` |
-| `8b-mot-sft`  | `SenseNova/SenseNova-U1-8B-MoT-SFT`  | 8001 | disabled (non-reasoning) | `sensenova-u1-8b-mot-sft` |
+| `8b-mot` *(default)* | `sensenova/SenseNova-U1-8B-MoT` | 8000 | `qwen3` (strips `<think>…</think>`) | `sensenova-u1-8b-mot` |
 
 ### Defaults
 ```bash
@@ -186,31 +185,17 @@ Helper script: `evaluation/easi/scripts/serve.sh`. Auto-activates `.venv-lightll
 bash evaluation/easi/scripts/serve.sh
 ```
 
-### SFT variant on different GPUs (no port override needed)
-```bash
-MODEL=8b-mot-sft GPUS=2,3 TP=2 bash evaluation/easi/scripts/serve.sh   # auto-picks port 8001
-```
-
 ### Max throughput on 8× H100 (single model)
 ```bash
 MODEL=8b-mot GPUS=0,1,2,3,4,5,6,7 TP=8 bash evaluation/easi/scripts/serve.sh
-```
-
-### Running both variants side-by-side
-```bash
-# terminal 1 — 8b-mot on GPUs 0-3, port 8000
-MODEL=8b-mot GPUS=0,1,2,3 TP=4 bash evaluation/easi/scripts/serve.sh
-
-# terminal 2 — 8b-mot-sft on GPUs 4-7, port 8001
-MODEL=8b-mot-sft  GPUS=4,5,6,7 TP=4 bash evaluation/easi/scripts/serve.sh
 ```
 
 ### Env vars (full list)
 
 | Var | Default | Notes |
 | :--- | :--- | :--- |
-| `MODEL` | `8b-mot` | `8b-mot` or `8b-mot-sft`. Ignored if `MODEL_DIR` is set |
-| `MODEL_DIR` | `./models/SenseNova-U1-8B-MoT[-SFT]` | Absolute path overrides |
+| `MODEL` | `8b-mot` | `8b-mot`. Ignored if `MODEL_DIR` is set |
+| `MODEL_DIR` | `./models/SenseNova-U1-Mini-<Beta\|SFT>` | Absolute path overrides |
 | `GPUS` | `0,1` | Comma-separated `CUDA_VISIBLE_DEVICES` |
 | `TP` | `2` | Tensor-parallel degree; must equal `GPUS` count |
 | `HOST` | `0.0.0.0` | |
@@ -218,7 +203,7 @@ MODEL=8b-mot-sft  GPUS=4,5,6,7 TP=4 bash evaluation/easi/scripts/serve.sh
 | `MAX_LEN` | `32768` | `--max_req_total_len` |
 | `MEM_FRAC` | `0.85` | `--mem_fraction` — fraction of GPU mem for KV cache |
 | `MODEL_NAME` | per-model | Advertised via `/v1/models`; benchmark client `model` field must match |
-| `REASONING` | per-model | `--reasoning_parser`. `qwen3` for 8b-mot, disabled for 8b-mot-sft. Set to empty string to disable on 8b-mot |
+| `REASONING` | per-model | `--reasoning_parser`. `qwen3` for beta, disabled for sft. Set to empty string to disable on beta |
 | `NO_AUTO_DL` | unset | Set to `1` to skip auto-download when model dir is missing (error out instead) |
 
 ### First-launch warmup
@@ -251,10 +236,10 @@ python examples/serving/client.py \
 
 ```bash
 source .venv-lightllm/bin/activate     # hf CLI lives in this venv
-bash evaluation/easi/scripts/download_weights.sh 8b-mot   # or 8b-mot-sft, or all
+bash evaluation/easi/scripts/download_weights.sh 8b-mot
 ```
 
-Weights land at `./models/SenseNova-U1-8B-MoT[-SFT]/`. `./models/` is gitignored. Set `export HF_TOKEN=hf_...` if the HF repo is gated.
+Weights land at `./models/SenseNova-U1-<Mini|Flash>-Beta/`. `./models/` is gitignored. Set `export HF_TOKEN=hf_...` if the HF repo is gated.
 
 ---
 
@@ -303,7 +288,7 @@ Verify:
 ```bash
 source evaluation/easi/EASI/.venv/bin/activate
 python -c 'from vlmeval.config import supported_VLM; print([k for k in supported_VLM if "SenseNova-U1-" in k])'
-# ['SenseNova-U1-8B-MoT-Local', 'SenseNova-U1-8B-MoT-SFT-Local']
+# ['SenseNova-U1-8B-MoT-Local']
 ```
 
 ### Why not edit `config.py` directly?
@@ -409,15 +394,6 @@ cd evaluation/easi/EASI
 python scripts/submissions/run_easi_eval.py \
   --model SenseNova-U1-8B-MoT-Local \
   --output-dir eval_results_sensenova-u1-8b-mot_viewspatial \
-  --api-nproc 16 \
-  --benchmarks viewspatial
-```
-
-**SFT variant (port 8001)**:
-```bash
-python scripts/submissions/run_easi_eval.py \
-  --model SenseNova-U1-8B-MoT-SFT-Local \
-  --output-dir eval_results_sensenova-u1-8b-mot-sft_viewspatial \
   --api-nproc 16 \
   --benchmarks viewspatial
 ```

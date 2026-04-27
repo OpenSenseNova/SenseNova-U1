@@ -6,18 +6,18 @@
 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/arXiv-Coming-b31b1b.svg" alt="arXiv"></a>
-  <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
+  <a href="#"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Coming-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
   <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
-  <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
+  <img src="docs/assets/teaser.webp" alt="SenseNova-U1" width="900">
 </p>
 
 <p align="center">
-  <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
+  <img src="docs/assets/teaser_2.webp" alt="visualization" width="900">
 </p>
 
 ## 🌟 Overview
@@ -28,7 +28,7 @@ It marks a fundamental paradigm shift in multimodal AI: **from modality integrat
 The unification of visual understanding and generation opens tremendous possibilities. SenseNova U1 sits in the stage of **Data-driven Learning** (like ChatGPT), yet gestures toward the next stage, that is, **Agentic Learning** (like OpenClaw) and thinking in a natively multimodal way.
 
 <p align="center">
-  <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
+  <img src="docs/assets/teaser_1.webp" alt="radar plot" width="900">
 </p>
 
 #### 🏗️ *Key Pillars:*      
@@ -44,8 +44,8 @@ At the core of SenseNova U1 is **[NEO-Unify](https://huggingface.co/blog/senseno
 Powered by this new core architecture, SenseNova U1 delivers exceptional efficiency in multimodal learning:
 
 <p align="center">
-  <img src="docs/assets/perform_vs_speed_avg8.png" width="48%" />
-  <img src="docs/assets/perform_vs_speed_avg3.png" width="48%" />
+  <img src="docs/assets/perform_vs_speed_avg8.webp" width="48%" />
+  <img src="docs/assets/perform_vs_speed_avg3.webp" width="48%" />
 </p>
 
 <p align="center">
@@ -77,8 +77,8 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
-| SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
-| SenseNova-U1-8B-MoT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
+| SenseNova-U1-8B-MoT-SFT | 8B MoT | Coming soon |
+| SenseNova-U1-8B-MoT | 8B MoT | Coming soon |
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 link |
 | SenseNova-U1-A3B-MoT | A3B MoT | 🤗 link |
 
@@ -89,7 +89,7 @@ Although relatively compact by today’s standards, these models already show st
 
 ## 📣 Updated News
 
-- `[2026.04.27]` Initial release of the weights for [SenseNova-U1-8B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) and [SenseNova-U1-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT).  
+- `[2026.04.27]` SenseNova-U1-8B-MoT-SFT and SenseNova-U1-8B-MoT will be released.
 
 - `[2026.04.27]` Initial release of the [inference code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README.md) for SenseNova-U1.   
 
@@ -273,7 +273,7 @@ Although relatively compact by today’s standards, these models already show st
 
 | |
 | :---: |
-| [<img alt="interleave case 05" src="./docs/assets/showcases/interleave/reasoning_case1.png">](./docs/assets/showcases/interleave/reasoning_case1.png) |
+| [<img alt="interleave case 05" src="./docs/assets/showcases/interleave/reasoning.png">](./docs/assets/showcases/interleave/reasoning.png) |
 
 </details>
 
@@ -353,7 +353,7 @@ Despite strong performance across tasks, several limitations remain for improvem
   Fine-grained details of human bodies can be challenging, especially when people appear as small elements within a scene or are engaged in complex interactions with surrounding objects.
 
 * **Text-based Generation**:   
-  Text rendering may sometimes produce misspellings, distorted characters, or formatting inconsistencies, which are sensitive to how prompts are phrased, especially in text-heavy scenarios.
+  Text rendering may sometimes produce misspellings, distorted characters, or formatting inconsistencies, which are sensitive to how prompts are phrased, especially in text-heavy scenarios. (see [`prompt enhancement`](./docs/prompt_enhancement.md) for best practice)
 
 * **Interleaved Generation**:   
 
@@ -371,7 +371,7 @@ We view these areas as active directions and expect continued improvements in fu
 
 The fastest way to experience SenseNova-U1 is through **[SenseNova-Studio](https://unify.light-ai.top/)** — a 🆓 free online playground where you can try the model directly in your browser, no installation or GPU required.
 
-> **Note:** U1-Fast is an accelerated version dedicated to infographic generation.
+> **Note:** To serve more users, U1-Fast has undergone step and CFG distillation, and is dedicated to infographic generation.
 
 
 ### 🦞 Use with SenseNova-Skills (OpenClaw)
@@ -391,9 +391,9 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 
 ### 🤗 Run with transformers (Default)
 
-> **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with uv.
+> **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with [uv](https://github.com/astral-sh/uv).
 
-<details>
+<details open>
 <summary>📝 Visual Understanding</summary>
 
 ```bash
@@ -404,19 +404,21 @@ python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --im
 
 > See [`examples/README.md`](./examples/README.md#visual-understanding-vqa) for batched inference, generation parameters, and JSONL format.
 
-<details>
+<details open>
 <summary>🖼️ Text-to-Image</summary>
 
 ```bash
-python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，成本仅为商业模型的1/10”。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
+python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，性价比出色”。" --width 2720 --height 1536 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
 ```
 
 </details>
 
 > Default resolution is 2048×2048 (1:1). See [supported resolution buckets](./examples/README.md#supported-resolution-buckets) for other aspect ratios.
 
+> For high-quality infographic generation, it is recommended to apply [prompt enhancement](./docs/prompt_enhancement.md) before generating images.
 
-<details>
+
+<details open>
 <summary>✏️ Image Editing</summary>
 
 ```bash
@@ -428,8 +430,7 @@ python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT 
 > 💡 Pre-resize inputs to ~2048×2048 resolution with orginal aspect ratio before inference for best quality (see [`examples/editing/resize_inputs.py`](./examples/editing/resize_inputs.py)).
 
 
-<details>
-
+<details open>
 <summary>♻️ Interleaved Generation</summary>
 
 ```bash

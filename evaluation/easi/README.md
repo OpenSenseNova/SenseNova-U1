@@ -31,7 +31,6 @@ bash evaluation/easi/scripts/setup.sh
 
 # launch server — auto-downloads weights on first run
 MODEL=8b-mot GPUS=0,1 TP=2 bash evaluation/easi/scripts/serve.sh   # → localhost:8000
-# (or MODEL=8b-mot-sft for the non-reasoning SFT variant → localhost:8001)
 
 # run a benchmark from a second shell
 source evaluation/easi/EASI/.venv/bin/activate
@@ -137,10 +136,9 @@ Tune `--api-nproc` based on your endpoint's capacity. Remote endpoints with rate
 
 | `MODEL` arg | HF repo | Server port | Reasoning parser |
 | :--- | :--- | :---: | :--- |
-| `8b-mot` (default) | `SenseNova/SenseNova-U1-8B-MoT` | 8000 | `qwen3` (strips `<think>`) |
-| `8b-mot-sft`  | `SenseNova/SenseNova-U1-8B-MoT-SFT`  | 8001 | `qwen3` (SFT also emits `<think>`) |
+| `8b-mot` (default) | `sensenova/SenseNova-U1-8B-MoT` | 8000 | `qwen3` (strips `<think>`) |
 
-Ports are auto-assigned per `MODEL` so both can run concurrently without clashing. Override with `PORT=<n>` if you need to change one.
+Override the port with `PORT=<n>`.
 
 ## Multi-replica (DP) serving behind a load balancer
 
@@ -152,9 +150,6 @@ DP=4 TP=2 bash evaluation/easi/scripts/serve.sh
 
 # 2 replicas × tp=4
 DP=2 TP=4 bash evaluation/easi/scripts/serve.sh
-
-# SFT variant — LB on port 8001
-DP=4 TP=2 MODEL=8b-mot-sft bash evaluation/easi/scripts/serve.sh
 ```
 
 Only one serve.sh process per model at a time — both `DP=1` and `DP>1` bind the same canonical port.
@@ -164,9 +159,8 @@ Port layout:
 | MODEL | LB (client-facing) | Backends |
 | :--- | :---: | :--- |
 | `8b-mot` | 8000 | 8100, 8110, 8120, 8130 (step 10) |
-| `8b-mot-sft` | 8001 | 8101, 8111, 8121, 8131 |
 
-Override either with `LB_PORT=...` or `BACKEND_BASE_PORT=...`.
+Override with `LB_PORT=...` or `BACKEND_BASE_PORT=...`.
 
 Direct hits to a backend port (e.g. `http://localhost:18000/v1/models`) still work — useful for debugging one specific replica.
 
@@ -174,7 +168,7 @@ Sanity-check guardrails (fail fast, no partial launches):
 - `DP * TP <= # visible GPUs` (from `nvidia-smi`) unless `GPUS=...` overrides
 - If `GPUS=...` provided, must contain exactly `DP * TP` entries
 - `LB_PORT` must not collide with any backend port in `[BACKEND_BASE_PORT, BACKEND_BASE_PORT + 10*(DP-1)]`
-- `MODEL` must be `8b-mot` or `8b-mot-sft`
+- `MODEL` must be `8b-mot`
 - `DP`, `TP`, `LB_PORT`, `BACKEND_BASE_PORT` must be integers ≥ 1
 - **Pre-flight port probe**: every port (LB + all backends) must be free. Stale processes from a previous run are detected before any replica is launched, with `ss -lntp` / `lsof` output naming the owner when possible
 
@@ -196,7 +190,7 @@ serve.sh won't leak zombie GPU procs:
 If you still end up with zombies (container crashed / SIGKILL'd), run:
 
 ```bash
-pkill -KILL -f "lightllm.server.api_server.*SenseNova-U1-8B-MoT"
+pkill -KILL -f "lightllm.server.api_server.*SenseNova-U1-Mini"
 ```
 
 and for GPU mem held by processes in another PID namespace (container got torn down and recreated), only a host-side `kill` or pod restart can recover.
@@ -213,7 +207,7 @@ and for GPU mem held by processes in another PID namespace (container got torn d
 ```bash
 # verbose single instance
 DETAIL_LOG=1 LIGHTLLM_LOG_LEVEL=debug \
-  MODEL=8b-mot-sft GPUS=0,1 TP=2 bash evaluation/easi/scripts/serve.sh
+  MODEL=8b-mot GPUS=0,1 TP=2 bash evaluation/easi/scripts/serve.sh
 
 # verbose multi-replica (env flows to every replica)
 DETAIL_LOG=1 LIGHTLLM_LOG_LEVEL=debug \
@@ -239,15 +233,6 @@ cd evaluation/easi/EASI
 python scripts/submissions/run_easi_eval.py \
   --model SenseNova-U1-8B-MoT-Local \
   --output-dir eval_results_sensenova-u1-8b-mot_viewspatial \
-  --api-nproc 16 \
-  --benchmarks viewspatial
-```
-
-### SFT variant (port 8001)
-```bash
-python scripts/submissions/run_easi_eval.py \
-  --model SenseNova-U1-8B-MoT-SFT-Local \
-  --output-dir eval_results_sensenova-u1-8b-mot-sft_viewspatial \
   --api-nproc 16 \
   --benchmarks viewspatial
 ```

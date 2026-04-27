@@ -220,7 +220,7 @@
 
 | |
 | :---: |
-| [<img alt="interleave reasoning case 2" src="./assets/showcases/interleave/reasoning_case2.png">](./assets/showcases/interleave/reasoning_case2.png) |
+| [<img alt="interleave reasoning case 2" src="./assets/showcases/interleave/reasoning.png">](./assets/showcases/interleave/reasoning.png) |
 
 ---
 
