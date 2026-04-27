@@ -16,28 +16,24 @@
   <img src="docs/assets/teaser.png" alt="SenseNova-U1" width="900">
 </p>
 
+<p align="center">
+  <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
+</p>
+
 ## 🌟 Overview
 
-🚀 **SenseNova U1** is a new series of native multimodal models that unifies multimodal understanding, reasoning, and generation within a single architecture. 
-It marks a fundamental paradigm shift in multimodal AI: **from modality integration to true unification**. Rather than relying on adapters to translate between modalities, SenseNova U1 models think and act across language and vision natively.
+🚀 **SenseNova U1** is a new series of native multimodal models that unifies multimodal understanding, reasoning, and generation within a monolithic architecture. 
+It marks a fundamental paradigm shift in multimodal AI: **from modality integration to true unification**. Rather than relying on adapters to translate between modalities, SenseNova U1 models think-and-act across language and vision natively.
+
+The unification of visual understanding and generation opens tremendous possibilities. SenseNova U1 sits in the stage of **Data-driven Learning** (like ChatGPT), yet gestures toward the next stage, that is, **Agentic Learning** (like OpenClaw) and thinking in a natively multimodal way.
 
 <p align="center">
   <img src="docs/assets/teaser_1.png" alt="radar plot" width="900">
 </p>
 
-The unification of visual understanding and generation opens tremendous possibilities. SenseNova U1 sits in the stage of data-driven learning (like ChatGPT), yet gestures toward the next stage, that is, Agentic learning (like OpenClaw) and thinking in a natively multimodal way.
-
-<p align="center">
-  <img src="docs/assets/teaser_2.png" alt="visualization" width="900">
-</p>
-
-
 #### 🏗️ *Key Pillars:*      
 
-At the core of SenseNova U1 is **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**, a novel architecture designed from first principles for multimodal AI: language and visual information are inherently and deeply correlated. 
-NEO-Unify eliminates both Visual Encoder (VE) and Variational Auto-Encoder (VAE), replacing them with a unified representation.
-
-This architecture has several important features:
+At the core of SenseNova U1 is **[NEO-Unify](https://huggingface.co/blog/sensenova/neo-unify)**, a novel architecture designed from the first principles for multimodal AI:  *It eliminates both Visual Encoder (VE) and Variational Auto-Encoder (VAE) where pixel-word information are inherently and deeply correlated.* Several important features are as follows:
 
 - 🔗 Model language and visual information end-to-end as a unified compound.   
 - 🖼️ Preserve semantic richness while maintaining pixel-level visual fidelity.     
@@ -86,9 +82,9 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 link |
 | SenseNova-U1-A3B-MoT | A3B MoT | 🤗 link |
 
-Note that the **SFT models** are trained in four stages: (1) *Understanding Warmup*, (2) *Generation Pre-training*, (3) *Unified Mid-training*, and (4) *Unified Supervised Fine-tuning*. The **final models** are obtained from the base model following an initial round of T2I reinforcement learning (RL) training.
+Here **SFT models** (*×32 downsampling ratio*) are trained via Understanding Warmup, Generation Pre-training, Unified Mid-training, and Unified SFT, with **final models** obtained after an initial round of T2I RL training.
 
-Although these models are relatively compact by today’s standards, they already demonstrate strong potential across a wide range of tasks, delivering performance comparable to commercial models while offering outstanding cost efficiency. That being said, We plan to release larger-scale models in future, which, we believe, can deliver stronger capabilities and higher performance.
+Although relatively compact by today’s standards, these models already show strong performance across diverse tasks, comparable to commercial models with excellent cost efficiency. Notably, larger-scale versions are planned to further enhance capability and performance in the future.
 
 
 ## 📣 Updated News
@@ -164,7 +160,7 @@ Although these models are relatively compact by today’s standards, they alread
   <tr>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0018.webp"><img width="300" alt="t2i landscape 0004" src="./docs/assets/showcases/t2i_infographic/0018.webp"></a></td>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0024.webp"><img width="300" alt="t2i landscape 0005" src="./docs/assets/showcases/t2i_infographic/0024.webp"></a></td>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0013.webp"><img width="300" alt="t2i landscape 0006" src="./docs/assets/showcases/t2i_infographic/0013.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0019.webp"><img width="300" alt="t2i landscape 0006" src="./docs/assets/showcases/t2i_infographic/0019.webp"></a></td>
   </tr>
   <tr>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0006.webp"><img width="300" alt="t2i landscape 0007" src="./docs/assets/showcases/t2i_infographic/0006.webp"></a></td>
@@ -187,9 +183,9 @@ Although these models are relatively compact by today’s standards, they alread
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0021.webp"><img width="220" alt="t2i image 0023" src="./docs/assets/showcases/t2i_infographic/0021.webp"></a></td>
   </tr>
   <tr>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0009.webp"><img width="220" alt="t2i image 0024" src="./docs/assets/showcases/t2i_infographic/0009.webp"></a></td>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0020.webp"><img width="220" alt="t2i image 0025" src="./docs/assets/showcases/t2i_infographic/0020.webp"></a></td>
-    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0008.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0014.webp"><img width="220" alt="t2i image 0024" src="./docs/assets/showcases/t2i_infographic/0014.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0025" src="./docs/assets/showcases/t2i_infographic/0028.webp"></a></td>
+    <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0028.webp"><img width="220" alt="t2i image 0026" src="./docs/assets/showcases/t2i_infographic/0008.webp"></a></td>
     <td align="center"><a href="./docs/assets/showcases/t2i_infographic/0002.webp"><img width="220" alt="t2i image 0027" src="./docs/assets/showcases/t2i_infographic/0002.webp"></a></td>
   </tr>
 </table>
@@ -260,8 +256,8 @@ Although these models are relatively compact by today’s standards, they alread
 
 | |
 | :---: |
-| [<img alt="interleave case 03" src="./docs/assets/showcases/interleave/case_03.webp">](./docs/assets/showcases/interleave/case_03.webp) |
-| [<img alt="interleave case 04" src="./docs/assets/showcases/interleave/case_04.webp">](./docs/assets/showcases/interleave/case_04.webp) |
+| [<img alt="interleave case 05" src="./docs/assets/showcases/interleave/case_0005_matchgirl_warm_au.webp">](./docs/assets/showcases/interleave/case_0005_matchgirl_warm_au.webp) |
+| [<img alt="interleave case 06" src="./docs/assets/showcases/interleave/case_0006_orange_cat_travel.webp">](./docs/assets/showcases/interleave/case_0006_orange_cat_travel.webp) |
 
 </details>
 
@@ -340,6 +336,27 @@ Although these models are relatively compact by today’s standards, they alread
 
 > Evaluation scripts and benchmark reproduction guides are added in [`evaluation`](./evaluation/README.md).
 
+## ⚠️ Ongoing Improvements
+
+Despite strong performance across tasks, several limitations remain for improvement:
+
+* **Visual Understanding**:   
+  The current model only supports a context length of up to **32K** tokens, which may constrain performance in scenarios requiring longer or more complex visual contexts.
+
+* **Human-centric Generation**:   
+  Fine-grained details of human bodies can be challenging, especially when people appear as small elements within a scene or are engaged in complex interactions with surrounding objects.
+
+* **Text-based Generation**:   
+  Text rendering may sometimes produce misspellings, distorted characters, or formatting inconsistencies, which are sensitive to how prompts are phrased, especially in text-heavy scenarios.
+
+* **Interleaved Generation**:   
+
+  * As an experimental feature, interleaved generation is still evolving and may not yet match the performance of dedicated text-to-image (T2I) pipelines.   
+
+  * **Beta status:** RL has not been specifically optimized for visual editing, reasoning, and interleaved tasks, and current performance is comparable SFT models.
+
+We view these areas as active directions and expect continued improvements in future iterations.
+
 
 ## 🛠️ Quick Start
 
@@ -347,6 +364,8 @@ Although these models are relatively compact by today’s standards, they alread
 ### 🌐 Use with SenseNova-Studio
 
 The fastest way to experience SenseNova-U1 is through **[SenseNova-Studio](https://unify.light-ai.top/)** — a 🆓 free online playground where you can try the model directly in your browser, no installation or GPU required.
+
+> **Note:** U1-Fast is an accelerated version dedicated to infographic generation.
 
 
 ### 🦞 Use with SenseNova-Skills (OpenClaw)
@@ -359,7 +378,7 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 <summary>✨ Some interesting cases produced through our Skills and Studio</summary>
 
 <p align="center">
-  <img width="800" alt="u1 case" src="./docs/assets/showcases/t2i_infographic/u1-case.webp">
+  <img src="docs/assets/showcases/t2i_infographic/u1-case2.webp" alt="Skill Cases">
 </p>
 
 </details>
@@ -383,7 +402,7 @@ python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --im
 <summary>🖼️ Text-to-Image</summary>
 
 ```bash
-python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型版本”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-Mini”，下方是等宽字体说明“18B参数密集模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-Flash”，下方是等宽字体说明“38B参数，3B激活的混合专家(MoE)模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，成本仅为商业模型的1/10”。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
+python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，成本仅为商业模型的1/10”。" --width 2048 --height 2048 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
 ```
 
 </details>
