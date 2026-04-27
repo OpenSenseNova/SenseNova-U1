@@ -271,7 +271,7 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 
 | |
 | :---: |
-| [<img alt="interleave reasoning case" src="./docs/assets/showcases/interleave/reasoning_case1.png">](./docs/assets/showcases/interleave/reasoning_case1.png) |
+| [<img alt="interleave reasoning case" src="./docs/assets/showcases/interleave/reasoning.png">](./docs/assets/showcases/interleave/reasoning.png) |
 
 </details>
 

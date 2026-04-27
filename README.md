@@ -273,7 +273,7 @@ Although relatively compact by today’s standards, these models already show st
 
 | |
 | :---: |
-| [<img alt="interleave case 05" src="./docs/assets/showcases/interleave/reasoning_case1.png">](./docs/assets/showcases/interleave/reasoning_case1.png) |
+| [<img alt="interleave case 05" src="./docs/assets/showcases/interleave/reasoning.png">](./docs/assets/showcases/interleave/reasoning.png) |
 
 </details>
 
