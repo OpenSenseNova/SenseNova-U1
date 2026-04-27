@@ -22,6 +22,7 @@ Configuration (env):
 Run via `serve_lb.sh` or directly:
     BACKENDS=http://localhost:8000,http://localhost:8010 python lb.py
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -33,8 +34,7 @@ from contextlib import asynccontextmanager
 import httpx
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.responses import StreamingResponse, JSONResponse
-
+from fastapi.responses import JSONResponse, StreamingResponse
 
 BACKENDS: list[str] = [b.strip().rstrip("/") for b in os.environ.get("BACKENDS", "").split(",") if b.strip()]
 if not BACKENDS:
@@ -112,7 +112,11 @@ async def wait_for_first_healthy(client: httpx.AsyncClient):
                 print(f"[lb] first healthy backend: {b}", flush=True)
                 return
         await asyncio.sleep(2.0)
-    print(f"[lb] WARNING: no backend became healthy within {STARTUP_TIMEOUT:.0f}s — serving anyway", file=sys.stderr, flush=True)
+    print(
+        f"[lb] WARNING: no backend became healthy within {STARTUP_TIMEOUT:.0f}s — serving anyway",
+        file=sys.stderr,
+        flush=True,
+    )
 
 
 def pick_backend() -> str | None:
@@ -174,7 +178,8 @@ async def proxy(full_path: str, request: Request):
     inflight[backend] += 1
     try:
         upstream_req = client.build_request(
-            request.method, url,
+            request.method,
+            url,
             content=body if body else None,
             headers=fwd_headers,
         )
