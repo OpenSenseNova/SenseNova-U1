@@ -262,9 +262,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help=(
             "Enable T2I reasoning (think) mode: the model first generates a "
-            "<think>...</think> block, then runs image generation. "
-            "Matches the README reasoning showcase. In --jsonl mode, a per-line "
-            "boolean field ``think`` overrides this flag when present."
+            "<think>...</think> block, then runs image generation."
         ),
     )
     p.add_argument(
@@ -272,8 +270,8 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default=None,
         help=(
-            "When using --prompt with --think: path to save the reasoning text "
-            "(UTF-8). Default: ``<output_stem>.think.txt`` next to --output."
+            "When using --prompt with --think: path to save the reasoning text."
+            "Default: ``<output_stem>.think.txt`` next to --output."
         ),
     )
     p.add_argument(
