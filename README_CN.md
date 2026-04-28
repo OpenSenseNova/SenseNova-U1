@@ -44,14 +44,14 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 基于这一全新的核心架构，SenseNova U1 在多模态学习中展现出卓越的效率：
 
 <p align="center">
-  <img src="docs/assets/perform_vs_speed_avg8.webp" width="48%" />
-  <img src="docs/assets/perform_vs_speed_avg3.webp" width="48%" />
+  <img src="docs/assets/perform_vs_speed_5bench.webp" width="48%" />
+  <img src="docs/assets/perform_vs_speed_infobench.webp" width="48%" />
 </p>
 
 <p align="center">
   <sub>
-    左图：在 OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的预测延迟与平均性能对比。<br>
-    右图：在信息图基准（BizGenEval、IGenBench）上的预测延迟与平均性能对比。
+    左图：在 OneIG（EN、ZH）、LongText（EN、ZH）、CVTG、BizGenEval（Easy、Hard）与 IGenBench 上的生成延迟与平均性能对比。<br>
+    右图：在信息图基准（BizGenEval（Easy、Hard）、IGenBench）上的生成延迟与平均性能对比。
   </sub>
 </p>
 
