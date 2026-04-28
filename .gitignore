@@ -23,7 +23,7 @@ ENV/
 # Submodules (LightLLM, EASI) + patches/ are tracked — nothing to ignore there.
 # Models dir (./models/) weights excluded via *.safetensors below.
 evaluation/easi/logs/
-models/
+/models/
 
 # uv
 .uv/
