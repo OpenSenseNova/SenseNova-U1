@@ -44,14 +44,14 @@ At the core of SenseNova U1 is **[NEO-Unify](https://huggingface.co/blog/senseno
 Powered by this new core architecture, SenseNova U1 delivers exceptional efficiency in multimodal learning:
 
 <p align="center">
-  <img src="docs/assets/perform_vs_speed_avg8.webp" width="48%" />
-  <img src="docs/assets/perform_vs_speed_avg3.webp" width="48%" />
+  <img src="docs/assets/perform_vs_speed_5bench.webp" width="48%" />
+  <img src="docs/assets/perform_vs_speed_infobench.webp" width="48%" />
 </p>
 
 <p align="center">
   <sub>
-    Left: Prediction Latency vs. Averaging Performance on OneIG (EN, ZH), LongText (EN, ZH), CVTG, BizGenEval (Easy, Hard), and IGenBench. <br>
-    Right: Prediction Latency vs. Averaging Performance on Infographic Benchmarks (BizGenEval, IGenBench).
+    Left: Generation Latency vs. Averaging Performance on OneIG (EN, ZH), LongText (EN, ZH), BizGenEval (Easy, Hard), CVTG and IGenBench. <br>
+    Right: Generation Latency vs. Averaging Performance on Infographic Benchmarks, i.e., BizGenEval (Easy, Hard), and IGenBench.
   </sub>
 </p>
 
