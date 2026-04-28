@@ -195,11 +195,7 @@ class InferenceProfiler:
             print("  per-call breakdown  :")
             for idx, record in enumerate(self.gen_records):
                 tokens = (record.width // self.patch_size) * (record.height // self.patch_size) * record.batch
-                memory = (
-                    f", {self._format_memory(record.memory_peak)}"
-                    if record.memory_peak.available
-                    else ""
-                )
+                memory = f", {self._format_memory(record.memory_peak)}" if record.memory_peak.available else ""
                 print(
                     f"    [{idx + 1:>3}] {record.width}x{record.height} x{record.batch}  "
                     f"{record.seconds:7.3f} s  ({tokens:>6d} tok, "
@@ -209,13 +205,12 @@ class InferenceProfiler:
 
     @staticmethod
     def _format_bytes(num_bytes: int) -> str:
-        return f"{num_bytes / (1024 ** 3):.2f} GiB"
+        return f"{num_bytes / (1024**3):.2f} GiB"
 
     @classmethod
     def _format_memory(cls, memory_peak: _MemoryPeak) -> str:
         return (
-            f"allocated {cls._format_bytes(memory_peak.allocated)}, "
-            f"reserved {cls._format_bytes(memory_peak.reserved)}"
+            f"allocated {cls._format_bytes(memory_peak.allocated)}, reserved {cls._format_bytes(memory_peak.reserved)}"
         )
 
     @staticmethod
