@@ -235,9 +235,9 @@ def parse_args() -> argparse.Namespace:
         "--profile",
         action="store_true",
         help=(
-            "Print timing stats: model load time, average per-image generation "
-            f"time, and the same time normalized per image token (patch size = "
-            f"{DEFAULT_IMAGE_PATCH_SIZE})."
+            "Print timing and CUDA memory stats: model load time, average "
+            "per-image generation time, peak GPU memory, and the same time "
+            f"normalized per image token (patch size = {DEFAULT_IMAGE_PATCH_SIZE})."
         ),
     )
 
