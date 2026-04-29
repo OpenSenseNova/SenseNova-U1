@@ -142,7 +142,7 @@ python examples/t2i/inference.py \
   --output output.png
 ```
 
-详细说明请参见 [`docs/prompt_enhancement.md`](../docs/prompt_enhancement.md)。
+详细说明请参见 [`docs/prompt_enhancement_CN.md`](../docs/prompt_enhancement_CN.md)。
 
 ## 图像编辑（it2i）
 

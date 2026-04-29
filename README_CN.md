@@ -413,7 +413,7 @@ python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --pr
 
 > 默认分辨率为 2048×2048（1:1）。其它长宽比请参见[支持的分辨率档位](./examples/README_CN.md#推荐分辨率档位)。
 
-> 当进行信息图生成时，建议先使用[提示词增强](./docs/prompt_enhancement.md)以获得最佳效果。
+> 当进行信息图生成时，建议先使用[提示词增强](./docs/prompt_enhancement_CN.md)以获得最佳效果。
 
 
 <details open>
