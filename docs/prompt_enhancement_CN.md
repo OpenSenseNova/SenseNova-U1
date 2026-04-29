@@ -30,13 +30,13 @@ user prompt ──► LLM (system prompt = infographic expander) ──► expan
 | `U1_ENHANCE_BACKEND`  | `chat_completions` | `chat_completions`（兼容 OpenAI）或 `anthropic` |
 | `U1_ENHANCE_ENDPOINT` | Gemini OpenAI 兼容 URL | 完整的 `/chat/completions` 或 `/v1/messages` URL |
 | `U1_ENHANCE_MODEL`    | `gemini-3.1-pro`   | 请求体中发送的模型名称字符串 |
-| `U1_ENHANCE_API_KEY`  | xxx            | Bearer 令牌（必填） |
+| `U1_ENHANCE_API_KEY`  | xxx            | Bearer token（必填） |
 
 首先创建 `.env` 文件并填入四个必要参数，然后在 `examples/t2i/inference.py` 命令行中添加 `--enhance` 即可。
 添加 `--print_enhance` 可显示原始提示词和增强后的提示词，便于调试。
 
 如需使用 **SenseNova 6.7 Flash-Lite** 作为增强器，请从
-[SenseNova 控制台 · 令牌套餐](https://platform.sensenova.cn/token-plan) 获取 API 密钥，然后设置：
+[SenseNova 控制台 · Token Plan](https://platform.sensenova.cn/token-plan) 获取 API 密钥，然后设置：
 
 ```bash
 U1_ENHANCE_BACKEND=chat_completions
