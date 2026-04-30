@@ -1,6 +1,6 @@
 # SenseNova-U1 Showcases
 
-[← Back to README](../README.md)
+[← Back to README](../README.md).
 
 ---
 
@@ -57,3 +57,12 @@
 | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/cb88be1c-6e4b-4e2b-924c-99d2f4ea9463" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/97900093-98ec-495c-8867-359f8d73dadd" /> |
 | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/6f7acfca-aeb7-4dc0-8efa-53a325f830aa" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/f2aef2a2-29b4-411d-8321-42f57662015c" /> |
 | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/f027e3d5-a08f-48bb-b2e3-9ab13b05dea2" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/5ab3f0a0-b803-4251-b96f-0d7140ad2df1" /> |
+
+
+## Image-Editing
+
+| Reference Image | SenseNova-U1-8B-MoT (Base) | SenseNova-U1-8B-MoT-8step-preview (Distill) |
+|---|---|---|
+| <img width="640" height="640" alt="3.webp" src="examples/editing/data/images/3.webp" /> | <img width="1536" height="2752" alt="Image" src="https://github.com/user-attachments/assets/8fcbcf8f-ad6a-4ea8-af82-5c99f37ffa11" /> | <img width="1536" height="2752" alt="Image" src="https://github.com/user-attachments/assets/e6878663-e64f-407c-9f1e-88987591b977" /> |
+| <img width="640" height="640" alt="6.webp" src="examples/editing/data/images/6.webp" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/3f2341f0-b20d-44b3-8025-b92d87e0a0fc" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/cfc7e1c9-5790-4414-b1e0-f7a2bde3d3f2" /> |
+| <img width="640" height="640" alt="8.webp" src="examples/editing/data/images/8.webp" /> | <img width="1696" height="2528" alt="Image" src="https://github.com/user-attachments/assets/36ce560e-1dd1-4b10-8aee-2dda74003e42" /> | <img width="1696" height="2528" alt="Image" src="https://github.com/user-attachments/assets/3a1997b1-96cf-4bbd-a637-ae9793985811" /> |

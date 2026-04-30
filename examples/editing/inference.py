@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import random
+import math
 from pathlib import Path
 from typing import Sequence
 
@@ -32,12 +32,12 @@ _IMAGE_GRID_FACTOR = DEFAULT_IMAGE_PATCH_SIZE
 DEFAULT_TARGET_PIXELS = 2048 * 2048
 
 
-def _set_seed(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
+def resize_to_target_pixels(img: Image.Image, target_pixels: int) -> Image.Image:
+    w, h = img.size
+    scale = math.sqrt(target_pixels / (w * h))
+    new_w = max(1, round(w * scale))
+    new_h = max(1, round(h * scale))
+    return img.resize((new_w, new_h), Image.LANCZOS)
 
 
 def _denorm(x: torch.Tensor) -> torch.Tensor:
@@ -52,13 +52,15 @@ def _to_pil(batch: torch.Tensor) -> list[Image.Image]:
     return [Image.fromarray(a) for a in arr]
 
 
-def _load_input_image(path: str | Path) -> Image.Image:
+def _load_input_image(path: str | Path, do_resize:bool = True) -> Image.Image:
     """Load as RGB; flatten RGBA onto white so the generator sees a clean canvas."""
     img = Image.open(path)
     if img.mode == "RGBA":
         bg = Image.new("RGB", img.size, (255, 255, 255))
         bg.paste(img, mask=img.split()[3])
         return bg
+    if do_resize:
+        img = resize_to_target_pixels(img, target_pixels=DEFAULT_TARGET_PIXELS)
     return img.convert("RGB")
 
 
@@ -377,7 +379,7 @@ def main() -> None:
 
     if args.prompt is not None:
         images = [_load_input_image(p) for p in args.image]
-        _maybe_warn_low_resolution_inputs(images, args.image, args.target_pixels)
+        # _maybe_warn_low_resolution_inputs(images, args.image, args.target_pixels)
         w, h = _resolve_output_size(
             images,
             explicit=cli_explicit_size,
@@ -420,7 +422,7 @@ def main() -> None:
     for i, sample in enumerate(tqdm(samples, desc="Editing")):
         paths = _coerce_image_paths(sample["image"])
         images = [_load_input_image(p) for p in paths]
-        _maybe_warn_low_resolution_inputs(images, paths, args.target_pixels)
+        # _maybe_warn_low_resolution_inputs(images, paths, args.target_pixels)
         w, h = _resolve_output_size(
             images,
             explicit=_explicit_size_from_sample(sample) or cli_explicit_size,
