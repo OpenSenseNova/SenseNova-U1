@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import random
+import math
 from pathlib import Path
 from typing import Sequence
 
@@ -32,12 +32,12 @@ _IMAGE_GRID_FACTOR = DEFAULT_IMAGE_PATCH_SIZE
 DEFAULT_TARGET_PIXELS = 2048 * 2048
 
 
-def _set_seed(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
+def resize_to_target_pixels(img: Image.Image, target_pixels: int) -> Image.Image:
+    w, h = img.size
+    scale = math.sqrt(target_pixels / (w * h))
+    new_w = max(1, round(w * scale))
+    new_h = max(1, round(h * scale))
+    return img.resize((new_w, new_h), Image.LANCZOS)
 
 
 def _denorm(x: torch.Tensor) -> torch.Tensor:
@@ -52,13 +52,16 @@ def _to_pil(batch: torch.Tensor) -> list[Image.Image]:
     return [Image.fromarray(a) for a in arr]
 
 
-def _load_input_image(path: str | Path) -> Image.Image:
+def _load_input_image(
+    path: str | Path, do_resize: bool = True, target_pixels: int = DEFAULT_TARGET_PIXELS
+) -> Image.Image:
     """Load as RGB; flatten RGBA onto white so the generator sees a clean canvas."""
     img = Image.open(path)
     if img.mode == "RGBA":
         bg = Image.new("RGB", img.size, (255, 255, 255))
         bg.paste(img, mask=img.split()[3])
-        return bg
+    if do_resize:
+        img = resize_to_target_pixels(img, target_pixels=target_pixels)
     return img.convert("RGB")
 
 
@@ -66,39 +69,6 @@ def _coerce_image_paths(value: object) -> list[str]:
     if isinstance(value, list):
         return [str(v) for v in value]
     return [str(value)]
-
-
-def _maybe_warn_low_resolution_inputs(
-    images: Sequence[Image.Image],
-    paths: Sequence[str | Path],
-    target_pixels: int,
-) -> None:
-    """Warn when an input image has fewer total pixels than ``target_pixels``.
-
-    The generator runs at ``target_pixels`` (≈ 2048*2048 by default) regardless
-    of input size, so feeding a small image forces implicit up-scaling inside
-    the pipeline and usually hurts quality. Pre-resizing the input manually
-    while preserving aspect ratio gives noticeably better edits.
-    """
-    low_res = []
-    for path, img in zip(paths, images):
-        w, h = img.size
-        if w * h < target_pixels:
-            low_res.append((path, w, h, w * h))
-    if not low_res:
-        return
-
-    print(
-        f"[editing][warn] {len(low_res)} input image(s) have fewer pixels than "
-        f"the target ({target_pixels} ≈ 2048*2048):"
-    )
-    for path, w, h, px in low_res:
-        print(f"  - {path}: {w}x{h} = {px} px")
-    print(
-        "[editing][warn] For best results, manually pre-resize each input so "
-        "that width*height ≈ 2048*2048 (aspect ratio preserved) before running "
-        "inference. See examples/editing/resize_inputs.py for a reference script."
-    )
 
 
 def _check_grid_divisible(width: int, height: int) -> None:
@@ -376,8 +346,7 @@ def main() -> None:
     cli_explicit_size: tuple[int, int] | None = (args.width, args.height) if args.width is not None else None
 
     if args.prompt is not None:
-        images = [_load_input_image(p) for p in args.image]
-        _maybe_warn_low_resolution_inputs(images, args.image, args.target_pixels)
+        images = [_load_input_image(p, target_pixels=args.target_pixels) for p in args.image]
         w, h = _resolve_output_size(
             images,
             explicit=cli_explicit_size,
@@ -419,8 +388,7 @@ def main() -> None:
 
     for i, sample in enumerate(tqdm(samples, desc="Editing")):
         paths = _coerce_image_paths(sample["image"])
-        images = [_load_input_image(p) for p in paths]
-        _maybe_warn_low_resolution_inputs(images, paths, args.target_pixels)
+        images = [_load_input_image(p, target_pixels=args.target_pixels) for p in paths]
         w, h = _resolve_output_size(
             images,
             explicit=_explicit_size_from_sample(sample) or cli_explicit_size,

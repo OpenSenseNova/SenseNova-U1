@@ -146,18 +146,6 @@ python examples/t2i/inference.py \
 
 ## 图像编辑（it2i）
 
-> 💡 **建议先对输入图像做离线预缩放，以获得最佳效果。**
-> 推理前，请**离线**将每张源图像缩放至 `width * height ≈ 2048 * 2048`
-> （保持宽高比）——可使用 [`editing/resize_inputs.py`](./editing/resize_inputs.py)：
->
-> ```bash
-> python examples/editing/resize_inputs.py \
->   --src examples/editing/data/images \
->   --dst examples/editing/data/images_2048
-> ```
->
-> 然后把 `--image` 或 JSONL 清单中的路径指向缩放后的目录即可。以下示例均假设你已完成该步骤。
-
 单次编辑：
 
 ```bash
