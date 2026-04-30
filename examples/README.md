@@ -151,20 +151,6 @@ See [`docs/prompt_enhancement.md`](../docs/prompt_enhancement.md) for full detai
 
 ## Image Editing (it2i)
 
-> 💡 **Pre-resize your inputs for best results.**
-> Before running inference, down-/up-sample each source image **offline**
-> so that `width * height ≈ 2048 * 2048` (aspect ratio preserved)
-> — use [`editing/resize_inputs.py`](./editing/resize_inputs.py):
->
-> ```bash
-> python examples/editing/resize_inputs.py \
->   --src examples/editing/data/images \
->   --dst examples/editing/data/images_2048
-> ```
->
-> Then point `--image` / the JSONL manifest at the resized folder. The
-> examples below assume you have already done this.
-
 Single edit:
 
 ```bash
