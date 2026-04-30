@@ -85,6 +85,8 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 
 目前这些模型在规模上相对紧凑，但已在多种任务上展现出强劲性能，与商用模型相当且具备出色的性价比。未来还将推出规模更大的版本，进一步提升能力。
 
+> 💡 `SenseNova-U1-8B-MoT` 中的 `8B-MoT` 指的是 ~8B 理解参数**与** ~8B 生成参数。可参阅 [模型参数分解](docs/parameter_breakdown_CN.md) 查看详细的分组明细。
+
 
 ## 📣 最新动态
 
