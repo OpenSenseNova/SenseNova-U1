@@ -89,7 +89,7 @@ Although relatively compact by today’s standards, these models already show st
 
 ## 📣 Updated News
 
-- `[2026.04.30]` Release the preview version of the 8-step inference model [SenseNova-U1-8B-MoT-8step-preview](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-8step-preview). In most cases, the image generation quality of this model closely matches that of the base model (see [comparison](docs/base_vs_distill.md)). In certain instances, grid artifacts may occur. These artifacts will be addressed and resolved in future updates. To test this model, you can use the [inference scripts](examples/README.md), but with the following parameters: ```--cfg_scale 1.0 --num_steps 8``` .
+- `[2026.04.30]` Release the preview version of the 8-step inference model [SenseNova-U1-8B-MoT-8step-preview](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-8step-preview). In most cases, the image generation quality of this model closely matches that of the base model (see [comparison and existing issues](docs/base_vs_distill.md)). To test this model, you can use the [inference scripts](examples/README.md), but with the following parameters: ```--cfg_scale 1.0 --num_steps 8``` .
 
 - `[2026.04.27]` Initial release of the weights for [SenseNova-U1-8B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) and [SenseNova-U1-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT).
 

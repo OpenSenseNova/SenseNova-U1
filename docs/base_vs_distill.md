@@ -1,6 +1,26 @@
-# SenseNova-U1 Showcases
+# Base (100 NFE) vs Distilled (8 NFE)
 
 [← Back to README](../README.md).
+
+## Run Base and Distilled Model
+
+```bash
+# Taking T2I for example
+# Run Base
+python examples/t2i/inference.py \
+    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --jsonl examples/t2i/data/samples.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+    --profile
+# Run Distilled
+python examples/t2i/inference.py \
+    --model_path SenseNova-U1-8B-MoT-8step-preview \
+    --jsonl examples/t2i/data/samples.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
+    --profile
+```
 
 ---
 
@@ -18,7 +38,7 @@
 | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/1d90cfd5-54ae-4669-9cde-51b0b911405e" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/52db191b-dce3-4c85-bfb7-e02a45bef0fa" /> |
 | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/eaf8f018-de5d-4ae6-bfde-895c12833480" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/2a1f04c7-a990-403c-904f-28aaa31f1c33" /> |
 | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/fc7d04f5-f2f0-4aa0-8cda-f0f06defcdd9" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/e96c4e91-2d99-42dc-a521-8a8922fbf580" /> |
-| <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/f32a306f-ee39-4132-b5f8-e8bdf2e8f291" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/7b97a6a7-4e1a-4af8-884f-5df134cfdc3b" /> |
+<!-- | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/f32a306f-ee39-4132-b5f8-e8bdf2e8f291" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/7b97a6a7-4e1a-4af8-884f-5df134cfdc3b" /> | -->
 | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/3a949ced-c7f1-4175-b478-60792fd634a4" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/cbcda1d3-ec83-4d3a-b1b5-1130fc67095e" /> |
 | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/dc93499e-f7f7-4d08-8d6f-69f27b3b943e" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/fd868c8e-ddaf-4fa0-b3dc-976cab223443" /> |
 | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/e62aa2ed-650a-44b5-b74d-b8aa150ec8e5" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/7b7bc125-5d56-43f2-9938-a9c73489a563" /> |
@@ -61,8 +81,19 @@
 
 ## Image-Editing
 
-| Reference Image | SenseNova-U1-8B-MoT (Base) | SenseNova-U1-8B-MoT-8step-preview (Distill) |
+| Reference Image | SenseNova-U1-8B-MoT (100 NFE) | SenseNova-U1-8B-MoT-8step-preview (8 NFE) |
 |---|---|---|
 | <img width="640" height="640" alt="3.webp" src="../examples/editing/data/images/3.webp" /> | <img width="1536" height="2752" alt="Image" src="https://github.com/user-attachments/assets/8fcbcf8f-ad6a-4ea8-af82-5c99f37ffa11" /> | <img width="1536" height="2752" alt="Image" src="https://github.com/user-attachments/assets/e6878663-e64f-407c-9f1e-88987591b977" /> |
 | <img width="640" height="640" alt="6.webp" src="../examples/editing/data/images/6.webp" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/3f2341f0-b20d-44b3-8025-b92d87e0a0fc" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/cfc7e1c9-5790-4414-b1e0-f7a2bde3d3f2" /> |
 | <img width="640" height="640" alt="8.webp" src="../examples/editing/data/images/8.webp" /> | <img width="1696" height="2528" alt="Image" src="https://github.com/user-attachments/assets/36ce560e-1dd1-4b10-8aee-2dda74003e42" /> | <img width="1696" height="2528" alt="Image" src="https://github.com/user-attachments/assets/3a1997b1-96cf-4bbd-a637-ae9793985811" /> |
+
+
+## Existing Issues
+
+Two issues have been identified in the SenseNova-U1-8B-MoT-8step-preview (8 NFE), and we are actively working to resolve them. 
+
+- Grid artifacts may occur in certain instances.
+<img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/7b97a6a7-4e1a-4af8-884f-5df134cfdc3b" /> 
+
+- In image-editing tasks, the generated results may exhibit altered color tones.
+ <img width="5063" height="1761" alt="Image" src="https://github.com/user-attachments/assets/9951c963-e5d7-4fd9-ba5d-ab9f3315f413" /> 
