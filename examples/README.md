@@ -248,7 +248,6 @@ Each line is one sample:
 python examples/interleave/inference.py \
     --model_path SenseNova/SenseNova-U1-8B-MoT \
     --jsonl examples/interleave/data/samples.jsonl \
-    --image_root examples/interleave/data/images\
     --resolution "16:9" \
     --output_dir outputs/interleave/jsonl
 ```
