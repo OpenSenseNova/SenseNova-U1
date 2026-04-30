@@ -52,7 +52,7 @@ def _to_pil(batch: torch.Tensor) -> list[Image.Image]:
     return [Image.fromarray(a) for a in arr]
 
 
-def _load_input_image(path: str | Path, do_resize:bool = True) -> Image.Image:
+def _load_input_image(path: str | Path, do_resize: bool = True) -> Image.Image:
     """Load as RGB; flatten RGBA onto white so the generator sees a clean canvas."""
     img = Image.open(path)
     if img.mode == "RGBA":
