@@ -58,7 +58,6 @@ def _load_input_image(path: str | Path, do_resize: bool = True) -> Image.Image:
     if img.mode == "RGBA":
         bg = Image.new("RGB", img.size, (255, 255, 255))
         bg.paste(img, mask=img.split()[3])
-        return bg
     if do_resize:
         img = resize_to_target_pixels(img, target_pixels=DEFAULT_TARGET_PIXELS)
     return img.convert("RGB")
