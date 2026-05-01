@@ -39,8 +39,9 @@ examples/
 ## CPU / 磁盘 Offload
 
 所有参考推理脚本都支持 Transformers / Accelerate 的 device-map 加载。
-这样可以把部分模型权重放在 CPU 内存或磁盘上，从而降低 GPU 峰值显存，
-代价是推理速度会变慢：
+默认示例保留直接单卡路径，因为当完整模型能放进显存时，这是最快、最直接
+的运行方式。对于显存较小的 GPU，可以额外加上 `--device_map auto`，让
+Accelerate 把部分模型权重放在 CPU 内存或磁盘上：
 
 ```bash
 python examples/t2i/inference.py \
@@ -55,6 +56,20 @@ python examples/t2i/inference.py \
 设置 `--device_map` 后，模型会交给 Accelerate 分发，脚本不会再对整个
 模型调用 `.to(device)`。当部分模块被放到磁盘时，`--offload_folder`
 用于保存 offload 文件。
+
+设置 `--device_map auto` 时，Accelerate 会估算各个模块的大小，读取
+可见 GPU 和 CPU 的可用内存，并按从快到慢的顺序放置模块：优先 GPU，
+放不下再放 CPU，必要时再使用磁盘 offload。传入 `--max_memory` 会覆盖
+自动探测到的内存预算；如果希望稳定复现低显存设备上的行为，建议显式设置。
+
+`--max_memory` 约束的是 Transformers / Accelerate 如何在 GPU、CPU 和
+磁盘之间放置**模型权重**，它不是严格的端到端显存上限：forward 期间的
+activation、KV cache、CUDA workspace、PyTorch reserved memory，以及
+图像生成相关中间状态仍然需要额外空间。由于这部分运行时开销会随分辨率、
+batch size、序列长度、采样模式和后端 kernel 变化，真正运行前很难精确
+知道应该预留多少。小显卡上建议把 GPU 预算设得低于物理显存，例如 32GB
+显卡可先尝试 `26GiB`-`28GiB`；如果生成阶段仍然 OOM，再进一步降低分辨率
+或 batch size。
 
 ## 文生图（Text-to-Image）
 

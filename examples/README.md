@@ -43,8 +43,10 @@ examples/
 ## CPU / Disk Offload
 
 All reference inference scripts support Transformers / Accelerate device-map
-loading. This can reduce peak GPU memory by keeping part of the model on CPU
-RAM or disk, at the cost of slower inference:
+loading. The default examples keep the direct single-GPU path because it is the
+fastest when the full model fits in VRAM. For lower-VRAM GPUs, add
+`--device_map auto` so Accelerate can place part of the model on CPU RAM or
+disk:
 
 ```bash
 python examples/t2i/inference.py \
@@ -59,6 +61,22 @@ python examples/t2i/inference.py \
 When `--device_map` is set, the model is dispatched by Accelerate and the
 script does not call `.to(device)` on the full model. `--offload_folder` is
 used when some modules are placed on disk.
+
+With `--device_map auto`, Accelerate estimates module sizes, checks the
+available memory on each visible GPU and CPU, and assigns modules to devices
+from fastest to slowest: GPU first, then CPU, then disk offload when needed and
+available. Passing `--max_memory` overrides the automatically detected memory
+budget and is recommended when you want reproducible low-VRAM behavior.
+
+`--max_memory` constrains how Transformers / Accelerate places **model
+weights** across GPU, CPU and disk. It is not a hard end-to-end VRAM cap:
+forward-time activation tensors, KV cache, CUDA workspaces, PyTorch reserved
+memory, and image-generation intermediates still need extra room. Since the
+exact runtime overhead depends on resolution, batch size, sequence length,
+sampling mode and backend kernels, it is hard to know the perfect reserve
+before running. On small GPUs, set the GPU budget below physical VRAM (for
+example `26GiB`-`28GiB` on a 32GB card) and lower resolution / batch size if
+generation still OOMs.
 
 ## Text-to-Image
 
