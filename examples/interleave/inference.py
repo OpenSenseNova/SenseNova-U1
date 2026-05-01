@@ -10,11 +10,14 @@ from typing import Sequence
 import numpy as np
 import torch
 from PIL import Image
-from transformers import AutoConfig, AutoModel, AutoTokenizer
 
 import sensenova_u1
-from sensenova_u1 import check_checkpoint_compatibility
-from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
+from sensenova_u1.utils import (
+    DEFAULT_IMAGE_PATCH_SIZE,
+    InferenceProfiler,
+    add_offload_args,
+    load_model_and_tokenizer,
+)
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
@@ -128,12 +131,21 @@ class SenseNovaU1Interleave:
         model_path: str,
         device: str = "cuda",
         dtype: torch.dtype = torch.bfloat16,
+        device_map: str | None = None,
+        max_memory: str | None = None,
+        offload_folder: str | None = None,
+        offload_state_dict: bool | None = None,
     ) -> None:
         self.device = device
-        config = AutoConfig.from_pretrained(model_path)
-        check_checkpoint_compatibility(config)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = AutoModel.from_pretrained(model_path, config=config, torch_dtype=dtype).to(device).eval()
+        self.model, self.tokenizer = load_model_and_tokenizer(
+            model_path,
+            dtype=dtype,
+            device=device,
+            device_map=device_map,
+            max_memory=max_memory,
+            offload_folder=offload_folder,
+            offload_state_dict=offload_state_dict,
+        )
 
     @torch.inference_mode()
     def generate(
@@ -358,6 +370,7 @@ def parse_args() -> argparse.Namespace:
         default="bfloat16",
         choices=["bfloat16", "float16", "float32"],
     )
+    add_offload_args(p)
     p.add_argument(
         "--attn_backend",
         default="auto",
@@ -388,7 +401,15 @@ def main() -> None:
 
     profiler = InferenceProfiler(enabled=args.profile, device=args.device)
     with profiler.time_load():
-        engine = SenseNovaU1Interleave(args.model_path, device=args.device, dtype=dtype)
+        engine = SenseNovaU1Interleave(
+            args.model_path,
+            device=args.device,
+            dtype=dtype,
+            device_map=args.device_map,
+            max_memory=args.max_memory,
+            offload_folder=args.offload_folder,
+            offload_state_dict=args.offload_state_dict,
+        )
 
     cfg_interval = tuple(args.cfg_interval)
     out_dir = Path(args.output_dir)

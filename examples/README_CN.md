@@ -36,6 +36,26 @@ examples/
         └── images/
 ```
 
+## CPU / 磁盘 Offload
+
+所有参考推理脚本都支持 Transformers / Accelerate 的 device-map 加载。
+这样可以把部分模型权重放在 CPU 内存或磁盘上，从而降低 GPU 峰值显存，
+代价是推理速度会变慢：
+
+```bash
+python examples/t2i/inference.py \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --prompt "A cinematic mountain village at sunrise" \
+  --device_map auto \
+  --max_memory "0=22GiB,cpu=80GiB" \
+  --offload_folder outputs/offload \
+  --output output.png
+```
+
+设置 `--device_map` 后，模型会交给 Accelerate 分发，脚本不会再对整个
+模型调用 `.to(device)`。当部分模块被放到磁盘时，`--offload_folder`
+用于保存 offload 文件。
+
 ## 文生图（Text-to-Image）
 
 单条 prompt 推理：

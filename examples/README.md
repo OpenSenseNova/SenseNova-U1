@@ -40,6 +40,26 @@ examples/
         └── images/
 ```
 
+## CPU / Disk Offload
+
+All reference inference scripts support Transformers / Accelerate device-map
+loading. This can reduce peak GPU memory by keeping part of the model on CPU
+RAM or disk, at the cost of slower inference:
+
+```bash
+python examples/t2i/inference.py \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --prompt "A cinematic mountain village at sunrise" \
+  --device_map auto \
+  --max_memory "0=22GiB,cpu=80GiB" \
+  --offload_folder outputs/offload \
+  --output output.png
+```
+
+When `--device_map` is set, the model is dispatched by Accelerate and the
+script does not call `.to(device)` on the full model. `--offload_folder` is
+used when some modules are placed on disk.
+
 ## Text-to-Image
 
 Single prompt:
