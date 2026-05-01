@@ -224,7 +224,9 @@ class InferenceProfiler:
 
     @classmethod
     def _format_memory(cls, memory_peak: _MemoryPeak) -> str:
-        text = f"allocated {cls._format_bytes(memory_peak.allocated)}, reserved {cls._format_bytes(memory_peak.reserved)}"
+        text = (
+            f"allocated {cls._format_bytes(memory_peak.allocated)}, reserved {cls._format_bytes(memory_peak.reserved)}"
+        )
         if len(memory_peak.by_device) <= 1:
             return text
         details = ", ".join(
