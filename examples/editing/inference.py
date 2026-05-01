@@ -137,8 +137,9 @@ class SenseNovaU1Editing:
         cfg_interval: tuple[float, float] = (0.0, 1.0),
         num_steps: int = 50,
         batch_size: int = 1,
+        think_mode: bool = False,
         seed: int = 0,
-    ) -> list[Image.Image]:
+    ) -> tuple[list[Image.Image], str]:
         output = self.model.it2i_generate(
             self.tokenizer,
             prompt,
@@ -151,9 +152,12 @@ class SenseNovaU1Editing:
             cfg_interval=cfg_interval,
             num_steps=num_steps,
             batch_size=batch_size,
+            think_mode=think_mode,
             seed=seed,
         )
-        return _to_pil(output)
+        if think_mode:
+            return _to_pil(output[0]), output[1]
+        return _to_pil(output), ""
 
 
 def _save_images(
@@ -304,6 +308,16 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     p.add_argument(
+        "--think",
+        action="store_true",
+        help=(
+            "Enable think mode (chain-of-thought reasoning). The model will "
+            "reason about the edit before generating the output image. "
+            "The thinking content is printed to stdout and saved to a "
+            "``<stem>_think.txt`` file next to the output image."
+        ),
+    )
+    p.add_argument(
         "--compare",
         action="store_true",
         help=(
@@ -354,7 +368,7 @@ def main() -> None:
         )
         # _set_seed(args.seed)
         with profiler.time_generate(w, h, args.batch_size):
-            outputs = engine.edit(
+            outputs, think_text = engine.edit(
                 args.prompt,
                 images,
                 image_size=(w, h),
@@ -365,10 +379,16 @@ def main() -> None:
                 cfg_interval=cfg_interval,
                 num_steps=args.num_steps,
                 batch_size=args.batch_size,
+                think_mode=args.think,
                 seed=args.seed,
             )
         out_path = Path(args.output)
         _save_images(outputs, out_path)
+        if think_text:
+            print(f"[think] {think_text}")
+            think_path = out_path.with_name(f"{out_path.stem}_think.txt")
+            think_path.write_text(think_text, encoding="utf-8")
+            print(f"[saved] {think_path}")
         if args.compare:
             save_compare(out_path, images, outputs[0], args.prompt)
         profiler.report()
@@ -396,7 +416,7 @@ def main() -> None:
         )
         # _set_seed(int(sample.get("seed", args.seed)))
         with profiler.time_generate(w, h, 1):
-            outputs = engine.edit(
+            outputs, think_text = engine.edit(
                 sample["prompt"],
                 images,
                 image_size=(w, h),
@@ -407,12 +427,16 @@ def main() -> None:
                 cfg_interval=cfg_interval,
                 num_steps=args.num_steps,
                 batch_size=1,
+                think_mode=args.think,
                 seed=args.seed,
             )
         tag = sample.get("type")
         stem = f"{i + 1:04d}" + (f"_{tag}" if tag else "") + f"_{w}x{h}.png"
         sample_out = out_dir / stem
         outputs[0].save(sample_out)
+        if think_text:
+            think_path = sample_out.with_suffix(".think.txt")
+            think_path.write_text(think_text, encoding="utf-8")
         if args.compare:
             save_compare(sample_out, images, outputs[0], sample["prompt"])
 
