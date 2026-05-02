@@ -442,11 +442,10 @@ def main() -> None:
 
     if args.prompt is not None:
         input_max_pixels = _resolve_input_max_pixels(args.input_max_pixels, len(args.image))
-        _print_input_resize_hint(len(args.image), input_max_pixels, args.input_max_pixels or "model-default", args.do_resize)
-        images = [
-            _load_input_image(p, do_resize=args.do_resize, input_max_pixels=input_max_pixels)
-            for p in args.image
-        ]
+        _print_input_resize_hint(
+            len(args.image), input_max_pixels, args.input_max_pixels or "model-default", args.do_resize
+        )
+        images = [_load_input_image(p, do_resize=args.do_resize, input_max_pixels=input_max_pixels) for p in args.image]
         w, h = _resolve_output_size(
             images,
             explicit=cli_explicit_size,
@@ -503,10 +502,7 @@ def main() -> None:
             str(sample_input_max_pixels or "model-default"),
             sample_do_resize,
         )
-        images = [
-            _load_input_image(p, do_resize=sample_do_resize, input_max_pixels=input_max_pixels)
-            for p in paths
-        ]
+        images = [_load_input_image(p, do_resize=sample_do_resize, input_max_pixels=input_max_pixels) for p in paths]
         w, h = _resolve_output_size(
             images,
             explicit=_explicit_size_from_sample(sample) or cli_explicit_size,
