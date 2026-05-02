@@ -1423,6 +1423,17 @@ class NEOChatModel(PreTrainedModel):
                 input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
             )
 
+        device = hidden_states_condition.device
+        dtype = hidden_states_condition.dtype
+
+        del pixel_values, grid_hw
+        del input_embeds_condition, indexes_condition, attention_mask_condition_prefix
+        if input_embeds_img_condition is not None:
+            del input_embeds_img_condition, indexes_img_condition, attention_mask_img_condition_prefix
+        if input_embeds_uncondition is not None:
+            del input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
+        del hidden_states_condition
+
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(
                 batch_size, *past_key_values_condition.layers[layer_idx].keys.shape[1:]
@@ -1462,9 +1473,6 @@ class NEOChatModel(PreTrainedModel):
                 current_len=token_h * token_w,
                 batch_size=batch_size,
             )
-
-        device = hidden_states_condition.device
-        dtype = hidden_states_condition.dtype
 
         grid_h = image_size[1] // self.patch_size
         grid_w = image_size[0] // self.patch_size
