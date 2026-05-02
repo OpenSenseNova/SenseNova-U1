@@ -1329,30 +1329,42 @@ class NEOChatModel(PreTrainedModel):
 
         merge_size = int(1 / self.downsample_ratio)
         question_condition = f"{prompt}"
-        question_img_condition = '<image>' * len(images)
-        question_uncondition = ""
         think_text = ""
+        needs_cfg = not (cfg_scale == 1 and img_cfg_scale == 1)
+        needs_img_condition = needs_cfg and (img_cfg_scale == 1 or cfg_scale != img_cfg_scale)
+        needs_uncondition = needs_cfg and img_cfg_scale != 1
 
         think_content = '<think>\n' if think_mode else '<think>\n\n</think>\n\n' + IMG_START_TOKEN
         query_condition = self._build_t2i_query(question_condition, system_message=SYSTEM_MESSAGE_FOR_GEN, append_text=think_content)
-        query_img_condition = self._build_t2i_query(question_img_condition, append_text=IMG_START_TOKEN)
-        query_uncondition = self._build_t2i_query(question_uncondition, append_text=IMG_START_TOKEN)
+        query_img_condition = (
+            self._build_t2i_query('<image>' * len(images), append_text=IMG_START_TOKEN)
+            if needs_img_condition
+            else None
+        )
+        query_uncondition = self._build_t2i_query("", append_text=IMG_START_TOKEN) if needs_uncondition else None
 
         for i in range(grid_hw.shape[0]):
             num_patch_token = int(grid_hw[i, 0] * grid_hw[i, 1] * self.downsample_ratio**2)
             image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * num_patch_token + IMG_END_TOKEN
             query_condition = query_condition.replace('<image>', image_tokens, 1)
-            query_img_condition = query_img_condition.replace('<image>', image_tokens, 1)
+            if query_img_condition is not None:
+                query_img_condition = query_img_condition.replace('<image>', image_tokens, 1)
 
         input_embeds_condition, indexes_condition, attention_mask_condition_prefix = self._build_it2i_inputs(
             tokenizer, query_condition, pixel_values, grid_hw
         )
-        input_embeds_img_condition, indexes_img_condition, attention_mask_img_condition_prefix = self._build_it2i_inputs(
-            tokenizer, query_img_condition, pixel_values, grid_hw
-        )
-        input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix = self._build_it2i_inputs(
-            tokenizer, query_uncondition
-        )
+        if query_img_condition is not None:
+            input_embeds_img_condition, indexes_img_condition, attention_mask_img_condition_prefix = self._build_it2i_inputs(
+                tokenizer, query_img_condition, pixel_values, grid_hw
+            )
+        else:
+            input_embeds_img_condition = indexes_img_condition = attention_mask_img_condition_prefix = None
+        if query_uncondition is not None:
+            input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix = self._build_it2i_inputs(
+                tokenizer, query_uncondition
+            )
+        else:
+            input_embeds_uncondition = indexes_uncondition = attention_mask_uncondition_prefix = None
 
         token_h = image_size[1] // (self.patch_size * merge_size)
         token_w = image_size[0] // (self.patch_size * merge_size)
@@ -1360,11 +1372,19 @@ class NEOChatModel(PreTrainedModel):
         indexes_image_condition = self._build_t2i_image_indexes(
             token_h, token_w, indexes_condition[0].max() + 1, device=input_embeds_condition.device
         )
-        indexes_image_img_condition = self._build_t2i_image_indexes(
-            token_h, token_w, indexes_img_condition[0].max() + 1, device=input_embeds_img_condition.device
+        indexes_image_img_condition = (
+            self._build_t2i_image_indexes(
+                token_h, token_w, indexes_img_condition[0].max() + 1, device=input_embeds_img_condition.device
+            )
+            if indexes_img_condition is not None
+            else None
         )
-        indexes_image_uncondition = self._build_t2i_image_indexes(
-            token_h, token_w, indexes_uncondition[0].max() + 1, device=input_embeds_uncondition.device
+        indexes_image_uncondition = (
+            self._build_t2i_image_indexes(
+                token_h, token_w, indexes_uncondition[0].max() + 1, device=input_embeds_uncondition.device
+            )
+            if indexes_uncondition is not None
+            else None
         )
 
         if think_mode:
@@ -1392,12 +1412,16 @@ class NEOChatModel(PreTrainedModel):
             past_key_values_condition, hidden_states_condition = self._it2i_prefix_forward(
                 input_embeds_condition, indexes_condition, attention_mask_condition_prefix
             )
-        past_key_values_img_condition, hidden_states_img_condition = self._it2i_prefix_forward(
-            input_embeds_img_condition, indexes_img_condition, attention_mask_img_condition_prefix
-        )
-        past_key_values_uncondition, hidden_states_uncondition = self._it2i_prefix_forward(
-            input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
-        )
+        past_key_values_img_condition = None
+        if input_embeds_img_condition is not None:
+            past_key_values_img_condition, _ = self._it2i_prefix_forward(
+                input_embeds_img_condition, indexes_img_condition, attention_mask_img_condition_prefix
+            )
+        past_key_values_uncondition = None
+        if input_embeds_uncondition is not None:
+            past_key_values_uncondition, _ = self._it2i_prefix_forward(
+                input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
+            )
 
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(
@@ -1406,34 +1430,38 @@ class NEOChatModel(PreTrainedModel):
             past_key_values_condition.layers[layer_idx].values = past_key_values_condition.layers[layer_idx].values.expand(
                 batch_size, *past_key_values_condition.layers[layer_idx].values.shape[1:]
             )
-            past_key_values_img_condition.layers[layer_idx].keys = past_key_values_img_condition.layers[layer_idx].keys.expand(
-                batch_size, *past_key_values_img_condition.layers[layer_idx].keys.shape[1:]
-            )
-            past_key_values_img_condition.layers[layer_idx].values = past_key_values_img_condition.layers[layer_idx].values.expand(
-                batch_size, *past_key_values_img_condition.layers[layer_idx].values.shape[1:]
-            )
-            past_key_values_uncondition.layers[layer_idx].keys = past_key_values_uncondition.layers[layer_idx].keys.expand(
-                batch_size, *past_key_values_uncondition.layers[layer_idx].keys.shape[1:]
-            )
-            past_key_values_uncondition.layers[layer_idx].values = past_key_values_uncondition.layers[layer_idx].values.expand(
-                batch_size, *past_key_values_uncondition.layers[layer_idx].values.shape[1:]
-            )
+            if past_key_values_img_condition is not None:
+                past_key_values_img_condition.layers[layer_idx].keys = past_key_values_img_condition.layers[layer_idx].keys.expand(
+                    batch_size, *past_key_values_img_condition.layers[layer_idx].keys.shape[1:]
+                )
+                past_key_values_img_condition.layers[layer_idx].values = past_key_values_img_condition.layers[layer_idx].values.expand(
+                    batch_size, *past_key_values_img_condition.layers[layer_idx].values.shape[1:]
+                )
+            if past_key_values_uncondition is not None:
+                past_key_values_uncondition.layers[layer_idx].keys = past_key_values_uncondition.layers[layer_idx].keys.expand(
+                    batch_size, *past_key_values_uncondition.layers[layer_idx].keys.shape[1:]
+                )
+                past_key_values_uncondition.layers[layer_idx].values = past_key_values_uncondition.layers[layer_idx].values.expand(
+                    batch_size, *past_key_values_uncondition.layers[layer_idx].values.shape[1:]
+                )
 
         prepare_flash_kv_cache(
             past_key_values_condition,
             current_len=token_h * token_w,
             batch_size=batch_size,
         )
-        prepare_flash_kv_cache(
-            past_key_values_img_condition,
-            current_len=token_h * token_w,
-            batch_size=batch_size,
-        )
-        prepare_flash_kv_cache(
-            past_key_values_uncondition,
-            current_len=token_h * token_w,
-            batch_size=batch_size,
-        )
+        if past_key_values_img_condition is not None:
+            prepare_flash_kv_cache(
+                past_key_values_img_condition,
+                current_len=token_h * token_w,
+                batch_size=batch_size,
+            )
+        if past_key_values_uncondition is not None:
+            prepare_flash_kv_cache(
+                past_key_values_uncondition,
+                current_len=token_h * token_w,
+                batch_size=batch_size,
+            )
 
         device = hidden_states_condition.device
         dtype = hidden_states_condition.dtype
@@ -1569,8 +1597,10 @@ class NEOChatModel(PreTrainedModel):
             image_prediction = self.unpatchify(z, self.patch_size * merge_size, image_size[1], image_size[0])
 
         clear_flash_kv_cache(past_key_values_condition)
-        clear_flash_kv_cache(past_key_values_img_condition)
-        clear_flash_kv_cache(past_key_values_uncondition)
+        if past_key_values_img_condition is not None:
+            clear_flash_kv_cache(past_key_values_img_condition)
+        if past_key_values_uncondition is not None:
+            clear_flash_kv_cache(past_key_values_uncondition)
 
         self.last_think_content = think_text
         if think_mode:
