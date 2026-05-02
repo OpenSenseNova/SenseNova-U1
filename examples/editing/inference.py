@@ -28,16 +28,59 @@ DEFAULT_SEED = 42
 # Output H / W must be divisible by this (= patch_size * merge_size).
 _IMAGE_GRID_FACTOR = DEFAULT_IMAGE_PATCH_SIZE
 
-# aspect ratio ispreserved, total pixels are normalized to this target
+# Aspect ratio is preserved, total output pixels are normalized to this target.
 DEFAULT_TARGET_PIXELS = 2048 * 2048
+DEFAULT_INPUT_MAX_PIXELS = 2048 * 2048
+MIN_INPUT_MAX_PIXELS = 512 * 512
 
 
-def resize_to_target_pixels(img: Image.Image, target_pixels: int) -> Image.Image:
-    w, h = img.size
-    scale = math.sqrt(target_pixels / (w * h))
-    new_w = max(1, round(w * scale))
-    new_h = max(1, round(h * scale))
-    return img.resize((new_w, new_h), Image.LANCZOS)
+def _auto_input_max_pixels(num_images: int) -> int:
+    full_res_image_budget = 2
+    if num_images <= full_res_image_budget:
+        return DEFAULT_INPUT_MAX_PIXELS
+    total_budget = full_res_image_budget * DEFAULT_INPUT_MAX_PIXELS
+    return max(MIN_INPUT_MAX_PIXELS, total_budget // max(1, num_images))
+
+
+def _resolve_input_max_pixels(value: str | None, num_images: int) -> int | None:
+    if value is None:
+        return None
+    if value == "auto":
+        return _auto_input_max_pixels(num_images)
+    try:
+        input_max_pixels = int(value)
+    except ValueError as exc:
+        raise SystemExit("--input_max_pixels must be an integer or 'auto'.") from exc
+    if input_max_pixels < MIN_INPUT_MAX_PIXELS:
+        side = int(math.sqrt(MIN_INPUT_MAX_PIXELS))
+        raise SystemExit(f"--input_max_pixels must be >= {MIN_INPUT_MAX_PIXELS} ({side}*{side}).")
+    return input_max_pixels
+
+
+def _resize_to_max_budget(img: Image.Image, input_max_pixels: int) -> Image.Image:
+    resized_h, resized_w = smart_resize(
+        height=img.height,
+        width=img.width,
+        factor=_IMAGE_GRID_FACTOR,
+        min_pixels=input_max_pixels,
+        max_pixels=input_max_pixels,
+    )
+    if (resized_w, resized_h) == img.size:
+        return img
+    return img.resize((resized_w, resized_h), Image.LANCZOS)
+
+
+def _print_input_resize_hint(num_images: int, input_max_pixels: int | None, source: str, do_resize: bool) -> None:
+    if not do_resize:
+        print("[editing] resize-to-budget disabled; model preprocessing will still enforce its input limits.")
+        return
+    if input_max_pixels is None:
+        return
+    side = int(math.sqrt(input_max_pixels))
+    print(
+        f"[editing] {num_images} input image(s); {source} input_max_pixels={input_max_pixels} "
+        f"(about {side}x{side} per image, aspect ratio preserved)."
+    )
 
 
 def _denorm(x: torch.Tensor) -> torch.Tensor:
@@ -53,22 +96,38 @@ def _to_pil(batch: torch.Tensor) -> list[Image.Image]:
 
 
 def _load_input_image(
-    path: str | Path, do_resize: bool = True, target_pixels: int = DEFAULT_TARGET_PIXELS
+    path: str | Path,
+    *,
+    do_resize: bool,
+    input_max_pixels: int | None,
 ) -> Image.Image:
     """Load as RGB; flatten RGBA onto white so the generator sees a clean canvas."""
     img = Image.open(path)
     if img.mode == "RGBA":
         bg = Image.new("RGB", img.size, (255, 255, 255))
         bg.paste(img, mask=img.split()[3])
-    if do_resize:
-        img = resize_to_target_pixels(img, target_pixels=target_pixels)
-    return img.convert("RGB")
+    img = img.convert("RGB")
+    if do_resize and input_max_pixels is not None:
+        img = _resize_to_max_budget(img, input_max_pixels)
+    return img
 
 
 def _coerce_image_paths(value: object) -> list[str]:
     if isinstance(value, list):
         return [str(v) for v in value]
     return [str(value)]
+
+
+def _coerce_bool(value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in {"1", "true", "yes", "y", "on"}:
+            return True
+        if lowered in {"0", "false", "no", "n", "off"}:
+            return False
+    raise SystemExit(f"Expected a boolean value for do_resize, got {value!r}.")
 
 
 def _check_grid_divisible(width: int, height: int) -> None:
@@ -238,6 +297,28 @@ def parse_args() -> argparse.Namespace:
             "Ignored when --width / --height are given."
         ),
     )
+    p.add_argument(
+        "--input_max_pixels",
+        default="auto",
+        help=(
+            "Maximum pixels per input/reference image before vision encoding. "
+            "Use an integer (for example 1048576 for 1024*1024) or 'auto' to "
+            "keep up to two inputs at 2048*2048 and divide that total budget across more inputs. "
+            "Default: auto."
+        ),
+    )
+    p.add_argument(
+        "--do_resize",
+        "--do-resize",
+        dest="do_resize",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Whether to resize input/reference images to the input pixel budget before model preprocessing. "
+            "Enabled by default. If disabled, the model's native image preprocessing still applies its "
+            "own size limits."
+        ),
+    )
 
     p.add_argument(
         "--cfg_scale",
@@ -360,7 +441,12 @@ def main() -> None:
     cli_explicit_size: tuple[int, int] | None = (args.width, args.height) if args.width is not None else None
 
     if args.prompt is not None:
-        images = [_load_input_image(p, target_pixels=args.target_pixels) for p in args.image]
+        input_max_pixels = _resolve_input_max_pixels(args.input_max_pixels, len(args.image))
+        _print_input_resize_hint(len(args.image), input_max_pixels, args.input_max_pixels or "model-default", args.do_resize)
+        images = [
+            _load_input_image(p, do_resize=args.do_resize, input_max_pixels=input_max_pixels)
+            for p in args.image
+        ]
         w, h = _resolve_output_size(
             images,
             explicit=cli_explicit_size,
@@ -408,7 +494,19 @@ def main() -> None:
 
     for i, sample in enumerate(tqdm(samples, desc="Editing")):
         paths = _coerce_image_paths(sample["image"])
-        images = [_load_input_image(p, target_pixels=args.target_pixels) for p in paths]
+        sample_input_max_pixels = sample.get("input_max_pixels", args.input_max_pixels)
+        sample_do_resize = _coerce_bool(sample.get("do_resize", args.do_resize))
+        input_max_pixels = _resolve_input_max_pixels(str(sample_input_max_pixels), len(paths))
+        _print_input_resize_hint(
+            len(paths),
+            input_max_pixels,
+            str(sample_input_max_pixels or "model-default"),
+            sample_do_resize,
+        )
+        images = [
+            _load_input_image(p, do_resize=sample_do_resize, input_max_pixels=input_max_pixels)
+            for p in paths
+        ]
         w, h = _resolve_output_size(
             images,
             explicit=_explicit_size_from_sample(sample) or cli_explicit_size,

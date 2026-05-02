@@ -176,6 +176,13 @@ python examples/editing/inference.py \
 - **自动模式（默认）**：不传 `--width / --height` 时，输出分辨率跟随第一张输入图，通过 `smart_resize` 保持宽高比，总像素数归一化到 `--target_pixels`（默认 `2048 * 2048`），且 H / W 均对齐到 32 的倍数。
 - **显式指定**：传入 `--width W --height H`（二者均须为 32 的倍数）。2048 × 2048 是一个通用场景下的稳妥选择。
 
+为了获得更好的编辑质量，建议尽量提供高分辨率输入/参考图。
+显存有限时可使用 `--input_max_pixels auto`：1-2 张图保持单图最高2048 × 2048，超过 2 张时把两张 2048 × 2048 的总预算均分给所有输入图。
+这个策略是基于“两张 2048 × 2048 参考图”的显存预算给出的保守默认值；
+可根据自己的显卡显存和编辑效果调节，也可传入整数，例如 `1048576` 表示单张输入图最高约 1024 × 1024。
+外层 resize-to-budget 默认开启；可传 `--no-do-resize` 跳过这一步，但模型原生图像预处理仍会应用自己的输入尺寸限制。
+脚本会在生成前打印每张输入图的上限。
+
 CFG 默认值：`--cfg_scale 4.0`（文本引导强度），`--img_cfg_scale 1.0`（默认关闭图像 CFG）。完整参数列表请运行 `python examples/editing/inference.py --help` 查看。
 
 可参考 [`editing/data/samples.jsonl`](./editing/data/samples.jsonl) 中的精简起步样例。
