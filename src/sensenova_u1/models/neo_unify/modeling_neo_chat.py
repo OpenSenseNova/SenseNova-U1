@@ -1304,7 +1304,10 @@ class NEOChatModel(PreTrainedModel):
         image_token_count = prompt.count('<image>')
         assert len(images) >= image_token_count
         if len(images) > image_token_count:
-            prompt = "<image>\n" * (len(images) - image_token_count) + prompt
+            if image_token_count == 0 and len(images) > 1:
+                prompt = "".join(f"Image-{i + 1}:<image>\n" for i in range(len(images))) + prompt
+            else:
+                prompt = "<image>\n" * (len(images) - image_token_count) + prompt
 
         pixel_values = []
         grid_hw = []
