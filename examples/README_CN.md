@@ -36,6 +36,35 @@ examples/
         └── images/
 ```
 
+## CPU / 磁盘 Offload
+
+所有参考推理脚本都支持 Transformers / Accelerate 的 device-map 加载。
+对于显存较小的 GPU，可以额外加上 `--device_map auto`，让Accelerate把部分模型权重放在CPU内存或磁盘上：
+
+```bash
+python examples/t2i/inference.py \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --prompt "A cinematic mountain village at sunrise" \
+  --device_map auto \
+  --max_memory "0=22GiB,cpu=80GiB" \
+  --offload_folder outputs/offload \
+  --output output.png
+```
+
+设置 `--device_map` 后，模型会交给 Accelerate 分发，脚本不会再对整个模型调用 `.to(device)`。
+当部分模块被放到磁盘时，`--offload_folder`用于保存 offload 文件。
+
+设置 `--device_map auto` 时，Accelerate 会估算各个模块的大小，读取可见 GPU 和 CPU 的可用内存，
+并按从快到慢的顺序放置模块：优先 GPU，放不下再放 CPU，必要时再使用磁盘 offload。
+传入 `--max_memory` 会覆盖自动探测到的内存预算；如果希望稳定复现低显存设备上的行为，建议显式设置。
+
+`--max_memory` 约束的是 Transformers / Accelerate 如何在 GPU、CPU和磁盘之间放置**模型权重**
+它不是严格的端到端显存上限：forward 期间的activation、KV cache、PyTorch reserved memory，
+以及图像生成相关中间状态仍然需要额外空间。
+由于这部分运行时开销会随分辨率、batch size、序列长度和后端kernel等变化，真正运行前很难精确知道预留多少。
+小显卡上建议把 GPU 预算设得低于物理显存，例如 32GB显卡可先尝试 `26GiB`-`28GiB`；
+如果生成阶段仍然 OOM，再进一步降低分辨率或 batch size。
+
 ## 文生图（Text-to-Image）
 
 单条 prompt 推理：
@@ -45,6 +74,8 @@ python examples/t2i/inference.py \
   --model_path SenseNova/SenseNova-U1-8B-MoT \
   --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，性价比出色”。" \
   --width 2720 --height 1536 \
+  --device_map auto \
+  --batch_size 1 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
   --output output.png \
   --profile

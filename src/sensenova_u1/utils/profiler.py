@@ -39,6 +39,7 @@ DEFAULT_IMAGE_PATCH_SIZE = 32
 class _MemoryPeak:
     allocated: int = 0
     reserved: int = 0
+    by_device: tuple[tuple[str, int, int], ...] = ()
 
     @property
     def available(self) -> bool:
@@ -93,20 +94,34 @@ class InferenceProfiler:
     def _has_cuda_memory_stats(self) -> bool:
         return self.enabled and self.device.startswith("cuda") and torch.cuda.is_available()
 
-    def _cuda_device(self) -> torch.device:
-        return torch.device(self.device)
+    def _cuda_devices(self) -> list[torch.device]:
+        device = torch.device(self.device)
+        if device.type != "cuda":
+            return []
+        if device.index is not None:
+            return [device]
+        return [torch.device(f"cuda:{idx}") for idx in range(torch.cuda.device_count())]
 
     def _reset_memory_peak(self) -> None:
         if self._has_cuda_memory_stats():
-            torch.cuda.reset_peak_memory_stats(self._cuda_device())
+            for device in self._cuda_devices():
+                torch.cuda.reset_peak_memory_stats(device)
 
     def _memory_peak(self) -> _MemoryPeak:
         if not self._has_cuda_memory_stats():
             return _MemoryPeak()
-        device = self._cuda_device()
+        by_device = tuple(
+            (
+                str(device),
+                torch.cuda.max_memory_allocated(device),
+                torch.cuda.max_memory_reserved(device),
+            )
+            for device in self._cuda_devices()
+        )
         return _MemoryPeak(
-            allocated=torch.cuda.max_memory_allocated(device),
-            reserved=torch.cuda.max_memory_reserved(device),
+            allocated=sum(allocated for _, allocated, _ in by_device),
+            reserved=sum(reserved for _, _, reserved in by_device),
+            by_device=by_device,
         )
 
     @contextmanager
@@ -209,14 +224,26 @@ class InferenceProfiler:
 
     @classmethod
     def _format_memory(cls, memory_peak: _MemoryPeak) -> str:
-        return (
+        text = (
             f"allocated {cls._format_bytes(memory_peak.allocated)}, reserved {cls._format_bytes(memory_peak.reserved)}"
         )
+        if len(memory_peak.by_device) <= 1:
+            return text
+        details = ", ".join(
+            f"{name}: {cls._format_bytes(allocated)} alloc/{cls._format_bytes(reserved)} reserved"
+            for name, allocated, reserved in memory_peak.by_device
+        )
+        return f"{text} ({details})"
 
     @staticmethod
     def _max_memory_peak(memory_peaks: Iterator[_MemoryPeak]) -> _MemoryPeak:
         max_peak = _MemoryPeak()
+        by_device: dict[str, tuple[int, int]] = {}
         for memory_peak in memory_peaks:
             max_peak.allocated = max(max_peak.allocated, memory_peak.allocated)
             max_peak.reserved = max(max_peak.reserved, memory_peak.reserved)
+            for name, allocated, reserved in memory_peak.by_device:
+                prev_allocated, prev_reserved = by_device.get(name, (0, 0))
+                by_device[name] = (max(prev_allocated, allocated), max(prev_reserved, reserved))
+        max_peak.by_device = tuple((name, allocated, reserved) for name, (allocated, reserved) in by_device.items())
         return max_peak
