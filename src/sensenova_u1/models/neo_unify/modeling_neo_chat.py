@@ -1626,22 +1626,28 @@ class NEOChatModel(PreTrainedModel):
         question_condition = f"{prompt}"
         # question_condition += f"\nThe resolution of the image should be {image_size}"
 
-        question_uncondition = f""
-        # question_uncondition += f"\nThe resolution of the image should be {image_size}"
         think_text = ""
+        needs_cfg = cfg_scale > 1
 
         think_content = '<think>\n' if think_mode else '<think>\n\n</think>\n\n' + IMG_START_TOKEN
         query_condition = self._build_t2i_query(question_condition, system_message=SYSTEM_MESSAGE_FOR_GEN, append_text=think_content)
-        query_uncondition = self._build_t2i_query(question_uncondition, append_text=IMG_START_TOKEN)
+        query_uncondition = self._build_t2i_query("", append_text=IMG_START_TOKEN) if needs_cfg else None
 
         input_ids_condition, indexes_condition, attention_mask_condition_prefix = self._build_t2i_text_inputs(tokenizer, query_condition)
-        input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix = self._build_t2i_text_inputs(tokenizer, query_uncondition)
+        if query_uncondition is not None:
+            input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix = self._build_t2i_text_inputs(tokenizer, query_uncondition)
+        else:
+            input_ids_uncondition = indexes_uncondition = attention_mask_uncondition_prefix = None
        
         token_h = image_size[1] // (self.patch_size * merge_size)
         token_w = image_size[0] // (self.patch_size * merge_size)
 
         indexes_image_condition = self._build_t2i_image_indexes(token_h, token_w, indexes_condition.shape[1], device=input_ids_condition.device)
-        indexes_image_uncondition = self._build_t2i_image_indexes(token_h, token_w, indexes_uncondition.shape[1], device=input_ids_uncondition.device)
+        indexes_image_uncondition = (
+            self._build_t2i_image_indexes(token_h, token_w, indexes_uncondition.shape[1], device=input_ids_uncondition.device)
+            if indexes_uncondition is not None
+            else None
+        )
 
         if think_mode:
             outputs_condition = self.language_model(
@@ -1666,13 +1672,24 @@ class NEOChatModel(PreTrainedModel):
             )
         else:
             past_key_values_condition, hidden_states_condition = self._t2i_prefix_forward(input_ids_condition, indexes_condition, attention_mask_condition_prefix)
-        past_key_values_uncondition, hidden_states_uncondition = self._t2i_prefix_forward(input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix)
+        past_key_values_uncondition = None
+        if input_ids_uncondition is not None:
+            past_key_values_uncondition, _ = self._t2i_prefix_forward(input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix)
+
+        device = hidden_states_condition.device
+        dtype = hidden_states_condition.dtype
+
+        del input_ids_condition, indexes_condition, attention_mask_condition_prefix
+        if input_ids_uncondition is not None:
+            del input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
+        del hidden_states_condition
 
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(batch_size, *past_key_values_condition.layers[layer_idx].keys.shape[1:])
             past_key_values_condition.layers[layer_idx].values = past_key_values_condition.layers[layer_idx].values.expand(batch_size, *past_key_values_condition.layers[layer_idx].values.shape[1:])
-            past_key_values_uncondition.layers[layer_idx].keys = past_key_values_uncondition.layers[layer_idx].keys.expand(batch_size, *past_key_values_uncondition.layers[layer_idx].keys.shape[1:])
-            past_key_values_uncondition.layers[layer_idx].values = past_key_values_uncondition.layers[layer_idx].values.expand(batch_size, *past_key_values_uncondition.layers[layer_idx].values.shape[1:])
+            if past_key_values_uncondition is not None:
+                past_key_values_uncondition.layers[layer_idx].keys = past_key_values_uncondition.layers[layer_idx].keys.expand(batch_size, *past_key_values_uncondition.layers[layer_idx].keys.shape[1:])
+                past_key_values_uncondition.layers[layer_idx].values = past_key_values_uncondition.layers[layer_idx].values.expand(batch_size, *past_key_values_uncondition.layers[layer_idx].values.shape[1:])
 
         # prepare flash cache once
         prepare_flash_kv_cache(
@@ -1680,14 +1697,12 @@ class NEOChatModel(PreTrainedModel):
             current_len=token_h * token_w,
             batch_size=batch_size,
         )
-        prepare_flash_kv_cache(
-            past_key_values_uncondition,
-            current_len=token_h * token_w,
-            batch_size=batch_size,
-        )
-
-        device = hidden_states_condition.device
-        dtype = hidden_states_condition.dtype
+        if past_key_values_uncondition is not None:
+            prepare_flash_kv_cache(
+                past_key_values_uncondition,
+                current_len=token_h * token_w,
+                batch_size=batch_size,
+            )
 
         # init noise image tokens
         grid_h = image_size[1] // self.patch_size
@@ -1763,7 +1778,8 @@ class NEOChatModel(PreTrainedModel):
             image_prediction = self.unpatchify(z, self.patch_size * merge_size, image_size[1], image_size[0])
 
         clear_flash_kv_cache(past_key_values_condition)
-        clear_flash_kv_cache(past_key_values_uncondition)
+        if past_key_values_uncondition is not None:
+            clear_flash_kv_cache(past_key_values_uncondition)
 
         self.last_think_content = think_text
         if think_mode:
