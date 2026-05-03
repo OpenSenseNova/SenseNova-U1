@@ -224,6 +224,14 @@ Output resolution has two modes:
 - **Auto (default)**: omit `--width / --height` — output tracks the first input via `smart_resize` (aspect ratio preserved, total pixels normalized to `--target_pixels` default `2048 * 2048`, H / W snapped to multiples of 32).
 - **Explicit**: pass `--width W --height H` (both multiples of 32). 2048 × 2048 is a good general-purpose choice.
 
+For best editing quality, provide high-resolution input/reference images when possible.
+Use `--input_max_pixels auto` to keep up to two inputs at 2048 × 2048 and divide that total budget across more inputs.
+This is a conservative default based on a two-reference 2048 × 2048 memory budget;
+tune the cap for your GPU memory and quality needs, or pass an integer such as `1048576` for a 1024 × 1024 cap.
+Resize-to-budget is enabled by default; pass `--no-do-resize` to skip this outer resize step.
+The model's native preprocessing still applies its own input limits.
+The script prints the per-image input cap before generation.
+
 CFG defaults: `--cfg_scale 4.0` (text guidance), `--img_cfg_scale 1.0` (image CFG off by default). Run `python examples/editing/inference.py --help` for the full flag list.
 
 See [`editing/data/samples.jsonl`](./editing/data/samples.jsonl) for a tiny starter file.

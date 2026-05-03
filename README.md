@@ -86,6 +86,8 @@ Here **SFT models** (*×32 downsampling ratio*) are trained via Understanding Wa
 
 Although relatively compact by today’s standards, these models already show strong performance across diverse tasks, comparable to commercial models with excellent cost efficiency. Notably, larger-scale versions are planned to further enhance capability and performance in the future.
 
+> 💡 The `8B-MoT` in `SenseNova-U1-8B-MoT` refers to ~8B understanding parameters **and** ~8B generation parameters. See [parameter breakdown](docs/parameter_breakdown.md) for details.
+
 
 ## 📣 Updated News
 
