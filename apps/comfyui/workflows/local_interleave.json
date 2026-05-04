@@ -1,0 +1,91 @@
+{
+  "id": "be8d8cc8-cbee-4189-9901-f3562f2b9815",
+  "revision": 0,
+  "last_node_id": 3,
+  "last_link_id": 2,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "SenseNovaU1LocalLoader",
+      "pos": [-500, 120],
+      "size": [420, 360],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "u1_model", "type": "SENSENOVA_U1_LOCAL_MODEL", "links": [1]},
+        {"name": "model_info_json", "type": "STRING", "links": null}
+      ],
+      "properties": {"Node name for S&R": "SenseNovaU1LocalLoader"},
+      "widgets_values": [
+        "sensenova/SenseNova-U1-8B-MoT",
+        "",
+        "cuda",
+        "bfloat16",
+        "auto",
+        "none",
+        "",
+        "",
+        false
+      ]
+    },
+    {
+      "id": 2,
+      "type": "SenseNovaU1LocalInterleave",
+      "pos": [0, 120],
+      "size": [470, 520],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {"name": "u1_model", "type": "SENSENOVA_U1_LOCAL_MODEL", "link": 1}
+      ],
+      "outputs": [
+        {"name": "images", "type": "IMAGE", "links": [2]},
+        {"name": "text", "type": "STRING", "links": null},
+        {"name": "think_text", "type": "STRING", "links": null},
+        {"name": "metadata_json", "type": "STRING", "links": null}
+      ],
+      "properties": {"Node name for S&R": "SenseNovaU1LocalInterleave"},
+      "widgets_values": [
+        "Design a two-panel visual explanation of how a compact electric vehicle battery thermal system works. Include concise labels and generate the supporting images.",
+        "2048x1152|16:9",
+        "You are a multimodal assistant capable of reasoning with both text and images. When reasoning is needed, place reasoning inside a <think></think> block. After the think block, provide a concise final answer.",
+        4,
+        1,
+        3,
+        0,
+        1,
+        50,
+        42,
+        true
+      ]
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [550, 120],
+      "size": [220, 260],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [{"name": "images", "type": "IMAGE", "link": 2}],
+      "outputs": [],
+      "properties": {"Node name for S&R": "PreviewImage"},
+      "widgets_values": []
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "SENSENOVA_U1_LOCAL_MODEL"],
+    [2, 2, 0, 3, 0, "IMAGE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "LG",
+    "ds": {"scale": 1, "offset": [540, 120]},
+    "frontendVersion": "1.39.19"
+  },
+  "version": 0.4
+}

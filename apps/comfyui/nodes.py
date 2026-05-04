@@ -9,8 +9,24 @@ try:
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
     )
+    from .local_pipeline import (
+        ATTN_BACKEND_OPTIONS,
+        CFG_NORM_OPTIONS,
+        DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
+        DEFAULT_SEED,
+        DEVICE_MAP_OPTIONS,
+        DTYPE_OPTIONS,
+        INTERLEAVE_RESOLUTION_OPTIONS,
+        LOCAL_MODEL_TYPE,
+        T2I_RESOLUTION_OPTIONS,
+        SenseNovaU1LocalModel,
+        default_source_path,
+        output_to_tuple,
+        parse_resolution_option,
+        target_pixels_from_megapixels,
+    )
     from .prompt_utils import load_prompt_template
-    from .sensenova_client import (
+    from .api_client import (
         CHAT_MODELS,
         IMAGE_MODELS,
         IMAGE_SIZE_OPTIONS,
@@ -23,8 +39,24 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
     )
+    from local_pipeline import (
+        ATTN_BACKEND_OPTIONS,
+        CFG_NORM_OPTIONS,
+        DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
+        DEFAULT_SEED,
+        DEVICE_MAP_OPTIONS,
+        DTYPE_OPTIONS,
+        INTERLEAVE_RESOLUTION_OPTIONS,
+        LOCAL_MODEL_TYPE,
+        T2I_RESOLUTION_OPTIONS,
+        SenseNovaU1LocalModel,
+        default_source_path,
+        output_to_tuple,
+        parse_resolution_option,
+        target_pixels_from_megapixels,
+    )
     from prompt_utils import load_prompt_template
-    from sensenova_client import (
+    from api_client import (
         CHAT_MODELS,
         IMAGE_MODELS,
         IMAGE_SIZE_OPTIONS,
@@ -293,12 +325,300 @@ class SenseNovaVisionImage:
         )
 
 
+class SenseNovaU1LocalLoader:
+    CATEGORY = f"{CATEGORY}/Local"
+    RETURN_TYPES = (LOCAL_MODEL_TYPE, "STRING")
+    RETURN_NAMES = ("u1_model", "model_info_json")
+    FUNCTION = "load"
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "model_path": (
+                    "STRING",
+                    {
+                        "default": "sensenova/SenseNova-U1-8B-MoT",
+                        "tooltip": "HuggingFace model id or local checkpoint directory.",
+                    },
+                ),
+                "sensenova_u1_src": (
+                    "STRING",
+                    {
+                        "default": default_source_path(),
+                        "tooltip": "Optional SenseNova-U1 source checkout or src directory.",
+                    },
+                ),
+                "device": ("STRING", {"default": "cuda"}),
+                "dtype": (list(DTYPE_OPTIONS), {"default": "bfloat16"}),
+                "attn_backend": (list(ATTN_BACKEND_OPTIONS), {"default": "auto"}),
+                "device_map": (list(DEVICE_MAP_OPTIONS), {"default": "none"}),
+                "max_memory": (
+                    "STRING",
+                    {
+                        "default": "",
+                        "tooltip": "Optional accelerate max_memory, e.g. 0=20GiB,cpu=64GiB.",
+                    },
+                ),
+                "offload_folder": ("STRING", {"default": ""}),
+                "offload_state_dict": ("BOOLEAN", {"default": False}),
+            }
+        }
+
+    def load(
+        self,
+        model_path: str,
+        sensenova_u1_src: str,
+        device: str,
+        dtype: str,
+        attn_backend: str,
+        device_map: str,
+        max_memory: str,
+        offload_folder: str,
+        offload_state_dict: bool,
+    ):
+        model = SenseNovaU1LocalModel(
+            model_path=model_path,
+            sensenova_u1_src=sensenova_u1_src,
+            device=device,
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory,
+            offload_folder=offload_folder,
+            offload_state_dict=offload_state_dict,
+        )
+        return model, json.dumps(model.info, ensure_ascii=False)
+
+
+class SenseNovaU1LocalTextToImage:
+    CATEGORY = f"{CATEGORY}/Local"
+    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("images", "text", "think_text", "metadata_json")
+    FUNCTION = "run"
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "u1_model": (LOCAL_MODEL_TYPE,),
+                "prompt": ("STRING", {"multiline": True, "default": ""}),
+                "resolution": (
+                    list(T2I_RESOLUTION_OPTIONS),
+                    {"default": T2I_RESOLUTION_OPTIONS[0]},
+                ),
+                "cfg_scale": ("FLOAT", {"default": 4.0, "min": 0.0, "max": 20.0, "step": 0.1}),
+                "cfg_norm": (list(CFG_NORM_OPTIONS), {"default": "none"}),
+                "timestep_shift": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 20.0, "step": 0.1}),
+                "cfg_interval_start": (
+                    "FLOAT",
+                    {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05},
+                ),
+                "cfg_interval_end": (
+                    "FLOAT",
+                    {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05},
+                ),
+                "num_steps": ("INT", {"default": 50, "min": 1, "max": 200}),
+                "batch_size": ("INT", {"default": 1, "min": 1, "max": 16}),
+                "seed": ("INT", {"default": DEFAULT_SEED, "min": 0, "max": 2**31 - 1}),
+                "think_mode": ("BOOLEAN", {"default": False}),
+            }
+        }
+
+    def run(
+        self,
+        u1_model: SenseNovaU1LocalModel,
+        prompt: str,
+        resolution: str,
+        cfg_scale: float,
+        cfg_norm: str,
+        timestep_shift: float,
+        cfg_interval_start: float,
+        cfg_interval_end: float,
+        num_steps: int,
+        batch_size: int,
+        seed: int,
+        think_mode: bool,
+    ):
+        width, height = parse_resolution_option(resolution)
+        result = u1_model.text_to_image(
+            prompt=prompt,
+            width=width,
+            height=height,
+            cfg_scale=cfg_scale,
+            cfg_norm=cfg_norm,
+            timestep_shift=timestep_shift,
+            cfg_interval=(cfg_interval_start, cfg_interval_end),
+            num_steps=num_steps,
+            batch_size=batch_size,
+            seed=seed,
+            think_mode=think_mode,
+        )
+        LOGGER.info("SenseNova U1 local T2I generated: %s", comfy_image_info(result.images))
+        return output_to_tuple(result)
+
+
+class SenseNovaU1LocalImageEdit:
+    CATEGORY = f"{CATEGORY}/Local"
+    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("images", "text", "think_text", "metadata_json")
+    FUNCTION = "run"
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "u1_model": (LOCAL_MODEL_TYPE,),
+                "image": ("IMAGE",),
+                "prompt": ("STRING", {"multiline": True, "default": ""}),
+                "auto_size": ("BOOLEAN", {"default": True}),
+                "width": ("INT", {"default": 2048, "min": 32, "max": 8192, "step": 32}),
+                "height": ("INT", {"default": 2048, "min": 32, "max": 8192, "step": 32}),
+                "target_megapixels": (
+                    "FLOAT",
+                    {"default": 4.194304, "min": 0.25, "max": 32.0, "step": 0.25},
+                ),
+                "cfg_scale": ("FLOAT", {"default": 4.0, "min": 0.0, "max": 20.0, "step": 0.1}),
+                "img_cfg_scale": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 20.0, "step": 0.1}),
+                "cfg_norm": (list(CFG_NORM_OPTIONS[:-1]), {"default": "none"}),
+                "timestep_shift": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 20.0, "step": 0.1}),
+                "cfg_interval_start": (
+                    "FLOAT",
+                    {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05},
+                ),
+                "cfg_interval_end": (
+                    "FLOAT",
+                    {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05},
+                ),
+                "num_steps": ("INT", {"default": 50, "min": 1, "max": 200}),
+                "batch_size": ("INT", {"default": 1, "min": 1, "max": 16}),
+                "seed": ("INT", {"default": DEFAULT_SEED, "min": 0, "max": 2**31 - 1}),
+            }
+        }
+
+    def run(
+        self,
+        u1_model: SenseNovaU1LocalModel,
+        image,
+        prompt: str,
+        auto_size: bool,
+        width: int,
+        height: int,
+        target_megapixels: float,
+        cfg_scale: float,
+        img_cfg_scale: float,
+        cfg_norm: str,
+        timestep_shift: float,
+        cfg_interval_start: float,
+        cfg_interval_end: float,
+        num_steps: int,
+        batch_size: int,
+        seed: int,
+    ):
+        result = u1_model.edit_image(
+            prompt=prompt,
+            input_image=image,
+            width=None if auto_size else width,
+            height=None if auto_size else height,
+            target_pixels=target_pixels_from_megapixels(target_megapixels),
+            cfg_scale=cfg_scale,
+            img_cfg_scale=img_cfg_scale,
+            cfg_norm=cfg_norm,
+            timestep_shift=timestep_shift,
+            cfg_interval=(cfg_interval_start, cfg_interval_end),
+            num_steps=num_steps,
+            batch_size=batch_size,
+            seed=seed,
+        )
+        LOGGER.info("SenseNova U1 local edit generated: %s", comfy_image_info(result.images))
+        return output_to_tuple(result)
+
+
+class SenseNovaU1LocalInterleave:
+    CATEGORY = f"{CATEGORY}/Local"
+    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("images", "text", "think_text", "metadata_json")
+    FUNCTION = "run"
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "u1_model": (LOCAL_MODEL_TYPE,),
+                "prompt": ("STRING", {"multiline": True, "default": ""}),
+                "resolution": (
+                    list(INTERLEAVE_RESOLUTION_OPTIONS),
+                    {"default": INTERLEAVE_RESOLUTION_OPTIONS[1]},
+                ),
+                "system_message": (
+                    "STRING",
+                    {"multiline": True, "default": DEFAULT_INTERLEAVE_SYSTEM_MESSAGE},
+                ),
+                "cfg_scale": ("FLOAT", {"default": 4.0, "min": 0.0, "max": 20.0, "step": 0.1}),
+                "img_cfg_scale": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 20.0, "step": 0.1}),
+                "timestep_shift": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 20.0, "step": 0.1}),
+                "cfg_interval_start": (
+                    "FLOAT",
+                    {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05},
+                ),
+                "cfg_interval_end": (
+                    "FLOAT",
+                    {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05},
+                ),
+                "num_steps": ("INT", {"default": 50, "min": 1, "max": 200}),
+                "seed": ("INT", {"default": DEFAULT_SEED, "min": 0, "max": 2**31 - 1}),
+                "think_mode": ("BOOLEAN", {"default": True}),
+            },
+            "optional": {
+                "image": ("IMAGE",),
+            },
+        }
+
+    def run(
+        self,
+        u1_model: SenseNovaU1LocalModel,
+        prompt: str,
+        resolution: str,
+        system_message: str,
+        cfg_scale: float,
+        img_cfg_scale: float,
+        timestep_shift: float,
+        cfg_interval_start: float,
+        cfg_interval_end: float,
+        num_steps: int,
+        seed: int,
+        think_mode: bool,
+        image=None,
+    ):
+        width, height = parse_resolution_option(resolution)
+        result = u1_model.interleave(
+            prompt=prompt,
+            input_image=image,
+            width=width,
+            height=height,
+            cfg_scale=cfg_scale,
+            img_cfg_scale=img_cfg_scale,
+            timestep_shift=timestep_shift,
+            cfg_interval=(cfg_interval_start, cfg_interval_end),
+            num_steps=num_steps,
+            seed=seed,
+            think_mode=think_mode,
+            system_message=system_message,
+        )
+        LOGGER.info("SenseNova U1 local interleave generated: %s", comfy_image_info(result.images))
+        return output_to_tuple(result)
+
+
 NODE_CLASS_MAPPINGS = {
     "SenseNovaChat": SenseNovaChat,
     "SenseNovaImageGenerate": SenseNovaImageGenerate,
     "SenseNovaPromptBuilder": SenseNovaPromptBuilder,
     "SenseNovaVisionURL": SenseNovaVisionURL,
     "SenseNovaVisionImage": SenseNovaVisionImage,
+    "SenseNovaU1LocalLoader": SenseNovaU1LocalLoader,
+    "SenseNovaU1LocalTextToImage": SenseNovaU1LocalTextToImage,
+    "SenseNovaU1LocalImageEdit": SenseNovaU1LocalImageEdit,
+    "SenseNovaU1LocalInterleave": SenseNovaU1LocalInterleave,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -307,4 +627,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "SenseNovaPromptBuilder": "SenseNova Prompt Builder",
     "SenseNovaVisionURL": "SenseNova Vision URL",
     "SenseNovaVisionImage": "SenseNova Vision Image",
+    "SenseNovaU1LocalLoader": "SenseNova U1 Local Loader",
+    "SenseNovaU1LocalTextToImage": "SenseNova U1 Local Text to Image",
+    "SenseNovaU1LocalImageEdit": "SenseNova U1 Local Image Edit",
+    "SenseNovaU1LocalInterleave": "SenseNova U1 Local Interleave",
 }

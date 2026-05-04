@@ -1,0 +1,461 @@
+from __future__ import annotations
+
+import json
+import math
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+from PIL import Image
+
+try:
+    from .image_utils import comfy_image_to_pil, pil_to_comfy_image
+except ImportError:  # pragma: no cover - supports direct imports during tests
+    from image_utils import comfy_image_to_pil, pil_to_comfy_image
+
+LOCAL_MODEL_TYPE = "SENSENOVA_U1_LOCAL_MODEL"
+
+DEFAULT_SEED = 42
+DEFAULT_SOURCE_PATH = ""
+DEFAULT_TARGET_PIXELS = 2048 * 2048
+DEFAULT_IMAGE_PATCH_SIZE = 32
+DEFAULT_INTERLEAVE_SYSTEM_MESSAGE = (
+    "You are a multimodal assistant capable of reasoning with both text and images. "
+    "When reasoning is needed, place reasoning inside a <think></think> block. "
+    "After the think block, provide a concise final answer."
+)
+
+T2I_RESOLUTIONS: dict[str, tuple[int, int]] = {
+    "1:1": (2048, 2048),
+    "16:9": (2720, 1536),
+    "9:16": (1536, 2720),
+    "3:2": (2496, 1664),
+    "2:3": (1664, 2496),
+    "4:3": (2368, 1760),
+    "3:4": (1760, 2368),
+    "1:2": (1440, 2880),
+    "2:1": (2880, 1440),
+    "1:3": (1152, 3456),
+    "3:1": (3456, 1152),
+}
+
+INTERLEAVE_RESOLUTIONS: dict[str, tuple[int, int]] = {
+    "1:1": (1536, 1536),
+    "16:9": (2048, 1152),
+    "9:16": (1152, 2048),
+    "3:2": (1888, 1248),
+    "2:3": (1248, 1888),
+    "4:3": (1760, 1312),
+    "3:4": (1312, 1760),
+    "1:2": (1088, 2144),
+    "2:1": (2144, 1088),
+    "1:3": (864, 2592),
+    "3:1": (2592, 864),
+}
+
+T2I_RESOLUTION_OPTIONS = tuple(
+    f"{width}x{height}|{ratio}" for ratio, (width, height) in T2I_RESOLUTIONS.items()
+)
+INTERLEAVE_RESOLUTION_OPTIONS = tuple(
+    f"{width}x{height}|{ratio}" for ratio, (width, height) in INTERLEAVE_RESOLUTIONS.items()
+)
+DTYPE_OPTIONS = ("bfloat16", "float16", "float32")
+CFG_NORM_OPTIONS = ("none", "global", "channel", "cfg_zero_star")
+ATTN_BACKEND_OPTIONS = ("auto", "flash", "sdpa")
+DEVICE_MAP_OPTIONS = ("none", "auto", "balanced", "balanced_low_0", "sequential")
+
+_NORM_MEAN = (0.5, 0.5, 0.5)
+_NORM_STD = (0.5, 0.5, 0.5)
+
+
+@dataclass
+class LocalGenerationResult:
+    images: Any
+    text: str
+    think_text: str
+    metadata: dict[str, Any]
+
+
+class SenseNovaU1LocalModel:
+    def __init__(
+        self,
+        *,
+        model_path: str,
+        sensenova_u1_src: str = "",
+        device: str = "cuda",
+        dtype: str = "bfloat16",
+        attn_backend: str = "auto",
+        device_map: str = "none",
+        max_memory: str = "",
+        offload_folder: str = "",
+        offload_state_dict: bool = False,
+    ) -> None:
+        if not model_path.strip():
+            raise RuntimeError("Local model_path cannot be empty.")
+
+        _maybe_add_source_path(sensenova_u1_src)
+        torch = _import_torch()
+        sensenova_u1, load_model_and_tokenizer, _ = _import_sensenova_u1()
+
+        if attn_backend not in ATTN_BACKEND_OPTIONS:
+            raise RuntimeError(f"Unsupported attention backend: {attn_backend}")
+        sensenova_u1.set_attn_backend(attn_backend)
+
+        torch_dtype = _resolve_dtype(torch, dtype)
+        normalized_device_map = None if device_map == "none" else device_map
+        self.device = device
+        self.dtype = dtype
+        self.model_path = model_path
+        self.attn_backend = attn_backend
+        self.effective_attn_backend = sensenova_u1.effective_attn_backend()
+        self.model, self.tokenizer = load_model_and_tokenizer(
+            model_path,
+            dtype=torch_dtype,
+            device=device,
+            device_map=normalized_device_map,
+            max_memory=max_memory or None,
+            offload_folder=offload_folder or None,
+            offload_state_dict=offload_state_dict if offload_state_dict else None,
+        )
+
+    @property
+    def info(self) -> dict[str, Any]:
+        return {
+            "model_path": self.model_path,
+            "device": self.device,
+            "dtype": self.dtype,
+            "attn_backend": self.attn_backend,
+            "effective_attn_backend": self.effective_attn_backend,
+        }
+
+    def text_to_image(
+        self,
+        *,
+        prompt: str,
+        width: int,
+        height: int,
+        cfg_scale: float,
+        cfg_norm: str,
+        timestep_shift: float,
+        cfg_interval: tuple[float, float],
+        num_steps: int,
+        batch_size: int,
+        seed: int,
+        think_mode: bool,
+    ) -> LocalGenerationResult:
+        if not prompt.strip():
+            raise RuntimeError("Text-to-image prompt cannot be empty.")
+
+        _check_cfg_interval(cfg_interval)
+        out = self.model.t2i_generate(
+            self.tokenizer,
+            prompt,
+            image_size=(width, height),
+            cfg_scale=cfg_scale,
+            cfg_norm=cfg_norm,
+            timestep_shift=timestep_shift,
+            cfg_interval=cfg_interval,
+            num_steps=num_steps,
+            batch_size=batch_size,
+            seed=seed,
+            think_mode=think_mode,
+        )
+        if think_mode:
+            tensor, think_text = out
+        else:
+            tensor = out
+            think_text = ""
+        return LocalGenerationResult(
+            images=_batch_tensor_to_comfy_image(tensor),
+            text="",
+            think_text=think_text,
+            metadata={
+                **self.info,
+                "task": "text-to-image",
+                "width": width,
+                "height": height,
+                "seed": seed,
+                "batch_size": batch_size,
+                "num_steps": num_steps,
+                "think_mode": think_mode,
+            },
+        )
+
+    def edit_image(
+        self,
+        *,
+        prompt: str,
+        input_image: Any,
+        width: int | None,
+        height: int | None,
+        target_pixels: int,
+        cfg_scale: float,
+        img_cfg_scale: float,
+        cfg_norm: str,
+        timestep_shift: float,
+        cfg_interval: tuple[float, float],
+        num_steps: int,
+        batch_size: int,
+        seed: int,
+    ) -> LocalGenerationResult:
+        if not prompt.strip():
+            raise RuntimeError("Image editing prompt cannot be empty.")
+        if cfg_norm == "cfg_zero_star":
+            raise RuntimeError("cfg_zero_star is only supported for local text-to-image.")
+
+        pil_image = comfy_image_to_pil(input_image)
+        out_width, out_height = _resolve_edit_size(
+            pil_image,
+            width=width,
+            height=height,
+            target_pixels=target_pixels,
+        )
+        _check_cfg_interval(cfg_interval)
+
+        tensor = self.model.it2i_generate(
+            self.tokenizer,
+            prompt,
+            [pil_image],
+            image_size=(out_width, out_height),
+            cfg_scale=cfg_scale,
+            img_cfg_scale=img_cfg_scale,
+            cfg_norm=cfg_norm,
+            timestep_shift=timestep_shift,
+            cfg_interval=cfg_interval,
+            num_steps=num_steps,
+            batch_size=batch_size,
+            seed=seed,
+        )
+        return LocalGenerationResult(
+            images=_batch_tensor_to_comfy_image(tensor),
+            text="",
+            think_text="",
+            metadata={
+                **self.info,
+                "task": "image-editing",
+                "width": out_width,
+                "height": out_height,
+                "seed": seed,
+                "batch_size": batch_size,
+                "num_steps": num_steps,
+                "target_pixels": target_pixels,
+            },
+        )
+
+    def interleave(
+        self,
+        *,
+        prompt: str,
+        input_image: Any | None,
+        width: int,
+        height: int,
+        cfg_scale: float,
+        img_cfg_scale: float,
+        timestep_shift: float,
+        cfg_interval: tuple[float, float],
+        num_steps: int,
+        seed: int,
+        think_mode: bool,
+        system_message: str,
+    ) -> LocalGenerationResult:
+        if not prompt.strip():
+            raise RuntimeError("Interleave prompt cannot be empty.")
+
+        _, _, smart_resize = _import_sensenova_u1()
+        input_images: list[Image.Image] = []
+        if input_image is not None:
+            pil_image = comfy_image_to_pil(input_image)
+            resized_height, resized_width = smart_resize(pil_image.height, pil_image.width)
+            width, height = resized_width, resized_height
+            input_images.append(pil_image)
+
+        _check_cfg_interval(cfg_interval)
+        text, image_tensors = self.model.interleave_gen(
+            self.tokenizer,
+            prompt,
+            images=input_images,
+            image_size=(width, height),
+            cfg_scale=cfg_scale,
+            img_cfg_scale=img_cfg_scale,
+            timestep_shift=timestep_shift,
+            cfg_interval=cfg_interval,
+            num_steps=num_steps,
+            system_message=system_message,
+            think_mode=think_mode,
+            seed=seed,
+        )
+        images = [_single_tensor_to_pil(tensor) for tensor in image_tensors]
+        if not images:
+            images = [Image.new("RGB", (1, 1), (0, 0, 0))]
+        return LocalGenerationResult(
+            images=_pil_images_to_comfy_batch(images),
+            text=text,
+            think_text="",
+            metadata={
+                **self.info,
+                "task": "interleave",
+                "width": width,
+                "height": height,
+                "seed": seed,
+                "num_steps": num_steps,
+                "think_mode": think_mode,
+                "num_output_images": len(image_tensors),
+            },
+        )
+
+
+def default_source_path() -> str:
+    env_path = _getenv("SENSENOVA_U1_SRC")
+    if env_path:
+        return env_path
+    repo_src = Path(__file__).resolve().parents[2] / "src"
+    if repo_src.is_dir():
+        return str(repo_src)
+    return DEFAULT_SOURCE_PATH
+
+
+def parse_resolution_option(value: str) -> tuple[int, int]:
+    size = value.split("|", 1)[0].strip()
+    width, height = size.split("x", 1)
+    return int(width), int(height)
+
+
+def output_to_tuple(result: LocalGenerationResult) -> tuple[Any, str, str, str]:
+    return (
+        result.images,
+        result.text,
+        result.think_text,
+        json.dumps(result.metadata, ensure_ascii=False),
+    )
+
+
+def _maybe_add_source_path(source_path: str) -> None:
+    source_path = source_path.strip()
+    if not source_path:
+        source_path = default_source_path()
+    if not source_path:
+        return
+
+    path = Path(source_path).expanduser()
+    if path.name != "src" and (path / "src").is_dir():
+        path = path / "src"
+    path_str = str(path)
+    if path.is_dir() and path_str not in sys.path:
+        sys.path.insert(0, path_str)
+
+
+def _import_torch():
+    try:
+        import torch
+    except ImportError as exc:
+        raise RuntimeError("Local SenseNova-U1 inference requires PyTorch in ComfyUI.") from exc
+    return torch
+
+
+def _import_sensenova_u1():
+    try:
+        import sensenova_u1
+        from sensenova_u1.models.neo_unify.utils import smart_resize
+        from sensenova_u1.utils import load_model_and_tokenizer
+    except ImportError as exc:
+        raise RuntimeError(
+            "Local SenseNova-U1 inference requires the sensenova_u1 package. "
+            "Install /Users/yanglei/program/SenseNova-U1 into the ComfyUI Python "
+            "environment, set SENSENOVA_U1_SRC, or fill the loader's sensenova_u1_src input."
+        ) from exc
+    return sensenova_u1, load_model_and_tokenizer, smart_resize
+
+
+def _resolve_dtype(torch, dtype: str):
+    try:
+        return {
+            "bfloat16": torch.bfloat16,
+            "float16": torch.float16,
+            "float32": torch.float32,
+        }[dtype]
+    except KeyError as exc:
+        raise RuntimeError(f"Unsupported dtype: {dtype}") from exc
+
+
+def _denorm(x):
+    torch = _import_torch()
+    mean = torch.tensor(_NORM_MEAN, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
+    std = torch.tensor(_NORM_STD, device=x.device, dtype=x.dtype).view(1, 3, 1, 1)
+    return (x * std + mean).clamp(0, 1)
+
+
+def _single_tensor_to_pil(tensor) -> Image.Image:
+    if tensor.ndim == 3:
+        tensor = tensor.unsqueeze(0)
+    return _tensor_batch_to_pil(tensor)[0]
+
+
+def _tensor_batch_to_pil(batch) -> list[Image.Image]:
+    arr = _denorm(batch.float()).permute(0, 2, 3, 1).cpu().numpy()
+    arr = (arr * 255.0).round().astype(np.uint8)
+    return [Image.fromarray(a).convert("RGB") for a in arr]
+
+
+def _batch_tensor_to_comfy_image(batch):
+    images = _tensor_batch_to_pil(batch)
+    return _pil_images_to_comfy_batch(images)
+
+
+def _pil_images_to_comfy_batch(images: list[Image.Image]):
+    torch = _import_torch()
+    tensors = [pil_to_comfy_image(image) for image in images]
+    return torch.cat(tensors, dim=0)
+
+
+def _resolve_edit_size(
+    image: Image.Image,
+    *,
+    width: int | None,
+    height: int | None,
+    target_pixels: int,
+) -> tuple[int, int]:
+    if width is not None or height is not None:
+        if width is None or height is None:
+            raise RuntimeError("width and height must be provided together.")
+        _check_grid_divisible(width, height)
+        return width, height
+
+    _, _, smart_resize = _import_sensenova_u1()
+    resized_height, resized_width = smart_resize(
+        height=image.height,
+        width=image.width,
+        factor=DEFAULT_IMAGE_PATCH_SIZE,
+        min_pixels=target_pixels,
+        max_pixels=target_pixels,
+    )
+    return resized_width, resized_height
+
+
+def _check_grid_divisible(width: int, height: int) -> None:
+    if width % DEFAULT_IMAGE_PATCH_SIZE or height % DEFAULT_IMAGE_PATCH_SIZE:
+        raise RuntimeError(
+            f"Output resolution ({width}x{height}) must be a multiple of "
+            f"{DEFAULT_IMAGE_PATCH_SIZE} on both axes."
+        )
+
+
+def _check_cfg_interval(cfg_interval: tuple[float, float]) -> None:
+    lo, hi = cfg_interval
+    if not 0.0 <= lo <= hi <= 1.0:
+        raise RuntimeError("cfg_interval must satisfy 0.0 <= start <= end <= 1.0.")
+
+
+def _getenv(name: str) -> str:
+    try:
+        import os
+
+        return os.environ.get(name, "")
+    except Exception:
+        return ""
+
+
+def target_pixels_from_megapixels(megapixels: float) -> int:
+    minimum = DEFAULT_IMAGE_PATCH_SIZE * DEFAULT_IMAGE_PATCH_SIZE
+    return max(minimum, math.floor(megapixels * 1_000_000))

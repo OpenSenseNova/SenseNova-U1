@@ -1,0 +1,173 @@
+{
+  "id": "a92af27a-0106-4c6f-9d1c-f9783b652f44",
+  "revision": 0,
+  "last_node_id": 3,
+  "last_link_id": 2,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "SenseNovaU1LocalLoader",
+      "pos": [
+        -480,
+        120
+      ],
+      "size": [
+        420,
+        360
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "u1_model",
+          "type": "SENSENOVA_U1_LOCAL_MODEL",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "model_info_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaU1LocalLoader"
+      },
+      "widgets_values": [
+        "sensenova/SenseNova-U1-8B-MoT",
+        "",
+        "cuda",
+        "bfloat16",
+        "auto",
+        "none",
+        "",
+        "",
+        false
+      ]
+    },
+    {
+      "id": 2,
+      "type": "SenseNovaU1LocalTextToImage",
+      "pos": [
+        0,
+        120
+      ],
+      "size": [
+        430,
+        420
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "u1_model",
+          "type": "SENSENOVA_U1_LOCAL_MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "think_text",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "metadata_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaU1LocalTextToImage"
+      },
+      "widgets_values": [
+        "A clean product-style image of a futuristic electric bicycle parked beside a glass building, morning light, crisp details, balanced composition",
+        "2048x2048|1:1",
+        4,
+        "none",
+        3,
+        0,
+        1,
+        50,
+        1,
+        42,
+        false
+      ]
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [
+        500,
+        120
+      ],
+      "size": [
+        220,
+        260
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "SENSENOVA_U1_LOCAL_MODEL"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "LG",
+    "ds": {
+      "scale": 1,
+      "offset": [
+        540,
+        120
+      ]
+    },
+    "frontendVersion": "1.39.19"
+  },
+  "version": 0.4
+}
