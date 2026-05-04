@@ -11,6 +11,7 @@ ComfyUI custom nodes for SenseNova-U1 API and local inference.
 - `SenseNova U1 Local Text to Image`: runs local `t2i_generate`.
 - `SenseNova U1 Local Image Edit`: runs local `it2i_generate`.
 - `SenseNova U1 Local Interleave`: runs local `interleave_gen`.
+- `SenseNova Interleave Preview`: renders ordered interleaved text / image results.
 
 ## Install
 
@@ -37,6 +38,7 @@ same environment. When using this app from the main SenseNova-U1 checkout, the l
 `src/` automatically. You can override it if needed:
 
 ```bash
+python -m pip install -e .
 export SENSENOVA_U1_SRC="/path/to/SenseNova-U1/src"
 ```
 

@@ -75,9 +75,14 @@ def main() -> None:
     if args.install_deps:
         requirements = app_dir / "requirements.txt"
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", str(requirements)])
+        print("\nFor local inference, also install the SenseNova-U1 runtime in the ComfyUI Python environment:")
+        print(f"  {sys.executable} -m pip install -e {repo_dir}")
+        print(f"  export SENSENOVA_U1_SRC={repo_dir / 'src'}")
+        print("  Restart ComfyUI.")
     else:
         print("\nNext steps:")
         print(f"  {sys.executable} -m pip install -r {app_dir / 'requirements.txt'}")
+        print(f"  {sys.executable} -m pip install -e {repo_dir}  # for local inference")
         print(f"  export SENSENOVA_U1_SRC={repo_dir / 'src'}")
         print("  Restart ComfyUI.")
 

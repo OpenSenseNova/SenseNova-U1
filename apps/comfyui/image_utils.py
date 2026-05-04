@@ -102,6 +102,21 @@ def comfy_image_to_pil(image) -> Image.Image:
     return Image.fromarray(array).convert("RGB")
 
 
+def comfy_batch_to_pil_images(image) -> list[Image.Image]:
+    if hasattr(image, "detach"):
+        image = image.detach().cpu().numpy()
+
+    array = np.asarray(image)
+    if array.ndim == 3:
+        array = array[None, ...]
+    if array.ndim != 4 or array.shape[-1] not in {3, 4}:
+        raise RuntimeError("ComfyUI IMAGE batch must have shape [B,H,W,C].")
+
+    array = np.clip(array, 0.0, 1.0)
+    array = (array * 255.0).round().astype(np.uint8)
+    return [Image.fromarray(item).convert("RGB") for item in array]
+
+
 def pil_to_png_data_url(image: Image.Image) -> str:
     buffer = BytesIO()
     image.convert("RGB").save(buffer, format="PNG")

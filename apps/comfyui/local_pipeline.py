@@ -16,6 +16,7 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
     from image_utils import comfy_image_to_pil, pil_to_comfy_image
 
 LOCAL_MODEL_TYPE = "SENSENOVA_U1_LOCAL_MODEL"
+INTERLEAVE_RESULT_TYPE = "SENSENOVA_INTERLEAVE_RESULT"
 
 DEFAULT_SEED = 42
 DEFAULT_SOURCE_PATH = ""
@@ -76,6 +77,7 @@ class LocalGenerationResult:
     text: str
     think_text: str
     metadata: dict[str, Any]
+    interleave_result: dict[str, Any] | None = None
 
 
 class SenseNovaU1LocalModel:
@@ -287,22 +289,29 @@ class SenseNovaU1LocalModel:
             seed=seed,
         )
         images = [_single_tensor_to_pil(tensor) for tensor in image_tensors]
+        metadata = {
+            **self.info,
+            "task": "interleave",
+            "width": width,
+            "height": height,
+            "seed": seed,
+            "num_steps": num_steps,
+            "think_mode": think_mode,
+            "num_output_images": len(image_tensors),
+        }
+        interleave_result = build_interleave_result(
+            text=text,
+            num_images=len(images),
+            metadata=metadata,
+        )
         if not images:
             images = [Image.new("RGB", (1, 1), (0, 0, 0))]
         return LocalGenerationResult(
             images=_pil_images_to_comfy_batch(images),
             text=text,
-            think_text="",
-            metadata={
-                **self.info,
-                "task": "interleave",
-                "width": width,
-                "height": height,
-                "seed": seed,
-                "num_steps": num_steps,
-                "think_mode": think_mode,
-                "num_output_images": len(image_tensors),
-            },
+            think_text=interleave_result["think_text"],
+            metadata=metadata,
+            interleave_result=interleave_result,
         )
 
 
@@ -329,6 +338,97 @@ def output_to_tuple(result: LocalGenerationResult) -> tuple[Any, str, str, str]:
         result.think_text,
         json.dumps(result.metadata, ensure_ascii=False),
     )
+
+
+def interleave_output_to_tuple(result: LocalGenerationResult) -> tuple[Any, str, str, str, dict[str, Any]]:
+    interleave_result = result.interleave_result or build_interleave_result(
+        text=result.text,
+        num_images=0,
+        metadata=result.metadata,
+    )
+    return (
+        result.images,
+        result.text,
+        result.think_text,
+        json.dumps(result.metadata, ensure_ascii=False),
+        interleave_result,
+    )
+
+
+def build_interleave_result(
+    *,
+    text: str,
+    num_images: int,
+    metadata: dict[str, Any],
+) -> dict[str, Any]:
+    parts = _parse_interleave_parts(text, num_images)
+    think_text = "\n\n".join(part["text"] for part in parts if part["type"] == "think")
+    return {
+        "version": 1,
+        "parts": parts,
+        "text": text,
+        "think_text": think_text,
+        "num_images": num_images,
+        "metadata": metadata,
+    }
+
+
+def interleave_result_to_markdown(result: dict[str, Any], *, include_think: bool = True) -> str:
+    lines: list[str] = []
+    for part in result.get("parts", []):
+        part_type = part.get("type")
+        if part_type == "think":
+            if include_think:
+                lines.extend(["<details><summary>think</summary>", "", str(part.get("text", "")), "", "</details>"])
+        elif part_type == "text":
+            text = str(part.get("text", "")).strip()
+            if text:
+                lines.append(text)
+        elif part_type == "image":
+            lines.append(f"[image:{int(part.get('index', 0))}]")
+    return "\n\n".join(line for line in lines if line != "")
+
+
+def _parse_interleave_parts(text: str, num_images: int) -> list[dict[str, Any]]:
+    parts: list[dict[str, Any]] = []
+    image_index = 0
+    for index, chunk in enumerate(text.split("<image>")):
+        _append_text_and_think_parts(parts, chunk)
+        if index < text.count("<image>"):
+            if image_index < num_images:
+                parts.append({"type": "image", "index": image_index})
+            else:
+                parts.append({"type": "image", "index": image_index, "missing": True})
+            image_index += 1
+    while image_index < num_images:
+        parts.append({"type": "image", "index": image_index})
+        image_index += 1
+    return parts
+
+
+def _append_text_and_think_parts(parts: list[dict[str, Any]], chunk: str) -> None:
+    remaining = chunk
+    while remaining:
+        start = remaining.find("<think>")
+        if start < 0:
+            _append_text_part(parts, remaining)
+            return
+        _append_text_part(parts, remaining[:start])
+        after_start = start + len("<think>")
+        end = remaining.find("</think>", after_start)
+        if end < 0:
+            think_text = remaining[after_start:]
+            remaining = ""
+        else:
+            think_text = remaining[after_start:end]
+            remaining = remaining[end + len("</think>") :]
+        if think_text.strip():
+            parts.append({"type": "think", "text": think_text.strip()})
+
+
+def _append_text_part(parts: list[dict[str, Any]], text: str) -> None:
+    if text.strip():
+        parts.append({"type": "text", "text": text.strip()})
 
 
 def _maybe_add_source_path(source_path: str) -> None:
@@ -358,14 +458,77 @@ def _import_sensenova_u1():
     try:
         import sensenova_u1
         from sensenova_u1.models.neo_unify.utils import smart_resize
-        from sensenova_u1.utils import load_model_and_tokenizer
     except ImportError as exc:
         raise RuntimeError(
             "Local SenseNova-U1 inference requires the sensenova_u1 package. "
-            "Install /Users/yanglei/program/SenseNova-U1 into the ComfyUI Python "
-            "environment, set SENSENOVA_U1_SRC, or fill the loader's sensenova_u1_src input."
+            "Install this repository into the ComfyUI Python environment, set "
+            "SENSENOVA_U1_SRC, or fill the loader's sensenova_u1_src input."
         ) from exc
+    try:
+        from sensenova_u1.utils import load_model_and_tokenizer
+    except ImportError:
+        load_model_and_tokenizer = _load_model_and_tokenizer
     return sensenova_u1, load_model_and_tokenizer, smart_resize
+
+
+def _load_model_and_tokenizer(
+    model_path: str,
+    *,
+    dtype,
+    device: str,
+    device_map: str | None = None,
+    max_memory: str | None = None,
+    offload_folder: str | None = None,
+    offload_state_dict: bool | None = None,
+):
+    try:
+        from transformers import AutoConfig, AutoModel, AutoTokenizer
+        from sensenova_u1 import check_checkpoint_compatibility
+    except ImportError as exc:
+        raise RuntimeError(
+            "Local SenseNova-U1 inference requires transformers and the sensenova_u1 package "
+            "in the ComfyUI Python environment."
+        ) from exc
+
+    config = AutoConfig.from_pretrained(model_path)
+    check_checkpoint_compatibility(config)
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+
+    model_kwargs: dict[str, Any] = {
+        "config": config,
+        "torch_dtype": dtype,
+    }
+    if device_map:
+        model_kwargs["device_map"] = device_map
+        parsed_max_memory = _parse_max_memory(max_memory or "")
+        if parsed_max_memory:
+            model_kwargs["max_memory"] = parsed_max_memory
+        if offload_folder:
+            model_kwargs["offload_folder"] = offload_folder
+        if offload_state_dict is not None:
+            model_kwargs["offload_state_dict"] = offload_state_dict
+
+    model = AutoModel.from_pretrained(model_path, **model_kwargs).eval()
+    if not device_map:
+        model = model.to(device)
+    return model, tokenizer
+
+
+def _parse_max_memory(value: str) -> dict[int | str, str]:
+    result: dict[int | str, str] = {}
+    for item in value.split(","):
+        item = item.strip()
+        if not item:
+            continue
+        if "=" not in item:
+            raise RuntimeError("max_memory entries must look like 0=20GiB,cpu=64GiB.")
+        key, memory = item.split("=", 1)
+        key = key.strip()
+        memory = memory.strip()
+        if not key or not memory:
+            raise RuntimeError("max_memory entries must include both device and memory.")
+        result[int(key) if key.isdigit() else key] = memory
+    return result
 
 
 def _resolve_dtype(torch, dtype: str):

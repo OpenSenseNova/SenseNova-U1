@@ -1,8 +1,8 @@
 {
   "id": "be8d8cc8-cbee-4189-9901-f3562f2b9815",
   "revision": 0,
-  "last_node_id": 3,
-  "last_link_id": 2,
+  "last_node_id": 4,
+  "last_link_id": 4,
   "nodes": [
     {
       "id": 1,
@@ -42,10 +42,11 @@
         {"name": "u1_model", "type": "SENSENOVA_U1_LOCAL_MODEL", "link": 1}
       ],
       "outputs": [
-        {"name": "images", "type": "IMAGE", "links": [2]},
+        {"name": "images", "type": "IMAGE", "links": [2, 3]},
         {"name": "text", "type": "STRING", "links": null},
         {"name": "think_text", "type": "STRING", "links": null},
-        {"name": "metadata_json", "type": "STRING", "links": null}
+        {"name": "metadata_json", "type": "STRING", "links": null},
+        {"name": "interleave_result", "type": "SENSENOVA_INTERLEAVE_RESULT", "links": [4]}
       ],
       "properties": {"Node name for S&R": "SenseNovaU1LocalInterleave"},
       "widgets_values": [
@@ -74,11 +75,31 @@
       "outputs": [],
       "properties": {"Node name for S&R": "PreviewImage"},
       "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "SenseNovaInterleavePreview",
+      "pos": [550, 420],
+      "size": [340, 220],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {"name": "interleave_result", "type": "SENSENOVA_INTERLEAVE_RESULT", "link": 4},
+        {"name": "images", "type": "IMAGE", "link": 3}
+      ],
+      "outputs": [
+        {"name": "markdown", "type": "STRING", "links": null}
+      ],
+      "properties": {"Node name for S&R": "SenseNovaInterleavePreview"},
+      "widgets_values": [false]
     }
   ],
   "links": [
     [1, 1, 0, 2, 0, "SENSENOVA_U1_LOCAL_MODEL"],
-    [2, 2, 0, 3, 0, "IMAGE"]
+    [2, 2, 0, 3, 0, "IMAGE"],
+    [3, 2, 0, 4, 1, "IMAGE"],
+    [4, 2, 4, 4, 0, "SENSENOVA_INTERLEAVE_RESULT"]
   ],
   "groups": [],
   "config": {},

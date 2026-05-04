@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import json
 import logging
+import tempfile
+import uuid
+from pathlib import Path
 
 try:
     from .image_utils import (
+        comfy_batch_to_pil_images,
         comfy_image_info,
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
@@ -16,11 +20,14 @@ try:
         DEFAULT_SEED,
         DEVICE_MAP_OPTIONS,
         DTYPE_OPTIONS,
+        INTERLEAVE_RESULT_TYPE,
         INTERLEAVE_RESOLUTION_OPTIONS,
         LOCAL_MODEL_TYPE,
         T2I_RESOLUTION_OPTIONS,
         SenseNovaU1LocalModel,
         default_source_path,
+        interleave_output_to_tuple,
+        interleave_result_to_markdown,
         output_to_tuple,
         parse_resolution_option,
         target_pixels_from_megapixels,
@@ -35,6 +42,7 @@ try:
     )
 except ImportError:  # pragma: no cover - supports direct imports during tests
     from image_utils import (
+        comfy_batch_to_pil_images,
         comfy_image_info,
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
@@ -46,11 +54,14 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         DEFAULT_SEED,
         DEVICE_MAP_OPTIONS,
         DTYPE_OPTIONS,
+        INTERLEAVE_RESULT_TYPE,
         INTERLEAVE_RESOLUTION_OPTIONS,
         LOCAL_MODEL_TYPE,
         T2I_RESOLUTION_OPTIONS,
         SenseNovaU1LocalModel,
         default_source_path,
+        interleave_output_to_tuple,
+        interleave_result_to_markdown,
         output_to_tuple,
         parse_resolution_option,
         target_pixels_from_megapixels,
@@ -536,8 +547,8 @@ class SenseNovaU1LocalImageEdit:
 
 class SenseNovaU1LocalInterleave:
     CATEGORY = f"{CATEGORY}/Local"
-    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING")
-    RETURN_NAMES = ("images", "text", "think_text", "metadata_json")
+    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING", INTERLEAVE_RESULT_TYPE)
+    RETURN_NAMES = ("images", "text", "think_text", "metadata_json", "interleave_result")
     FUNCTION = "run"
 
     @classmethod
@@ -606,7 +617,36 @@ class SenseNovaU1LocalInterleave:
             system_message=system_message,
         )
         LOGGER.info("SenseNova U1 local interleave generated: %s", comfy_image_info(result.images))
-        return output_to_tuple(result)
+        return interleave_output_to_tuple(result)
+
+
+class SenseNovaInterleavePreview:
+    CATEGORY = f"{CATEGORY}/Local"
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("markdown",)
+    FUNCTION = "run"
+    OUTPUT_NODE = True
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "interleave_result": (INTERLEAVE_RESULT_TYPE,),
+                "include_think": ("BOOLEAN", {"default": False}),
+            },
+            "optional": {
+                "images": ("IMAGE",),
+            },
+        }
+
+    def run(self, interleave_result: dict, include_think: bool, images=None):
+        markdown = interleave_result_to_markdown(interleave_result, include_think=include_think)
+        ui: dict[str, list] = {"text": [markdown]}
+        if images is not None:
+            saved_images = _save_preview_images(images)
+            if saved_images:
+                ui["images"] = saved_images
+        return {"ui": ui, "result": (markdown,)}
 
 
 NODE_CLASS_MAPPINGS = {
@@ -619,6 +659,7 @@ NODE_CLASS_MAPPINGS = {
     "SenseNovaU1LocalTextToImage": SenseNovaU1LocalTextToImage,
     "SenseNovaU1LocalImageEdit": SenseNovaU1LocalImageEdit,
     "SenseNovaU1LocalInterleave": SenseNovaU1LocalInterleave,
+    "SenseNovaInterleavePreview": SenseNovaInterleavePreview,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -631,4 +672,22 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "SenseNovaU1LocalTextToImage": "SenseNova U1 Local Text to Image",
     "SenseNovaU1LocalImageEdit": "SenseNova U1 Local Image Edit",
     "SenseNovaU1LocalInterleave": "SenseNova U1 Local Interleave",
+    "SenseNovaInterleavePreview": "SenseNova Interleave Preview",
 }
+
+
+def _save_preview_images(images) -> list[dict[str, str]]:
+    try:
+        import folder_paths
+
+        output_dir = Path(folder_paths.get_temp_directory())
+    except Exception:
+        output_dir = Path(tempfile.gettempdir()) / "sensenova_comfyui_preview"
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    saved: list[dict[str, str]] = []
+    for index, image in enumerate(comfy_batch_to_pil_images(images)):
+        filename = f"sensenova_interleave_{uuid.uuid4().hex}_{index:03d}.png"
+        image.save(output_dir / filename, format="PNG")
+        saved.append({"filename": filename, "subfolder": "", "type": "temp"})
+    return saved
