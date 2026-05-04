@@ -1,0 +1,4 @@
+httpx
+numpy
+pillow
+python-dotenv
