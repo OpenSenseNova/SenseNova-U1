@@ -79,6 +79,7 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 | :---- | :------- | :--------- |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
 | SenseNova-U1-8B-MoT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
+| SenseNova-U1-8B-MoT-8step-preview | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-8step-preview) |
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 link |
 | SenseNova-U1-A3B-MoT | A3B MoT | 🤗 link |
 
