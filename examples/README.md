@@ -156,7 +156,7 @@ Single edit:
 ```bash
 python examples/editing/inference.py \
   --model_path SenseNova/SenseNova-U1-8B-MoT \
-  --prompt "Change the animal's fur color to a darker shade." \
+  --prompt "Change the jacket of the person on the left to bright yellow." \
   --image examples/editing/data/images/1.webp \
   --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
   --timestep_shift 3.0 --num_steps 50 \
