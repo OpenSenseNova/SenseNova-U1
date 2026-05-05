@@ -5,6 +5,7 @@ import logging
 import tempfile
 import uuid
 from pathlib import Path
+from typing import Any
 
 try:
     from .image_utils import (
@@ -641,11 +642,44 @@ class SenseNovaInterleavePreview:
 
     def run(self, interleave_result: dict, include_think: bool, images=None):
         markdown = interleave_result_to_markdown(interleave_result, include_think=include_think)
-        ui: dict[str, list] = {"text": [markdown]}
-        if images is not None:
-            saved_images = _save_preview_images(images)
-            if saved_images:
-                ui["images"] = saved_images
+        saved_images: list[dict[str, str]] = (
+            _save_preview_images(images) if images is not None else []
+        )
+
+        # Structured parts allow the frontend to render text and images in
+        # their original interleaved order instead of stacking them.
+        parts_payload: list[dict[str, Any]] = []
+        for part in interleave_result.get("parts", []):
+            ptype = part.get("type")
+            if ptype == "think":
+                if include_think:
+                    text = str(part.get("text", "")).strip()
+                    if text:
+                        parts_payload.append({"type": "think", "text": text})
+            elif ptype == "text":
+                text = str(part.get("text", "")).strip()
+                if text:
+                    parts_payload.append({"type": "text", "text": text})
+            elif ptype == "image":
+                idx = int(part.get("index", 0))
+                if 0 <= idx < len(saved_images):
+                    img = saved_images[idx]
+                    parts_payload.append(
+                        {
+                            "type": "image",
+                            "index": idx,
+                            "filename": img.get("filename", ""),
+                            "subfolder": img.get("subfolder", ""),
+                            "image_type": img.get("type", "temp"),
+                        }
+                    )
+                else:
+                    parts_payload.append({"type": "image", "index": idx, "missing": True})
+
+        ui: dict[str, Any] = {
+            "text": [markdown],
+            "parts": parts_payload,
+        }
         return {"ui": ui, "result": (markdown,)}
 
 
