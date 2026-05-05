@@ -1,8 +1,8 @@
 {
   "id": "8a36c97b-03db-45f4-9154-0e59b7f61366",
   "revision": 0,
-  "last_node_id": 4,
-  "last_link_id": 3,
+  "last_node_id": 6,
+  "last_link_id": 4,
   "nodes": [
     {
       "id": 1,
@@ -127,7 +127,9 @@
         {
           "name": "think_text",
           "type": "STRING",
-          "links": null
+          "links": [
+            4
+          ]
         },
         {
           "name": "metadata_json",
@@ -152,20 +154,21 @@
         1,
         50,
         1,
-        1242770664,
-        "randomize"
+        42,
+        "fixed",
+        false
       ]
     },
     {
       "id": 4,
       "type": "PreviewImage",
       "pos": [
-        545.780742109375,
-        121.17234761718754
+        551.0654574035171,
+        -33.077242535484714
       ],
       "size": [
-        394.1426848046874,
-        513.0954211328124
+        386.8829846614751,
+        621.7392536760358
       ],
       "flags": {},
       "order": 3,
@@ -182,6 +185,37 @@
         "Node name for S&R": "PreviewImage"
       },
       "widgets_values": []
+    },
+    {
+      "id": 6,
+      "type": "PreviewAny",
+      "pos": [
+        553.8443943368454,
+        672.8903773855884
+      ],
+      "size": [
+        386.69200829226315,
+        173.34643765501687
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 4
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ]
     }
   ],
   "links": [
@@ -208,6 +242,14 @@
       4,
       0,
       "IMAGE"
+    ],
+    [
+      4,
+      3,
+      2,
+      6,
+      0,
+      "STRING"
     ]
   ],
   "groups": [],
@@ -215,10 +257,10 @@
   "extra": {
     "workflowRendererVersion": "LG",
     "ds": {
-      "scale": 0.6209213230591555,
+      "scale": 0.7149221062580672,
       "offset": [
-        991.0200599999994,
-        179.36629999999988
+        773.9705624243321,
+        41.60095323700315
       ]
     },
     "frontendVersion": "1.39.19",
