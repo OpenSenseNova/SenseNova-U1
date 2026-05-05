@@ -646,24 +646,23 @@ class SenseNovaInterleavePreview:
             _save_preview_images(images) if images is not None else []
         )
 
-        # Structured parts allow the frontend to render text and images in
-        # their original interleaved order instead of stacking them.
+        # Structured parts let the frontend render text and images in their
+        # original interleaved order instead of stacking them.
         parts_payload: list[dict[str, Any]] = []
         for part in interleave_result.get("parts", []):
             ptype = part.get("type")
-            if ptype == "think":
-                if include_think:
-                    text = str(part.get("text", "")).strip()
-                    if text:
-                        parts_payload.append({"type": "think", "text": text})
-            elif ptype == "text":
+            if ptype == "think" and not include_think:
+                continue
+            if ptype in ("text", "think"):
                 text = str(part.get("text", "")).strip()
                 if text:
-                    parts_payload.append({"type": "text", "text": text})
+                    parts_payload.append({"type": ptype, "text": text})
             elif ptype == "image":
                 idx = int(part.get("index", 0))
-                if 0 <= idx < len(saved_images):
-                    img = saved_images[idx]
+                img = saved_images[idx] if 0 <= idx < len(saved_images) else None
+                if img is None:
+                    parts_payload.append({"type": "image", "index": idx, "missing": True})
+                else:
                     parts_payload.append(
                         {
                             "type": "image",
@@ -673,14 +672,11 @@ class SenseNovaInterleavePreview:
                             "image_type": img.get("type", "temp"),
                         }
                     )
-                else:
-                    parts_payload.append({"type": "image", "index": idx, "missing": True})
 
-        ui: dict[str, Any] = {
-            "text": [markdown],
-            "parts": parts_payload,
+        return {
+            "ui": {"text": [markdown], "parts": parts_payload},
+            "result": (markdown,),
         }
-        return {"ui": ui, "result": (markdown,)}
 
 
 NODE_CLASS_MAPPINGS = {
