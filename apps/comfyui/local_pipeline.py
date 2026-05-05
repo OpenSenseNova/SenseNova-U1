@@ -285,6 +285,10 @@ class SenseNovaU1LocalModel:
             raise RuntimeError("cfg_zero_star is only supported for local text-to-image.")
 
         pil_image = comfy_image_to_pil(input_image)
+        # Match the Terminal pipeline by upsampling small inputs to the same
+        # pixel budget before they hit the model; otherwise edits on sub-2K
+        # images come out noticeably softer than `examples/editing/inference.py`.
+        pil_image = _resize_input_to_budget(pil_image, target_pixels)
         out_width, out_height = _resolve_edit_size(
             pil_image,
             width=width,
@@ -653,6 +657,26 @@ def _pil_images_to_comfy_batch(images: list[Image.Image]):
     torch = _import_torch()
     tensors = [pil_to_comfy_image(image) for image in images]
     return torch.cat(tensors, dim=0)
+
+
+def _resize_input_to_budget(image: Image.Image, target_pixels: int) -> Image.Image:
+    """Match the Terminal pipeline (`examples/editing/inference.py`):
+    rescale the source image so its total pixels equal ``target_pixels``,
+    keeping aspect ratio, snapping H/W to the model's grid factor, and using
+    LANCZOS resampling. Without this step a small input (e.g. 1024x1024)
+    would be passed through to the model as-is, costing visible detail.
+    """
+    _, _, smart_resize = _import_sensenova_u1()
+    resized_height, resized_width = smart_resize(
+        height=image.height,
+        width=image.width,
+        factor=DEFAULT_IMAGE_PATCH_SIZE,
+        min_pixels=target_pixels,
+        max_pixels=target_pixels,
+    )
+    if (resized_width, resized_height) == image.size:
+        return image
+    return image.resize((resized_width, resized_height), Image.LANCZOS)
 
 
 def _resolve_edit_size(
