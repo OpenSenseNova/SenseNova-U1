@@ -1,15 +1,15 @@
 {
-  "id": "a92af27a-0106-4c6f-9d1c-f9783b652f44",
+  "id": "8a36c97b-03db-45f4-9154-0e59b7f61366",
   "revision": 0,
-  "last_node_id": 3,
-  "last_link_id": 2,
+  "last_node_id": 4,
+  "last_link_id": 3,
   "nodes": [
     {
       "id": 1,
       "type": "SenseNovaU1LocalLoader",
       "pos": [
-        -480,
-        120
+        -520.3208437890622,
+        -17.623112343749938
       ],
       "size": [
         420,
@@ -50,23 +50,65 @@
     },
     {
       "id": 2,
-      "type": "SenseNovaU1LocalTextToImage",
+      "type": "LoadImage",
       "pos": [
-        0,
-        120
+        -518.748080117188,
+        398.93568074218774
       ],
       "size": [
-        430,
-        420
+        417.6686240234375,
+        539.1002277734372
       ],
       "flags": {},
       "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "1.webp",
+        "image"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "SenseNovaU1LocalImageEdit",
+      "pos": [
+        -0.6416875781249995,
+        120.73197378906247
+      ],
+      "size": [
+        440,
+        520
+      ],
+      "flags": {},
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
           "name": "u1_model",
           "type": "SENSENOVA_U1_LOCAL_MODEL",
           "link": 1
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 2
         }
       ],
       "outputs": [
@@ -74,7 +116,7 @@
           "name": "images",
           "type": "IMAGE",
           "links": [
-            2
+            3
           ]
         },
         {
@@ -94,41 +136,45 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaU1LocalTextToImage"
+        "Node name for S&R": "SenseNovaU1LocalImageEdit"
       },
       "widgets_values": [
-        "A clean product-style image of a futuristic electric bicycle parked beside a glass building, morning light, crisp details, balanced composition",
-        "2048x2048|1:1",
+        "Change the jacket of the person on the left to bright yellow.",
+        true,
+        2048,
+        2048,
+        4.194304,
         4,
+        1,
         "none",
         3,
         0,
         1,
         50,
         1,
-        42,
-        false
+        1242770664,
+        "randomize"
       ]
     },
     {
-      "id": 3,
+      "id": 4,
       "type": "PreviewImage",
       "pos": [
-        500,
-        120
+        545.780742109375,
+        121.17234761718754
       ],
       "size": [
-        220,
-        260
+        394.1426848046874,
+        513.0954211328124
       ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 2
+          "link": 3
         }
       ],
       "outputs": [],
@@ -143,7 +189,7 @@
       1,
       1,
       0,
-      2,
+      3,
       0,
       "SENSENOVA_U1_LOCAL_MODEL"
     ],
@@ -152,6 +198,14 @@
       2,
       0,
       3,
+      1,
+      "IMAGE"
+    ],
+    [
+      3,
+      3,
+      0,
+      4,
       0,
       "IMAGE"
     ]
@@ -161,13 +215,17 @@
   "extra": {
     "workflowRendererVersion": "LG",
     "ds": {
-      "scale": 1,
+      "scale": 0.6209213230591555,
       "offset": [
-        540,
-        120
+        991.0200599999994,
+        179.36629999999988
       ]
     },
-    "frontendVersion": "1.39.19"
+    "frontendVersion": "1.39.19",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
   },
   "version": 0.4
 }
