@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import logging
 import math
 import sys
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -14,6 +16,73 @@ try:
     from .image_utils import comfy_image_to_pil, pil_to_comfy_image
 except ImportError:  # pragma: no cover - supports direct imports during tests
     from image_utils import comfy_image_to_pil, pil_to_comfy_image
+
+LOGGER = logging.getLogger(__name__)
+
+
+@contextmanager
+def _progress_hook(model: Any, total_steps: int):
+    """Temporarily wrap ``model.unpatchify`` so each call advances a
+    ComfyUI :class:`ProgressBar`.
+
+    ``unpatchify`` is invoked exactly once at the end of every sampling
+    step in t2i / it2i / interleave generation, so it is a precise and
+    non-invasive progress signal that does not require modifying the
+    model code. If ``comfy.utils.ProgressBar`` is unavailable (e.g. tests
+    outside ComfyUI), we still install the wrapper and emit a log line
+    with the final step count so users get feedback on the terminal.
+    """
+
+    pbar = None
+    try:
+        from comfy.utils import ProgressBar  # type: ignore[import-not-found]
+
+        pbar = ProgressBar(max(1, int(total_steps)))
+    except Exception:  # pragma: no cover - ComfyUI runtime not present
+        pbar = None
+
+    if not hasattr(model, "unpatchify"):
+        yield
+        return
+
+    original = model.unpatchify
+    counter = {"n": 0}
+
+    def wrapped(*args, **kwargs):
+        out = original(*args, **kwargs)
+        counter["n"] += 1
+        if pbar is not None:
+            try:
+                pbar.update(1)
+            except Exception:
+                pass
+        # Log a heartbeat at every multiple of total_steps so users can see
+        # multi-image interleave progress past the saturated bar.
+        if total_steps and counter["n"] % total_steps == 0:
+            LOGGER.info(
+                "SenseNova U1 sampling: image #%d ready (%d steps).",
+                counter["n"] // total_steps,
+                total_steps,
+            )
+        return out
+
+    model.unpatchify = wrapped
+    try:
+        yield
+    finally:
+        try:
+            del model.unpatchify  # restore the class-level binding
+        except AttributeError:
+            try:
+                model.unpatchify = original
+            except Exception:
+                pass
+        if counter["n"]:
+            LOGGER.info(
+                "SenseNova U1 sampling: %d step(s) completed (target=%d).",
+                counter["n"],
+                total_steps,
+            )
 
 LOCAL_MODEL_TYPE = "SENSENOVA_U1_LOCAL_MODEL"
 INTERLEAVE_RESULT_TYPE = "SENSENOVA_INTERLEAVE_RESULT"
@@ -159,19 +228,20 @@ class SenseNovaU1LocalModel:
             raise RuntimeError("Text-to-image prompt cannot be empty.")
 
         _check_cfg_interval(cfg_interval)
-        out = self.model.t2i_generate(
-            self.tokenizer,
-            prompt,
-            image_size=(width, height),
-            cfg_scale=cfg_scale,
-            cfg_norm=cfg_norm,
-            timestep_shift=timestep_shift,
-            cfg_interval=cfg_interval,
-            num_steps=num_steps,
-            batch_size=batch_size,
-            seed=seed,
-            think_mode=think_mode,
-        )
+        with _progress_hook(self.model, num_steps):
+            out = self.model.t2i_generate(
+                self.tokenizer,
+                prompt,
+                image_size=(width, height),
+                cfg_scale=cfg_scale,
+                cfg_norm=cfg_norm,
+                timestep_shift=timestep_shift,
+                cfg_interval=cfg_interval,
+                num_steps=num_steps,
+                batch_size=batch_size,
+                seed=seed,
+                think_mode=think_mode,
+            )
         if think_mode:
             tensor, think_text = out
         else:
@@ -224,20 +294,21 @@ class SenseNovaU1LocalModel:
         )
         _check_cfg_interval(cfg_interval)
 
-        tensor = self.model.it2i_generate(
-            self.tokenizer,
-            prompt,
-            [pil_image],
-            image_size=(out_width, out_height),
-            cfg_scale=cfg_scale,
-            img_cfg_scale=img_cfg_scale,
-            cfg_norm=cfg_norm,
-            timestep_shift=timestep_shift,
-            cfg_interval=cfg_interval,
-            num_steps=num_steps,
-            batch_size=batch_size,
-            seed=seed,
-        )
+        with _progress_hook(self.model, num_steps):
+            tensor = self.model.it2i_generate(
+                self.tokenizer,
+                prompt,
+                [pil_image],
+                image_size=(out_width, out_height),
+                cfg_scale=cfg_scale,
+                img_cfg_scale=img_cfg_scale,
+                cfg_norm=cfg_norm,
+                timestep_shift=timestep_shift,
+                cfg_interval=cfg_interval,
+                num_steps=num_steps,
+                batch_size=batch_size,
+                seed=seed,
+            )
         return LocalGenerationResult(
             images=_batch_tensor_to_comfy_image(tensor),
             text="",
@@ -282,20 +353,24 @@ class SenseNovaU1LocalModel:
             input_images.append(pil_image)
 
         _check_cfg_interval(cfg_interval)
-        text, image_tensors = self.model.interleave_gen(
-            self.tokenizer,
-            prompt,
-            images=input_images,
-            image_size=(width, height),
-            cfg_scale=cfg_scale,
-            img_cfg_scale=img_cfg_scale,
-            timestep_shift=timestep_shift,
-            cfg_interval=cfg_interval,
-            num_steps=num_steps,
-            system_message=system_message,
-            think_mode=think_mode,
-            seed=seed,
-        )
+        # Interleave can emit multiple images, each running num_steps sampling
+        # steps. The bar saturates at the first image; subsequent images are
+        # tracked via LOGGER (one line per completed image).
+        with _progress_hook(self.model, num_steps):
+            text, image_tensors = self.model.interleave_gen(
+                self.tokenizer,
+                prompt,
+                images=input_images,
+                image_size=(width, height),
+                cfg_scale=cfg_scale,
+                img_cfg_scale=img_cfg_scale,
+                timestep_shift=timestep_shift,
+                cfg_interval=cfg_interval,
+                num_steps=num_steps,
+                system_message=system_message,
+                think_mode=think_mode,
+                seed=seed,
+            )
         images = [_single_tensor_to_pil(tensor) for tensor in image_tensors]
         metadata = {
             **self.info,
