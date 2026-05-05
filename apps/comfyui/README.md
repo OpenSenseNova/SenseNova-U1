@@ -24,7 +24,7 @@ python apps/comfyui/install.py --comfyui /path/to/ComfyUI
 By default this creates:
 
 ```text
-/path/to/ComfyUI/custom_nodes/SenseNova-U1 -> /path/to/SenseNova-U1/apps/comfyui
+/path/to/ComfyUI/custom_nodes/ComfyUI-SenseNova-U1 -> /path/to/SenseNova-U1/apps/comfyui
 ```
 
 Install the lightweight ComfyUI app dependencies in the Python environment used by ComfyUI:
