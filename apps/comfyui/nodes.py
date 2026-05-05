@@ -505,7 +505,10 @@ class SenseNovaU1LocalImageEdit:
                 "num_steps": ("INT", {"default": 50, "min": 1, "max": 200}),
                 "batch_size": ("INT", {"default": 1, "min": 1, "max": 16}),
                 "seed": ("INT", {"default": DEFAULT_SEED, "min": 0, "max": 2**31 - 1}),
-            }
+            },
+            "optional": {
+                "think_mode": ("BOOLEAN", {"default": False}),
+            },
         }
 
     def run(
@@ -526,6 +529,7 @@ class SenseNovaU1LocalImageEdit:
         num_steps: int,
         batch_size: int,
         seed: int,
+        think_mode: bool = False,
     ):
         result = u1_model.edit_image(
             prompt=prompt,
@@ -541,6 +545,7 @@ class SenseNovaU1LocalImageEdit:
             num_steps=num_steps,
             batch_size=batch_size,
             seed=seed,
+            think_mode=think_mode,
         )
         LOGGER.info("SenseNova U1 local edit generated: %s", comfy_image_info(result.images))
         return output_to_tuple(result)

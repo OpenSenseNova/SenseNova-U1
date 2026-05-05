@@ -278,6 +278,7 @@ class SenseNovaU1LocalModel:
         num_steps: int,
         batch_size: int,
         seed: int,
+        think_mode: bool,
     ) -> LocalGenerationResult:
         if not prompt.strip():
             raise RuntimeError("Image editing prompt cannot be empty.")
@@ -298,7 +299,7 @@ class SenseNovaU1LocalModel:
         _check_cfg_interval(cfg_interval)
 
         with _progress_hook(self.model, num_steps):
-            tensor = self.model.it2i_generate(
+            out = self.model.it2i_generate(
                 self.tokenizer,
                 prompt,
                 [pil_image],
@@ -311,11 +312,17 @@ class SenseNovaU1LocalModel:
                 num_steps=num_steps,
                 batch_size=batch_size,
                 seed=seed,
+                think_mode=think_mode,
             )
+        if think_mode:
+            tensor, think_text = out
+        else:
+            tensor = out
+            think_text = ""
         return LocalGenerationResult(
             images=_batch_tensor_to_comfy_image(tensor),
             text="",
-            think_text="",
+            think_text=think_text,
             metadata={
                 **self.info,
                 "task": "image-editing",
@@ -325,6 +332,7 @@ class SenseNovaU1LocalModel:
                 "batch_size": batch_size,
                 "num_steps": num_steps,
                 "target_pixels": target_pixels,
+                "think_mode": think_mode,
             },
         )
 
