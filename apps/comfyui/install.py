@@ -54,8 +54,7 @@ def main() -> None:
     if target.exists() or target.is_symlink():
         if not args.force:
             raise SystemExit(
-                f"Target already exists: {target}\n"
-                "Re-run with --force to replace it, or choose another --name."
+                f"Target already exists: {target}\nRe-run with --force to replace it, or choose another --name."
             )
         if target.is_symlink() or target.is_file():
             target.unlink()

@@ -79,10 +79,7 @@ def comfy_image_info(image) -> str:
     except Exception:
         value_range = "<unknown>"
 
-    return (
-        f"shape={shape}; dtype={dtype}; device={device}; "
-        f"contiguous={is_contiguous}; range={value_range}"
-    )
+    return f"shape={shape}; dtype={dtype}; device={device}; contiguous={is_contiguous}; range={value_range}"
 
 
 def comfy_image_to_pil(image) -> Image.Image:

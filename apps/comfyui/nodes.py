@@ -8,6 +8,13 @@ from pathlib import Path
 from typing import Any
 
 try:
+    from .api_client import (
+        CHAT_MODELS,
+        IMAGE_MODELS,
+        IMAGE_SIZE_OPTIONS,
+        VISION_MODELS,
+        SenseNovaClient,
+    )
     from .image_utils import (
         comfy_batch_to_pil_images,
         comfy_image_info,
@@ -21,8 +28,8 @@ try:
         DEFAULT_SEED,
         DEVICE_MAP_OPTIONS,
         DTYPE_OPTIONS,
-        INTERLEAVE_RESULT_TYPE,
         INTERLEAVE_RESOLUTION_OPTIONS,
+        INTERLEAVE_RESULT_TYPE,
         LOCAL_MODEL_TYPE,
         T2I_RESOLUTION_OPTIONS,
         SenseNovaU1LocalModel,
@@ -34,14 +41,14 @@ try:
         target_pixels_from_megapixels,
     )
     from .prompt_utils import load_prompt_template
-    from .api_client import (
+except ImportError:  # pragma: no cover - supports direct imports during tests
+    from api_client import (
         CHAT_MODELS,
         IMAGE_MODELS,
         IMAGE_SIZE_OPTIONS,
         VISION_MODELS,
         SenseNovaClient,
     )
-except ImportError:  # pragma: no cover - supports direct imports during tests
     from image_utils import (
         comfy_batch_to_pil_images,
         comfy_image_info,
@@ -55,8 +62,8 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         DEFAULT_SEED,
         DEVICE_MAP_OPTIONS,
         DTYPE_OPTIONS,
-        INTERLEAVE_RESULT_TYPE,
         INTERLEAVE_RESOLUTION_OPTIONS,
+        INTERLEAVE_RESULT_TYPE,
         LOCAL_MODEL_TYPE,
         T2I_RESOLUTION_OPTIONS,
         SenseNovaU1LocalModel,
@@ -68,13 +75,6 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         target_pixels_from_megapixels,
     )
     from prompt_utils import load_prompt_template
-    from api_client import (
-        CHAT_MODELS,
-        IMAGE_MODELS,
-        IMAGE_SIZE_OPTIONS,
-        VISION_MODELS,
-        SenseNovaClient,
-    )
 
 CATEGORY = "SenseNova"
 VISION_SYSTEM_PROMPT = "You are a careful vision assistant. Describe only visible details."
@@ -642,9 +642,7 @@ class SenseNovaInterleavePreview:
 
     def run(self, interleave_result: dict, include_think: bool, images=None):
         markdown = interleave_result_to_markdown(interleave_result, include_think=include_think)
-        saved_images: list[dict[str, str]] = (
-            _save_preview_images(images) if images is not None else []
-        )
+        saved_images: list[dict[str, str]] = _save_preview_images(images) if images is not None else []
 
         # Structured parts let the frontend render text and images in their
         # original interleaved order instead of stacking them.

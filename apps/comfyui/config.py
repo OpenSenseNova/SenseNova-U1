@@ -22,9 +22,7 @@ def load_config(*, load_env_file: bool = True) -> SenseNovaConfig:
 
     api_key = os.getenv(API_KEY_ENV, "").strip()
     if not api_key:
-        raise RuntimeError(
-            f"Missing {API_KEY_ENV}. Set it in your environment or in a local .env file."
-        )
+        raise RuntimeError(f"Missing {API_KEY_ENV}. Set it in your environment or in a local .env file.")
 
     base_url = os.getenv(BASE_URL_ENV, DEFAULT_BASE_URL).strip().rstrip("/")
     if not base_url:

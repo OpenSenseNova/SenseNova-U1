@@ -84,6 +84,7 @@ def _progress_hook(model: Any, total_steps: int):
                 total_steps,
             )
 
+
 LOCAL_MODEL_TYPE = "SENSENOVA_U1_LOCAL_MODEL"
 INTERLEAVE_RESULT_TYPE = "SENSENOVA_INTERLEAVE_RESULT"
 
@@ -133,9 +134,7 @@ INTERLEAVE_RESOLUTIONS: dict[str, tuple[int, int]] = {
     "3:1": (2592, 864),
 }
 
-T2I_RESOLUTION_OPTIONS = tuple(
-    f"{width}x{height}|{ratio}" for ratio, (width, height) in T2I_RESOLUTIONS.items()
-)
+T2I_RESOLUTION_OPTIONS = tuple(f"{width}x{height}|{ratio}" for ratio, (width, height) in T2I_RESOLUTIONS.items())
 INTERLEAVE_RESOLUTION_OPTIONS = tuple(
     f"{width}x{height}|{ratio}" for ratio, (width, height) in INTERLEAVE_RESOLUTIONS.items()
 )
@@ -566,6 +565,7 @@ def _load_model_and_tokenizer(
 ):
     try:
         from transformers import AutoConfig, AutoModel, AutoTokenizer
+
         from sensenova_u1 import check_checkpoint_compatibility
     except ImportError as exc:
         raise RuntimeError(
@@ -682,8 +682,7 @@ def _resolve_edit_size(
 def _check_grid_divisible(width: int, height: int) -> None:
     if width % DEFAULT_IMAGE_PATCH_SIZE or height % DEFAULT_IMAGE_PATCH_SIZE:
         raise RuntimeError(
-            f"Output resolution ({width}x{height}) must be a multiple of "
-            f"{DEFAULT_IMAGE_PATCH_SIZE} on both axes."
+            f"Output resolution ({width}x{height}) must be a multiple of {DEFAULT_IMAGE_PATCH_SIZE} on both axes."
         )
 
 
