@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-DEFAULT_NODE_NAME = "SenseNova-U1"
+DEFAULT_NODE_NAME = "ComfyUI-SenseNova-U1"
 
 
 def parse_args() -> argparse.Namespace:

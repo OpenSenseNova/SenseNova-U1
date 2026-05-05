@@ -24,8 +24,16 @@ DEFAULT_TARGET_PIXELS = 2048 * 2048
 DEFAULT_IMAGE_PATCH_SIZE = 32
 DEFAULT_INTERLEAVE_SYSTEM_MESSAGE = (
     "You are a multimodal assistant capable of reasoning with both text and images. "
-    "When reasoning is needed, place reasoning inside a <think></think> block. "
-    "After the think block, provide a concise final answer."
+    "You support two modes:\n\n"
+    "Think Mode: When reasoning is needed, you MUST start with a <think></think> block "
+    "and place all reasoning inside it. You MUST interleave text with generated images "
+    "using tags like <image1>, <image2>. Images can ONLY be generated between <think> and "
+    "</think>, and may be referenced in the final answer.\n\n"
+    "Non-Think Mode: When no reasoning is needed, directly provide the answer without reasoning. "
+    "Do not use tags like <image1>, <image2>; present any images naturally alongside the text.\n\n"
+    "After the think block, always provide a concise, user-facing final answer. "
+    "The answer may include text, images, or both. Match the user's language in both reasoning "
+    "and the final answer."
 )
 
 T2I_RESOLUTIONS: dict[str, tuple[int, int]] = {
