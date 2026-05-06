@@ -444,6 +444,7 @@ python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-8B-M
 </details>
 
 > See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
+
 > See [`docs/gpu_mem_profiler.md`](./docs/gpu_mem_profiler.md) for GPU memory profiler.
 
 
