@@ -12,7 +12,7 @@ from transformers import AutoConfig, AutoModel, AutoTokenizer
 
 import sensenova_u1
 from sensenova_u1 import check_checkpoint_compatibility
-from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
+from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler, load_and_merge_lora_weight_from_safetensors
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
@@ -154,6 +154,12 @@ def parse_args() -> argparse.Namespace:
         "--model_path",
         required=True,
         help="HuggingFace Hub id (e.g. sensenova/SenseNova-U1-8B-MoT) or a local path.",
+    )
+    p.add_argument(
+        "--lora_path",
+        required=False,
+        default=None,
+        help="HuggingFace Hub id or a local path to a lora model.",
     )
 
     src = p.add_mutually_exclusive_group(required=True)
@@ -334,6 +340,9 @@ def main() -> None:
     try:
         with profiler.time_load():
             engine = SenseNovaU1T2I(args.model_path, device=args.device, dtype=dtype)
+        if args.lora_path is not None:
+            print(f"load lora {args.lora_path}")
+            engine.model = load_and_merge_lora_weight_from_safetensors(engine.model, args.lora_path)
 
         cfg_interval = tuple(args.cfg_interval)
 

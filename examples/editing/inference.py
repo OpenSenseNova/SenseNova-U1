@@ -17,6 +17,7 @@ from sensenova_u1.models.neo_unify.utils import smart_resize
 from sensenova_u1.utils import (
     DEFAULT_IMAGE_PATCH_SIZE,
     InferenceProfiler,
+    load_and_merge_lora_weight_from_safetensors,
     save_compare,
 )
 
@@ -241,7 +242,12 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help="HuggingFace Hub id (e.g. sensenova/SenseNova-U1-8B-MoT) or a local path.",
     )
-
+    p.add_argument(
+        "--lora_path",
+        required=False,
+        default=None,
+        help="HuggingFace Hub id or a local path to a lora model.",
+    )
     src = p.add_mutually_exclusive_group(required=True)
     src.add_argument(
         "--prompt",
@@ -436,6 +442,10 @@ def main() -> None:
 
     with profiler.time_load():
         engine = SenseNovaU1Editing(args.model_path, device=args.device, dtype=dtype)
+
+    if args.lora_path is not None:
+        print(f"load lora {args.lora_path}")
+        engine.model = load_and_merge_lora_weight_from_safetensors(engine.model, args.lora_path)
 
     cfg_interval = tuple(args.cfg_interval)
     cli_explicit_size: tuple[int, int] | None = (args.width, args.height) if args.width is not None else None

@@ -1,4 +1,5 @@
 from .comparison import save_compare
+from .lora import load_and_merge_lora_weight_from_safetensors
 from .param_count import (
     ModelParamInspector,
     build_rules,
@@ -15,4 +16,5 @@ __all__ = [
     "format_bytes",
     "format_param_count",
     "save_compare",
+    "load_and_merge_lora_weight_from_safetensors",
 ]
