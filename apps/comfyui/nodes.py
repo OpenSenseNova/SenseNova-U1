@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import tempfile
@@ -80,6 +81,26 @@ CATEGORY = "SenseNova"
 VISION_SYSTEM_PROMPT = "You are a careful vision assistant. Describe only visible details."
 BUILDER_PROMPT_TEMPLATE = "builder_prompt.txt"
 LOGGER = logging.getLogger(__name__)
+
+_LOCAL_MODEL_CACHE: dict[tuple, SenseNovaU1LocalModel] = {}
+
+
+def _evict_model_cache(keep_key: tuple | None = None) -> None:
+    to_evict = [k for k in _LOCAL_MODEL_CACHE if k != keep_key]
+    for k in to_evict:
+        old = _LOCAL_MODEL_CACHE.pop(k)
+        try:
+            del old.model
+        except Exception:
+            pass
+        del old
+    if to_evict:
+        try:
+            import torch
+            torch.cuda.empty_cache()
+        except Exception:
+            pass
+        LOGGER.info("SenseNova U1 loader: evicted %d cached model(s) from VRAM.", len(to_evict))
 
 
 class SenseNovaChat:
@@ -377,6 +398,26 @@ class SenseNovaU1LocalLoader:
             }
         }
 
+    @classmethod
+    def IS_CHANGED(
+        cls,
+        model_path: str,
+        sensenova_u1_src: str,
+        device: str,
+        dtype: str,
+        attn_backend: str,
+        device_map: str,
+        max_memory: str,
+        offload_folder: str,
+        offload_state_dict: bool,
+    ) -> str:
+        key = (
+            model_path.strip(), sensenova_u1_src.strip(), device.strip(),
+            dtype, attn_backend, device_map,
+            max_memory.strip(), offload_folder.strip(), offload_state_dict,
+        )
+        return hashlib.sha256(str(key).encode()).hexdigest()
+
     def load(
         self,
         model_path: str,
@@ -389,17 +430,28 @@ class SenseNovaU1LocalLoader:
         offload_folder: str,
         offload_state_dict: bool,
     ):
-        model = SenseNovaU1LocalModel(
-            model_path=model_path,
-            sensenova_u1_src=sensenova_u1_src,
-            device=device,
-            dtype=dtype,
-            attn_backend=attn_backend,
-            device_map=device_map,
-            max_memory=max_memory,
-            offload_folder=offload_folder,
-            offload_state_dict=offload_state_dict,
+        cache_key = (
+            model_path.strip(), sensenova_u1_src.strip(), device.strip(),
+            dtype, attn_backend, device_map,
+            max_memory.strip(), offload_folder.strip(), offload_state_dict,
         )
+        if cache_key not in _LOCAL_MODEL_CACHE:
+            _evict_model_cache()
+            LOGGER.info("SenseNova U1 loader: loading model from %s", model_path)
+            _LOCAL_MODEL_CACHE[cache_key] = SenseNovaU1LocalModel(
+                model_path=model_path,
+                sensenova_u1_src=sensenova_u1_src,
+                device=device,
+                dtype=dtype,
+                attn_backend=attn_backend,
+                device_map=device_map,
+                max_memory=max_memory,
+                offload_folder=offload_folder,
+                offload_state_dict=offload_state_dict,
+            )
+        else:
+            LOGGER.info("SenseNova U1 loader: reusing cached model for %s", model_path)
+        model = _LOCAL_MODEL_CACHE[cache_key]
         return model, json.dumps(model.info, ensure_ascii=False)
 
 
@@ -710,14 +762,24 @@ NODE_DISPLAY_NAME_MAPPINGS = {
 
 
 def _save_preview_images(images) -> list[dict[str, str]]:
+    managed_by_comfyui = False
     try:
         import folder_paths
 
         output_dir = Path(folder_paths.get_temp_directory())
+        managed_by_comfyui = True
     except Exception:
         output_dir = Path(tempfile.gettempdir()) / "sensenova_comfyui_preview"
 
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    if not managed_by_comfyui:
+        for stale in output_dir.glob("sensenova_interleave_*.png"):
+            try:
+                stale.unlink()
+            except OSError:
+                pass
+
     saved: list[dict[str, str]] = []
     for index, image in enumerate(comfy_batch_to_pil_images(images)):
         filename = f"sensenova_interleave_{uuid.uuid4().hex}_{index:03d}.png"

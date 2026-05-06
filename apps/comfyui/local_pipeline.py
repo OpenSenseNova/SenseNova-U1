@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import math
+import os
 import sys
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -173,7 +174,7 @@ class SenseNovaU1LocalModel:
         if not model_path.strip():
             raise RuntimeError("Local model_path cannot be empty.")
 
-        _maybe_add_source_path(sensenova_u1_src)
+        injected_path = _maybe_add_source_path(sensenova_u1_src)
         torch = _import_torch()
         sensenova_u1, load_model_and_tokenizer, _ = _import_sensenova_u1()
 
@@ -197,6 +198,7 @@ class SenseNovaU1LocalModel:
             offload_folder=offload_folder or None,
             offload_state_dict=offload_state_dict if offload_state_dict else None,
         )
+        _maybe_remove_source_path(injected_path)
 
     @property
     def info(self) -> dict[str, Any]:
@@ -410,7 +412,7 @@ class SenseNovaU1LocalModel:
 
 
 def default_source_path() -> str:
-    env_path = _getenv("SENSENOVA_U1_SRC")
+    env_path = os.environ.get("SENSENOVA_U1_SRC", "")
     if env_path:
         return env_path
     repo_src = Path(__file__).resolve().parents[2] / "src"
@@ -486,9 +488,11 @@ def interleave_result_to_markdown(result: dict[str, Any], *, include_think: bool
 def _parse_interleave_parts(text: str, num_images: int) -> list[dict[str, Any]]:
     parts: list[dict[str, Any]] = []
     image_index = 0
-    for index, chunk in enumerate(text.split("<image>")):
+    chunks = text.split("<image>")
+    num_image_tags = len(chunks) - 1
+    for index, chunk in enumerate(chunks):
         _append_text_and_think_parts(parts, chunk)
-        if index < text.count("<image>"):
+        if index < num_image_tags:
             if image_index < num_images:
                 parts.append({"type": "image", "index": image_index})
             else:
@@ -525,12 +529,14 @@ def _append_text_part(parts: list[dict[str, Any]], text: str) -> None:
         parts.append({"type": "text", "text": text.strip()})
 
 
-def _maybe_add_source_path(source_path: str) -> None:
+def _maybe_add_source_path(source_path: str) -> list[str]:
+    """Inject source_path into sys.path for this session only; returns the
+    injected path so _maybe_remove_source_path can undo it."""
     source_path = source_path.strip()
     if not source_path:
         source_path = default_source_path()
     if not source_path:
-        return
+        return []
 
     path = Path(source_path).expanduser()
     if path.name != "src" and (path / "src").is_dir():
@@ -538,6 +544,16 @@ def _maybe_add_source_path(source_path: str) -> None:
     path_str = str(path)
     if path.is_dir() and path_str not in sys.path:
         sys.path.insert(0, path_str)
+        return [path_str]
+    return []
+
+
+def _maybe_remove_source_path(injected: list[str]) -> None:
+    """Remove paths injected by _maybe_add_source_path, keeping any the user
+    may have added independently."""
+    for p in injected:
+        if p in sys.path:
+            sys.path.remove(p)
 
 
 def _import_torch():
@@ -722,16 +738,6 @@ def _check_cfg_interval(cfg_interval: tuple[float, float]) -> None:
     lo, hi = cfg_interval
     if not 0.0 <= lo <= hi <= 1.0:
         raise RuntimeError("cfg_interval must satisfy 0.0 <= start <= end <= 1.0.")
-
-
-def _getenv(name: str) -> str:
-    try:
-        import os
-
-        return os.environ.get(name, "")
-    except Exception:
-        return ""
-
 
 def target_pixels_from_megapixels(megapixels: float) -> int:
     minimum = DEFAULT_IMAGE_PATCH_SIZE * DEFAULT_IMAGE_PATCH_SIZE
