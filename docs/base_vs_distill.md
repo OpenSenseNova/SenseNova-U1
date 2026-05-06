@@ -14,7 +14,16 @@ python examples/t2i/inference.py \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
 
-# Run Distilled
+
+# Run 8-step preview model
+python examples/t2i/inference.py \
+    --model_path SenseNova-U1-8B-MoT-8step-preview \
+    --jsonl examples/t2i/data/samples.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
+    --profile
+
+# Run 8-step LoRA
 huggingface-cli download sensenova/SenseNova-U1-8B-MoT-LoRAs --include "SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors" --local-dir ./SenseNova/SenseNova-U1-8B-MoT-LoRAs/ --local-dir-use-symlinks False
 python examples/t2i/inference.py \
     --model_path SenseNova/SenseNova-U1-8B-MoT \
