@@ -175,6 +175,7 @@ class SenseNovaU1LocalModel:
             raise RuntimeError("Local model_path cannot be empty.")
 
         injected_path = _maybe_add_source_path(sensenova_u1_src)
+        model_path = _resolve_local_model_path(model_path)
         torch = _import_torch()
         sensenova_u1, load_model_and_tokenizer, _ = _import_sensenova_u1()
 
@@ -581,6 +582,17 @@ def _import_sensenova_u1():
     return sensenova_u1, load_model_and_tokenizer, smart_resize
 
 
+def _resolve_local_model_path(model_path: str) -> str:
+    if Path(model_path).exists():
+        return model_path
+    try:
+        from huggingface_hub import snapshot_download
+
+        return snapshot_download(model_path, local_files_only=True)
+    except Exception:
+        return model_path
+
+
 def _load_model_and_tokenizer(
     model_path: str,
     *,
@@ -601,10 +613,10 @@ def _load_model_and_tokenizer(
             "in the ComfyUI Python environment."
         ) from exc
 
+    model_path = _resolve_local_model_path(model_path)
     config = AutoConfig.from_pretrained(model_path)
     check_checkpoint_compatibility(config)
     tokenizer = AutoTokenizer.from_pretrained(model_path)
-
     model_kwargs: dict[str, Any] = {
         "config": config,
         "torch_dtype": dtype,
