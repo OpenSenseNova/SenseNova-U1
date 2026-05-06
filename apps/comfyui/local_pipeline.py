@@ -751,6 +751,7 @@ def _check_cfg_interval(cfg_interval: tuple[float, float]) -> None:
     if not 0.0 <= lo <= hi <= 1.0:
         raise RuntimeError("cfg_interval must satisfy 0.0 <= start <= end <= 1.0.")
 
+
 def target_pixels_from_megapixels(megapixels: float) -> int:
     minimum = DEFAULT_IMAGE_PATCH_SIZE * DEFAULT_IMAGE_PATCH_SIZE
     return max(minimum, math.floor(megapixels * 1_000_000))

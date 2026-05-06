@@ -97,6 +97,7 @@ def _evict_model_cache(keep_key: tuple | None = None) -> None:
     if to_evict:
         try:
             import torch
+
             torch.cuda.empty_cache()
         except Exception:
             pass
@@ -412,9 +413,15 @@ class SenseNovaU1LocalLoader:
         offload_state_dict: bool,
     ) -> str:
         key = (
-            model_path.strip(), sensenova_u1_src.strip(), device.strip(),
-            dtype, attn_backend, device_map,
-            max_memory.strip(), offload_folder.strip(), offload_state_dict,
+            model_path.strip(),
+            sensenova_u1_src.strip(),
+            device.strip(),
+            dtype,
+            attn_backend,
+            device_map,
+            max_memory.strip(),
+            offload_folder.strip(),
+            offload_state_dict,
         )
         return hashlib.sha256(str(key).encode()).hexdigest()
 
@@ -431,9 +438,15 @@ class SenseNovaU1LocalLoader:
         offload_state_dict: bool,
     ):
         cache_key = (
-            model_path.strip(), sensenova_u1_src.strip(), device.strip(),
-            dtype, attn_backend, device_map,
-            max_memory.strip(), offload_folder.strip(), offload_state_dict,
+            model_path.strip(),
+            sensenova_u1_src.strip(),
+            device.strip(),
+            dtype,
+            attn_backend,
+            device_map,
+            max_memory.strip(),
+            offload_folder.strip(),
+            offload_state_dict,
         )
         if cache_key not in _LOCAL_MODEL_CACHE:
             _evict_model_cache()
