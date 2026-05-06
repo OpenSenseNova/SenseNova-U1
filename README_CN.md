@@ -405,8 +405,7 @@ python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --im
 
 </details>
 
-> 批量推理、生成参数和 JSONL 格式请参见 [`examples/README_CN.md`](./examples/README_CN.md#视觉理解vqa)，
-> 显存性能分析请参见 [`性能分析`](./docs/gpu_mem_profiler_CN.md)。
+> 批量推理、生成参数和 JSONL 格式请参见 [`examples/README_CN.md`](./examples/README_CN.md#视觉理解vqa)。
 
 <details open>
 <summary>🖼️ 文生图</summary>
@@ -442,7 +441,8 @@ python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-8B-M
 ```
 </details>
 
-> 批量推理、JSONL 格式、prompt 增强、分辨率档位及完整参数说明请参见 [`examples/README_CN.md`](./examples/README_CN.md)。
+> 批量推理、JSONL 格式、prompt 增强、分辨率档位及完整参数说明请参见 [`examples/README_CN.md`](./examples/README_CN.md)，
+> 显存性能分析请参见 [`性能分析`](./docs/gpu_mem_profiler_CN.md)。
 
 
 ### ⚡ 使用 LightLLM + LightX2V 运行
