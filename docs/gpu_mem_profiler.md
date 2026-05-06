@@ -43,7 +43,7 @@ Enables chain-of-thought reasoning via `--think`. The model outputs its reasonin
 ```bash
 python examples/t2i/inference.py \
     --model_path checkpoints/SenseNova-U1-8B-MoT \
-    --jsonl examples/t2i/data/samples.jsonl \
+    --prompt "Close portrait of an elderly woman by a farmhouse window, textured skin, gentle smile, warm natural light, emotional documentary look. The portrait should feel polished and natural, with sharp eyes, realistic skin texture, accurate facial anatomy, and premium lighting that keeps the face as the main focus." \
     --output_dir outputs/ \
     --cfg_scale 4.0 \
     --cfg_norm none \
@@ -123,12 +123,12 @@ python examples/interleave/inference.py \
 ================================================================
 Profile summary
 ================================================================
-  model load          :  103.491 s
+  model load          :  117.242 s
   load peak memory    : allocated 32.77 GiB, reserved 33.10 GiB
-  generations         : 1 call(s), 1 image(s) total, 312.974 s wall
-  avg per image       :  312.974 s
+  generations         : 1 call(s), 6 image(s) total, 329.279 s wall
+  avg per image       :   54.880 s
   image tokens        : patch_size=32, avg 2304 tok/image (2304)
-  throughput          :     7.36 tok/s
+  throughput          :    41.98 tok/s
   generation peak mem : allocated 49.35 GiB, reserved 68.63 GiB
 ================================================================
 ```
@@ -142,6 +142,6 @@ Profile summary
 | t2i         | 32.77 / 33.10          | 34.83 / 35.76                | 22.981       | 178.23             |
 | t2i-think   | 32.77 / 33.10          | 35.01 / 35.91                | 39.608       | 103.01             |
 | editing     | 32.77 / 33.10          | 39.50 / 41.32                | 27.192       | 148.17             |
-| interleave  | 32.77 / 33.10          | 49.35 / 68.63                | 312.974      |   7.36             |
+| interleave  | 32.77 / 33.10          | 49.35 / 68.63                | 54.880       |  41.98             |
 
 > Memory columns are formatted as `allocated / reserved`.

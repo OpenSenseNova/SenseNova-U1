@@ -146,6 +146,16 @@ class InferenceProfiler:
                 )
             )
 
+    def update_last_batch(self, n: int) -> None:
+        """Correct the batch count of the most recent time_generate record.
+
+        Call this immediately after the context manager exits, once the actual
+        number of generated images is known (e.g. len(images) for interleaved
+        generation where one call produces a variable number of images).
+        """
+        if self.enabled and self.gen_records:
+            self.gen_records[-1].batch = n
+
     # ------------------------------------------------------------------
     # reporting
     # ------------------------------------------------------------------
