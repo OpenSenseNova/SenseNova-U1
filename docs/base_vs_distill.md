@@ -101,10 +101,10 @@ python examples/t2i/inference.py \
 
 ## Existing Issues
 
-Two issues have been identified in the SenseNova-U1-8B-MoT-8step-preview (8 NFE), and we are actively working to resolve them. 
+A issue have been identified in the SenseNova-U1-8B-MoT-LoRA-8step-V1.0 (8 NFE), and we are actively working to resolve them. 
 
 - Grid artifacts may occur in certain instances.
 <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/7b97a6a7-4e1a-4af8-884f-5df134cfdc3b" /> 
 
-- In image-editing tasks, the generated results may exhibit altered color tones.
- <img width="5063" height="1761" alt="Image" src="https://github.com/user-attachments/assets/9951c963-e5d7-4fd9-ba5d-ab9f3315f413" /> 
+<!-- - In image-editing tasks, the generated results may exhibit altered color tones.
+ <img width="5063" height="1761" alt="Image" src="https://github.com/user-attachments/assets/9951c963-e5d7-4fd9-ba5d-ab9f3315f413" />  -->
