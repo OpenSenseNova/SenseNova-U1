@@ -15,7 +15,7 @@ python examples/t2i/inference.py \
     --profile
 
 
-# Run 8-step preview model
+# Run 8-step preview model (deprecated)
 python examples/t2i/inference.py \
     --model_path SenseNova-U1-8B-MoT-8step-preview \
     --jsonl examples/t2i/data/samples.jsonl \
