@@ -8,6 +8,7 @@ from .param_count import (
     format_bytes,
     format_param_count,
 )
+from .offload import offload_layers_async, offload_layers_sync
 from .profiler import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
 
 __all__ = [
@@ -21,6 +22,8 @@ __all__ = [
     "load_gguf_checkpoint",
     "load_model_and_tokenizer",
     "match_state_dict",
+    "offload_layers_async",
+    "offload_layers_sync",
     "save_compare",
     "set_gguf2meta_model",
 ]

@@ -29,12 +29,14 @@ try:
         CFG_NORM_OPTIONS,
         DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
         DEFAULT_SEED,
+        DEFAULT_VRAM_MODE,
         DEVICE_MAP_OPTIONS,
         DTYPE_OPTIONS,
         INTERLEAVE_RESOLUTION_OPTIONS,
         INTERLEAVE_RESULT_TYPE,
         LOCAL_MODEL_TYPE,
         T2I_RESOLUTION_OPTIONS,
+        VRAM_MODE_OPTIONS,
         SenseNovaU1LocalModel,
         default_source_path,
         interleave_output_to_tuple,
@@ -63,12 +65,14 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         CFG_NORM_OPTIONS,
         DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
         DEFAULT_SEED,
+        DEFAULT_VRAM_MODE,
         DEVICE_MAP_OPTIONS,
         DTYPE_OPTIONS,
         INTERLEAVE_RESOLUTION_OPTIONS,
         INTERLEAVE_RESULT_TYPE,
         LOCAL_MODEL_TYPE,
         T2I_RESOLUTION_OPTIONS,
+        VRAM_MODE_OPTIONS,
         SenseNovaU1LocalModel,
         default_source_path,
         interleave_output_to_tuple,
@@ -155,12 +159,29 @@ def _evict_model_cache(keep_key: tuple | None = None) -> None:
             del old.model
         except Exception:
             pass
+        try:
+            del old.tokenizer
+        except Exception:
+            pass
         del old
     if to_evict:
+        # Force a GC pass *before* empty_cache so any tensors waiting on
+        # cyclic refs / lingering hooks actually drop their CUDA memory back
+        # to the caching allocator. Without this, empty_cache() can't reclaim
+        # the old model's VRAM and the next load OOMs partway through inference.
         try:
+            import gc
+
             import torch
 
-            torch.cuda.empty_cache()
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
+                torch.cuda.empty_cache()
+                # Old model may have been CPU-pinned (vram_mode != "full");
+                # release the pinned host blocks too.
+                if hasattr(torch._C, "_host_emptyCache"):
+                    torch._C._host_emptyCache()
         except Exception:
             pass
         LOGGER.info("SenseNova U1 loader: evicted %d cached model(s) from VRAM.", len(to_evict))
@@ -448,14 +469,41 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                 io.String.Input("device", default="cuda"),
                 io.Combo.Input("dtype", options=list(DTYPE_OPTIONS), default="bfloat16"),
                 io.Combo.Input("attn_backend", options=list(ATTN_BACKEND_OPTIONS), default="auto"),
-                io.Combo.Input("device_map", options=list(DEVICE_MAP_OPTIONS), default="none"),
+                io.Combo.Input(
+                    "device_map",
+                    options=list(DEVICE_MAP_OPTIONS),
+                    default="none",
+                    tooltip=(
+                        "Multi-GPU sharding via accelerate. 'none' = single device "
+                        "(default). auto/balanced/balanced_low_0/sequential split layers "
+                        "across all visible GPUs. For *single-GPU VRAM reduction* use "
+                        "vram_mode instead — they are mutually exclusive."
+                    ),
+                ),
                 io.String.Input(
                     "max_memory",
                     default="",
-                    tooltip="Optional accelerate max_memory, e.g. 0=20GiB,cpu=64GiB.",
+                    tooltip=(
+                        "Per-device memory budget for device_map (e.g. 0=20GiB,1=20GiB,cpu=64GiB). "
+                        "Only relevant when device_map != 'none'."
+                    ),
                 ),
-                io.String.Input("offload_folder", default=""),
-                io.Boolean.Input("offload_state_dict", default=False),
+                io.Combo.Input(
+                    "vram_mode",
+                    options=list(VRAM_MODE_OPTIONS),
+                    default=DEFAULT_VRAM_MODE,
+                    tooltip=(
+                        "Single-GPU layer-offload mode (controls weight residency only; "
+                        "activations / KV cache grow with workload — especially in interleave "
+                        "mode where each generated image enlarges the cache).\n"
+                        "  full     — no offload, whole model on GPU, fastest (default)\n"
+                        "  low      — synchronous per-layer CPU<->GPU swap, smallest weight\n"
+                        "             footprint, slowest\n"
+                        "  balanced — async prefetch, overlaps H2D with compute, faster than low\n"
+                        "Anything other than 'full' forces device_map='none' (use device_map "
+                        "for multi-GPU sharding instead)."
+                    ),
+                ),
                 io.Combo.Input(
                     "gguf_checkpoint",
                     options=_list_gguf_options(),
@@ -486,8 +534,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         attn_backend: str,
         device_map: str,
         max_memory: str,
-        offload_folder: str,
-        offload_state_dict: bool,
+        vram_mode: str,
         gguf_checkpoint: str,
     ) -> str:
         key = (
@@ -498,8 +545,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             attn_backend,
             device_map,
             max_memory.strip(),
-            offload_folder.strip(),
-            offload_state_dict,
+            vram_mode,
             _resolve_gguf_choice(gguf_checkpoint.strip()),
         )
         return hashlib.sha256(str(key).encode()).hexdigest()
@@ -514,8 +560,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         attn_backend: str,
         device_map: str,
         max_memory: str,
-        offload_folder: str,
-        offload_state_dict: bool,
+        vram_mode: str,
         gguf_checkpoint: str,
     ) -> io.NodeOutput:
         resolved_gguf = _resolve_gguf_choice(gguf_checkpoint.strip())
@@ -527,8 +572,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             attn_backend,
             device_map,
             max_memory.strip(),
-            offload_folder.strip(),
-            offload_state_dict,
+            vram_mode,
             resolved_gguf,
         )
         if cache_key not in _LOCAL_MODEL_CACHE:
@@ -549,9 +593,8 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                 attn_backend=attn_backend,
                 device_map=device_map,
                 max_memory=max_memory,
-                offload_folder=offload_folder,
-                offload_state_dict=offload_state_dict,
                 gguf_checkpoint=resolved_gguf,
+                vram_mode=vram_mode,
             )
         else:
             LOGGER.info("SenseNova U1 loader: reusing cached model for %s", model_path)

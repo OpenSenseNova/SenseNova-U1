@@ -26,11 +26,14 @@ Usage:
 from __future__ import annotations
 
 import gc
+import logging
 from pathlib import Path
 from typing import Any
 
 import torch
 from torch import nn
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _resolve_local_model_path(model_path: str) -> str:
@@ -60,6 +63,7 @@ def load_model_and_tokenizer(
     max_memory: str | dict[int | str, str] | None = None,
     offload_folder: str | None = None,
     offload_state_dict: bool | None = None,
+    for_offload: bool = False,
 ) -> tuple[nn.Module, Any]:
     """Build a SenseNova-U1 model + tokenizer pair.
 
@@ -75,10 +79,22 @@ def load_model_and_tokenizer(
     - ``"*.gguf"``: build a meta-init model from the config and inject
       dequantizing weights from the GGUF file via the diffusers quantizer.
       The accelerate offload kwargs are ignored on this path.
+
+    When ``for_offload=True`` the loaded model stays on CPU (no ``.to(device)``)
+    so a downstream layer-offload wrapper can manage CPU<->GPU movement
+    itself. ``device_map`` is forced to ``None`` in this mode (with a warning)
+    because accelerate's static placement is incompatible with dynamic offload.
     """
     from transformers import AutoConfig, AutoModel, AutoTokenizer
 
     from .. import check_checkpoint_compatibility
+
+    if for_offload and device_map:
+        LOGGER.warning(
+            "for_offload=True overrides device_map=%r (accelerate placement is incompatible with layer offload).",
+            device_map,
+        )
+        device_map = None
 
     model_path = _resolve_local_model_path(model_path)
     config = AutoConfig.from_pretrained(model_path)
@@ -86,7 +102,8 @@ def load_model_and_tokenizer(
     tokenizer = AutoTokenizer.from_pretrained(model_path)
 
     if gguf_checkpoint is not None:
-        model = _load_from_gguf(config, gguf_checkpoint, dtype=dtype, device=device)
+        gguf_device = torch.device("cpu") if for_offload else device
+        model = _load_from_gguf(config, gguf_checkpoint, dtype=dtype, device=gguf_device)
     else:
         model_kwargs: dict[str, Any] = {"config": config, "torch_dtype": dtype}
         if device_map:
@@ -100,7 +117,7 @@ def load_model_and_tokenizer(
                 model_kwargs["offload_state_dict"] = offload_state_dict
 
         model = AutoModel.from_pretrained(model_path, **model_kwargs).eval()
-        if not device_map and device is not None:
+        if not device_map and device is not None and not for_offload:
             model = model.to(device)
 
     return model, tokenizer

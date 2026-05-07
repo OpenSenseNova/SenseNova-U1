@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 from pathlib import Path
 from typing import Sequence
@@ -15,7 +16,19 @@ from sensenova_u1.utils import (
     InferenceProfiler,
     load_and_merge_lora_weight_from_safetensors,
     load_model_and_tokenizer,
+    offload_layers_async,
+    offload_layers_sync,
 )
+
+DEFAULT_LAYERS_ATTR = "language_model.model.layers"
+
+VRAM_MODE_OPTIONS = ("full", "low", "balanced")
+DEFAULT_VRAM_MODE = "full"
+_VRAM_MODE_TO_PREFETCH: dict[str, int] = {
+    "full": 0,
+    "low": 1,
+    "balanced": 2,
+}
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
@@ -77,14 +90,33 @@ class SenseNovaU1T2I:
         device: str = "cuda",
         dtype: torch.dtype = torch.bfloat16,
         gguf_checkpoint: str | None = None,
+        vram_mode: str = DEFAULT_VRAM_MODE,
     ) -> None:
+        if vram_mode not in _VRAM_MODE_TO_PREFETCH:
+            raise ValueError(
+                f"Unsupported vram_mode={vram_mode!r}. Choose one of {VRAM_MODE_OPTIONS}."
+            )
         self.device = device
         self._last_think_text: str = ""
+        self.vram_mode = vram_mode
+        self.prefetch_count = _VRAM_MODE_TO_PREFETCH[vram_mode]
         self.model, self.tokenizer = load_model_and_tokenizer(
             model_path,
             dtype=dtype,
             device=device,
             gguf_checkpoint=gguf_checkpoint,
+            for_offload=self.prefetch_count > 0,
+        )
+
+    def _offload_ctx(self):
+        """Wrap ``self.model`` for layer offload, or pass through when off."""
+        if self.prefetch_count == 0:
+            return contextlib.nullcontext(self.model)
+        target = torch.device(self.device)
+        if self.prefetch_count == 1:
+            return offload_layers_sync(self.model, DEFAULT_LAYERS_ATTR, target)
+        return offload_layers_async(
+            self.model, DEFAULT_LAYERS_ATTR, target, prefetch_count=self.prefetch_count
         )
 
     @property
@@ -106,19 +138,20 @@ class SenseNovaU1T2I:
         seed: int = 0,
         think_mode: bool = False,
     ) -> list[Image.Image]:
-        out = self.model.t2i_generate(
-            self.tokenizer,
-            prompt,
-            image_size=image_size,
-            cfg_scale=cfg_scale,
-            cfg_norm=cfg_norm,
-            timestep_shift=timestep_shift,
-            cfg_interval=cfg_interval,
-            num_steps=num_steps,
-            batch_size=batch_size,
-            seed=seed,
-            think_mode=think_mode,
-        )
+        with self._offload_ctx() as offloaded:
+            out = offloaded.t2i_generate(
+                self.tokenizer,
+                prompt,
+                image_size=image_size,
+                cfg_scale=cfg_scale,
+                cfg_norm=cfg_norm,
+                timestep_shift=timestep_shift,
+                cfg_interval=cfg_interval,
+                num_steps=num_steps,
+                batch_size=batch_size,
+                seed=seed,
+                think_mode=think_mode,
+            )
         if think_mode:
             tensor, think_text = out
             self._last_think_text = think_text
@@ -263,6 +296,18 @@ def parse_args() -> argparse.Namespace:
     )
 
     p.add_argument(
+        "--vram_mode",
+        choices=list(VRAM_MODE_OPTIONS),
+        default=DEFAULT_VRAM_MODE,
+        help=(
+            "Single-GPU layer-offload mode. "
+            "'full' = no offload, whole model on GPU, fastest (default). "
+            "'low' = synchronous per-layer CPU<->GPU swap, smallest weight footprint. "
+            "'balanced' = async prefetch, overlaps H2D with compute, faster than low."
+        ),
+    )
+
+    p.add_argument(
         "--enhance",
         action="store_true",
         help=(
@@ -359,6 +404,7 @@ def main() -> None:
                 device=args.device,
                 dtype=dtype,
                 gguf_checkpoint=args.gguf_checkpoint,
+                vram_mode=args.vram_mode,
             )
         if args.lora_path is not None:
             print(f"load lora {args.lora_path}")
