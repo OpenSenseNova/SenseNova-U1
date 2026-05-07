@@ -88,6 +88,62 @@ LOGGER = logging.getLogger(__name__)
 LocalModelIO = io.Custom(LOCAL_MODEL_TYPE)
 InterleaveResultIO = io.Custom(INTERLEAVE_RESULT_TYPE)
 
+
+_GGUF_FOLDER_CANDIDATES: tuple[str, ...] = ("gguf", "diffusion_models")
+
+
+def _list_gguf_options() -> list[str]:
+    """Combo options for SenseNovaU1LocalLoader.gguf_checkpoint.
+
+    Always starts with an empty string (= no GGUF, load via safetensors), then
+    every `.gguf` filename found under any registered folder in
+    ``_GGUF_FOLDER_CANDIDATES`` (`gguf` for the dedicated layout, plus the
+    stock ComfyUI `diffusion_models` folder where ComfyUI-GGUF style packs
+    live). Returns just ``[""]`` when folder_paths is unavailable or no
+    matching files exist, so the schema still loads cleanly outside ComfyUI.
+    """
+    found: set[str] = set()
+    try:
+        import folder_paths
+
+        for folder in _GGUF_FOLDER_CANDIDATES:
+            try:
+                files = folder_paths.get_filename_list(folder)
+            except Exception:
+                continue
+            for f in files:
+                if f.lower().endswith(".gguf"):
+                    found.add(f)
+    except Exception:
+        pass
+    return ["", *sorted(found)]
+
+
+def _resolve_gguf_choice(value: str) -> str:
+    """Map a Combo selection back to an absolute path.
+
+    Searches the configured folders in order; the first registered folder
+    that contains the file wins. If the value isn't a registered filename
+    (e.g. workflow JSON edited to point at a literal path), it is returned
+    unchanged so SenseNovaU1LocalModel can treat it as an absolute path.
+    """
+    if not value:
+        return ""
+    try:
+        import folder_paths
+
+        for folder in _GGUF_FOLDER_CANDIDATES:
+            try:
+                full = folder_paths.get_full_path(folder, value)
+            except Exception:
+                continue
+            if full:
+                return full
+    except Exception:
+        pass
+    return value
+
+
 _LOCAL_MODEL_CACHE: dict[tuple, SenseNovaU1LocalModel] = {}
 
 
@@ -400,6 +456,19 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                 ),
                 io.String.Input("offload_folder", default=""),
                 io.Boolean.Input("offload_state_dict", default=False),
+                io.Combo.Input(
+                    "gguf_checkpoint",
+                    options=_list_gguf_options(),
+                    default="",
+                    tooltip=(
+                        "Optional .gguf quantized checkpoint, picked from "
+                        "`<comfyui>/models/gguf/` or `<comfyui>/models/diffusion_models/`. "
+                        "Empty (default) loads safetensors via from_pretrained. When set, weights "
+                        "are loaded via the diffusers GGUF quantizer; device_map must be 'none'. "
+                        "Requires the [gguf] extra (gguf>=0.10.0, diffusers>=0.30.0). Restart "
+                        "ComfyUI to refresh the list after dropping new files into either folder."
+                    ),
+                ),
             ],
             outputs=[
                 LocalModelIO.Output(display_name="u1_model"),
@@ -419,6 +488,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         max_memory: str,
         offload_folder: str,
         offload_state_dict: bool,
+        gguf_checkpoint: str,
     ) -> str:
         key = (
             model_path.strip(),
@@ -430,6 +500,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             max_memory.strip(),
             offload_folder.strip(),
             offload_state_dict,
+            _resolve_gguf_choice(gguf_checkpoint.strip()),
         )
         return hashlib.sha256(str(key).encode()).hexdigest()
 
@@ -445,7 +516,9 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         max_memory: str,
         offload_folder: str,
         offload_state_dict: bool,
+        gguf_checkpoint: str,
     ) -> io.NodeOutput:
+        resolved_gguf = _resolve_gguf_choice(gguf_checkpoint.strip())
         cache_key = (
             model_path.strip(),
             sensenova_u1_src.strip(),
@@ -456,10 +529,18 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             max_memory.strip(),
             offload_folder.strip(),
             offload_state_dict,
+            resolved_gguf,
         )
         if cache_key not in _LOCAL_MODEL_CACHE:
             _evict_model_cache()
-            LOGGER.info("SenseNova U1 loader: loading model from %s", model_path)
+            if resolved_gguf:
+                LOGGER.info(
+                    "SenseNova U1 loader: loading %s with GGUF checkpoint %s",
+                    model_path,
+                    resolved_gguf,
+                )
+            else:
+                LOGGER.info("SenseNova U1 loader: loading model from %s", model_path)
             _LOCAL_MODEL_CACHE[cache_key] = SenseNovaU1LocalModel(
                 model_path=model_path,
                 sensenova_u1_src=sensenova_u1_src,
@@ -470,6 +551,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                 max_memory=max_memory,
                 offload_folder=offload_folder,
                 offload_state_dict=offload_state_dict,
+                gguf_checkpoint=resolved_gguf,
             )
         else:
             LOGGER.info("SenseNova U1 loader: reusing cached model for %s", model_path)

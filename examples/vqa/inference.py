@@ -6,12 +6,10 @@ import sys
 from pathlib import Path
 
 import torch
-from transformers import AutoConfig, AutoModel, AutoTokenizer
 
 import sensenova_u1
-from sensenova_u1 import check_checkpoint_compatibility
 from sensenova_u1.models.neo_unify.utils import load_image_native
-from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
+from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler, load_model_and_tokenizer
 
 
 class SenseNovaU1VQA:
@@ -22,12 +20,15 @@ class SenseNovaU1VQA:
         model_path: str,
         device: str = "cuda",
         dtype: torch.dtype = torch.bfloat16,
+        gguf_checkpoint: str | None = None,
     ) -> None:
         self.device = device
-        config = AutoConfig.from_pretrained(model_path)
-        check_checkpoint_compatibility(config)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = AutoModel.from_pretrained(model_path, config=config, torch_dtype=dtype).to(device).eval()
+        self.model, self.tokenizer = load_model_and_tokenizer(
+            model_path,
+            dtype=dtype,
+            device=device,
+            gguf_checkpoint=gguf_checkpoint,
+        )
 
     @torch.inference_mode()
     def answer(
@@ -104,6 +105,15 @@ def parse_args() -> argparse.Namespace:
         choices=["bfloat16", "float16", "float32"],
     )
     p.add_argument(
+        "--gguf_checkpoint",
+        default=None,
+        help=(
+            "Optional path to a .gguf quantized checkpoint. When set, the dequantizing "
+            "diffusers GGUF Linear layer is used instead of safetensors weights. "
+            "Requires the [gguf] extra (gguf>=0.10.0, diffusers>=0.30.0)."
+        ),
+    )
+    p.add_argument(
         "--attn_backend",
         default="auto",
         choices=["auto", "flash", "sdpa"],
@@ -138,7 +148,12 @@ def main() -> None:
     profiler = InferenceProfiler(enabled=args.profile, device=args.device)
 
     with profiler.time_load():
-        engine = SenseNovaU1VQA(args.model_path, device=args.device, dtype=dtype)
+        engine = SenseNovaU1VQA(
+            args.model_path,
+            device=args.device,
+            dtype=dtype,
+            gguf_checkpoint=args.gguf_checkpoint,
+        )
 
     if args.image is not None:
         # single image mode — image size used as proxy for profiler dimensions

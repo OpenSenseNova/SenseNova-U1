@@ -8,11 +8,14 @@ from typing import Sequence
 import numpy as np
 import torch
 from PIL import Image
-from transformers import AutoConfig, AutoModel, AutoTokenizer
 
 import sensenova_u1
-from sensenova_u1 import check_checkpoint_compatibility
-from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler, load_and_merge_lora_weight_from_safetensors
+from sensenova_u1.utils import (
+    DEFAULT_IMAGE_PATCH_SIZE,
+    InferenceProfiler,
+    load_and_merge_lora_weight_from_safetensors,
+    load_model_and_tokenizer,
+)
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
@@ -73,13 +76,16 @@ class SenseNovaU1T2I:
         model_path: str,
         device: str = "cuda",
         dtype: torch.dtype = torch.bfloat16,
+        gguf_checkpoint: str | None = None,
     ) -> None:
         self.device = device
         self._last_think_text: str = ""
-        config = AutoConfig.from_pretrained(model_path)
-        check_checkpoint_compatibility(config)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = AutoModel.from_pretrained(model_path, config=config, torch_dtype=dtype).to(device).eval()
+        self.model, self.tokenizer = load_model_and_tokenizer(
+            model_path,
+            dtype=dtype,
+            device=device,
+            gguf_checkpoint=gguf_checkpoint,
+        )
 
     @property
     def last_think_text(self) -> str:
@@ -227,6 +233,15 @@ def parse_args() -> argparse.Namespace:
         choices=["bfloat16", "float16", "float32"],
     )
     p.add_argument(
+        "--gguf_checkpoint",
+        default=None,
+        help=(
+            "Optional path to a .gguf quantized checkpoint. When set, the dequantizing "
+            "diffusers GGUF Linear layer is used instead of safetensors weights. "
+            "Requires the [gguf] extra (gguf>=0.10.0, diffusers>=0.30.0)."
+        ),
+    )
+    p.add_argument(
         "--attn_backend",
         default="auto",
         choices=["auto", "flash", "sdpa"],
@@ -339,7 +354,12 @@ def main() -> None:
 
     try:
         with profiler.time_load():
-            engine = SenseNovaU1T2I(args.model_path, device=args.device, dtype=dtype)
+            engine = SenseNovaU1T2I(
+                args.model_path,
+                device=args.device,
+                dtype=dtype,
+                gguf_checkpoint=args.gguf_checkpoint,
+            )
         if args.lora_path is not None:
             print(f"load lora {args.lora_path}")
             engine.model = load_and_merge_lora_weight_from_safetensors(engine.model, args.lora_path)

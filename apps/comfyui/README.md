@@ -72,6 +72,28 @@ export SN_BASE_URL="https://token.sensenova.cn/v1"
 
 Tokens are not exposed as node inputs, so they are not saved into ComfyUI workflows.
 
+## GGUF Quantized Checkpoints
+
+The `SenseNova U1 Local Loader` exposes an optional `gguf_checkpoint` dropdown
+populated from `<comfyui>/models/gguf/` and the stock ComfyUI
+`<comfyui>/models/diffusion_models/` folder (the default location used by
+ComfyUI-GGUF style distributions). When a file is selected, weights are loaded
+through `diffusers`' GGUF quantizer (dequantizing `nn.Linear` -> `GGUFLinear`)
+instead of safetensors; config and tokenizer still come from `model_path`. The
+default empty selection keeps the safetensors path.
+
+Drop your `.gguf` file into either folder and restart ComfyUI to refresh the
+dropdown.
+
+Requirements: install the `gguf` extra in the ComfyUI Python environment, e.g.
+
+```bash
+python -m pip install -e ".[gguf]"     # from this repo, or
+python -m pip install "gguf>=0.10.0" "diffusers>=0.30.0"
+```
+
+`gguf_checkpoint` cannot be combined with a non-`none` `device_map` — pick one.
+
 ## Notes On Samplers
 
 Local U1 generation uses the sampling loop implemented by `t2i_generate`, `it2i_generate`, and

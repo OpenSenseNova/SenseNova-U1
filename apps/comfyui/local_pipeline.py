@@ -170,6 +170,7 @@ class SenseNovaU1LocalModel:
         max_memory: str = "",
         offload_folder: str = "",
         offload_state_dict: bool = False,
+        gguf_checkpoint: str = "",
     ) -> None:
         if not model_path.strip():
             raise RuntimeError("Local model_path cannot be empty.")
@@ -185,10 +186,15 @@ class SenseNovaU1LocalModel:
 
         torch_dtype = _resolve_dtype(torch, dtype)
         normalized_device_map = None if device_map == "none" else device_map
+        normalized_gguf = gguf_checkpoint.strip() or None
+        if normalized_gguf and normalized_device_map:
+            # diffusers' GGUF quantizer skips accelerate sharding — let the user know.
+            raise RuntimeError("gguf_checkpoint cannot be combined with a device_map; pick one.")
         self.device = device
         self.dtype = dtype
         self.model_path = model_path
         self.attn_backend = attn_backend
+        self.gguf_checkpoint = normalized_gguf or ""
         self.effective_attn_backend = sensenova_u1.effective_attn_backend()
         self.model, self.tokenizer = load_model_and_tokenizer(
             model_path,
@@ -198,6 +204,7 @@ class SenseNovaU1LocalModel:
             max_memory=max_memory or None,
             offload_folder=offload_folder or None,
             offload_state_dict=offload_state_dict if offload_state_dict else None,
+            gguf_checkpoint=normalized_gguf,
         )
         _maybe_remove_source_path(injected_path)
 
@@ -209,6 +216,7 @@ class SenseNovaU1LocalModel:
             "dtype": self.dtype,
             "attn_backend": self.attn_backend,
             "effective_attn_backend": self.effective_attn_backend,
+            "gguf_checkpoint": self.gguf_checkpoint,
         }
 
     def text_to_image(
@@ -602,6 +610,7 @@ def _load_model_and_tokenizer(
     max_memory: str | None = None,
     offload_folder: str | None = None,
     offload_state_dict: bool | None = None,
+    gguf_checkpoint: str | None = None,
 ):
     try:
         from transformers import AutoConfig, AutoModel, AutoTokenizer
@@ -617,6 +626,26 @@ def _load_model_and_tokenizer(
     config = AutoConfig.from_pretrained(model_path)
     check_checkpoint_compatibility(config)
     tokenizer = AutoTokenizer.from_pretrained(model_path)
+
+    if gguf_checkpoint:
+        try:
+            from accelerate import init_empty_weights
+
+            from sensenova_u1.utils import load_gguf_checkpoint, set_gguf2meta_model
+        except ImportError as exc:
+            raise RuntimeError(
+                "GGUF loading requires `accelerate`, `gguf>=0.10.0`, and `diffusers>=0.30.0`. "
+                "Install them with `pip install -e .[gguf]` or in the ComfyUI Python environment."
+            ) from exc
+        with init_empty_weights():
+            model = AutoModel.from_config(config)
+        state_dict = load_gguf_checkpoint(gguf_checkpoint)
+        import torch as _torch
+
+        target_device = _torch.device(device) if isinstance(device, str) else device
+        set_gguf2meta_model(model, state_dict, dtype, target_device)
+        return model.eval(), tokenizer
+
     model_kwargs: dict[str, Any] = {
         "config": config,
         "torch_dtype": dtype,
