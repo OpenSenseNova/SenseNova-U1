@@ -91,6 +91,8 @@ SenseNova U1 的核心是 **[NEO-Unify](https://huggingface.co/blog/sensenova/ne
 
 ## 📣 最新动态
 
+- `[2026.05.08]` 新增 **GGUF 量化权重支持** 与 **分层加载 VRAM 模式**，便于在单卡低显存环境下推理，详见 [低显存推理（GGUF + VRAM 模式）](#-低显存推理gguf--vram-模式)。`SenseNova-U1-8B-MoT-Merger` 的 GGUF 权重已上传至 [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf)，特别感谢 [@smthem](https://github.com/smthem) 为社区贡献量化权重。
+
 - `[2026.05.06]` 发布[SenseNova-U1-8B-MoT-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors). 请查看[推理示例脚本](docs/base_vs_distill.md#run-base-and-distilled-model).
 
 - `[2026.04.30]` 发布8步推理模型的预览版 [SenseNova-U1-8B-MoT-8step-preview](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-8step-preview). 在大多数情况下，该模型的图像生成质量与基础模型非常接近 (查看 [效果对比和存在的问题](docs/base_vs_distill.md))。要测试该模型，可以参考[推理脚本](examples/README.md), 但需替换如下参数: ```--cfg_scale 1.0 --num_steps 8``` .
@@ -444,6 +446,53 @@ python examples/interleave/inference.py --model_path sensenova/SenseNova-U1-8B-M
 </details>
 
 > 批量推理、JSONL 格式、prompt 增强、分辨率档位及完整参数说明请参见 [`examples/README_CN.md`](./examples/README_CN.md)。
+
+
+### 💾 低显存推理（GGUF + VRAM 模式）
+
+针对单张消费级显卡的部署场景，我们在 `transformers` 路径上提供两项可独立启用、也可组合使用的低显存特性。
+
+#### GGUF 量化权重
+
+在四个推理脚本（`t2i`、`editing`、`interleave`、`vqa`）中传入 `--gguf_checkpoint`，即可使用 `diffusers` GGUF Linear 层加载量化后的 `.gguf` 权重，替代原始 bf16 safetensors 权重。`--model_path` 仍需指定（用于加载 tokenizer / config 及非语言模型权重）。
+
+```bash
+# 一次性安装可选依赖
+uv pip install -e ".[gguf]"   # 或：pip install "gguf>=0.10.0" "diffusers>=0.30.0"
+
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --gguf_checkpoint /path/to/SenseNova-U1-8B-MoT-Merger-Q4_K_M.gguf \
+  --prompt "A male peacock trying to attract a female" \
+  --output output.png
+```
+
+`SenseNova-U1-8B-MoT-Merger` 的 GGUF 权重（提供 Q3 / Q4 / Q5 / Q6 / Q8 等多档量化）：
+
+| 量化权重 | HF 链接 |
+| :------- | :------ |
+| SenseNova-U1-8B-MoT-Merger-gguf | [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) |
+
+> 🙏 特别感谢 GitHub 用户 [@smthem](https://github.com/smthem) 为社区贡献 GGUF 量化权重。
+
+#### `--vram_mode`：单卡分层卸载
+
+`--vram_mode` 将语言模型各层常驻 CPU pinned memory，仅在前向时按需流式拷贝到 GPU 上参与计算，从而显著降低权重的 VRAM 占用，激活值仍保留在显卡上。
+
+| 模式 | 行为 | 适用场景 |
+| :--- | :--- | :--- |
+| `full`（默认） | 不做卸载，整模放在 GPU 上 | 显存充裕，追求最快速度 |
+| `low` | 同步逐层 CPU↔GPU 交换 | 显存最为紧张 |
+| `balanced` | 异步预取，将 H2D 拷贝与计算重叠 | 显存吃紧但希望恢复部分速度 |
+
+```bash
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --vram_mode balanced \
+  --prompt "..." --output output.png
+```
+
+`--gguf_checkpoint` 与 `--vram_mode` 可叠加：在 ~16 GB 消费卡上推荐使用 `Q4 GGUF + balanced` 组合。
 
 
 ### ⚡ 使用 LightLLM + LightX2V 运行

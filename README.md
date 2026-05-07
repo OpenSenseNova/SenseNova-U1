@@ -92,6 +92,8 @@ Although relatively compact by today’s standards, these models already show st
 
 ## 📣 Updated News
 
+- `[2026.05.08]` Add **GGUF quantized checkpoints** and **layer-offload VRAM modes** for low-VRAM single-GPU inference. See [Memory-efficient inference](#-memory-efficient-inference-gguf--vram-modes). GGUF weights for `SenseNova-U1-8B-MoT-Merger` are available at [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) — many thanks to [@smthem](https://github.com/smthem) for contributing the quantized weights.
+
 - `[2026.05.06]` Release [SenseNova-U1-8B-MoT-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors). Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
 - `[2026.04.30]` Release the preview version of the 8-step inference model [SenseNova-U1-8B-MoT-8step-preview](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-8step-preview). In most cases, the image generation quality of this model closely matches that of the base model (see [comparison and existing issues](docs/base_vs_distill.md)). To test this model, you can use the [inference scripts](examples/README.md), but with the following parameters: ```--cfg_scale 1.0 --num_steps 8``` .
@@ -446,6 +448,53 @@ python examples/interleave/inference.py --model_path sensenova/SenseNova-U1-8B-M
 </details>
 
 > See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
+
+
+### 💾 Memory-efficient inference (GGUF + VRAM modes)
+
+For users running on a single consumer GPU, two complementary features lower the VRAM footprint of the `transformers` path. They can be combined freely.
+
+#### GGUF quantized checkpoints
+
+Pass `--gguf_checkpoint` to any of the four inference scripts (`t2i`, `editing`, `interleave`, `vqa`) to load a quantized `.gguf` file via the `diffusers` GGUF Linear layer instead of the bf16 safetensors weights. The base `--model_path` is still required (for tokenizer / config / non-LM weights).
+
+```bash
+# install the optional extra once
+uv pip install -e ".[gguf]"   # or: pip install "gguf>=0.10.0" "diffusers>=0.30.0"
+
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --gguf_checkpoint /path/to/SenseNova-U1-8B-MoT-Merger-Q4_K_M.gguf \
+  --prompt "A male peacock trying to attract a female" \
+  --output output.png
+```
+
+GGUF weights for `SenseNova-U1-8B-MoT-Merger` (multiple quant levels: Q3 / Q4 / Q5 / Q6 / Q8) are available at:
+
+| Quantized weights | HF link |
+| :---------------- | :------ |
+| SenseNova-U1-8B-MoT-Merger-gguf | [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) |
+
+> 🙏 Thanks to GitHub user [@smthem](https://github.com/smthem) for contributing the quantized GGUF weights to the community.
+
+#### `--vram_mode`: single-GPU layer offload
+
+Pass `--vram_mode` to keep the language-model layers resident on CPU pinned memory and stream them onto the GPU on-demand during forward, freeing weight VRAM while keeping activations on-device.
+
+| Mode | Behavior | When to use |
+| :--- | :--- | :--- |
+| `full` *(default)* | No offload; whole model on GPU | Plenty of VRAM, best speed |
+| `low` | Synchronous per-layer CPU↔GPU swap | Lowest VRAM footprint |
+| `balanced` | Async prefetch overlaps H2D copy with compute | Tight on VRAM but want to recover speed |
+
+```bash
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --vram_mode balanced \
+  --prompt "..." --output output.png
+```
+
+`--gguf_checkpoint` and `--vram_mode` compose: a Q4 GGUF + `balanced` is the recommended setup for ~10–12 GB consumer cards.
 
 
 ### ⚡ Run with LightLLM + LightX2V (Recommended)
