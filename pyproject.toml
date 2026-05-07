@@ -117,3 +117,6 @@ extend-exclude = [
     "evaluation/easi/EASI",
     "evaluation/easi/lightllm-stack/LightLLM",
 ]
+
+[tool.ruff.lint]
+select = ["I"]

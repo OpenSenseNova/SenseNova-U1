@@ -14,6 +14,6 @@ jobs:
       - name: Install Ruff
         run: pip install ruff==0.14.4
       - name: Run Ruff Check
-        run: ruff check . --select I --output-format=github
+        run: ruff check . --output-format=github
       - name: Run Ruff Format Check
         run: ruff format . --check
