@@ -48,12 +48,14 @@ Restart ComfyUI after installation.
 
 ## Workflows
 
-Example workflows live in `workflows/`:
+Example workflows live in `workflows/`. Each links to a screenshot of the loaded graph in `docs/`:
 
-- `api_u1_fast_t2i.json`: API U1-Fast text-to-image.
-- `local_t2i.json`: local SenseNova-U1 text-to-image.
-- `local_editing.json`: local SenseNova-U1 image editing.
-- `local_interleave.json`: local SenseNova-U1 interleaved generation.
+| Workflow | Description | Preview |
+| --- | --- | --- |
+| `api_u1_fast_t2i.json` | API U1-Fast text-to-image | ![api_u1_fast_t2i](docs/api_u1_fast_t2i.jpg) |
+| `local_t2i.json` | Local SenseNova-U1 text-to-image | ![t2i](docs/t2i.jpg) |
+| `local_editing.json` | Local SenseNova-U1 image editing | ![editing](docs/editing.jpg) |
+| `local_interleave.json` | Local SenseNova-U1 interleaved generation | ![interleave](docs/interleave.jpg) |
 
 Drag a workflow JSON into ComfyUI, then update `model_path`, `device`, `device_map`, and prompt
 settings as needed. For a smoke test, set `num_steps` to `1` or `2` before returning to the
