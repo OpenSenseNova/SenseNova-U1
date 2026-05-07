@@ -93,9 +93,7 @@ class SenseNovaU1T2I:
         vram_mode: str = DEFAULT_VRAM_MODE,
     ) -> None:
         if vram_mode not in _VRAM_MODE_TO_PREFETCH:
-            raise ValueError(
-                f"Unsupported vram_mode={vram_mode!r}. Choose one of {VRAM_MODE_OPTIONS}."
-            )
+            raise ValueError(f"Unsupported vram_mode={vram_mode!r}. Choose one of {VRAM_MODE_OPTIONS}.")
         self.device = device
         self._last_think_text: str = ""
         self.vram_mode = vram_mode
@@ -115,9 +113,7 @@ class SenseNovaU1T2I:
         target = torch.device(self.device)
         if self.prefetch_count == 1:
             return offload_layers_sync(self.model, DEFAULT_LAYERS_ATTR, target)
-        return offload_layers_async(
-            self.model, DEFAULT_LAYERS_ATTR, target, prefetch_count=self.prefetch_count
-        )
+        return offload_layers_async(self.model, DEFAULT_LAYERS_ATTR, target, prefetch_count=self.prefetch_count)
 
     @property
     def last_think_text(self) -> str:
