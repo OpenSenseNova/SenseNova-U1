@@ -2,6 +2,8 @@
 
 ComfyUI custom nodes for SenseNova-U1 API and local inference.
 
+> Requires a ComfyUI build that ships the v3 node API (`comfy_api.latest`). The nodes are registered through `comfy_entrypoint()`; older ComfyUI installs that only support the v1 `NODE_CLASS_MAPPINGS` registration will not load them.
+
 ## Nodes
 
 - `SenseNova Image Generate`: calls the U1-Fast image API.

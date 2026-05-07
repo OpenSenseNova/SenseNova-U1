@@ -8,6 +8,8 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+from comfy_api.latest import ComfyExtension, io
+
 try:
     from .api_client import (
         CHAT_MODELS,
@@ -78,9 +80,13 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
     from prompt_utils import load_prompt_template
 
 CATEGORY = "SenseNova"
+LOCAL_CATEGORY = f"{CATEGORY}/Local"
 VISION_SYSTEM_PROMPT = "You are a careful vision assistant. Describe only visible details."
 BUILDER_PROMPT_TEMPLATE = "builder_prompt.txt"
 LOGGER = logging.getLogger(__name__)
+
+LocalModelIO = io.Custom(LOCAL_MODEL_TYPE)
+InterleaveResultIO = io.Custom(INTERLEAVE_RESULT_TYPE)
 
 _LOCAL_MODEL_CACHE: dict[tuple, SenseNovaU1LocalModel] = {}
 
@@ -104,34 +110,36 @@ def _evict_model_cache(keep_key: tuple | None = None) -> None:
         LOGGER.info("SenseNova U1 loader: evicted %d cached model(s) from VRAM.", len(to_evict))
 
 
-class SenseNovaChat:
-    CATEGORY = CATEGORY
-    RETURN_TYPES = ("STRING", "STRING", "STRING")
-    RETURN_NAMES = ("text", "usage_json", "raw_json")
-    FUNCTION = "run"
+class SenseNovaChat(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaChat",
+            display_name="SenseNova Chat",
+            category=CATEGORY,
+            inputs=[
+                io.String.Input("text", multiline=True, default=""),
+                io.String.Input(
+                    "system_prompt",
+                    multiline=True,
+                    default="You are a helpful assistant. Answer clearly and concisely.",
+                ),
+                io.Combo.Input("model", options=list(CHAT_MODELS), default=CHAT_MODELS[0]),
+                io.Float.Input("temperature", default=0.7, min=0.0, max=2.0, step=0.1),
+                io.Float.Input("top_p", default=1.0, min=0.0, max=1.0, step=0.05),
+                io.Int.Input("max_tokens", default=2048, min=1, max=65536),
+                io.Int.Input("timeout", default=120, min=10, max=600),
+            ],
+            outputs=[
+                io.String.Output(display_name="text"),
+                io.String.Output(display_name="usage_json"),
+                io.String.Output(display_name="raw_json"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "text": ("STRING", {"multiline": True, "default": ""}),
-                "system_prompt": (
-                    "STRING",
-                    {
-                        "multiline": True,
-                        "default": "You are a helpful assistant. Answer clearly and concisely.",
-                    },
-                ),
-                "model": (list(CHAT_MODELS), {"default": CHAT_MODELS[0]}),
-                "temperature": ("FLOAT", {"default": 0.7, "min": 0.0, "max": 2.0, "step": 0.1}),
-                "top_p": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05}),
-                "max_tokens": ("INT", {"default": 2048, "min": 1, "max": 65536}),
-                "timeout": ("INT", {"default": 120, "min": 10, "max": 600}),
-            }
-        }
-
-    def run(
-        self,
+    def execute(
+        cls,
         text: str,
         system_prompt: str,
         model: str,
@@ -139,7 +147,7 @@ class SenseNovaChat:
         top_p: float,
         max_tokens: int,
         timeout: int,
-    ):
+    ) -> io.NodeOutput:
         client = SenseNovaClient.from_env()
         result = client.chat(
             text=text,
@@ -150,31 +158,37 @@ class SenseNovaChat:
             max_tokens=max_tokens,
             timeout=timeout,
         )
-        return (
+        return io.NodeOutput(
             result.text,
             json.dumps(result.usage, ensure_ascii=False),
             json.dumps(result.raw, ensure_ascii=False),
         )
 
 
-class SenseNovaImageGenerate:
-    CATEGORY = CATEGORY
-    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING", "STRING")
-    RETURN_NAMES = ("images", "image_base64", "image_url", "raw_json", "image_info")
-    FUNCTION = "run"
+class SenseNovaImageGenerate(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaImageGenerate",
+            display_name="SenseNova Image Generate",
+            category=CATEGORY,
+            inputs=[
+                io.String.Input("prompt", multiline=True, default=""),
+                io.Combo.Input("model", options=list(IMAGE_MODELS), default=IMAGE_MODELS[0]),
+                io.Combo.Input("size", options=list(IMAGE_SIZE_OPTIONS), default=IMAGE_SIZE_OPTIONS[0]),
+                io.Int.Input("timeout", default=300, min=30, max=900),
+            ],
+            outputs=[
+                io.Image.Output(display_name="images"),
+                io.String.Output(display_name="image_base64"),
+                io.String.Output(display_name="image_url"),
+                io.String.Output(display_name="raw_json"),
+                io.String.Output(display_name="image_info"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "prompt": ("STRING", {"multiline": True, "default": ""}),
-                "model": (list(IMAGE_MODELS), {"default": IMAGE_MODELS[0]}),
-                "size": (list(IMAGE_SIZE_OPTIONS), {"default": IMAGE_SIZE_OPTIONS[0]}),
-                "timeout": ("INT", {"default": 300, "min": 30, "max": 900}),
-            }
-        }
-
-    def run(self, prompt: str, model: str, size: str, timeout: int):
+    def execute(cls, prompt: str, model: str, size: str, timeout: int) -> io.NodeOutput:
         client = SenseNovaClient.from_env()
         result = client.generate_image(prompt=prompt, model=model, size=size, timeout=timeout)
         image = image_bytes_to_comfy_image(result.image_bytes)
@@ -185,7 +199,7 @@ class SenseNovaImageGenerate:
             bool(result.image_url),
             image_info,
         )
-        return (
+        return io.NodeOutput(
             image,
             result.image_base64,
             result.image_url,
@@ -194,34 +208,36 @@ class SenseNovaImageGenerate:
         )
 
 
-class SenseNovaPromptBuilder:
-    CATEGORY = CATEGORY
-    RETURN_TYPES = ("STRING", "STRING", "STRING")
-    RETURN_NAMES = ("prompt", "usage_json", "raw_json")
-    FUNCTION = "run"
+class SenseNovaPromptBuilder(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaPromptBuilder",
+            display_name="SenseNova Prompt Builder",
+            category=CATEGORY,
+            inputs=[
+                io.String.Input("prompt", multiline=True, default=""),
+                io.String.Input(
+                    "system_prompt",
+                    multiline=True,
+                    default=load_prompt_template(BUILDER_PROMPT_TEMPLATE),
+                ),
+                io.Combo.Input("model", options=list(CHAT_MODELS), default=CHAT_MODELS[0]),
+                io.Float.Input("temperature", default=0.3, min=0.0, max=2.0, step=0.1),
+                io.Float.Input("top_p", default=1.0, min=0.0, max=1.0, step=0.05),
+                io.Int.Input("max_tokens", default=2048, min=1, max=65536),
+                io.Int.Input("timeout", default=120, min=10, max=600),
+            ],
+            outputs=[
+                io.String.Output(display_name="prompt"),
+                io.String.Output(display_name="usage_json"),
+                io.String.Output(display_name="raw_json"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "prompt": ("STRING", {"multiline": True, "default": ""}),
-                "system_prompt": (
-                    "STRING",
-                    {
-                        "multiline": True,
-                        "default": load_prompt_template(BUILDER_PROMPT_TEMPLATE),
-                    },
-                ),
-                "model": (list(CHAT_MODELS), {"default": CHAT_MODELS[0]}),
-                "temperature": ("FLOAT", {"default": 0.3, "min": 0.0, "max": 2.0, "step": 0.1}),
-                "top_p": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05}),
-                "max_tokens": ("INT", {"default": 2048, "min": 1, "max": 65536}),
-                "timeout": ("INT", {"default": 120, "min": 10, "max": 600}),
-            }
-        }
-
-    def run(
-        self,
+    def execute(
+        cls,
         prompt: str,
         system_prompt: str,
         model: str,
@@ -229,7 +245,7 @@ class SenseNovaPromptBuilder:
         top_p: float,
         max_tokens: int,
         timeout: int,
-    ):
+    ) -> io.NodeOutput:
         client = SenseNovaClient.from_env()
         result = client.chat(
             text=prompt,
@@ -240,42 +256,40 @@ class SenseNovaPromptBuilder:
             max_tokens=max_tokens,
             timeout=timeout,
         )
-        return (
+        return io.NodeOutput(
             result.text,
             json.dumps(result.usage, ensure_ascii=False),
             json.dumps(result.raw, ensure_ascii=False),
         )
 
 
-class SenseNovaVisionURL:
-    CATEGORY = CATEGORY
-    RETURN_TYPES = ("STRING", "STRING", "STRING")
-    RETURN_NAMES = ("text", "usage_json", "raw_json")
-    FUNCTION = "run"
+class SenseNovaVisionURL(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaVisionURL",
+            display_name="SenseNova Vision URL",
+            category=CATEGORY,
+            inputs=[
+                io.String.Input("image_url", default=""),
+                io.String.Input("prompt", multiline=True, default="Describe this image."),
+                io.String.Input("system_prompt", multiline=True, default=VISION_SYSTEM_PROMPT),
+                io.Combo.Input("model", options=list(VISION_MODELS), default=VISION_MODELS[0]),
+                io.Float.Input("temperature", default=0.2, min=0.0, max=2.0, step=0.1),
+                io.Float.Input("top_p", default=1.0, min=0.0, max=1.0, step=0.05),
+                io.Int.Input("max_tokens", default=2048, min=1, max=65536),
+                io.Int.Input("timeout", default=120, min=10, max=600),
+            ],
+            outputs=[
+                io.String.Output(display_name="text"),
+                io.String.Output(display_name="usage_json"),
+                io.String.Output(display_name="raw_json"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "image_url": ("STRING", {"default": ""}),
-                "prompt": ("STRING", {"multiline": True, "default": "Describe this image."}),
-                "system_prompt": (
-                    "STRING",
-                    {
-                        "multiline": True,
-                        "default": VISION_SYSTEM_PROMPT,
-                    },
-                ),
-                "model": (list(VISION_MODELS), {"default": VISION_MODELS[0]}),
-                "temperature": ("FLOAT", {"default": 0.2, "min": 0.0, "max": 2.0, "step": 0.1}),
-                "top_p": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05}),
-                "max_tokens": ("INT", {"default": 2048, "min": 1, "max": 65536}),
-                "timeout": ("INT", {"default": 120, "min": 10, "max": 600}),
-            }
-        }
-
-    def run(
-        self,
+    def execute(
+        cls,
         image_url: str,
         prompt: str,
         system_prompt: str,
@@ -284,7 +298,7 @@ class SenseNovaVisionURL:
         top_p: float,
         max_tokens: int,
         timeout: int,
-    ):
+    ) -> io.NodeOutput:
         client = SenseNovaClient.from_env()
         result = client.vision_chat(
             image_url=image_url,
@@ -296,42 +310,40 @@ class SenseNovaVisionURL:
             max_tokens=max_tokens,
             timeout=timeout,
         )
-        return (
+        return io.NodeOutput(
             result.text,
             json.dumps(result.usage, ensure_ascii=False),
             json.dumps(result.raw, ensure_ascii=False),
         )
 
 
-class SenseNovaVisionImage:
-    CATEGORY = CATEGORY
-    RETURN_TYPES = ("STRING", "STRING", "STRING")
-    RETURN_NAMES = ("text", "usage_json", "raw_json")
-    FUNCTION = "run"
+class SenseNovaVisionImage(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaVisionImage",
+            display_name="SenseNova Vision Image",
+            category=CATEGORY,
+            inputs=[
+                io.Image.Input("image"),
+                io.String.Input("prompt", multiline=True, default="Describe this image."),
+                io.String.Input("system_prompt", multiline=True, default=VISION_SYSTEM_PROMPT),
+                io.Combo.Input("model", options=list(VISION_MODELS), default=VISION_MODELS[0]),
+                io.Float.Input("temperature", default=0.2, min=0.0, max=2.0, step=0.1),
+                io.Float.Input("top_p", default=1.0, min=0.0, max=1.0, step=0.05),
+                io.Int.Input("max_tokens", default=2048, min=1, max=65536),
+                io.Int.Input("timeout", default=120, min=10, max=600),
+            ],
+            outputs=[
+                io.String.Output(display_name="text"),
+                io.String.Output(display_name="usage_json"),
+                io.String.Output(display_name="raw_json"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "image": ("IMAGE",),
-                "prompt": ("STRING", {"multiline": True, "default": "Describe this image."}),
-                "system_prompt": (
-                    "STRING",
-                    {
-                        "multiline": True,
-                        "default": VISION_SYSTEM_PROMPT,
-                    },
-                ),
-                "model": (list(VISION_MODELS), {"default": VISION_MODELS[0]}),
-                "temperature": ("FLOAT", {"default": 0.2, "min": 0.0, "max": 2.0, "step": 0.1}),
-                "top_p": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05}),
-                "max_tokens": ("INT", {"default": 2048, "min": 1, "max": 65536}),
-                "timeout": ("INT", {"default": 120, "min": 10, "max": 600}),
-            }
-        }
-
-    def run(
-        self,
+    def execute(
+        cls,
         image,
         prompt: str,
         system_prompt: str,
@@ -340,7 +352,7 @@ class SenseNovaVisionImage:
         top_p: float,
         max_tokens: int,
         timeout: int,
-    ):
+    ) -> io.NodeOutput:
         client = SenseNovaClient.from_env()
         result = client.vision_chat(
             image_url=comfy_image_to_png_data_url(image),
@@ -352,55 +364,51 @@ class SenseNovaVisionImage:
             max_tokens=max_tokens,
             timeout=timeout,
         )
-        return (
+        return io.NodeOutput(
             result.text,
             json.dumps(result.usage, ensure_ascii=False),
             json.dumps(result.raw, ensure_ascii=False),
         )
 
 
-class SenseNovaU1LocalLoader:
-    CATEGORY = f"{CATEGORY}/Local"
-    RETURN_TYPES = (LOCAL_MODEL_TYPE, "STRING")
-    RETURN_NAMES = ("u1_model", "model_info_json")
-    FUNCTION = "load"
+class SenseNovaU1LocalLoader(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaU1LocalLoader",
+            display_name="SenseNova U1 Local Loader",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                io.String.Input(
+                    "model_path",
+                    default="sensenova/SenseNova-U1-8B-MoT",
+                    tooltip="HuggingFace model id or local checkpoint directory.",
+                ),
+                io.String.Input(
+                    "sensenova_u1_src",
+                    default=default_source_path(),
+                    tooltip="Optional SenseNova-U1 source checkout or src directory.",
+                ),
+                io.String.Input("device", default="cuda"),
+                io.Combo.Input("dtype", options=list(DTYPE_OPTIONS), default="bfloat16"),
+                io.Combo.Input("attn_backend", options=list(ATTN_BACKEND_OPTIONS), default="auto"),
+                io.Combo.Input("device_map", options=list(DEVICE_MAP_OPTIONS), default="none"),
+                io.String.Input(
+                    "max_memory",
+                    default="",
+                    tooltip="Optional accelerate max_memory, e.g. 0=20GiB,cpu=64GiB.",
+                ),
+                io.String.Input("offload_folder", default=""),
+                io.Boolean.Input("offload_state_dict", default=False),
+            ],
+            outputs=[
+                LocalModelIO.Output(display_name="u1_model"),
+                io.String.Output(display_name="model_info_json"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "model_path": (
-                    "STRING",
-                    {
-                        "default": "sensenova/SenseNova-U1-8B-MoT",
-                        "tooltip": "HuggingFace model id or local checkpoint directory.",
-                    },
-                ),
-                "sensenova_u1_src": (
-                    "STRING",
-                    {
-                        "default": default_source_path(),
-                        "tooltip": "Optional SenseNova-U1 source checkout or src directory.",
-                    },
-                ),
-                "device": ("STRING", {"default": "cuda"}),
-                "dtype": (list(DTYPE_OPTIONS), {"default": "bfloat16"}),
-                "attn_backend": (list(ATTN_BACKEND_OPTIONS), {"default": "auto"}),
-                "device_map": (list(DEVICE_MAP_OPTIONS), {"default": "none"}),
-                "max_memory": (
-                    "STRING",
-                    {
-                        "default": "",
-                        "tooltip": "Optional accelerate max_memory, e.g. 0=20GiB,cpu=64GiB.",
-                    },
-                ),
-                "offload_folder": ("STRING", {"default": ""}),
-                "offload_state_dict": ("BOOLEAN", {"default": False}),
-            }
-        }
-
-    @classmethod
-    def IS_CHANGED(
+    def fingerprint_inputs(
         cls,
         model_path: str,
         sensenova_u1_src: str,
@@ -425,8 +433,9 @@ class SenseNovaU1LocalLoader:
         )
         return hashlib.sha256(str(key).encode()).hexdigest()
 
-    def load(
-        self,
+    @classmethod
+    def execute(
+        cls,
         model_path: str,
         sensenova_u1_src: str,
         device: str,
@@ -436,7 +445,7 @@ class SenseNovaU1LocalLoader:
         max_memory: str,
         offload_folder: str,
         offload_state_dict: bool,
-    ):
+    ) -> io.NodeOutput:
         cache_key = (
             model_path.strip(),
             sensenova_u1_src.strip(),
@@ -465,45 +474,45 @@ class SenseNovaU1LocalLoader:
         else:
             LOGGER.info("SenseNova U1 loader: reusing cached model for %s", model_path)
         model = _LOCAL_MODEL_CACHE[cache_key]
-        return model, json.dumps(model.info, ensure_ascii=False)
+        return io.NodeOutput(model, json.dumps(model.info, ensure_ascii=False))
 
 
-class SenseNovaU1LocalTextToImage:
-    CATEGORY = f"{CATEGORY}/Local"
-    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING")
-    RETURN_NAMES = ("images", "text", "think_text", "metadata_json")
-    FUNCTION = "run"
+class SenseNovaU1LocalTextToImage(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaU1LocalTextToImage",
+            display_name="SenseNova U1 Local Text to Image",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                LocalModelIO.Input("u1_model"),
+                io.String.Input("prompt", multiline=True, default=""),
+                io.Combo.Input(
+                    "resolution",
+                    options=list(T2I_RESOLUTION_OPTIONS),
+                    default=T2I_RESOLUTION_OPTIONS[0],
+                ),
+                io.Float.Input("cfg_scale", default=4.0, min=0.0, max=20.0, step=0.1),
+                io.Combo.Input("cfg_norm", options=list(CFG_NORM_OPTIONS), default="none"),
+                io.Float.Input("timestep_shift", default=3.0, min=0.0, max=20.0, step=0.1),
+                io.Float.Input("cfg_interval_start", default=0.0, min=0.0, max=1.0, step=0.05),
+                io.Float.Input("cfg_interval_end", default=1.0, min=0.0, max=1.0, step=0.05),
+                io.Int.Input("num_steps", default=50, min=1, max=200),
+                io.Int.Input("batch_size", default=1, min=1, max=16),
+                io.Int.Input("seed", default=DEFAULT_SEED, min=0, max=2**31 - 1),
+                io.Boolean.Input("think_mode", default=False),
+            ],
+            outputs=[
+                io.Image.Output(display_name="images"),
+                io.String.Output(display_name="text"),
+                io.String.Output(display_name="think_text"),
+                io.String.Output(display_name="metadata_json"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "u1_model": (LOCAL_MODEL_TYPE,),
-                "prompt": ("STRING", {"multiline": True, "default": ""}),
-                "resolution": (
-                    list(T2I_RESOLUTION_OPTIONS),
-                    {"default": T2I_RESOLUTION_OPTIONS[0]},
-                ),
-                "cfg_scale": ("FLOAT", {"default": 4.0, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "cfg_norm": (list(CFG_NORM_OPTIONS), {"default": "none"}),
-                "timestep_shift": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "cfg_interval_start": (
-                    "FLOAT",
-                    {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05},
-                ),
-                "cfg_interval_end": (
-                    "FLOAT",
-                    {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05},
-                ),
-                "num_steps": ("INT", {"default": 50, "min": 1, "max": 200}),
-                "batch_size": ("INT", {"default": 1, "min": 1, "max": 16}),
-                "seed": ("INT", {"default": DEFAULT_SEED, "min": 0, "max": 2**31 - 1}),
-                "think_mode": ("BOOLEAN", {"default": False}),
-            }
-        }
-
-    def run(
-        self,
+    def execute(
+        cls,
         u1_model: SenseNovaU1LocalModel,
         prompt: str,
         resolution: str,
@@ -516,7 +525,7 @@ class SenseNovaU1LocalTextToImage:
         batch_size: int,
         seed: int,
         think_mode: bool,
-    ):
+    ) -> io.NodeOutput:
         width, height = parse_resolution_option(resolution)
         result = u1_model.text_to_image(
             prompt=prompt,
@@ -532,52 +541,52 @@ class SenseNovaU1LocalTextToImage:
             think_mode=think_mode,
         )
         LOGGER.info("SenseNova U1 local T2I generated: %s", comfy_image_info(result.images))
-        return output_to_tuple(result)
+        return io.NodeOutput(*output_to_tuple(result))
 
 
-class SenseNovaU1LocalImageEdit:
-    CATEGORY = f"{CATEGORY}/Local"
-    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING")
-    RETURN_NAMES = ("images", "text", "think_text", "metadata_json")
-    FUNCTION = "run"
+class SenseNovaU1LocalImageEdit(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaU1LocalImageEdit",
+            display_name="SenseNova U1 Local Image Edit",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                LocalModelIO.Input("u1_model"),
+                io.Image.Input("image"),
+                io.String.Input("prompt", multiline=True, default=""),
+                io.Boolean.Input("auto_size", default=True),
+                io.Int.Input("width", default=2048, min=32, max=8192, step=32),
+                io.Int.Input("height", default=2048, min=32, max=8192, step=32),
+                io.Float.Input(
+                    "target_megapixels",
+                    default=4.194304,
+                    min=0.25,
+                    max=32.0,
+                    step=0.25,
+                ),
+                io.Float.Input("cfg_scale", default=4.0, min=0.0, max=20.0, step=0.1),
+                io.Float.Input("img_cfg_scale", default=1.0, min=0.0, max=20.0, step=0.1),
+                io.Combo.Input("cfg_norm", options=list(CFG_NORM_OPTIONS[:-1]), default="none"),
+                io.Float.Input("timestep_shift", default=3.0, min=0.0, max=20.0, step=0.1),
+                io.Float.Input("cfg_interval_start", default=0.0, min=0.0, max=1.0, step=0.05),
+                io.Float.Input("cfg_interval_end", default=1.0, min=0.0, max=1.0, step=0.05),
+                io.Int.Input("num_steps", default=50, min=1, max=200),
+                io.Int.Input("batch_size", default=1, min=1, max=16),
+                io.Int.Input("seed", default=DEFAULT_SEED, min=0, max=2**31 - 1),
+                io.Boolean.Input("think_mode", default=False, optional=True),
+            ],
+            outputs=[
+                io.Image.Output(display_name="images"),
+                io.String.Output(display_name="text"),
+                io.String.Output(display_name="think_text"),
+                io.String.Output(display_name="metadata_json"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "u1_model": (LOCAL_MODEL_TYPE,),
-                "image": ("IMAGE",),
-                "prompt": ("STRING", {"multiline": True, "default": ""}),
-                "auto_size": ("BOOLEAN", {"default": True}),
-                "width": ("INT", {"default": 2048, "min": 32, "max": 8192, "step": 32}),
-                "height": ("INT", {"default": 2048, "min": 32, "max": 8192, "step": 32}),
-                "target_megapixels": (
-                    "FLOAT",
-                    {"default": 4.194304, "min": 0.25, "max": 32.0, "step": 0.25},
-                ),
-                "cfg_scale": ("FLOAT", {"default": 4.0, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "img_cfg_scale": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "cfg_norm": (list(CFG_NORM_OPTIONS[:-1]), {"default": "none"}),
-                "timestep_shift": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "cfg_interval_start": (
-                    "FLOAT",
-                    {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05},
-                ),
-                "cfg_interval_end": (
-                    "FLOAT",
-                    {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05},
-                ),
-                "num_steps": ("INT", {"default": 50, "min": 1, "max": 200}),
-                "batch_size": ("INT", {"default": 1, "min": 1, "max": 16}),
-                "seed": ("INT", {"default": DEFAULT_SEED, "min": 0, "max": 2**31 - 1}),
-            },
-            "optional": {
-                "think_mode": ("BOOLEAN", {"default": False}),
-            },
-        }
-
-    def run(
-        self,
+    def execute(
+        cls,
         u1_model: SenseNovaU1LocalModel,
         image,
         prompt: str,
@@ -595,7 +604,7 @@ class SenseNovaU1LocalImageEdit:
         batch_size: int,
         seed: int,
         think_mode: bool = False,
-    ):
+    ) -> io.NodeOutput:
         result = u1_model.edit_image(
             prompt=prompt,
             input_image=image,
@@ -613,51 +622,51 @@ class SenseNovaU1LocalImageEdit:
             think_mode=think_mode,
         )
         LOGGER.info("SenseNova U1 local edit generated: %s", comfy_image_info(result.images))
-        return output_to_tuple(result)
+        return io.NodeOutput(*output_to_tuple(result))
 
 
-class SenseNovaU1LocalInterleave:
-    CATEGORY = f"{CATEGORY}/Local"
-    RETURN_TYPES = ("IMAGE", "STRING", "STRING", "STRING", INTERLEAVE_RESULT_TYPE)
-    RETURN_NAMES = ("images", "text", "think_text", "metadata_json", "interleave_result")
-    FUNCTION = "run"
+class SenseNovaU1LocalInterleave(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaU1LocalInterleave",
+            display_name="SenseNova U1 Local Interleave",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                LocalModelIO.Input("u1_model"),
+                io.String.Input("prompt", multiline=True, default=""),
+                io.Combo.Input(
+                    "resolution",
+                    options=list(INTERLEAVE_RESOLUTION_OPTIONS),
+                    default=INTERLEAVE_RESOLUTION_OPTIONS[1],
+                ),
+                io.String.Input(
+                    "system_message",
+                    multiline=True,
+                    default=DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
+                ),
+                io.Float.Input("cfg_scale", default=4.0, min=0.0, max=20.0, step=0.1),
+                io.Float.Input("img_cfg_scale", default=1.0, min=0.0, max=20.0, step=0.1),
+                io.Float.Input("timestep_shift", default=3.0, min=0.0, max=20.0, step=0.1),
+                io.Float.Input("cfg_interval_start", default=0.0, min=0.0, max=1.0, step=0.05),
+                io.Float.Input("cfg_interval_end", default=1.0, min=0.0, max=1.0, step=0.05),
+                io.Int.Input("num_steps", default=50, min=1, max=200),
+                io.Int.Input("seed", default=DEFAULT_SEED, min=0, max=2**31 - 1),
+                io.Boolean.Input("think_mode", default=True),
+                io.Image.Input("image", optional=True),
+            ],
+            outputs=[
+                io.Image.Output(display_name="images"),
+                io.String.Output(display_name="text"),
+                io.String.Output(display_name="think_text"),
+                io.String.Output(display_name="metadata_json"),
+                InterleaveResultIO.Output(display_name="interleave_result"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "u1_model": (LOCAL_MODEL_TYPE,),
-                "prompt": ("STRING", {"multiline": True, "default": ""}),
-                "resolution": (
-                    list(INTERLEAVE_RESOLUTION_OPTIONS),
-                    {"default": INTERLEAVE_RESOLUTION_OPTIONS[1]},
-                ),
-                "system_message": (
-                    "STRING",
-                    {"multiline": True, "default": DEFAULT_INTERLEAVE_SYSTEM_MESSAGE},
-                ),
-                "cfg_scale": ("FLOAT", {"default": 4.0, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "img_cfg_scale": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "timestep_shift": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 20.0, "step": 0.1}),
-                "cfg_interval_start": (
-                    "FLOAT",
-                    {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.05},
-                ),
-                "cfg_interval_end": (
-                    "FLOAT",
-                    {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05},
-                ),
-                "num_steps": ("INT", {"default": 50, "min": 1, "max": 200}),
-                "seed": ("INT", {"default": DEFAULT_SEED, "min": 0, "max": 2**31 - 1}),
-                "think_mode": ("BOOLEAN", {"default": True}),
-            },
-            "optional": {
-                "image": ("IMAGE",),
-            },
-        }
-
-    def run(
-        self,
+    def execute(
+        cls,
         u1_model: SenseNovaU1LocalModel,
         prompt: str,
         resolution: str,
@@ -671,7 +680,7 @@ class SenseNovaU1LocalInterleave:
         seed: int,
         think_mode: bool,
         image=None,
-    ):
+    ) -> io.NodeOutput:
         width, height = parse_resolution_option(resolution)
         result = u1_model.interleave(
             prompt=prompt,
@@ -688,29 +697,34 @@ class SenseNovaU1LocalInterleave:
             system_message=system_message,
         )
         LOGGER.info("SenseNova U1 local interleave generated: %s", comfy_image_info(result.images))
-        return interleave_output_to_tuple(result)
+        return io.NodeOutput(*interleave_output_to_tuple(result))
 
 
-class SenseNovaInterleavePreview:
-    CATEGORY = f"{CATEGORY}/Local"
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("markdown",)
-    FUNCTION = "run"
-    OUTPUT_NODE = True
+class SenseNovaInterleavePreview(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaInterleavePreview",
+            display_name="SenseNova Interleave Preview",
+            category=LOCAL_CATEGORY,
+            is_output_node=True,
+            inputs=[
+                InterleaveResultIO.Input("interleave_result"),
+                io.Boolean.Input("include_think", default=False),
+                io.Image.Input("images", optional=True),
+            ],
+            outputs=[
+                io.String.Output(display_name="markdown"),
+            ],
+        )
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "interleave_result": (INTERLEAVE_RESULT_TYPE,),
-                "include_think": ("BOOLEAN", {"default": False}),
-            },
-            "optional": {
-                "images": ("IMAGE",),
-            },
-        }
-
-    def run(self, interleave_result: dict, include_think: bool, images=None):
+    def execute(
+        cls,
+        interleave_result: dict,
+        include_think: bool,
+        images=None,
+    ) -> io.NodeOutput:
         markdown = interleave_result_to_markdown(interleave_result, include_think=include_think)
         saved_images: list[dict[str, str]] = _save_preview_images(images) if images is not None else []
 
@@ -741,37 +755,12 @@ class SenseNovaInterleavePreview:
                         }
                     )
 
-        return {
-            "ui": {"text": [markdown], "parts": parts_payload},
-            "result": (markdown,),
-        }
-
-
-NODE_CLASS_MAPPINGS = {
-    "SenseNovaChat": SenseNovaChat,
-    "SenseNovaImageGenerate": SenseNovaImageGenerate,
-    "SenseNovaPromptBuilder": SenseNovaPromptBuilder,
-    "SenseNovaVisionURL": SenseNovaVisionURL,
-    "SenseNovaVisionImage": SenseNovaVisionImage,
-    "SenseNovaU1LocalLoader": SenseNovaU1LocalLoader,
-    "SenseNovaU1LocalTextToImage": SenseNovaU1LocalTextToImage,
-    "SenseNovaU1LocalImageEdit": SenseNovaU1LocalImageEdit,
-    "SenseNovaU1LocalInterleave": SenseNovaU1LocalInterleave,
-    "SenseNovaInterleavePreview": SenseNovaInterleavePreview,
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "SenseNovaChat": "SenseNova Chat",
-    "SenseNovaImageGenerate": "SenseNova Image Generate",
-    "SenseNovaPromptBuilder": "SenseNova Prompt Builder",
-    "SenseNovaVisionURL": "SenseNova Vision URL",
-    "SenseNovaVisionImage": "SenseNova Vision Image",
-    "SenseNovaU1LocalLoader": "SenseNova U1 Local Loader",
-    "SenseNovaU1LocalTextToImage": "SenseNova U1 Local Text to Image",
-    "SenseNovaU1LocalImageEdit": "SenseNova U1 Local Image Edit",
-    "SenseNovaU1LocalInterleave": "SenseNova U1 Local Interleave",
-    "SenseNovaInterleavePreview": "SenseNova Interleave Preview",
-}
+        # The custom `parts` field is consumed by web/sensenova_interleave_preview.js;
+        # `text` mirrors the legacy v1 ui shape.
+        return io.NodeOutput(
+            markdown,
+            ui={"text": [markdown], "parts": parts_payload},
+        )
 
 
 def _save_preview_images(images) -> list[dict[str, str]]:
@@ -799,3 +788,23 @@ def _save_preview_images(images) -> list[dict[str, str]]:
         image.save(output_dir / filename, format="PNG")
         saved.append({"filename": filename, "subfolder": "", "type": "temp"})
     return saved
+
+
+class SenseNovaExtension(ComfyExtension):
+    async def get_node_list(self) -> list[type[io.ComfyNode]]:
+        return [
+            SenseNovaChat,
+            SenseNovaImageGenerate,
+            SenseNovaPromptBuilder,
+            SenseNovaVisionURL,
+            SenseNovaVisionImage,
+            SenseNovaU1LocalLoader,
+            SenseNovaU1LocalTextToImage,
+            SenseNovaU1LocalImageEdit,
+            SenseNovaU1LocalInterleave,
+            SenseNovaInterleavePreview,
+        ]
+
+
+async def comfy_entrypoint() -> SenseNovaExtension:
+    return SenseNovaExtension()
