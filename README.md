@@ -9,7 +9,7 @@
   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
-  <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://discord.com/invite/BuTXPHmQub"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
@@ -477,11 +477,11 @@ Join our growing community to share feedback, get support, and stay updated on t
 <div align="center">
 <table>
   <tr>
-    <td align="center"><b><a href="https://discord.gg/cxkwXWjp">Discord</a></b></td>
+    <td align="center"><b><a href="https://discord.com/invite/BuTXPHmQub">Discord</a></b></td>
     <td align="center"><b>WeChat Group</b></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://discord.gg/cxkwXWjp"><img src="docs/assets/discord_qr.webp" width="160"/></a></td>
+    <td align="center"><a href="https://discord.com/invite/BuTXPHmQub"><img src="docs/assets/discord_qr.webp" width="160"/></a></td>
     <td align="center"><img src="docs/assets/wechat_qr.webp" width="160"/></td>
   </tr>
 </table>
