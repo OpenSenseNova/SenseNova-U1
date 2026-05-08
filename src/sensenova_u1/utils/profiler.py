@@ -28,22 +28,41 @@ from __future__ import annotations
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Iterator, List
+from typing import Iterator, List, Mapping
 
 import torch
 
+try:
+    import resource as _resource  # POSIX-only; Windows falls back to 0
+except ImportError:  # pragma: no cover - non-POSIX
+    _resource = None  # type: ignore[assignment]
+
 DEFAULT_IMAGE_PATCH_SIZE = 32
+
+
+def _process_rss_peak() -> int:
+    """Return process-wide peak resident set size in bytes (0 if unavailable).
+
+    ``ru_maxrss`` is a monotonic high-water mark since process start: it cannot
+    be reset, so per-block values reflect cumulative peak, not delta.
+    """
+    if _resource is None:
+        return 0
+    rss = _resource.getrusage(_resource.RUSAGE_SELF).ru_maxrss
+    # Linux reports kB; macOS reports bytes. Heuristic: huge value => already bytes.
+    return rss * 1024 if rss < (1 << 40) else rss
 
 
 @dataclass
 class _MemoryPeak:
     allocated: int = 0
     reserved: int = 0
+    cpu_rss: int = 0
     by_device: tuple[tuple[str, int, int], ...] = ()
 
     @property
     def available(self) -> bool:
-        return self.allocated > 0 or self.reserved > 0
+        return self.allocated > 0 or self.reserved > 0 or self.cpu_rss > 0
 
 
 @dataclass
@@ -75,6 +94,7 @@ class InferenceProfiler:
         enabled: bool,
         device: str = "cuda",
         patch_size: int = DEFAULT_IMAGE_PATCH_SIZE,
+        config: Mapping[str, object] | None = None,
     ) -> None:
         self.enabled = enabled
         self.device = device
@@ -82,6 +102,20 @@ class InferenceProfiler:
         self.load_time: float = 0.0
         self.load_memory_peak = _MemoryPeak()
         self.gen_records: List[_GenerationRecord] = []
+        self.config: dict[str, str] = {}
+        if config:
+            self.set_config(config)
+
+    def set_config(self, config: Mapping[str, object]) -> None:
+        """Attach run metadata (e.g. vram_mode, attn_backend, dtype) shown in report().
+
+        ``None`` values are dropped so callers can pass-through optional args
+        without filtering. Existing keys are overwritten.
+        """
+        for key, value in config.items():
+            if value is None:
+                continue
+            self.config[key] = str(value)
 
     # ------------------------------------------------------------------
     # timing
@@ -108,8 +142,9 @@ class InferenceProfiler:
                 torch.cuda.reset_peak_memory_stats(device)
 
     def _memory_peak(self) -> _MemoryPeak:
+        cpu_rss = _process_rss_peak()
         if not self._has_cuda_memory_stats():
-            return _MemoryPeak()
+            return _MemoryPeak(cpu_rss=cpu_rss)
         by_device = tuple(
             (
                 str(device),
@@ -121,6 +156,7 @@ class InferenceProfiler:
         return _MemoryPeak(
             allocated=sum(allocated for _, allocated, _ in by_device),
             reserved=sum(reserved for _, _, reserved in by_device),
+            cpu_rss=cpu_rss,
             by_device=by_device,
         )
 
@@ -173,6 +209,9 @@ class InferenceProfiler:
         print("=" * 64)
         print("Profile summary")
         print("=" * 64)
+        if self.config:
+            config_str = ", ".join(f"{k}={v}" for k, v in self.config.items())
+            print(f"  config              : {config_str}")
         print(f"  model load          : {self.load_time:8.3f} s")
         if self.load_memory_peak.available:
             print(f"  load peak memory    : {self._format_memory(self.load_memory_peak)}")
@@ -224,9 +263,15 @@ class InferenceProfiler:
 
     @classmethod
     def _format_memory(cls, memory_peak: _MemoryPeak) -> str:
-        text = (
-            f"allocated {cls._format_bytes(memory_peak.allocated)}, reserved {cls._format_bytes(memory_peak.reserved)}"
-        )
+        parts: list[str] = []
+        if memory_peak.allocated > 0 or memory_peak.reserved > 0:
+            parts.append(
+                f"allocated {cls._format_bytes(memory_peak.allocated)}, "
+                f"reserved {cls._format_bytes(memory_peak.reserved)}"
+            )
+        if memory_peak.cpu_rss > 0:
+            parts.append(f"cpu RSS {cls._format_bytes(memory_peak.cpu_rss)}")
+        text = ", ".join(parts) if parts else "n/a"
         if len(memory_peak.by_device) <= 1:
             return text
         details = ", ".join(
@@ -242,6 +287,7 @@ class InferenceProfiler:
         for memory_peak in memory_peaks:
             max_peak.allocated = max(max_peak.allocated, memory_peak.allocated)
             max_peak.reserved = max(max_peak.reserved, memory_peak.reserved)
+            max_peak.cpu_rss = max(max_peak.cpu_rss, memory_peak.cpu_rss)
             for name, allocated, reserved in memory_peak.by_device:
                 prev_allocated, prev_reserved = by_device.get(name, (0, 0))
                 by_device[name] = (max(prev_allocated, allocated), max(prev_reserved, reserved))

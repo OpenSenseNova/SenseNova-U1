@@ -367,7 +367,16 @@ def main() -> None:
     sensenova_u1.set_attn_backend(args.attn_backend)
     print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
 
-    profiler = InferenceProfiler(enabled=args.profile, device=args.device)
+    profiler = InferenceProfiler(
+        enabled=args.profile,
+        device=args.device,
+        config={
+            "vram_mode": args.vram_mode,
+            "attn_backend": sensenova_u1.effective_attn_backend(),
+            "dtype": args.dtype,
+            "gguf": args.gguf_checkpoint,
+        },
+    )
     enhancer, loop = _build_enhancer(args)
 
     try:
