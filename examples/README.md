@@ -40,38 +40,56 @@ examples/
         └── images/
 ```
 
-## CPU / Disk Offload
+## Multi-GPU dispatch
 
 All reference inference scripts support Transformers / Accelerate device-map loading.
-For lower-VRAM GPUs, add `--device_map auto` so Accelerate can place part of the model on CPU RAM or disk:
+For multi-GPU machines, add `--device_map auto` so Accelerate can split the model across visible GPUs:
 
 ```bash
 python examples/t2i/inference.py \
   --model_path SenseNova/SenseNova-U1-8B-MoT \
   --prompt "A cinematic mountain village at sunrise" \
   --device_map auto \
-  --max_memory "0=22GiB,cpu=80GiB" \
-  --offload_folder outputs/offload \
+  --max_memory "0=22GiB,1=22GiB" \
   --output output.png
 ```
 
 When `--device_map` is set, the model is dispatched by Accelerate and the
-script does not call `.to(device)` on the full model. `--offload_folder` is
-used when some modules are placed on disk.
+script does not call `.to(device)` on the full model.
 
 With `--device_map auto`, Accelerate estimates module sizes, checks the
-available memory on each visible GPU and CPU, and assigns modules to devices
-from fastest to slowest: GPU first, then CPU, then disk offload when needed and available.
-Passing `--max_memory` overrides the automatically detected memory budget
-and is recommended when you want reproducible low-VRAM behavior.
+available memory on each visible GPU, and assigns modules to GPUs in order.
+Passing `--max_memory` overrides the automatically detected per-device budget
+and is recommended for reproducible placement on heterogeneous setups.
 
-`--max_memory` constrains how Transformers / Accelerate places **model weights** across GPU, CPU and disk.
+`--max_memory` constrains how Transformers / Accelerate places **model weights** across GPUs.
 It is not a hard end-to-end VRAM cap: forward-time activation tensors, KV cache,
 PyTorch reserved memory, and image-generation intermediates still need extra room.
-Since the exact runtime overhead depends on resolution, batch size, sequence length,
-and backend kernels, it is hard to know the perfect reserve before running.
-On small GPUs, set the GPU budget below physical VRAM (for example `26GiB`-`28GiB` on a 32GB card)
+On small GPUs, set the per-GPU budget below physical VRAM (for example `26GiB`-`28GiB` on a 32GB card)
 and lower resolution / batch size if generation still OOMs.
+
+### Low-VRAM single-card: `--vram_mode`
+
+For single-card low-VRAM setups, prefer the project's layer-offload path over Accelerate CPU/disk
+dispatch — it is significantly faster and is supported by all four reference scripts (t2i,
+interleave, editing, vqa):
+
+| `--vram_mode` | Behavior |
+|---------------|----------|
+| `full`        | Whole model on GPU, no offload. Fastest. (Default.) |
+| `low`         | Synchronous per-layer CPU<->GPU swap. Smallest weight footprint, slowest. |
+| `balanced`    | Async prefetch (overlaps host->device with compute). Faster than `low`. |
+
+```bash
+python examples/t2i/inference.py \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --prompt "A cinematic mountain village at sunrise" \
+  --vram_mode balanced \
+  --output output.png
+```
+
+`--vram_mode` is mutually exclusive with `--device_map`: layer offload requires the model to stay
+on CPU between forwards, which is incompatible with Accelerate's static dispatch.
 
 ## Text-to-Image
 

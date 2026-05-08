@@ -39,14 +39,17 @@ LOGGER = logging.getLogger(__name__)
 
 
 def add_offload_args(parser: argparse.ArgumentParser) -> None:
-    """Add Transformers/Accelerate device-map loading flags to an example CLI."""
+    """Add Transformers/Accelerate device-map and layer-offload flags to an example CLI."""
+    from .offload import DEFAULT_VRAM_MODE, VRAM_MODE_OPTIONS
+
     parser.add_argument(
         "--device_map",
         default=None,
         help=(
             "Optional Transformers device_map, e.g. 'auto', 'balanced', "
             "'balanced_low_0', or 'sequential'. When set, the model is loaded "
-            "with Accelerate dispatch and is not moved again with .to(device)."
+            "with Accelerate dispatch and is not moved again with .to(device). "
+            "Use this for multi-GPU split; for low-VRAM single-card, prefer --vram_mode."
         ),
     )
     parser.add_argument(
@@ -54,19 +57,20 @@ def add_offload_args(parser: argparse.ArgumentParser) -> None:
         default=None,
         help=(
             "Optional per-device memory limits for --device_map, either JSON "
-            "or comma-separated KEY=VALUE pairs, e.g. '0=20GiB,cpu=64GiB'."
+            "or comma-separated KEY=VALUE pairs, e.g. '0=20GiB,1=20GiB'."
         ),
     )
     parser.add_argument(
-        "--offload_folder",
-        default=None,
-        help="Folder for disk offload when --device_map places modules on 'disk'.",
-    )
-    parser.add_argument(
-        "--offload_state_dict",
-        action=argparse.BooleanOptionalAction,
-        default=None,
-        help="Forwarded to AutoModel.from_pretrained for CPU/disk offload loading.",
+        "--vram_mode",
+        choices=list(VRAM_MODE_OPTIONS),
+        default=DEFAULT_VRAM_MODE,
+        help=(
+            "Single-GPU layer-offload mode. "
+            "'full' = no offload, whole model on GPU, fastest (default). "
+            "'low' = synchronous per-layer CPU<->GPU swap, smallest weight footprint. "
+            "'balanced' = async prefetch, overlaps H2D with compute, faster than 'low'. "
+            "Mutually exclusive with --device_map (layer offload requires the model on CPU)."
+        ),
     )
 
 
@@ -103,8 +107,6 @@ def load_model_and_tokenizer(
     gguf_checkpoint: str | None = None,
     device_map: str | None = None,
     max_memory: str | dict[int | str, str] | None = None,
-    offload_folder: str | None = None,
-    offload_state_dict: bool | None = None,
     for_offload: bool = False,
 ) -> tuple[nn.Module, Any]:
     """Build a SenseNova-U1 model + tokenizer pair.
@@ -115,12 +117,12 @@ def load_model_and_tokenizer(
     Weight loading branches on ``gguf_checkpoint``:
 
     - ``None``: standard ``AutoModel.from_pretrained(model_path, ...)``.
-      The ``device_map`` / ``max_memory`` / ``offload_*`` accelerate kwargs
-      apply on this path; when ``device_map`` is ``None`` the model is
-      ``.to(device)`` after loading.
+      The ``device_map`` / ``max_memory`` accelerate kwargs apply on this
+      path; when ``device_map`` is ``None`` the model is ``.to(device)``
+      after loading.
     - ``"*.gguf"``: build a meta-init model from the config and inject
       dequantizing weights from the GGUF file via the diffusers quantizer.
-      The accelerate offload kwargs are ignored on this path.
+      The accelerate kwargs are ignored on this path.
 
     When ``for_offload=True`` the loaded model stays on CPU (no ``.to(device)``)
     so a downstream layer-offload wrapper can manage CPU<->GPU movement
@@ -153,10 +155,6 @@ def load_model_and_tokenizer(
             parsed_max_memory = _normalize_max_memory(max_memory)
             if parsed_max_memory:
                 model_kwargs["max_memory"] = parsed_max_memory
-            if offload_folder:
-                model_kwargs["offload_folder"] = offload_folder
-            if offload_state_dict is not None:
-                model_kwargs["offload_state_dict"] = offload_state_dict
 
         model = AutoModel.from_pretrained(model_path, **model_kwargs).eval()
         if not device_map and device is not None and not for_offload:

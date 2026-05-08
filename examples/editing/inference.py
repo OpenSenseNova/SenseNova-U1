@@ -14,11 +14,14 @@ import sensenova_u1
 from sensenova_u1.models.neo_unify.utils import smart_resize
 from sensenova_u1.utils import (
     DEFAULT_IMAGE_PATCH_SIZE,
+    DEFAULT_VRAM_MODE,
     InferenceProfiler,
     add_offload_args,
     load_and_merge_lora_weight_from_safetensors,
     load_model_and_tokenizer,
+    make_offload_ctx,
     save_compare,
+    vram_mode_to_prefetch_count,
 )
 
 NORM_MEAN = (0.5, 0.5, 0.5)
@@ -180,19 +183,19 @@ class SenseNovaU1Editing:
         gguf_checkpoint: str | None = None,
         device_map: str | None = None,
         max_memory: str | None = None,
-        offload_folder: str | None = None,
-        offload_state_dict: bool | None = None,
+        vram_mode: str = DEFAULT_VRAM_MODE,
     ) -> None:
         self.device = device
+        self.vram_mode = vram_mode
+        self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
         self.model, self.tokenizer = load_model_and_tokenizer(
             model_path,
             dtype=dtype,
             device=device,
             gguf_checkpoint=gguf_checkpoint,
+            for_offload=self.prefetch_count > 0,
             device_map=device_map,
             max_memory=max_memory,
-            offload_folder=offload_folder,
-            offload_state_dict=offload_state_dict,
         )
 
     @torch.inference_mode()
@@ -211,21 +214,22 @@ class SenseNovaU1Editing:
         think_mode: bool = False,
         seed: int = 0,
     ) -> tuple[list[Image.Image], str]:
-        output = self.model.it2i_generate(
-            self.tokenizer,
-            prompt,
-            list(images),
-            image_size=image_size,
-            cfg_scale=cfg_scale,
-            img_cfg_scale=img_cfg_scale,
-            cfg_norm=cfg_norm,
-            timestep_shift=timestep_shift,
-            cfg_interval=cfg_interval,
-            num_steps=num_steps,
-            batch_size=batch_size,
-            think_mode=think_mode,
-            seed=seed,
-        )
+        with make_offload_ctx(self.model, self.prefetch_count, self.device) as offloaded:
+            output = offloaded.it2i_generate(
+                self.tokenizer,
+                prompt,
+                list(images),
+                image_size=image_size,
+                cfg_scale=cfg_scale,
+                img_cfg_scale=img_cfg_scale,
+                cfg_norm=cfg_norm,
+                timestep_shift=timestep_shift,
+                cfg_interval=cfg_interval,
+                num_steps=num_steps,
+                batch_size=batch_size,
+                think_mode=think_mode,
+                seed=seed,
+            )
         if think_mode:
             return _to_pil(output[0]), output[1]
         return _to_pil(output), ""
@@ -469,8 +473,7 @@ def main() -> None:
             gguf_checkpoint=args.gguf_checkpoint,
             device_map=args.device_map,
             max_memory=args.max_memory,
-            offload_folder=args.offload_folder,
-            offload_state_dict=args.offload_state_dict,
+            vram_mode=args.vram_mode,
         )
 
     if args.lora_path is not None:

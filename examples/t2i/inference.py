@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import contextlib
 import json
 from pathlib import Path
 from typing import Sequence
@@ -13,23 +12,14 @@ from PIL import Image
 import sensenova_u1
 from sensenova_u1.utils import (
     DEFAULT_IMAGE_PATCH_SIZE,
+    DEFAULT_VRAM_MODE,
     InferenceProfiler,
     add_offload_args,
     load_and_merge_lora_weight_from_safetensors,
     load_model_and_tokenizer,
-    offload_layers_async,
-    offload_layers_sync,
+    make_offload_ctx,
+    vram_mode_to_prefetch_count,
 )
-
-DEFAULT_LAYERS_ATTR = "language_model.model.layers"
-
-VRAM_MODE_OPTIONS = ("full", "low", "balanced")
-DEFAULT_VRAM_MODE = "full"
-_VRAM_MODE_TO_PREFETCH: dict[str, int] = {
-    "full": 0,
-    "low": 1,
-    "balanced": 2,
-}
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
@@ -94,15 +84,11 @@ class SenseNovaU1T2I:
         vram_mode: str = DEFAULT_VRAM_MODE,
         device_map: str | None = None,
         max_memory: str | None = None,
-        offload_folder: str | None = None,
-        offload_state_dict: bool | None = None,
     ) -> None:
-        if vram_mode not in _VRAM_MODE_TO_PREFETCH:
-            raise ValueError(f"Unsupported vram_mode={vram_mode!r}. Choose one of {VRAM_MODE_OPTIONS}.")
         self.device = device
         self._last_think_text: str = ""
         self.vram_mode = vram_mode
-        self.prefetch_count = _VRAM_MODE_TO_PREFETCH[vram_mode]
+        self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
         self.model, self.tokenizer = load_model_and_tokenizer(
             model_path,
             dtype=dtype,
@@ -111,18 +97,11 @@ class SenseNovaU1T2I:
             for_offload=self.prefetch_count > 0,
             device_map=device_map,
             max_memory=max_memory,
-            offload_folder=offload_folder,
-            offload_state_dict=offload_state_dict,
         )
 
     def _offload_ctx(self):
         """Wrap ``self.model`` for layer offload, or pass through when off."""
-        if self.prefetch_count == 0:
-            return contextlib.nullcontext(self.model)
-        target = torch.device(self.device)
-        if self.prefetch_count == 1:
-            return offload_layers_sync(self.model, DEFAULT_LAYERS_ATTR, target)
-        return offload_layers_async(self.model, DEFAULT_LAYERS_ATTR, target, prefetch_count=self.prefetch_count)
+        return make_offload_ctx(self.model, self.prefetch_count, self.device)
 
     @property
     def last_think_text(self) -> str:
@@ -302,18 +281,6 @@ def parse_args() -> argparse.Namespace:
     )
 
     p.add_argument(
-        "--vram_mode",
-        choices=list(VRAM_MODE_OPTIONS),
-        default=DEFAULT_VRAM_MODE,
-        help=(
-            "Single-GPU layer-offload mode. "
-            "'full' = no offload, whole model on GPU, fastest (default). "
-            "'low' = synchronous per-layer CPU<->GPU swap, smallest weight footprint. "
-            "'balanced' = async prefetch, overlaps H2D with compute, faster than low."
-        ),
-    )
-
-    p.add_argument(
         "--enhance",
         action="store_true",
         help=(
@@ -413,8 +380,6 @@ def main() -> None:
                 vram_mode=args.vram_mode,
                 device_map=args.device_map,
                 max_memory=args.max_memory,
-                offload_folder=args.offload_folder,
-                offload_state_dict=args.offload_state_dict,
             )
         if args.lora_path is not None:
             print(f"load lora {args.lora_path}")

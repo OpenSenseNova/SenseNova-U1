@@ -692,16 +692,13 @@ def _import_sensenova_u1():
     try:
         import sensenova_u1
         from sensenova_u1.models.neo_unify.utils import smart_resize
+        from sensenova_u1.utils import load_model_and_tokenizer
     except ImportError as exc:
         raise RuntimeError(
             "Local SenseNova-U1 inference requires the sensenova_u1 package. "
             "Install this repository into the ComfyUI Python environment, set "
             "SENSENOVA_U1_SRC, or fill the loader's sensenova_u1_src input."
         ) from exc
-    try:
-        from sensenova_u1.utils import load_model_and_tokenizer
-    except ImportError:
-        load_model_and_tokenizer = _load_model_and_tokenizer
     return sensenova_u1, load_model_and_tokenizer, smart_resize
 
 
@@ -714,84 +711,6 @@ def _resolve_local_model_path(model_path: str) -> str:
         return snapshot_download(model_path, local_files_only=True)
     except Exception:
         return model_path
-
-
-def _load_model_and_tokenizer(
-    model_path: str,
-    *,
-    dtype,
-    device: str,
-    device_map: str | None = None,
-    max_memory: str | None = None,
-    gguf_checkpoint: str | None = None,
-    for_offload: bool = False,
-):
-    try:
-        from transformers import AutoConfig, AutoModel, AutoTokenizer
-
-        from sensenova_u1 import check_checkpoint_compatibility
-    except ImportError as exc:
-        raise RuntimeError(
-            "Local SenseNova-U1 inference requires transformers and the sensenova_u1 package "
-            "in the ComfyUI Python environment."
-        ) from exc
-
-    model_path = _resolve_local_model_path(model_path)
-    config = AutoConfig.from_pretrained(model_path)
-    check_checkpoint_compatibility(config)
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-
-    if gguf_checkpoint:
-        try:
-            from accelerate import init_empty_weights
-
-            from sensenova_u1.utils import load_gguf_checkpoint, set_gguf2meta_model
-        except ImportError as exc:
-            raise RuntimeError(
-                "GGUF loading requires `accelerate`, `gguf>=0.10.0`, and `diffusers>=0.30.0`. "
-                "Install them with `pip install -e .[gguf]` or in the ComfyUI Python environment."
-            ) from exc
-        with init_empty_weights():
-            model = AutoModel.from_config(config)
-        state_dict = load_gguf_checkpoint(gguf_checkpoint)
-        import torch as _torch
-
-        gguf_target = "cpu" if for_offload else device
-        target_device = _torch.device(gguf_target) if isinstance(gguf_target, str) else gguf_target
-        set_gguf2meta_model(model, state_dict, dtype, target_device)
-        return model.eval(), tokenizer
-
-    model_kwargs: dict[str, Any] = {
-        "config": config,
-        "torch_dtype": dtype,
-    }
-    if device_map:
-        model_kwargs["device_map"] = device_map
-        parsed_max_memory = _parse_max_memory(max_memory or "")
-        if parsed_max_memory:
-            model_kwargs["max_memory"] = parsed_max_memory
-
-    model = AutoModel.from_pretrained(model_path, **model_kwargs).eval()
-    if not device_map and not for_offload:
-        model = model.to(device)
-    return model, tokenizer
-
-
-def _parse_max_memory(value: str) -> dict[int | str, str]:
-    result: dict[int | str, str] = {}
-    for item in value.split(","):
-        item = item.strip()
-        if not item:
-            continue
-        if "=" not in item:
-            raise RuntimeError("max_memory entries must look like 0=20GiB,cpu=64GiB.")
-        key, memory = item.split("=", 1)
-        key = key.strip()
-        memory = memory.strip()
-        if not key or not memory:
-            raise RuntimeError("max_memory entries must include both device and memory.")
-        result[int(key) if key.isdigit() else key] = memory
-    return result
 
 
 def _resolve_dtype(torch, dtype: str):

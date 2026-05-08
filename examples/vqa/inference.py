@@ -11,10 +11,13 @@ import sensenova_u1
 from sensenova_u1.models.neo_unify.utils import load_image_native
 from sensenova_u1.utils import (
     DEFAULT_IMAGE_PATCH_SIZE,
+    DEFAULT_VRAM_MODE,
     InferenceProfiler,
     add_offload_args,
     infer_input_device,
     load_model_and_tokenizer,
+    make_offload_ctx,
+    vram_mode_to_prefetch_count,
 )
 
 
@@ -29,18 +32,18 @@ class SenseNovaU1VQA:
         gguf_checkpoint: str | None = None,
         device_map: str | None = None,
         max_memory: str | None = None,
-        offload_folder: str | None = None,
-        offload_state_dict: bool | None = None,
+        vram_mode: str = DEFAULT_VRAM_MODE,
     ) -> None:
+        self.vram_mode = vram_mode
+        self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
         self.model, self.tokenizer = load_model_and_tokenizer(
             model_path,
             dtype=dtype,
             device=device,
             gguf_checkpoint=gguf_checkpoint,
+            for_offload=self.prefetch_count > 0,
             device_map=device_map,
             max_memory=max_memory,
-            offload_folder=offload_folder,
-            offload_state_dict=offload_state_dict,
         )
         self.device = str(infer_input_device(self.model, fallback=device)) if device_map else device
 
@@ -73,15 +76,16 @@ class SenseNovaU1VQA:
         if repetition_penalty is not None:
             generation_config["repetition_penalty"] = repetition_penalty
 
-        response, updated_history = self.model.chat(
-            self.tokenizer,
-            pixel_values,
-            question,
-            generation_config,
-            history=history,
-            return_history=True,
-            grid_hw=grid_hw,
-        )
+        with make_offload_ctx(self.model, self.prefetch_count, self.device) as offloaded:
+            response, updated_history = offloaded.chat(
+                self.tokenizer,
+                pixel_values,
+                question,
+                generation_config,
+                history=history,
+                return_history=True,
+                grid_hw=grid_hw,
+            )
         return response, updated_history
 
 
@@ -170,8 +174,7 @@ def main() -> None:
             gguf_checkpoint=args.gguf_checkpoint,
             device_map=args.device_map,
             max_memory=args.max_memory,
-            offload_folder=args.offload_folder,
-            offload_state_dict=args.offload_state_dict,
+            vram_mode=args.vram_mode,
         )
 
     if args.image is not None:

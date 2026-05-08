@@ -14,10 +14,13 @@ from PIL import Image
 import sensenova_u1
 from sensenova_u1.utils import (
     DEFAULT_IMAGE_PATCH_SIZE,
+    DEFAULT_VRAM_MODE,
     InferenceProfiler,
     add_offload_args,
     load_and_merge_lora_weight_from_safetensors,
     load_model_and_tokenizer,
+    make_offload_ctx,
+    vram_mode_to_prefetch_count,
 )
 
 NORM_MEAN = (0.5, 0.5, 0.5)
@@ -135,19 +138,19 @@ class SenseNovaU1Interleave:
         gguf_checkpoint: str | None = None,
         device_map: str | None = None,
         max_memory: str | None = None,
-        offload_folder: str | None = None,
-        offload_state_dict: bool | None = None,
+        vram_mode: str = DEFAULT_VRAM_MODE,
     ) -> None:
         self.device = device
+        self.vram_mode = vram_mode
+        self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
         self.model, self.tokenizer = load_model_and_tokenizer(
             model_path,
             dtype=dtype,
             device=device,
             gguf_checkpoint=gguf_checkpoint,
+            for_offload=self.prefetch_count > 0,
             device_map=device_map,
             max_memory=max_memory,
-            offload_folder=offload_folder,
-            offload_state_dict=offload_state_dict,
         )
 
     @torch.inference_mode()
@@ -165,20 +168,21 @@ class SenseNovaU1Interleave:
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
         seed: int = 0,
     ) -> tuple[str, list[Image.Image]]:
-        text, image_tensors = self.model.interleave_gen(
-            self.tokenizer,
-            prompt,
-            images=list(input_images),
-            image_size=image_size,
-            cfg_scale=cfg_scale,
-            img_cfg_scale=img_cfg_scale,
-            timestep_shift=timestep_shift,
-            cfg_interval=cfg_interval,
-            num_steps=num_steps,
-            system_message=system_message,
-            think_mode=think_mode,
-            seed=seed,
-        )
+        with make_offload_ctx(self.model, self.prefetch_count, self.device) as offloaded:
+            text, image_tensors = offloaded.interleave_gen(
+                self.tokenizer,
+                prompt,
+                images=list(input_images),
+                image_size=image_size,
+                cfg_scale=cfg_scale,
+                img_cfg_scale=img_cfg_scale,
+                timestep_shift=timestep_shift,
+                cfg_interval=cfg_interval,
+                num_steps=num_steps,
+                system_message=system_message,
+                think_mode=think_mode,
+                seed=seed,
+            )
         return text, [_to_pil(img) for img in image_tensors]
 
 
@@ -426,8 +430,7 @@ def main() -> None:
             gguf_checkpoint=args.gguf_checkpoint,
             device_map=args.device_map,
             max_memory=args.max_memory,
-            offload_folder=args.offload_folder,
-            offload_state_dict=args.offload_state_dict,
+            vram_mode=args.vram_mode,
         )
 
     if args.lora_path is not None:
