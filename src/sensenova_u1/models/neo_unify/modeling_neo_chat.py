@@ -853,7 +853,19 @@ class NEOChatModel(PreTrainedModel):
                 if enable_timestep_shift:
                     timesteps = self._apply_time_schedule(timesteps, token_h*token_w, timestep_shift)
 
-                for step_i in range(num_steps):
+                step_iter = range(num_steps)
+                if verbose:
+                    try:
+                        from tqdm import tqdm as _tqdm
+                        step_iter = _tqdm(
+                            step_iter,
+                            desc=f"image {img_count + 1} ({image_size[0]}x{image_size[1]})",
+                            total=num_steps,
+                            leave=False,
+                        )
+                    except ImportError:
+                        pass
+                for step_i in step_iter:
                     t = timesteps[step_i]
                     t_next = timesteps[step_i + 1]
 
@@ -1076,6 +1088,7 @@ class NEOChatModel(PreTrainedModel):
             # text generation
             gen_tokens = []
             hit_max_tokens = False
+            last_decoded = 0
             while True:
                 token_item = next_token.item()
                 if token_item == eos_token_id or token_item == self.img_start_token_id:
@@ -1090,8 +1103,15 @@ class NEOChatModel(PreTrainedModel):
                     use_cache=True
                 )
                 past_key_values_cond = outputs_cond.past_key_values
-                t_index_cond += 1 
+                t_index_cond += 1
                 next_token = torch.argmax(outputs_cond.logits[:, -1, :], dim=-1)
+
+                # Stream partial text so users see liveness during long runs
+                # (e.g. low VRAM offload). Decode in 16-token chunks.
+                if verbose and len(gen_tokens) - last_decoded >= 16:
+                    partial = tokenizer.decode(gen_tokens[last_decoded:], skip_special_tokens=True)
+                    print(partial, end='', flush=True)
+                    last_decoded = len(gen_tokens)
 
                 if current_generated_tokens >= max_new_tokens:
                     hit_max_tokens = True
@@ -1101,7 +1121,9 @@ class NEOChatModel(PreTrainedModel):
                 chunk_text = tokenizer.decode(gen_tokens, skip_special_tokens=True)
                 generated_text += chunk_text
                 if verbose:
-                    print(chunk_text, end='', flush=True)
+                    remaining = tokenizer.decode(gen_tokens[last_decoded:], skip_special_tokens=True)
+                    if remaining:
+                        print(remaining, end='', flush=True)
 
             if next_token.item() == eos_token_id or hit_max_tokens:
                 break
@@ -1112,7 +1134,7 @@ class NEOChatModel(PreTrainedModel):
 
                 generated_text += "<image>"
                 if verbose:
-                    print("<image>", end='', flush=True)
+                    print(f"\n[image {img_count + 1}] preparing diffusion...", flush=True)
 
                 # Add the img_start_token for condition and text_uncondition branch
                 self.language_model.model.current_index = t_index_cond
@@ -1176,7 +1198,19 @@ class NEOChatModel(PreTrainedModel):
                 if enable_timestep_shift:
                     timesteps = self._apply_time_schedule(timesteps, token_h*token_w, timestep_shift)
 
-                for step_i in range(num_steps):
+                step_iter = range(num_steps)
+                if verbose:
+                    try:
+                        from tqdm import tqdm as _tqdm
+                        step_iter = _tqdm(
+                            step_iter,
+                            desc=f"image {img_count + 1} ({image_size[0]}x{image_size[1]})",
+                            total=num_steps,
+                            leave=False,
+                        )
+                    except ImportError:
+                        pass
+                for step_i in step_iter:
                     t = timesteps[step_i]
                     t_next = timesteps[step_i + 1]
 

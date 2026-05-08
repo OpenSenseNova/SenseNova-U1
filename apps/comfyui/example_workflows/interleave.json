@@ -1,0 +1,250 @@
+{
+  "id": "be8d8cc8-cbee-4189-9901-f3562f2b9815",
+  "revision": 0,
+  "last_node_id": 6,
+  "last_link_id": 8,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "SenseNovaU1LocalLoader",
+      "pos": [
+        -584.6196484374999,
+        118.61511718749999
+      ],
+      "size": [
+        420,
+        360
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "u1_model",
+          "type": "SENSENOVA_U1_LOCAL_MODEL",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "model_info_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaU1LocalLoader"
+      },
+      "widgets_values": [
+        "sensenova/SenseNova-U1-8B-MoT",
+        "",
+        "cuda",
+        "bfloat16",
+        "auto",
+        "none",
+        "",
+        "",
+        false
+      ]
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [
+        1297.171029687501,
+        104.87239093750007
+      ],
+      "size": [
+        900,
+        570
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 6
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "SenseNovaInterleavePreview",
+      "pos": [
+        618.1237801985109,
+        109.1613685573875
+      ],
+      "size": [
+        585.5180136995116,
+        2022.6508331714076
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "interleave_result",
+          "type": "SENSENOVA_INTERLEAVE_RESULT",
+          "link": 7
+        },
+        {
+          "name": "images",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "markdown",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaInterleavePreview"
+      },
+      "widgets_values": [
+        false,
+        ""
+      ]
+    },
+    {
+      "id": 5,
+      "type": "SenseNovaU1LocalInterleave",
+      "pos": [
+        -62.504062499999876,
+        117.08402343749997
+      ],
+      "size": [
+        574.2494531250001,
+        796.1821484375
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "u1_model",
+          "type": "SENSENOVA_U1_LOCAL_MODEL",
+          "link": 5
+        },
+        {
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            6,
+            8
+          ]
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "think_text",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "metadata_json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "interleave_result",
+          "type": "SENSENOVA_INTERLEAVE_RESULT",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaU1LocalInterleave"
+      },
+      "widgets_values": [
+        "讲一下经典童话《卖火柴的小女孩》，但这次请给出一个温暖的平行宇宙改编版图文绘本。在最后一次擦亮火柴时，出现的不是幻象，而是一只拥有魔法的驯鹿，它载着小女孩飞向了有糖果和壁炉的城堡",
+        "2048x1152|16:9",
+        "You are a multimodal assistant capable of reasoning with both text and images. You support two modes:\n\nThink Mode: When reasoning is needed, you MUST start with a <think></think> block and place all reasoning inside it. You MUST interleave text with generated images using tags like <image1>, <image2>. Images can ONLY be generated between <think> and </think>, and may be referenced in the final answer.\n\nNon-Think Mode: When no reasoning is needed, directly provide the answer without reasoning. Do not use tags like <image1>, <image2>; present any images naturally alongside the text.\n\nAfter the think block, always provide a concise, user-facing final answer. The answer may include text, images, or both. Match the user's language in both reasoning and the final answer.",
+        4,
+        1,
+        3,
+        0,
+        1,
+        50,
+        42,
+        "fixed",
+        false
+      ]
+    }
+  ],
+  "links": [
+    [
+      5,
+      1,
+      0,
+      5,
+      0,
+      "SENSENOVA_U1_LOCAL_MODEL"
+    ],
+    [
+      6,
+      5,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      5,
+      4,
+      4,
+      0,
+      "SENSENOVA_INTERLEAVE_RESULT"
+    ],
+    [
+      8,
+      5,
+      0,
+      4,
+      1,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "LG",
+    "ds": {
+      "scale": 0.48882334567357844,
+      "offset": [
+        743.5454439911009,
+        173.9935246855156
+      ]
+    },
+    "frontendVersion": "1.39.19",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

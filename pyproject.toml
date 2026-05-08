@@ -63,6 +63,11 @@ dependencies = [
 flash = [
     "flash-attn>=2.8,<3",
 ]
+
+gguf = [
+    "gguf>=0.10.0",
+    "diffusers>=0.30.0",
+]
 dev = [
     "ruff",
     "pytest",
@@ -112,3 +117,6 @@ extend-exclude = [
     "evaluation/easi/EASI",
     "evaluation/easi/lightllm-stack/LightLLM",
 ]
+
+[tool.ruff.lint]
+select = ["I"]

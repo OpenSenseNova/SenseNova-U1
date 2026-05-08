@@ -9,15 +9,19 @@ from typing import Sequence
 import numpy as np
 import torch
 from PIL import Image
-from transformers import AutoConfig, AutoModel, AutoTokenizer
 
 import sensenova_u1
-from sensenova_u1 import check_checkpoint_compatibility
 from sensenova_u1.models.neo_unify.utils import smart_resize
 from sensenova_u1.utils import (
     DEFAULT_IMAGE_PATCH_SIZE,
+    DEFAULT_VRAM_MODE,
     InferenceProfiler,
+    add_offload_args,
+    load_and_merge_lora_weight_from_safetensors,
+    load_model_and_tokenizer,
+    make_offload_ctx,
     save_compare,
+    vram_mode_to_prefetch_count,
 )
 
 NORM_MEAN = (0.5, 0.5, 0.5)
@@ -176,12 +180,23 @@ class SenseNovaU1Editing:
         model_path: str,
         device: str = "cuda",
         dtype: torch.dtype = torch.bfloat16,
+        gguf_checkpoint: str | None = None,
+        device_map: str | None = None,
+        max_memory: str | None = None,
+        vram_mode: str = DEFAULT_VRAM_MODE,
     ) -> None:
         self.device = device
-        config = AutoConfig.from_pretrained(model_path)
-        check_checkpoint_compatibility(config)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = AutoModel.from_pretrained(model_path, config=config, torch_dtype=dtype).to(device).eval()
+        self.vram_mode = vram_mode
+        self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
+        self.model, self.tokenizer = load_model_and_tokenizer(
+            model_path,
+            dtype=dtype,
+            device=device,
+            gguf_checkpoint=gguf_checkpoint,
+            for_offload=self.prefetch_count > 0,
+            device_map=device_map,
+            max_memory=max_memory,
+        )
 
     @torch.inference_mode()
     def edit(
@@ -199,21 +214,22 @@ class SenseNovaU1Editing:
         think_mode: bool = False,
         seed: int = 0,
     ) -> tuple[list[Image.Image], str]:
-        output = self.model.it2i_generate(
-            self.tokenizer,
-            prompt,
-            list(images),
-            image_size=image_size,
-            cfg_scale=cfg_scale,
-            img_cfg_scale=img_cfg_scale,
-            cfg_norm=cfg_norm,
-            timestep_shift=timestep_shift,
-            cfg_interval=cfg_interval,
-            num_steps=num_steps,
-            batch_size=batch_size,
-            think_mode=think_mode,
-            seed=seed,
-        )
+        with make_offload_ctx(self.model, self.prefetch_count, self.device) as offloaded:
+            output = offloaded.it2i_generate(
+                self.tokenizer,
+                prompt,
+                list(images),
+                image_size=image_size,
+                cfg_scale=cfg_scale,
+                img_cfg_scale=img_cfg_scale,
+                cfg_norm=cfg_norm,
+                timestep_shift=timestep_shift,
+                cfg_interval=cfg_interval,
+                num_steps=num_steps,
+                batch_size=batch_size,
+                think_mode=think_mode,
+                seed=seed,
+            )
         if think_mode:
             return _to_pil(output[0]), output[1]
         return _to_pil(output), ""
@@ -241,7 +257,12 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help="HuggingFace Hub id (e.g. sensenova/SenseNova-U1-8B-MoT) or a local path.",
     )
-
+    p.add_argument(
+        "--lora_path",
+        required=False,
+        default=None,
+        help="HuggingFace Hub id or a local path to a lora model.",
+    )
     src = p.add_mutually_exclusive_group(required=True)
     src.add_argument(
         "--prompt",
@@ -368,6 +389,16 @@ def parse_args() -> argparse.Namespace:
         default="bfloat16",
         choices=["bfloat16", "float16", "float32"],
     )
+    add_offload_args(p)
+    p.add_argument(
+        "--gguf_checkpoint",
+        default=None,
+        help=(
+            "Optional path to a .gguf quantized checkpoint. When set, the dequantizing "
+            "diffusers GGUF Linear layer is used instead of safetensors weights. "
+            "Requires the [gguf] extra (gguf>=0.10.0, diffusers>=0.30.0)."
+        ),
+    )
     p.add_argument(
         "--attn_backend",
         default="auto",
@@ -432,10 +463,31 @@ def main() -> None:
     sensenova_u1.set_attn_backend(args.attn_backend)
     print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
 
-    profiler = InferenceProfiler(enabled=args.profile, device=args.device)
+    profiler = InferenceProfiler(
+        enabled=args.profile,
+        device=args.device,
+        config={
+            "vram_mode": args.vram_mode,
+            "attn_backend": sensenova_u1.effective_attn_backend(),
+            "dtype": args.dtype,
+            "gguf": args.gguf_checkpoint,
+        },
+    )
 
     with profiler.time_load():
-        engine = SenseNovaU1Editing(args.model_path, device=args.device, dtype=dtype)
+        engine = SenseNovaU1Editing(
+            args.model_path,
+            device=args.device,
+            dtype=dtype,
+            gguf_checkpoint=args.gguf_checkpoint,
+            device_map=args.device_map,
+            max_memory=args.max_memory,
+            vram_mode=args.vram_mode,
+        )
+
+    if args.lora_path is not None:
+        print(f"load lora {args.lora_path}")
+        engine.model = load_and_merge_lora_weight_from_safetensors(engine.model, args.lora_path)
 
     cfg_interval = tuple(args.cfg_interval)
     cli_explicit_size: tuple[int, int] | None = (args.width, args.height) if args.width is not None else None

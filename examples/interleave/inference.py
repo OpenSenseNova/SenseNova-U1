@@ -10,11 +10,18 @@ from typing import Sequence
 import numpy as np
 import torch
 from PIL import Image
-from transformers import AutoConfig, AutoModel, AutoTokenizer
 
 import sensenova_u1
-from sensenova_u1 import check_checkpoint_compatibility
-from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
+from sensenova_u1.utils import (
+    DEFAULT_IMAGE_PATCH_SIZE,
+    DEFAULT_VRAM_MODE,
+    InferenceProfiler,
+    add_offload_args,
+    load_and_merge_lora_weight_from_safetensors,
+    load_model_and_tokenizer,
+    make_offload_ctx,
+    vram_mode_to_prefetch_count,
+)
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
@@ -128,12 +135,23 @@ class SenseNovaU1Interleave:
         model_path: str,
         device: str = "cuda",
         dtype: torch.dtype = torch.bfloat16,
+        gguf_checkpoint: str | None = None,
+        device_map: str | None = None,
+        max_memory: str | None = None,
+        vram_mode: str = DEFAULT_VRAM_MODE,
     ) -> None:
         self.device = device
-        config = AutoConfig.from_pretrained(model_path)
-        check_checkpoint_compatibility(config)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = AutoModel.from_pretrained(model_path, config=config, torch_dtype=dtype).to(device).eval()
+        self.vram_mode = vram_mode
+        self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
+        self.model, self.tokenizer = load_model_and_tokenizer(
+            model_path,
+            dtype=dtype,
+            device=device,
+            gguf_checkpoint=gguf_checkpoint,
+            for_offload=self.prefetch_count > 0,
+            device_map=device_map,
+            max_memory=max_memory,
+        )
 
     @torch.inference_mode()
     def generate(
@@ -150,20 +168,22 @@ class SenseNovaU1Interleave:
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
         seed: int = 0,
     ) -> tuple[str, list[Image.Image]]:
-        text, image_tensors = self.model.interleave_gen(
-            self.tokenizer,
-            prompt,
-            images=list(input_images),
-            image_size=image_size,
-            cfg_scale=cfg_scale,
-            img_cfg_scale=img_cfg_scale,
-            timestep_shift=timestep_shift,
-            cfg_interval=cfg_interval,
-            num_steps=num_steps,
-            system_message=system_message,
-            think_mode=think_mode,
-            seed=seed,
-        )
+        with make_offload_ctx(self.model, self.prefetch_count, self.device) as offloaded:
+            text, image_tensors = offloaded.interleave_gen(
+                self.tokenizer,
+                prompt,
+                images=list(input_images),
+                image_size=image_size,
+                cfg_scale=cfg_scale,
+                img_cfg_scale=img_cfg_scale,
+                timestep_shift=timestep_shift,
+                cfg_interval=cfg_interval,
+                num_steps=num_steps,
+                system_message=system_message,
+                think_mode=think_mode,
+                seed=seed,
+                verbose=True,
+            )
         return text, [_to_pil(img) for img in image_tensors]
 
 
@@ -255,6 +275,12 @@ def parse_args() -> argparse.Namespace:
         "--model_path",
         required=True,
         help="HuggingFace Hub id (e.g. sensenova/SenseNova-U1-8B-MoT) or a local path.",
+    )
+    p.add_argument(
+        "--lora_path",
+        required=False,
+        default=None,
+        help="HuggingFace Hub id or a local path to a lora model.",
     )
 
     src = p.add_mutually_exclusive_group(required=True)
@@ -358,6 +384,16 @@ def parse_args() -> argparse.Namespace:
         default="bfloat16",
         choices=["bfloat16", "float16", "float32"],
     )
+    add_offload_args(p)
+    p.add_argument(
+        "--gguf_checkpoint",
+        default=None,
+        help=(
+            "Optional path to a .gguf quantized checkpoint. When set, the dequantizing "
+            "diffusers GGUF Linear layer is used instead of safetensors weights. "
+            "Requires the [gguf] extra (gguf>=0.10.0, diffusers>=0.30.0)."
+        ),
+    )
     p.add_argument(
         "--attn_backend",
         default="auto",
@@ -386,9 +422,30 @@ def main() -> None:
     sensenova_u1.set_attn_backend(args.attn_backend)
     print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
 
-    profiler = InferenceProfiler(enabled=args.profile, device=args.device)
+    profiler = InferenceProfiler(
+        enabled=args.profile,
+        device=args.device,
+        config={
+            "vram_mode": args.vram_mode,
+            "attn_backend": sensenova_u1.effective_attn_backend(),
+            "dtype": args.dtype,
+            "gguf": args.gguf_checkpoint,
+        },
+    )
     with profiler.time_load():
-        engine = SenseNovaU1Interleave(args.model_path, device=args.device, dtype=dtype)
+        engine = SenseNovaU1Interleave(
+            args.model_path,
+            device=args.device,
+            dtype=dtype,
+            gguf_checkpoint=args.gguf_checkpoint,
+            device_map=args.device_map,
+            max_memory=args.max_memory,
+            vram_mode=args.vram_mode,
+        )
+
+    if args.lora_path is not None:
+        print(f"load lora {args.lora_path}")
+        engine.model = load_and_merge_lora_weight_from_safetensors(engine.model, args.lora_path)
 
     cfg_interval = tuple(args.cfg_interval)
     out_dir = Path(args.output_dir)
@@ -405,7 +462,7 @@ def main() -> None:
         input_images = _load_input_images(args.image)
         w, h = _resolve_image_size(input_images, fallback_w, fallback_h)
         # _set_seed(args.seed)
-        with profiler.time_generate(w, h, 1):
+        with profiler.time_generate(w, h, 1) as gen:
             text, images = engine.generate(
                 args.prompt,
                 input_images=input_images,
@@ -462,7 +519,7 @@ def main() -> None:
             think_mode = bool(sample.get("think_mode", args.think_mode))
             # _set_seed(int(sample.get("seed", args.seed)))
 
-            with profiler.time_generate(w, h, 1):
+            with profiler.time_generate(w, h, 1) as gen:
                 text, images = engine.generate(
                     prompt,
                     input_images=input_images,

@@ -36,15 +36,64 @@ examples/
         └── images/
 ```
 
+## 多 GPU 分发
+
+所有参考推理脚本都支持 Transformers / Accelerate 的 device-map 加载。
+对于多 GPU 机器，可以加上 `--device_map auto`，让 Accelerate 在可见的 GPU 之间切分模型：
+
+```bash
+python examples/t2i/inference.py \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --prompt "A cinematic mountain village at sunrise" \
+  --device_map auto \
+  --max_memory "0=22GiB,1=22GiB" \
+  --output output.png
+```
+
+设置 `--device_map` 后，模型会交给 Accelerate 分发，脚本不会再对整个模型调用 `.to(device)`。
+
+设置 `--device_map auto` 时，Accelerate 会估算各个模块的大小，读取可见 GPU 的可用内存，并依次分配到各 GPU。
+传入 `--max_memory` 会覆盖自动探测到的逐设备内存预算；在异构机器上想要稳定复现放置策略时建议显式设置。
+
+`--max_memory` 约束的是 Transformers / Accelerate 如何在 GPU 之间放置**模型权重**，
+它不是严格的端到端显存上限：forward 期间的 activation、KV cache、PyTorch reserved memory，
+以及图像生成相关中间状态仍然需要额外空间。
+小显卡上建议把单卡预算设得低于物理显存，例如 32GB 显卡可先尝试 `26GiB`-`28GiB`；
+如果生成阶段仍然 OOM，再进一步降低分辨率或 batch size。
+
+### 单卡低显存：`--vram_mode`
+
+单卡显存吃紧时，请优先使用项目自带的 layer offload，比 Accelerate 的 CPU/磁盘分发快得多；
+四个参考脚本（t2i / interleave / editing / vqa）都支持：
+
+| `--vram_mode` | 行为 |
+|---------------|------|
+| `full`        | 整模型常驻 GPU，不做 offload。最快。（默认）|
+| `low`         | 每层同步 CPU<->GPU 交换，权重显存占用最小，速度最慢。|
+| `balanced`    | 异步预取（H2D 与计算重叠），比 `low` 快。|
+
+```bash
+python examples/t2i/inference.py \
+  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --prompt "A cinematic mountain village at sunrise" \
+  --vram_mode balanced \
+  --output output.png
+```
+
+`--vram_mode` 与 `--device_map` 互斥：layer offload 需要模型在两次 forward 之间保留在 CPU 上，
+这与 Accelerate 的静态分发不兼容。
+
 ## 文生图（Text-to-Image）
 
 单条 prompt 推理：
 
 ```bash
 python examples/t2i/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，性价比出色”。" \
   --width 2720 --height 1536 \
+  --device_map auto \
+  --batch_size 1 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
   --output output.png \
   --profile
@@ -54,7 +103,7 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/t2i/data/samples.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -67,7 +116,7 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/t2i/data/samples_infographic.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -84,7 +133,7 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/t2i/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "A male peacock trying to attract a female" \
   --width 2048 --height 2048 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -98,7 +147,7 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/t2i/data/samples_reasoning.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -136,7 +185,7 @@ SenseNova-U1 在约 2K 像素的分辨率档位上训练。尽管支持任意的
 # export U1_ENHANCE_MODEL=gemini-3.1-pro
 
 python examples/t2i/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "如何制作咖啡的教程" \
   --enhance --print_enhance \
   --output output.png
@@ -150,9 +199,9 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/editing/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
-  --prompt "Change the animal's fur color to a darker shade." \
-  --image examples/editing/data/images/1.jpg \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --prompt "Change the jacket of the person on the left to bright yellow." \
+  --image examples/editing/data/images/1.webp \
   --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
   --timestep_shift 3.0 --num_steps 50 \
   --output edited.png \
@@ -163,7 +212,7 @@ python examples/editing/inference.py \
 
 ```bash
 python examples/editing/inference.py \
-    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/editing/data/samples.jsonl \
     --output_dir outputs/editing/ \
     --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
@@ -199,7 +248,7 @@ CFG 默认值：`--cfg_scale 4.0`（文本引导强度），`--img_cfg_scale 1.0
 ### 1) 单样本，仅文本 prompt
 ```bash
 python examples/interleave/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
   --resolution "16:9" \
   --output_dir outputs/interleave/text \
@@ -210,7 +259,7 @@ python examples/interleave/inference.py \
 
 ```bash
 python examples/interleave/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "<image>\n图文交错生成小猫游览故宫的场景" \
   --image examples/interleave/data/images/image0.jpg \
   --output_dir outputs/interleave/text_image \
@@ -228,7 +277,7 @@ python examples/interleave/inference.py \
 
 ```bash
 python examples/interleave/inference.py \
-    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/interleave/data/samples.jsonl \
     --resolution "16:9" \
     --output_dir outputs/interleave/jsonl
@@ -242,7 +291,7 @@ python examples/interleave/inference.py \
 
 ```bash
 python examples/vqa/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
   --image examples/vqa/data/images/menu.jpg \
   --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." \
   --output outputs/menu_answer.txt \
@@ -261,7 +310,7 @@ python examples/vqa/inference.py \
 
 ```bash
 python examples/vqa/inference.py \
-    --model_path SenseNova/SenseNova-U1-8B-MoT \
+    --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/vqa/data/samples.jsonl \
     --output_dir outputs/vqa/ \
     --max_new_tokens 8192 \

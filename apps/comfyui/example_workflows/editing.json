@@ -1,0 +1,273 @@
+{
+  "id": "8a36c97b-03db-45f4-9154-0e59b7f61366",
+  "revision": 0,
+  "last_node_id": 6,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "SenseNovaU1LocalLoader",
+      "pos": [
+        -520.3208437890622,
+        -17.623112343749938
+      ],
+      "size": [
+        420,
+        360
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "u1_model",
+          "type": "SENSENOVA_U1_LOCAL_MODEL",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "model_info_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaU1LocalLoader"
+      },
+      "widgets_values": [
+        "sensenova/SenseNova-U1-8B-MoT",
+        "",
+        "cuda",
+        "bfloat16",
+        "auto",
+        "none",
+        "",
+        "",
+        false
+      ]
+    },
+    {
+      "id": 2,
+      "type": "LoadImage",
+      "pos": [
+        -518.748080117188,
+        398.93568074218774
+      ],
+      "size": [
+        417.6686240234375,
+        539.1002277734372
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "1.webp",
+        "image"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "SenseNovaU1LocalImageEdit",
+      "pos": [
+        -0.6416875781249995,
+        120.73197378906247
+      ],
+      "size": [
+        440,
+        520
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "u1_model",
+          "type": "SENSENOVA_U1_LOCAL_MODEL",
+          "link": 1
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "think_text",
+          "type": "STRING",
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "metadata_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaU1LocalImageEdit"
+      },
+      "widgets_values": [
+        "Change the jacket of the person on the left to bright yellow.",
+        true,
+        2048,
+        2048,
+        4.194304,
+        4,
+        1,
+        "none",
+        3,
+        0,
+        1,
+        50,
+        1,
+        42,
+        "fixed",
+        false
+      ]
+    },
+    {
+      "id": 4,
+      "type": "PreviewImage",
+      "pos": [
+        551.0654574035171,
+        -33.077242535484714
+      ],
+      "size": [
+        386.8829846614751,
+        621.7392536760358
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 6,
+      "type": "PreviewAny",
+      "pos": [
+        553.8443943368454,
+        672.8903773855884
+      ],
+      "size": [
+        386.69200829226315,
+        173.34643765501687
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 4
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      3,
+      0,
+      "SENSENOVA_U1_LOCAL_MODEL"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      1,
+      "IMAGE"
+    ],
+    [
+      3,
+      3,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      3,
+      2,
+      6,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "LG",
+    "ds": {
+      "scale": 0.7149221062580672,
+      "offset": [
+        773.9705624243321,
+        41.60095323700315
+      ]
+    },
+    "frontendVersion": "1.39.19",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

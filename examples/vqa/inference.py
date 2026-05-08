@@ -6,12 +6,19 @@ import sys
 from pathlib import Path
 
 import torch
-from transformers import AutoConfig, AutoModel, AutoTokenizer
 
 import sensenova_u1
-from sensenova_u1 import check_checkpoint_compatibility
 from sensenova_u1.models.neo_unify.utils import load_image_native
-from sensenova_u1.utils import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
+from sensenova_u1.utils import (
+    DEFAULT_IMAGE_PATCH_SIZE,
+    DEFAULT_VRAM_MODE,
+    InferenceProfiler,
+    add_offload_args,
+    infer_input_device,
+    load_model_and_tokenizer,
+    make_offload_ctx,
+    vram_mode_to_prefetch_count,
+)
 
 
 class SenseNovaU1VQA:
@@ -22,12 +29,23 @@ class SenseNovaU1VQA:
         model_path: str,
         device: str = "cuda",
         dtype: torch.dtype = torch.bfloat16,
+        gguf_checkpoint: str | None = None,
+        device_map: str | None = None,
+        max_memory: str | None = None,
+        vram_mode: str = DEFAULT_VRAM_MODE,
     ) -> None:
-        self.device = device
-        config = AutoConfig.from_pretrained(model_path)
-        check_checkpoint_compatibility(config)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = AutoModel.from_pretrained(model_path, config=config, torch_dtype=dtype).to(device).eval()
+        self.vram_mode = vram_mode
+        self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
+        self.model, self.tokenizer = load_model_and_tokenizer(
+            model_path,
+            dtype=dtype,
+            device=device,
+            gguf_checkpoint=gguf_checkpoint,
+            for_offload=self.prefetch_count > 0,
+            device_map=device_map,
+            max_memory=max_memory,
+        )
+        self.device = str(infer_input_device(self.model, fallback=device)) if device_map else device
 
     @torch.inference_mode()
     def answer(
@@ -58,15 +76,16 @@ class SenseNovaU1VQA:
         if repetition_penalty is not None:
             generation_config["repetition_penalty"] = repetition_penalty
 
-        response, updated_history = self.model.chat(
-            self.tokenizer,
-            pixel_values,
-            question,
-            generation_config,
-            history=history,
-            return_history=True,
-            grid_hw=grid_hw,
-        )
+        with make_offload_ctx(self.model, self.prefetch_count, self.device) as offloaded:
+            response, updated_history = offloaded.chat(
+                self.tokenizer,
+                pixel_values,
+                question,
+                generation_config,
+                history=history,
+                return_history=True,
+                grid_hw=grid_hw,
+            )
         return response, updated_history
 
 
@@ -103,6 +122,16 @@ def parse_args() -> argparse.Namespace:
         default="bfloat16",
         choices=["bfloat16", "float16", "float32"],
     )
+    add_offload_args(p)
+    p.add_argument(
+        "--gguf_checkpoint",
+        default=None,
+        help=(
+            "Optional path to a .gguf quantized checkpoint. When set, the dequantizing "
+            "diffusers GGUF Linear layer is used instead of safetensors weights. "
+            "Requires the [gguf] extra (gguf>=0.10.0, diffusers>=0.30.0)."
+        ),
+    )
     p.add_argument(
         "--attn_backend",
         default="auto",
@@ -135,10 +164,27 @@ def main() -> None:
     sensenova_u1.set_attn_backend(args.attn_backend)
     print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
 
-    profiler = InferenceProfiler(enabled=args.profile, device=args.device)
+    profiler = InferenceProfiler(
+        enabled=args.profile,
+        device=args.device,
+        config={
+            "vram_mode": args.vram_mode,
+            "attn_backend": sensenova_u1.effective_attn_backend(),
+            "dtype": args.dtype,
+            "gguf": args.gguf_checkpoint,
+        },
+    )
 
     with profiler.time_load():
-        engine = SenseNovaU1VQA(args.model_path, device=args.device, dtype=dtype)
+        engine = SenseNovaU1VQA(
+            args.model_path,
+            device=args.device,
+            dtype=dtype,
+            gguf_checkpoint=args.gguf_checkpoint,
+            device_map=args.device_map,
+            max_memory=args.max_memory,
+            vram_mode=args.vram_mode,
+        )
 
     if args.image is not None:
         # single image mode — image size used as proxy for profiler dimensions

@@ -7,9 +7,10 @@
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/arXiv-Coming-b31b1b.svg" alt="arXiv"></a>
   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
+  <a href="https://modelscope.cn/collections/SenseNova/SenseNova-U1"><img src="https://img.shields.io/badge/%F0%9F%A4%96%20ModelScope-模型-purple" alt="ModelScope-模型"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
-  <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="https://discord.com/invite/BuTXPHmQub"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
@@ -79,7 +80,7 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 | :---- | :------- | :--------- |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
 | SenseNova-U1-8B-MoT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
-| SenseNova-U1-8B-MoT-8step-preview | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-8step-preview) |
+| SenseNova-U1-8B-MoT-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors) |
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | 🤗 link |
 | SenseNova-U1-A3B-MoT | A3B MoT | 🤗 link |
 
@@ -91,6 +92,10 @@ Although relatively compact by today’s standards, these models already show st
 
 
 ## 📣 Updated News
+
+- `[2026.05.08]` Add **GGUF quantized checkpoints** and **layer-offload VRAM modes** for low-VRAM single-GPU inference. See [Memory-efficient inference](#-memory-efficient-inference-gguf--vram-modes). GGUF weights for `SenseNova-U1-8B-MoT-Merger` are available at [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) — many thanks to [@smthem](https://github.com/smthem) for contributing the quantized weights.
+
+- `[2026.05.06]` Release [SenseNova-U1-8B-MoT-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors). Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
 - `[2026.04.30]` Release the preview version of the 8-step inference model [SenseNova-U1-8B-MoT-8step-preview](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-8step-preview). In most cases, the image generation quality of this model closely matches that of the base model (see [comparison and existing issues](docs/base_vs_distill.md)). To test this model, you can use the [inference scripts](examples/README.md), but with the following parameters: ```--cfg_scale 1.0 --num_steps 8``` .
 
@@ -402,7 +407,7 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 <summary>📝 Visual Understanding</summary>
 
 ```bash
-python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
+python examples/vqa/inference.py --model_path sensenova/SenseNova-U1-8B-MoT --image examples/vqa/data/images/menu.jpg --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." --output outputs/answer.txt --max_new_tokens 8192 --do_sample --temperature 0.6 --top_p 0.95 --top_k 20 --repetition_penalty 1.05 --profile
 ```
 
 </details>
@@ -413,7 +418,7 @@ python examples/vqa/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --im
 <summary>🖼️ Text-to-Image</summary>
 
 ```bash
-python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，性价比出色”。" --width 2720 --height 1536 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
+python examples/t2i/inference.py --model_path sensenova/SenseNova-U1-8B-MoT --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，性价比出色”。" --width 2720 --height 1536 --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output.png --profile
 ```
 
 </details>
@@ -427,7 +432,7 @@ python examples/t2i/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --pr
 <summary>✏️ Image Editing</summary>
 
 ```bash
-python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.jpg --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
+python examples/editing/inference.py --model_path sensenova/SenseNova-U1-8B-MoT --prompt "Change the animal's fur color to a darker shade." --image examples/editing/data/images/1.webp --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 --output output_edited.png --profile --compare
 ```
 
 </details>
@@ -439,13 +444,60 @@ python examples/editing/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT 
 <summary>♻️ Interleaved Generation</summary>
 
 ```bash
-python examples/interleave/inference.py --model_path SenseNova/SenseNova-U1-8B-MoT --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
+python examples/interleave/inference.py --model_path sensenova/SenseNova-U1-8B-MoT --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." --resolution "16:9" --output_dir outputs/interleave/ --stem demo --profile
 ```
 </details>
 
 > See [`examples/README.md`](./examples/README.md) for batched inference, JSONL format, prompt enhancement, resolution buckets, and full flag reference.
 
 > See [`docs/gpu_mem_profiler.md`](./docs/gpu_mem_profiler.md) for GPU memory profiler.
+
+
+### 💾 Memory-efficient inference (GGUF + VRAM modes)
+
+For users running on a single consumer GPU, two complementary features lower the VRAM footprint of the `transformers` path. They can be combined freely.
+
+#### GGUF quantized checkpoints
+
+Pass `--gguf_checkpoint` to any of the four inference scripts (`t2i`, `editing`, `interleave`, `vqa`) to load a quantized `.gguf` file via the `diffusers` GGUF Linear layer instead of the bf16 safetensors weights. The base `--model_path` is still required (for tokenizer / config / non-LM weights).
+
+```bash
+# install the optional extra once
+uv pip install -e ".[gguf]"   # or: pip install "gguf>=0.10.0" "diffusers>=0.30.0"
+
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --gguf_checkpoint /path/to/SenseNova-U1-8B-MoT-Merger-Q4_K_M.gguf \
+  --prompt "A male peacock trying to attract a female" \
+  --output output.png
+```
+
+GGUF weights for `SenseNova-U1-8B-MoT-Merger` (multiple quant levels: Q3 / Q4 / Q5 / Q6 / Q8) are available at:
+
+| Quantized weights | HF link |
+| :---------------- | :------ |
+| SenseNova-U1-8B-MoT-Merger-gguf | [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) |
+
+> 🙏 Thanks to GitHub user [@smthem](https://github.com/smthem) for contributing the quantized GGUF weights to the community.
+
+#### `--vram_mode`: single-GPU layer offload
+
+Pass `--vram_mode` to keep the language-model layers resident on CPU pinned memory and stream them onto the GPU on-demand during forward, freeing weight VRAM while keeping activations on-device.
+
+| Mode | Behavior | When to use |
+| :--- | :--- | :--- |
+| `full` *(default)* | No offload; whole model on GPU | Plenty of VRAM, best speed |
+| `low` | Synchronous per-layer CPU↔GPU swap | Lowest VRAM footprint |
+| `balanced` | Async prefetch overlaps H2D copy with compute | Tight on VRAM but want to recover speed |
+
+```bash
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --vram_mode balanced \
+  --prompt "..." --output output.png
+```
+
+`--gguf_checkpoint` and `--vram_mode` compose: a Q4 GGUF + `balanced` is the recommended setup for ~10–12 GB consumer cards.
 
 
 ### ⚡ Run with LightLLM + LightX2V (Recommended)
@@ -477,11 +529,11 @@ Join our growing community to share feedback, get support, and stay updated on t
 <div align="center">
 <table>
   <tr>
-    <td align="center"><b><a href="https://discord.gg/cxkwXWjp">Discord</a></b></td>
+    <td align="center"><b><a href="https://discord.com/invite/BuTXPHmQub">Discord</a></b></td>
     <td align="center"><b>WeChat Group</b></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://discord.gg/cxkwXWjp"><img src="docs/assets/discord_qr.webp" width="160"/></a></td>
+    <td align="center"><a href="https://discord.com/invite/BuTXPHmQub"><img src="docs/assets/discord_qr.webp" width="160"/></a></td>
     <td align="center"><img src="docs/assets/wechat_qr.webp" width="160"/></td>
   </tr>
 </table>
