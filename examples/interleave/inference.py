@@ -182,6 +182,7 @@ class SenseNovaU1Interleave:
                 system_message=system_message,
                 think_mode=think_mode,
                 seed=seed,
+                verbose=True,
             )
         return text, [_to_pil(img) for img in image_tensors]
 
