@@ -74,6 +74,20 @@ class _GenerationRecord:
     memory_peak: _MemoryPeak
 
 
+@dataclass
+class GenerationHandle:
+    """Mutable handle yielded by :meth:`InferenceProfiler.time_generate`.
+
+    Callers may overwrite ``batch`` (and width/height) after the generate
+    call returns when the true count is only known post-hoc — e.g. interleave
+    inference, where one call produces a variable number of images.
+    """
+
+    width: int
+    height: int
+    batch: int
+
+
 class InferenceProfiler:
     """Minimal wall-clock profiler for model loading + generation.
 
@@ -176,22 +190,27 @@ class InferenceProfiler:
             self.load_memory_peak = self._memory_peak()
 
     @contextmanager
-    def time_generate(self, width: int, height: int, batch: int = 1) -> Iterator[None]:
+    def time_generate(self, width: int, height: int, batch: int = 1) -> Iterator[GenerationHandle]:
+        """Time a generation block. Yields a mutable handle so callers can
+        correct ``batch`` (or width/height) after the call when the true
+        count is only known post-hoc (e.g. interleave produces N images per
+        call). Existing callers that ignore the yielded value still work."""
+        handle = GenerationHandle(width=width, height=height, batch=batch)
         if not self.enabled:
-            yield
+            yield handle
             return
         self._sync()
         self._reset_memory_peak()
         t0 = time.perf_counter()
         try:
-            yield
+            yield handle
         finally:
             self._sync()
             self.gen_records.append(
                 _GenerationRecord(
-                    width=width,
-                    height=height,
-                    batch=batch,
+                    width=handle.width,
+                    height=handle.height,
+                    batch=handle.batch,
                     seconds=time.perf_counter() - t0,
                     memory_peak=self._memory_peak(),
                 )

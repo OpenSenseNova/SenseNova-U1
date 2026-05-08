@@ -461,7 +461,7 @@ def main() -> None:
         input_images = _load_input_images(args.image)
         w, h = _resolve_image_size(input_images, fallback_w, fallback_h)
         # _set_seed(args.seed)
-        with profiler.time_generate(w, h, 1):
+        with profiler.time_generate(w, h, 1) as gen:
             text, images = engine.generate(
                 args.prompt,
                 input_images=input_images,
@@ -475,6 +475,7 @@ def main() -> None:
                 system_message=args.system_message,
                 seed=args.seed,
             )
+            gen.batch = max(len(images), 1)
         print(f"[text] {text}")
         _save_outputs(
             text,
@@ -517,7 +518,7 @@ def main() -> None:
             think_mode = bool(sample.get("think_mode", args.think_mode))
             # _set_seed(int(sample.get("seed", args.seed)))
 
-            with profiler.time_generate(w, h, 1):
+            with profiler.time_generate(w, h, 1) as gen:
                 text, images = engine.generate(
                     prompt,
                     input_images=input_images,
@@ -531,6 +532,7 @@ def main() -> None:
                     system_message=args.system_message,
                     seed=args.seed,
                 )
+                gen.batch = max(len(images), 1)
 
             stem = f"{i + 1:04d}" + ("_think" if think_mode else "_no_think")
             input_names = _save_outputs(
