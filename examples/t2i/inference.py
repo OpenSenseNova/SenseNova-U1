@@ -14,6 +14,7 @@ import sensenova_u1
 from sensenova_u1.utils import (
     DEFAULT_IMAGE_PATCH_SIZE,
     InferenceProfiler,
+    add_offload_args,
     load_and_merge_lora_weight_from_safetensors,
     load_model_and_tokenizer,
     offload_layers_async,
@@ -91,6 +92,10 @@ class SenseNovaU1T2I:
         dtype: torch.dtype = torch.bfloat16,
         gguf_checkpoint: str | None = None,
         vram_mode: str = DEFAULT_VRAM_MODE,
+        device_map: str | None = None,
+        max_memory: str | None = None,
+        offload_folder: str | None = None,
+        offload_state_dict: bool | None = None,
     ) -> None:
         if vram_mode not in _VRAM_MODE_TO_PREFETCH:
             raise ValueError(f"Unsupported vram_mode={vram_mode!r}. Choose one of {VRAM_MODE_OPTIONS}.")
@@ -104,6 +109,10 @@ class SenseNovaU1T2I:
             device=device,
             gguf_checkpoint=gguf_checkpoint,
             for_offload=self.prefetch_count > 0,
+            device_map=device_map,
+            max_memory=max_memory,
+            offload_folder=offload_folder,
+            offload_state_dict=offload_state_dict,
         )
 
     def _offload_ctx(self):
@@ -261,6 +270,7 @@ def parse_args() -> argparse.Namespace:
         default="bfloat16",
         choices=["bfloat16", "float16", "float32"],
     )
+    add_offload_args(p)
     p.add_argument(
         "--gguf_checkpoint",
         default=None,
@@ -401,6 +411,10 @@ def main() -> None:
                 dtype=dtype,
                 gguf_checkpoint=args.gguf_checkpoint,
                 vram_mode=args.vram_mode,
+                device_map=args.device_map,
+                max_memory=args.max_memory,
+                offload_folder=args.offload_folder,
+                offload_state_dict=args.offload_state_dict,
             )
         if args.lora_path is not None:
             print(f"load lora {args.lora_path}")

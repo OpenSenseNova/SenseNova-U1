@@ -25,7 +25,9 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import gc
+import json
 import logging
 from pathlib import Path
 from typing import Any
@@ -34,6 +36,46 @@ import torch
 from torch import nn
 
 LOGGER = logging.getLogger(__name__)
+
+
+def add_offload_args(parser: argparse.ArgumentParser) -> None:
+    """Add Transformers/Accelerate device-map loading flags to an example CLI."""
+    parser.add_argument(
+        "--device_map",
+        default=None,
+        help=(
+            "Optional Transformers device_map, e.g. 'auto', 'balanced', "
+            "'balanced_low_0', or 'sequential'. When set, the model is loaded "
+            "with Accelerate dispatch and is not moved again with .to(device)."
+        ),
+    )
+    parser.add_argument(
+        "--max_memory",
+        default=None,
+        help=(
+            "Optional per-device memory limits for --device_map, either JSON "
+            "or comma-separated KEY=VALUE pairs, e.g. '0=20GiB,cpu=64GiB'."
+        ),
+    )
+    parser.add_argument(
+        "--offload_folder",
+        default=None,
+        help="Folder for disk offload when --device_map places modules on 'disk'.",
+    )
+    parser.add_argument(
+        "--offload_state_dict",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Forwarded to AutoModel.from_pretrained for CPU/disk offload loading.",
+    )
+
+
+def infer_input_device(model: nn.Module, fallback: str | torch.device = "cuda") -> torch.device:
+    """Pick a usable device for tensors passed into a dispatched model."""
+    for param in model.parameters():
+        if param.device.type not in {"cpu", "meta"}:
+            return param.device
+    return torch.device(fallback)
 
 
 def _resolve_local_model_path(model_path: str) -> str:
@@ -124,13 +166,19 @@ def load_model_and_tokenizer(
 
 
 def _normalize_max_memory(value: str | dict | None) -> dict[int | str, str]:
-    """Accept either a parsed mapping or the comma-separated CLI form ``"0=20GiB,cpu=64GiB"``."""
+    """Accept a parsed mapping, JSON object, or comma-separated CLI form ``"0=20GiB,cpu=64GiB"``."""
     if value is None or value == "":
         return {}
     if isinstance(value, dict):
-        return value
+        return {_coerce_memory_key(k): str(v) for k, v in value.items()}
+    stripped = value.strip()
+    if stripped.startswith("{"):
+        raw = json.loads(stripped)
+        if not isinstance(raw, dict):
+            raise RuntimeError("max_memory JSON must be an object")
+        return {_coerce_memory_key(k): str(v) for k, v in raw.items()}
     result: dict[int | str, str] = {}
-    for item in value.split(","):
+    for item in stripped.split(","):
         item = item.strip()
         if not item:
             continue
@@ -141,8 +189,18 @@ def _normalize_max_memory(value: str | dict | None) -> dict[int | str, str]:
         memory = memory.strip()
         if not key or not memory:
             raise RuntimeError("max_memory entries must include both device and memory.")
-        result[int(key) if key.isdigit() else key] = memory
+        result[_coerce_memory_key(key)] = memory
     return result
+
+
+def _coerce_memory_key(key: object) -> int | str:
+    if isinstance(key, int):
+        return key
+    key_str = str(key)
+    return int(key_str) if key_str.isdigit() else key_str
+
+
+parse_max_memory = _normalize_max_memory
 
 
 def _load_from_gguf(
