@@ -1134,7 +1134,7 @@ class NEOChatModel(PreTrainedModel):
 
                 generated_text += "<image>"
                 if verbose:
-                    print(f"\n[image {img_count + 1}/{max_images}] preparing diffusion...", flush=True)
+                    print(f"\n[image {img_count + 1}] preparing diffusion...", flush=True)
 
                 # Add the img_start_token for condition and text_uncondition branch
                 self.language_model.model.current_index = t_index_cond
