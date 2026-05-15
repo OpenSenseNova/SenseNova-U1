@@ -1,8 +1,8 @@
 # SenseNova-U1-8B-MoT-Infographic 📊
 
-**SenseNova-U1-8B-MoT-Infographic** is built upon the base U1-8B-MoT model with an extended MT training phase. During both the MT and SFT stages, we optimized the data distribution between visual understanding and generation tasks. Furthermore, we applied RL specifically targeting text rendering, background, and overall visual aesthetics to better adapt to infographic generation scenarios.
+**SenseNova-U1-8B-MoT-Infographic** is built upon the base U1-8B-MoT model with an extended MT training phase. During both the MT and SFT stages, we optimized the data distribution between visual understanding and generation tasks. In the RL stage, we further refined the reward recipe to reduce the occurrence of unintended black backgrounds in generated infographics.
 
-- **Benchmark Performance:** Achieved significant improvements of **+6.8 / +4.3 points** on BizGenEval hard/easy and **+18.2 / +12.8 points** on IGenBench Q-ACC/I-ACC, while maintaining robust visual understanding capabilities without substantial degradation.
+- **Benchmark Performance:** Compared with the base **SenseNova-U1-8B-MoT** model, BizGenEval hard/easy increased from **39.8 / 61.1** to **46.6 / 65.4** (**+6.8 / +4.3 points**), and IGenBench Q-ACC/I-ACC increased from **51.3 / 4.2** to **69.5 / 17.0** (**+18.2 / +12.8 points**), while maintaining robust visual understanding capabilities without substantial degradation.
 - **Generation Quality:** The model produces complex infographics across 100+ styles and layouts, with improved visual aesthetics and text rendering — including dense small text such as arXiv-style pages.
 
 ## Benchmark Highlights
