@@ -132,7 +132,7 @@ python examples/t2i/inference.py \
     --profile
 ```
 
-See [`t2i/data/samples_infographic.jsonl`](./t2i/data/samples_infographic.jsonl) to reproduce the infographic showcases.
+See [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) to reproduce the infographic showcases, and the generated results can be viewed in [Infographic Showcases](../docs/u1_infographic_showcases.md).
 
 ### T2I reasoning (think mode)
 

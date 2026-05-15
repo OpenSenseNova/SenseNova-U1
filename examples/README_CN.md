@@ -123,7 +123,7 @@ python examples/t2i/inference.py \
     --profile
 ```
 
-可参考 [`t2i/data/samples_infographic.jsonl`](./t2i/data/samples_infographic.jsonl) 复现信息图展示样例。
+可参考 [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) 复现信息图展示样例，生成结果展示可见 [信息图案例展示](../docs/u1_infographic_showcases.md)。
 
 ### T2I 推理模式（think mode）
 
