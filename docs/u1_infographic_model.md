@@ -7,7 +7,7 @@
 
 ## Benchmark Highlights
 
-| Model | BizGenEval Avg. (hard / easy, %) ↑ | IGenBench Q-ACC (%) ↑ | IGenBench I-ACC (%) ↑ | OneIG(EN) ↑  | OneIG(ZH) ↑  |
+| Model | BizGenEval Avg. (hard / easy) ↑ | IGenBench Q-ACC↑ | IGenBench I-ACC ↑ | OneIG(EN) ↑  | OneIG(ZH) ↑  |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | ***Commercial Models*** | |
 | Nano-Banana-Pro | 76.7 / 93.7 | 90.6 | 48.8 | 58.1 | 56.8 |
