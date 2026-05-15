@@ -125,8 +125,8 @@ Infographic-focused batched generation:
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path sensenova/SenseNova-U1-8B-MoT \
-    --jsonl examples/t2i/data/samples_infographic.jsonl \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
+    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
