@@ -23,7 +23,7 @@
 
 ## 📣 最新动态
 
-- `[2026.05.15]` ✨ 发布 [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic)。该模型专为复杂信息图生成打造。模型指标等细节可见 [U1 Infographic Model](docs/u1_infographic_model_CN.md)，100个生成案例可见 🖼️ [Infographic Showcases](docs/u1_infographic_showcases.md)。
+- `[2026.05.15]` 发布 [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic)。该模型专为复杂信息图生成打造。模型指标等细节可见 [U1 Infographic Model](docs/u1_infographic_model_CN.md)，100个生成案例可见  [✨ Infographic Showcases ](docs/u1_infographic_showcases.md)。
 
 - `[2026.05.10]` 发布 [🔥SenseNova-U1 技术报告🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf)，并开源 [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) 与 [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT) 模型权重。
 
