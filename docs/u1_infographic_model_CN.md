@@ -9,13 +9,13 @@
 
 | Model | BizGenEval Avg. (hard / easy, %) ↑ | IGenBench Q-ACC (%) ↑ | IGenBench I-ACC (%) ↑ | OneIG(EN) ↑ | OneIG(ZH) ↑ |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| ***Commercial Models*** | | | | | |
+| ***Commercial Models*** ||
 | Nano-Banana-Pro | 76.7 / 93.7 | 90.6 | 48.8 | 58.1 | 56.8 |
 | Nano-Banana-2.0 | 68.5 / 92.5 | 85.6 | 34.4 | 54.0 | 54.9 |
 | GPT-Image-1.5 | 35.9 / 81.6 | 55.0 | 12.0 | - | - |
 | Qwen-Image-2.0 | 45.5 / 65.8 | 50.0 | 3.0 | 54.1 | 50.9 |
 | Seedream-4.5 | 30.1 / 66.2 | 61.0 | 6.0 | 56.4 | 55.0 |
-| ***Open-source Models*** | | | | | |
+| ***Open-source Models*** ||
 | **SenseNova-U1-8B-MoT-Infographic** | **46.6 / 65.4** | **69.5** | **17.0** | **55.6** | 53.3 |
 | SenseNova-U1-8B-MoT | 39.8 / 61.1 | 51.3 | 4.2 | 54.5 | **53.8** |
 | Z-Image | 8.2 / 43.8 | 30.0 | 1.0 | 54.6 | 53.5 |
