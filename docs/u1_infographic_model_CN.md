@@ -31,7 +31,7 @@
 
 <table width="100%" style="table-layout: fixed;">
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 1：Infographic 1</b></div><img src="https://github.com/user-attachments/assets/d98f84cd-5795-4641-89c8-72217ac7456f" alt="信息图案例 028" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/d98f84cd-5795-4641-89c8-72217ac7456f" alt="信息图案例 028" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以深蓝色科技风格为背景，主题为“翼起进化：5G-A 极速时代”，突出展示5G-A网络的四大核心能力及其在智慧家庭中的应用。整体布局采用中心辐射式结构，中央是一个立体的、发光的5G-A芯片模块，周围环绕着数据流、光纤连接和抽象的科技光效，营造出高速、智能、互联的未来网络氛围。左侧与右侧分布多个半透明圆角矩形文本框，分别介绍不同技术特性，底部右下角则放置“天翼美好家”品牌标识及宣传语。
 
 标题“翼起进化：5G-A 极速时代”位于左上角，字体较大，呈亮蓝色霓虹效果，并配有声波状装饰图案，下方附有进度条样式的横条，标注“下行速率 10Gbps”。
@@ -80,7 +80,7 @@
 
 该信息图通过图文结合、逻辑清晰的结构，系统展示了5G-A技术的性能优势与应用场景，尤其强调其在家庭智能化服务中的价值，传达出“技术即温度”的品牌理念。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 2：2024酒店智能化与市场趋势硬核洞察</b></div><img src="https://github.com/user-attachments/assets/5f8ba3fa-5310-4a34-89f5-55a0c8a41459" alt="信息图案例 033" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/5f8ba3fa-5310-4a34-89f5-55a0c8a41459" alt="信息图案例 033" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“不仅是睡觉，是代码重构空间”为醒目主标题，副标题为“2024酒店智能化与市场趋势硬核洞察”，整体采用撕纸拼贴风格的视觉设计，背景融合了混凝土墙面纹理、电路板图案、涂鸦文字（如“AI”、“Data”、“Experience”）以及霓虹色块，营造出强烈的科技感与街头潮流氛围。右侧以白色撕裂纸张为底，突出主标题和副标题，下方附有条形码及“UPGRADE NOW”字样，强化升级紧迫感。
 
 信息图主体分为五个趋势模块，分别标记为TREND_1至TREND_5，每个模块包含英文主题名、中文解释、趋势描述及视觉符号，布局呈非对称网格状，通过撕裂边缘、箭头、色块等元素引导视线流动。
@@ -117,10 +117,10 @@
 
 该信息图通过混合多种图形语言——科技符号、街头涂鸦、数据可视化、比喻性插画——构建了一个关于2024年酒店业智能化转型的硬核叙事，强调技术驱动、用户体验革新、空间功能重构、可持续发展及市场竞争变革，最终指向“智能化是生存必需”的核心结论。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 3：Infographic 3</b></div><img src="https://github.com/user-attachments/assets/f5d3eea6-7e6d-46ae-bfdf-b8006e95b537" alt="信息图案例 049" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/f5d3eea6-7e6d-46ae-bfdf-b8006e95b537" alt="信息图案例 049" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 3 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 4：温度：能量的静止</b></div><img src="https://github.com/user-attachments/assets/1823a220-e320-4555-8115-a9cb192ed9b8" alt="信息图案例 092" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/1823a220-e320-4555-8115-a9cb192ed9b8" alt="信息图案例 092" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以水在冬季结冰、夏季融化的自然现象为核心主题，采用左右对称、冷暖色调分隔的视觉布局，将科学原理以艺术化水彩风格呈现。整体分为四个象限，围绕中心标题“水为何在冬结冰而在夏流淌？”展开，每个象限对应一个核心影响因素：温度、日照、降水和地理。视觉上，左侧以蓝色调为主，象征寒冷与冰晶，右侧以橙黄色调为主，象征阳光与流动的水体，形成鲜明对比。
 
 中心标题“水为何在冬结冰而在夏流淌？”以大号艺术字体书写，其中“冬结冰”为深蓝，“夏流淌”为橙红，突出季节差异。标题周围点缀雪花、雨滴、冰锥等装饰元素，增强主题氛围。
@@ -137,30 +137,30 @@
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 5：SCOUTING THE LEAGUE AVERAGE</b></div><img src="https://github.com/user-attachments/assets/26c84727-703e-4a9d-abc7-62fdecaad048" alt="信息图案例 000" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/26c84727-703e-4a9d-abc7-62fdecaad048" alt="信息图案例 000" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 5 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 6：Polyploidy in Agriculture: Total Chromosome Counts</b></div><img src="https://github.com/user-attachments/assets/c89f1b57-4b82-4d48-a281-1755dbf119af" alt="信息图案例 001" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/c89f1b57-4b82-4d48-a281-1755dbf119af" alt="信息图案例 001" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 6 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 7：Urban Construction Waste Outcomes</b></div><img src="https://github.com/user-attachments/assets/2d7f64a0-d0c9-4089-a923-d36c61c87031" alt="信息图案例 002" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/2d7f64a0-d0c9-4089-a923-d36c61c87031" alt="信息图案例 002" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 7 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 8：La Niñas globaler Fußabdruck</b></div><img src="https://github.com/user-attachments/assets/7c799cf5-a864-41ac-a639-f0150eb94488" alt="信息图案例 003" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/7c799cf5-a864-41ac-a639-f0150eb94488" alt="信息图案例 003" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 8 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 9：Healthcare Risk Management: Litigation Success by Error Type</b></div><img src="https://github.com/user-attachments/assets/70282742-e7c5-454c-b61c-728910cdc4df" alt="信息图案例 004" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/70282742-e7c5-454c-b61c-728910cdc4df" alt="信息图案例 004" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 9 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 10：Evolution of Peak Power Density in Standard Enterprises</b></div><img src="https://github.com/user-attachments/assets/96a796c3-a73c-4aee-93be-55fd33dc6c9a" alt="信息图案例 005" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/96a796c3-a73c-4aee-93be-55fd33dc6c9a" alt="信息图案例 005" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 10 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 11：Base Saturation of Fast Fashion Garments</b></div><img src="https://github.com/user-attachments/assets/02573e41-d42d-4304-842f-356dbf0aa643" alt="信息图案例 006" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/02573e41-d42d-4304-842f-356dbf0aa643" alt="信息图案例 006" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 11 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 12：SMART SAVER KIT</b></div><img src="https://github.com/user-attachments/assets/8e43e13e-5caf-497b-a402-5ebdde76d023" alt="信息图案例 015" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/8e43e13e-5caf-497b-a402-5ebdde76d023" alt="信息图案例 015" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>The infographic titled &quot;SMART SAVER KIT&quot; is presented on a light blue grid background resembling a cutting mat, with white dashed borders and decorative elements like percentage symbols (%) and barcode patterns along the edges. The overall design style is clean, modern, and playful, using 3D-rendered objects and speech-bubble-like labels to present information in an engaging, visually structured layout.
 
 At the top center, the title &quot;SMART SAVER KIT&quot; is displayed in bold, black, uppercase letters on a white, ticket-shaped banner with a scalloped bottom edge.
@@ -197,10 +197,10 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 13：Love Unlocked: Read Between the Lines</b></div><img src="https://github.com/user-attachments/assets/b60f3081-8cbc-42a9-ba13-05592f1ff360" alt="信息图案例 023" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/b60f3081-8cbc-42a9-ba13-05592f1ff360" alt="信息图案例 023" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 13 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 14：Infographic 14</b></div><img src="https://github.com/user-attachments/assets/b6230f84-403a-459f-9293-96afdf16983e" alt="信息图案例 036" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/b6230f84-403a-459f-9293-96afdf16983e" alt="信息图案例 036" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以复古像素风格的电子游戏界面呈现，整体布局模拟计算机操作系统或控制台，背景为深蓝色电路板纹理，点缀着二进制代码和数据流，营造出科技感十足的视觉氛围。顶部中央显示“ENG_CAREER_LOAD...”加载进度条，当前进度为75%，暗示这是一个正在加载的职业生涯系统。
 
 信息图分为四个主要模块：
@@ -257,21 +257,21 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整体设计采用游戏化的术语（如“技能树”、“BOSS战”、“通关道具”、“属性点”、“掉落表”），将工程师的职业发展过程比喻为RPG游戏中的成长与挑战。颜色编码清晰：绿色用于技能路径，红色用于高威胁，橙色用于中等威胁，金币、金条、钻石象征不同级别的收入奖励。界面元素包含窗口边框、最小化/关闭按钮、状态指示灯等，强化了“系统加载”的主题。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 15：2024 Updates &amp; Reminders: Driving License Management &amp; Traffic Violation Processing</b></div><img src="https://github.com/user-attachments/assets/9aab3a63-dcb5-4d3c-9bd9-3612c3ec8f21" alt="信息图案例 044" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/9aab3a63-dcb5-4d3c-9bd9-3612c3ec8f21" alt="信息图案例 044" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 15 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 16：Mid-Autumn Festival: Healthy Mooncake Consumption &amp; Safety Guide</b></div><img src="https://github.com/user-attachments/assets/a84b0b4e-2ed6-4567-a9a8-cb09d4f8a848" alt="信息图案例 051" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/a84b0b4e-2ed6-4567-a9a8-cb09d4f8a848" alt="信息图案例 051" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 16 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 17：Core Pathways, Impacts and Future Priorities of Modern Hanfu Inheritance</b></div><img src="https://github.com/user-attachments/assets/800061f8-9903-4e1d-85fb-79b23f1ba476" alt="信息图案例 054" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/800061f8-9903-4e1d-85fb-79b23f1ba476" alt="信息图案例 054" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 17 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 18：What is Cyclical Unemployment?</b></div><img src="https://github.com/user-attachments/assets/49358162-8e6f-43b5-9876-6a8d4de976ce" alt="信息图案例 061" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/49358162-8e6f-43b5-9876-6a8d4de976ce" alt="信息图案例 061" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 18 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 19：Infographic 19</b></div><img src="https://github.com/user-attachments/assets/26ba7ced-ec7a-4feb-ba4d-d7988ff8dc33" alt="信息图案例 062" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/26ba7ced-ec7a-4feb-ba4d-d7988ff8dc33" alt="信息图案例 062" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为“中外关系与国际交流活动归纳总结”，采用中国风与现代科技融合的插画风格，整体布局对称，以一座横跨水面的石拱桥作为视觉中心，象征连接与沟通。背景融合传统山水意境与现代都市天际线（如上海东方明珠塔、金茂大厦等），体现古今交融、东西对话的主题。画面左右两侧分别站立一位身着传统汉服的中国人物和一位身着西方古典服饰的外国人物，代表不同文明的交流与互动。
 
 信息图通过多个装饰性对话框、卷轴和图标，系统呈现中外关系的四大核心维度：
@@ -302,12 +302,12 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整体设计运用了丰富的中国传统符号（如祥云、龙纹、亭台楼阁）与现代科技元素（如电路板、数据流、地球网格）相结合，色彩以蓝、金、红为主调，营造庄重、和谐、前瞻的氛围。所有文本均为简体中文，无英文或其他语言。信息结构清晰，逻辑层次分明，从具体领域到总体目标再到最终总结，形成完整叙事闭环。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 20：SEEK &amp; FIND: HIDDEN ROVER SECRETS,</b></div><img src="https://github.com/user-attachments/assets/f6ae11a8-564e-4f6c-9a39-71a7fc02b0f2" alt="信息图案例 063" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/f6ae11a8-564e-4f6c-9a39-71a7fc02b0f2" alt="信息图案例 063" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 20 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 21：Infographic 21</b></div><img src="https://github.com/user-attachments/assets/0ea9ba7b-7224-4813-92e3-f411fe3e03bb" alt="信息图案例 065" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/0ea9ba7b-7224-4813-92e3-f411fe3e03bb" alt="信息图案例 065" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以一个木质边框的软木公告板为背景，呈现了一则关于电力设施检修导致的停电通知。整体设计采用手绘风格的便签纸、照片和插图拼贴形式，通过不同颜色的便签纸（黄色、蓝色、白色、橙色、绿色）和图钉固定在软木板上，营造出社区公告栏的真实感。背景是老旧居民区街道场景，有行人、小吃摊、电线杆和窗台上的猫，增强了生活气息。
 
 中央最醒目的是一张撕边白纸，用粗黑字体写着标题“停电通知！”，下方配有红色下划线，正文说明：“为了保障您的用电安全，我们将进行必要的电力设施检修。”
@@ -334,10 +334,10 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 所有便签纸均用彩色图钉（红、绿、蓝）或胶带固定，部分边缘有撕裂效果，增强真实感。整体布局层次分明，信息分区清晰，视觉引导自然，便于居民快速获取关键信息。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 22：VISION VOGUE | THE EYE ISSUE,</b></div><img src="https://github.com/user-attachments/assets/0989d17e-49e6-4185-b475-5e5a94503fa7" alt="信息图案例 066" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/0989d17e-49e6-4185-b475-5e5a94503fa7" alt="信息图案例 066" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 22 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 23：Infographic 23</b></div><img src="https://github.com/user-attachments/assets/d827a93c-5bac-416e-b7fa-05c8750d985b" alt="信息图案例 069" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/d827a93c-5bac-416e-b7fa-05c8750d985b" alt="信息图案例 069" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以赛博朋克（Cyberpunk）科幻风格呈现“猪肝烹饪方法与食谱分享”，整体采用深色背景搭配霓虹蓝、橙、绿等高对比度发光元素，营造出未来科技厨房的视觉氛围。画面中布满电路板纹理、机械臂、透明容器、数据显示屏等科技元素，强化了“赛博”主题。信息结构清晰，分为三个主要部分：上部为“烹饪前处理：净化与激活”，中部为“核心烹饪技法：赛博爆炒与低温慢煮”，下部为“精选赛博食谱：未来风味指南”。
 
 **标题与布局：**
@@ -413,7 +413,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图不仅传递实用烹饪知识，更通过视觉叙事构建了一个“未来厨房”的沉浸式体验。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 24：植物茎尖冷冻保存方案：分步指南与科学原理</b></div><img src="https://github.com/user-attachments/assets/fc85f72c-785c-4331-9fe5-15bcd02911e8" alt="信息图案例 079" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/fc85f72c-785c-4331-9fe5-15bcd02911e8" alt="信息图案例 079" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以深蓝色科技风格为背景，标题为“植物茎尖冷冻保存方案：分步指南与科学原理”，采用现代感十足的渐变蓝底、发光边框和网络状纹理设计，右上角点缀一个半透明的细胞结构图案，整体布局清晰、逻辑严谨，分为三个主要模块：左侧“知识模块（一）：基础与目的”，中间“核心流程（7步）”，右侧“知识模块（二）：关键试剂与环境”，底部为“结论”部分。
 
 **标题与整体布局：**
@@ -521,7 +521,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 25：Infographic 25</b></div><img src="https://github.com/user-attachments/assets/fe2d2592-35ca-480c-9acf-a803fc710e29" alt="信息图案例 018" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/fe2d2592-35ca-480c-9acf-a803fc710e29" alt="信息图案例 018" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>这是一张以温暖手绘卡通风格呈现的社区治理主题信息图，整体采用米白色背景搭配彩色圆点网格边框，视觉上充满亲和力与生活气息。标题“社区治理：让爱串门！”以橙色立体艺术字置于顶部中央，字体活泼可爱，右侧配有一个手持公文包、头戴蓝色发卡的女社工卡通形象，面带微笑挥手致意。
 
 图像主体内容分为四个主要部分：左上角为社区全景插画，展示蜿蜒小路连接着几栋温馨房屋，居民们在树下交流，蜜蜂飞舞，象征和谐邻里关系；中央偏右是一个拟人化的房子角色，张开双臂欢迎居民，旁边配有对话气泡解释“什么是社区治理？”——“以居民为中心，通过专业社会工作方法，多方参与共同解决社区问题。核心理念：‘助人自助’。通过激发内生动力，将钢筋水泥的楼宇转化成有温度的共同体。它是现代城市最有温度的微型实验！”
@@ -549,13 +549,13 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整张信息图通过生动的插画、清晰的步骤分解和实用的文字指导，系统阐释了社区治理的核心理念与操作路径，强调居民参与、多方协作和持续赋能，传递出“让爱串门”的温情主旨。左侧边缘还点缀有小蜜蜂、情侣贴纸、格纹图案等装饰元素，增强趣味性与设计感。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 26：Core Impacts of Urbanization Across Key Sectors</b></div><img src="https://github.com/user-attachments/assets/969b069e-8b7f-47a5-9364-dcbc9955896d" alt="信息图案例 046" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/969b069e-8b7f-47a5-9364-dcbc9955896d" alt="信息图案例 046" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 26 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 27：POPULAR EDIBLE PREPARATIONS OF PUMPKIN</b></div><img src="https://github.com/user-attachments/assets/8c69c9b3-5b6a-40fc-a6c8-4de8b4aaf365" alt="信息图案例 057" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/8c69c9b3-5b6a-40fc-a6c8-4de8b4aaf365" alt="信息图案例 057" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 27 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 28：Infographic 28</b></div><img src="https://github.com/user-attachments/assets/6229804d-3464-408a-a686-ac93668096c2" alt="信息图案例 072" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/6229804d-3464-408a-a686-ac93668096c2" alt="信息图案例 072" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以复古像素风格的街机游戏界面为设计主题，整体视觉呈现为一个充满科幻感的电子游戏屏幕，背景是深邃宇宙中的星云与光束，中央是一个巨大的彩色漩涡，象征着知识探索的核心。标题“心理学与社会学：知识普及大冒险”以醒目的蓝紫色霓虹字体置于顶部，具有强烈的视觉冲击力。
 
 画面采用对称式布局，左右两侧分别代表“玩家1：心理学”和“玩家2：社会学”，各有一名像素风格的角色形象。左侧心理学角色头盔内有大脑图案，周围环绕齿轮与对话气泡；右侧社会学角色头盔内有群体图标，背景是城市轮廓与网络连接图。两者通过箭头路径向中心汇聚，象征学科融合。
@@ -596,13 +596,13 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 29：R-SQUARED EXPLAINED</b></div><img src="https://github.com/user-attachments/assets/acfbdaa9-9e3f-4316-b867-8c7059260148" alt="信息图案例 078" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/acfbdaa9-9e3f-4316-b867-8c7059260148" alt="信息图案例 078" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 29 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 30：AMERICAN OPTIONS: FLEXIBILITY &amp; STRATEGY IN FINANCE</b></div><img src="https://github.com/user-attachments/assets/b0c60a06-16d6-444c-a081-467cf090df75" alt="信息图案例 082" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/b0c60a06-16d6-444c-a081-467cf090df75" alt="信息图案例 082" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 30 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 31：核心定义</b></div><img src="https://github.com/user-attachments/assets/49a702e8-85f1-4999-a2bd-989b53441fec" alt="信息图案例 007" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/49a702e8-85f1-4999-a2bd-989b53441fec" alt="信息图案例 007" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“徒手攀岩小知识”为主题，采用卡通插画风格，色彩柔和，背景为淡紫色渐变与白色拼接，点缀有云朵、蜜蜂、瓢虫、花朵、蝴蝶等自然元素，整体设计温馨、童趣，适合大众尤其是青少年阅读。
 
 标题“徒手攀岩小知识”位于左上角，置于一个云朵形状的白色边框内，字体为深棕色，粗体，旁边配有戴黄色头盔的小男孩攀岩形象和一只橘白相间的猫咪，上方还有蜜蜂飞舞，营造出轻松活泼的氛围。
@@ -640,15 +640,15 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 各模块之间通过虚线箭头连接，形成从“核心定义”→“前期准备”→“技巧与挑战”→“安全注意”→“精神与意义”的逻辑闭环，引导读者系统理解徒手攀岩的全貌。视觉元素丰富，文字简洁明了，图文结合紧密，适合科普传播。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 32：Infographic 32</b></div><img src="https://github.com/user-attachments/assets/d2bdab2b-6f28-4898-9029-3c730eaa2991" alt="信息图案例 008" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/d2bdab2b-6f28-4898-9029-3c730eaa2991" alt="信息图案例 008" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 32 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 33：Infographic 33</b></div><img src="https://github.com/user-attachments/assets/5da1eecd-2eb5-47ca-9c50-2f4f5cf81949" alt="信息图案例 009" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/5da1eecd-2eb5-47ca-9c50-2f4f5cf81949" alt="信息图案例 009" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 33 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 34：Infographic 34</b></div><img src="https://github.com/user-attachments/assets/d47f20bc-3966-4fd8-a7b0-4ef395dc65fe" alt="信息图案例 010" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/d47f20bc-3966-4fd8-a7b0-4ef395dc65fe" alt="信息图案例 010" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以清新可爱的卡通风格呈现，整体背景为浅绿色，带有手绘波浪线、星星和彩色圆点装饰边框，营造出轻松活泼的氛围。标题“趣味跳房子：扩展玩法与关键点”采用大号艺术字体，红色与绿色搭配，下方副标题“让经典游戏更有趣、更健康、更安全！”进一步点明主题。
 
 信息图内容分为五大模块，布局清晰，左右对称分布：
@@ -690,7 +690,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 所有文本均为简体中文，排版清晰，图文结合紧密，视觉引导明确，适合儿童及家长阅读理解。信息结构完整，从玩法创新到健康价值、装备准备、操作流程再到安全注意事项，全面覆盖了趣味跳房子游戏的各个方面。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 35：Infographic 35</b></div><img src="https://github.com/user-attachments/assets/a727c9f5-e20d-4ea9-b868-db48696fb868" alt="信息图案例 011" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/a727c9f5-e20d-4ea9-b868-db48696fb868" alt="信息图案例 011" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>这是一张以手绘插画风格呈现的《蒜香排骨》烹饪流程图解，整体采用暖色调背景（米黄色），布局清晰，图文并茂，通过四个主要步骤系统性地指导读者完成这道菜肴。标题《蒜香排骨》位于顶部中央，使用深棕色粗体书法字体，醒目突出。
 
 整个信息图分为四个核心步骤，分别标注为“步骤1：准备食材”、“步骤2：腌制入味”、“步骤3：炸制蒜香”和“步骤4&amp;5：合味出锅”，每个步骤均配有详细的说明文字、插画示意图以及附加的“厨师秘技”和“小心得”气泡框，增强实用性和可读性。
@@ -764,15 +764,15 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 此图不仅提供完整的菜谱，还融入专业技巧与个人经验，兼具教育性与趣味性，适合家庭烹饪爱好者参考使用。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 36：Infographic 36</b></div><img src="https://github.com/user-attachments/assets/84b08232-0ed2-4ca1-aecb-bd7a8bf58981" alt="信息图案例 012" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/84b08232-0ed2-4ca1-aecb-bd7a8bf58981" alt="信息图案例 012" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 36 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 37：CROP PHYSIOLOGY</b></div><img src="https://github.com/user-attachments/assets/74fa50e8-9f31-4291-b614-4b17f9f16a44" alt="信息图案例 013" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/74fa50e8-9f31-4291-b614-4b17f9f16a44" alt="信息图案例 013" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 37 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 38：Infographic 38</b></div><img src="https://github.com/user-attachments/assets/1dc07354-76b5-4aae-bc00-2f498864c684" alt="信息图案例 014" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/1dc07354-76b5-4aae-bc00-2f498864c684" alt="信息图案例 014" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以科技感十足的深蓝色调为背景，辅以霓虹蓝紫边框和电路板纹理装饰，整体风格现代、未来感强。标题“2024年小米及竞品最新电暖器机型参数对比”位于顶部中央，采用发光白色字体，醒目突出。
 
 图表主体为横向三列对比表格，左侧列为主推产品“小米米家石墨烯踢脚线电暖器”，并配有金色“高亮推荐”徽章，其单元格背景为渐变金棕色，文字为金色；中间列为“戴森 AM09 无叶冷暖风扇”，右侧列为“飞利浦暖风机 3000系列”，这两列背景为深蓝色，文字为白色或浅蓝色，与主推产品形成视觉区分。
@@ -813,7 +813,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 信息图通过清晰的网格结构、颜色编码和图标辅助，直观呈现了三款电暖器在核心技术、智能功能、物理属性和市场定位上的差异，尤其突出了小米产品在智能互联和性价比方面的优势。所有文本均为简体中文，内容完整无遗漏。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 39：AUTO SPECS: VELOCITY</b></div><img src="https://github.com/user-attachments/assets/7ec5be6d-d678-4de3-a8e9-a342ace35162" alt="信息图案例 025" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/7ec5be6d-d678-4de3-a8e9-a342ace35162" alt="信息图案例 025" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以科技感十足的深蓝色调为背景，配以网格线和二进制代码边框，整体呈现未来派数字仪表盘风格。顶部标题为“AUTO SPECS: VELOCITY”，采用金属质感银色大字，下方有黄黑相间的警示条纹，右上角标有“TEST MODE”红色标签，表明当前处于测试模式。
 
 图表中心是“MODULE_01: 动力心脏（中央仪表）”，一个圆形速度表式仪表盘，外圈刻度从0到8，指针指向约5.5位置，中心显示橙色数字“1025 hp”，下方标注“Turbo”。仪表盘左侧蓝色区域表示低负载，右侧红色区域表示高负载，当前指针位于红区，象征高功率输出状态。
@@ -848,7 +848,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 背景中可见一辆跑车的蓝色线框模型，带有尾翼，暗示车辆设计特征。整体布局清晰分区，各模块通过标签编号区分，数据编码方式包括数字、图表、进度条和文本描述，视觉元素丰富，强调高性能与先进技术。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 40：Infographic 40</b></div><img src="https://github.com/user-attachments/assets/55f00c10-179f-4fca-b42c-b92e9e6c127c" alt="信息图案例 076" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/55f00c10-179f-4fca-b42c-b92e9e6c127c" alt="信息图案例 076" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为“浅表切口手术部位感染（SSIs）与炎症”，采用清晰的流程图结构，系统性地介绍了手术部位感染的相关知识。整体布局分为顶部的“示例与症状”区域和下方四个主要模块：1. 定义与类型、2. 病理生理与风险因素、3. 炎症反应、4. 控制与影响。各模块通过箭头连接，形成逻辑递进关系，视觉风格简洁明了，使用不同颜色区分模块（蓝色、橙色、紫色、绿色），并辅以插图和图标增强理解。
 
 在顶部“示例与症状”部分，展示了三种典型情况：
@@ -882,7 +882,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 41：Infographic 41</b></div><img src="https://github.com/user-attachments/assets/338d7d46-a5a1-4e49-8eb6-a750118c186f" alt="信息图案例 080" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/338d7d46-a5a1-4e49-8eb6-a750118c186f" alt="信息图案例 080" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为“变异性，标准差与管理会计：图表与分析概览”，采用清晰的双栏布局，左侧聚焦于数据可视化与关键点说明，右侧则系统性地呈现核心概念、管理应用、案例研究及结论。整体设计风格简洁专业，使用浅蓝色背景与深色文字，辅以彩色图形元素增强可读性。
 
 **左侧部分：变异性水平与概率分布**
@@ -919,7 +919,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 - 右侧的核心概念通过箭头串联，构成逻辑递进；管理应用部分则通过垂直与水平箭头构建了从基础到实践的流程。
 - 整体信息流从理论（变异性→标准差→统计分布）过渡到应用（预算、成本、风险、决策），最后以行业案例和结论收尾，结构完整，层次分明。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 42：深渊生存：高压极寒适应机制</b></div><img src="https://github.com/user-attachments/assets/50e51dc0-125f-4a3a-ba93-286d47350308" alt="信息图案例 096" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/50e51dc0-125f-4a3a-ba93-286d47350308" alt="信息图案例 096" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以深蓝色调为主，营造出深海幽暗神秘的氛围，标题为“深渊生存：高压极寒适应机制”，字体为银白色立体字，位于图像顶部中央，具有科技感和视觉冲击力。整体布局呈对称结构，中心为一条半透明的深海鱼（类似吞噬鳗或深海鮟鱇鱼）的解剖插图，展示其内部骨骼与器官，周围环绕着发光粒子轨迹，象征生命活动与能量流动。四个主要模块分别位于左上、右上、左下、右下，每个模块均采用圆角矩形边框，带有金属质感和淡蓝色光晕，内含插图与文字说明，围绕中心鱼类形成放射状结构，强调各适应机制与核心生物的关联性。
 
 各模块内容如下：
@@ -950,15 +950,15 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 此外，在中心鱼类周围，有连接四个模块的虚线光带，将“高蛋白”、“低代谢”、“诱捕”、“高压”四个关键词分别指向对应的模块，形成逻辑闭环。背景中散布着大量半透明气泡状或细胞状图形，增强深海环境的真实感与沉浸感。整体设计融合了科学可视化与艺术渲染，采用三维效果、发光元素与冷色调光影，使信息传达既专业又具吸引力。所有文本均为简体中文，无英文或其他语言，符合中国科普或教育类信息图风格。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 43：SUSTAINABILITY LOG</b></div><img src="https://github.com/user-attachments/assets/8da5b7a0-2f3e-4623-a64b-87a5846bd78d" alt="信息图案例 040" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/8da5b7a0-2f3e-4623-a64b-87a5846bd78d" alt="信息图案例 040" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 43 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 44：The Evolution of Yi Yang Qianxi</b></div><img src="https://github.com/user-attachments/assets/c1792808-a0f6-412d-9067-9d8da206a203" alt="信息图案例 041" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/c1792808-a0f6-412d-9067-9d8da206a203" alt="信息图案例 041" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 44 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 45：用植物成长讲耐心与时间</b></div><img src="https://github.com/user-attachments/assets/886c10f9-99f4-4d4a-928d-c477a3b7f37b" alt="信息图案例 071" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/886c10f9-99f4-4d4a-928d-c477a3b7f37b" alt="信息图案例 071" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“用植物成长讲耐心与时间”为主题，采用温暖治愈的绘本风格，通过局部放大的微观视角，生动描绘了植物从种子到开花结果的五个成长阶段，隐喻人生中耐心与时间的价值。整体布局呈非线性网状结构，五个圆形放大镜分别聚焦于不同生长阶段，由藤蔓连接，象征生命连续不断的过程。每个放大镜内包含细腻的手绘插图，并配有编号和文字说明，形成清晰的视觉叙事流。
 
 标题位于顶部中央，字体为深棕色手写体，背景点缀浅绿色与橙色圆点，营造柔和氛围。副标题“绘本治愈风·局部放大·温暖的微观世界”位于主标题下方，进一步说明设计风格与核心概念。
@@ -989,7 +989,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整体色彩以大地色系（棕、绿、米黄）为主，辅以暖橙与浅粉，营造宁静、温暖、充满希望的视觉感受。图表类型为流程式信息图，结合插画与文字，通过“放大镜”这一视觉隐喻，引导观者关注细节与内在过程，强调耐心与时间在成长中的关键作用。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 46：Infographic 46</b></div><img src="https://github.com/user-attachments/assets/7fde21a1-8591-4886-9d6a-73e54341e8e7" alt="信息图案例 077" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/7fde21a1-8591-4886-9d6a-73e54341e8e7" alt="信息图案例 077" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以深蓝色为背景，采用清晰的流程图和模块化布局，系统地介绍了“铬酸银沉淀反应：实验演示与化学原理”。整体设计风格现代、专业，使用黄色和白色文字突出关键信息，配合实验室器皿、分子结构、齿轮等图标增强视觉表达。
 
 标题位于顶部中央，以大号白色和黄色字体呈现：“铬酸银沉淀反应：实验演示与化学原理”。
@@ -1018,7 +1018,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整个信息图通过流程图、化学式、图标和分块文本，逻辑清晰地呈现了铬酸银沉淀反应的实验步骤、化学原理、成分特性及其在多个领域的应用价值。所有文字均为中文，符合要求。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 47：Infographic 47</b></div><img src="https://github.com/user-attachments/assets/f7d9ed42-6660-46f4-b9cb-1c92bd1039d8" alt="信息图案例 081" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/f7d9ed42-6660-46f4-b9cb-1c92bd1039d8" alt="信息图案例 081" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为“第一季度财务报告分析”，采用深蓝色科技感背景，配以电路板纹理，整体布局分为六个彩色模块，呈2×3网格排列。每个模块使用不同主色调（蓝、橙、绿、紫、金、棕）区分主题，并包含图标、标题、概念说明、重要性/影响描述、图表和数据标签，视觉风格现代且专业。
 
 ---
@@ -1126,12 +1126,12 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图完整呈现了企业第一季度核心财务指标的动态变化、成本结构及经营策略，兼具数据可视化与战略指导功能。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 48：Infographic 48</b></div><img src="https://github.com/user-attachments/assets/6a9f72d2-178a-49be-a0ab-84c50ca2e236" alt="信息图案例 017" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/6a9f72d2-178a-49be-a0ab-84c50ca2e236" alt="信息图案例 017" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 48 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 49：职称评审成分表</b></div><img src="https://github.com/user-attachments/assets/fdade57e-b89a-4561-825f-8fde35c6e54d" alt="信息图案例 022" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/fdade57e-b89a-4561-825f-8fde35c6e54d" alt="信息图案例 022" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“职称评审成分表”为主题，采用清新柔和的薄荷绿背景，搭配3D卡通风格的视觉元素，整体设计活泼且富有教育性。标题“职称评审成分表”以立体米白色字体呈现于木质搁板上，周围点缀着笔、笔记本、回形针等文具图标，营造出办公学习氛围。
 
 图表主体为一个环形结构，由六个色彩鲜明、形状不规则的扇形板块组成，围绕中心一枚金色奖牌（带五角星）排列，象征职称评审的核心价值。每个扇形板块通过细线连接至对应的说明框，形成清晰的信息关联。
@@ -1176,10 +1176,10 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 所有数据加总为100%（30% + 20% + 15% + 15% + 10% + 10%），构成完整的职称评审价值体系。信息框采用半透明圆角矩形设计，配色与对应扇形一致，增强视觉统一性。整个信息图通过直观的饼状环形布局、明确的百分比标注、生动的图标以及详实的文字说明，全面解析了职称评审在职业发展中的多维价值，强调其不仅是能力认证，更是影响薪资、晋升、落户、退休等多方面的综合“硬通货”。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 50：Infographic 50</b></div><img src="https://github.com/user-attachments/assets/70aec02f-4f48-4241-9938-f220d97573e6" alt="信息图案例 026" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/70aec02f-4f48-4241-9938-f220d97573e6" alt="信息图案例 026" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 50 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 51：EARTHQUAKE: 活下去</b></div><img src="https://github.com/user-attachments/assets/bd8a6aa7-6485-4a71-8eab-da3693825944" alt="信息图案例 031" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/bd8a6aa7-6485-4a71-8eab-da3693825944" alt="信息图案例 031" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>这是一张以“EARTHQUAKE: 活下去”为主题、采用漫画风格和拼贴设计的地震应急生存指南信息图。整体背景为米色带有网点纹理，搭配黑黄警示条纹、手绘线条、涂鸦式文字框和鲜艳的粉、黄、蓝高亮色块，营造出紧张又具视觉冲击力的氛围。标题“EARTHQUAKE: 活下去”位于顶部中央，其中“EARTHQUAKE”使用粉色与黄色方块交替填充，“活下去”三字则置于黄色背景上，黑色粗体字，两侧配有波浪形震动符号，强调地震主题。下方散布多个“STAY ALIVE”印章式标志，增强警示感。
 
 信息图内容分为五个编号部分，每个部分均配有插图和说明文字，按逻辑顺序呈现地震应对步骤：
@@ -1211,15 +1211,15 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整体布局呈非对称网格结构，五个要点分布在画面不同位置，通过箭头和视觉引导线连接，形成从预防（01）→ 预警响应（02）→ 室内避险（03）→ 室外逃生（04）→ 被困求生（05）的完整逻辑链。所有文本均为中文，仅标题中保留英文“EARTHQUAKE”和“STAY ALIVE”作为强调。字体多样，包括粗体、手写体、印章体，增强信息层级和视觉趣味性。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 52：Shattered Silks: Multi-dimensional Deconstruction of the New Costume Drama</b></div><img src="https://github.com/user-attachments/assets/159d16f6-db04-4c56-8d48-cf79f2670d0b" alt="信息图案例 032" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/159d16f6-db04-4c56-8d48-cf79f2670d0b" alt="信息图案例 032" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 52 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 53：SPRING FESTIVAL SERVICE GUIDE</b></div><img src="https://github.com/user-attachments/assets/c3ba3912-6488-49b6-969f-b98012c80d55" alt="信息图案例 035" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/c3ba3912-6488-49b6-969f-b98012c80d55" alt="信息图案例 035" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 53 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 54：Infographic 54</b></div><img src="https://github.com/user-attachments/assets/87fd0ba4-bb73-4a77-88a5-4ffccfe6c6b4" alt="信息图案例 037" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/87fd0ba4-bb73-4a77-88a5-4ffccfe6c6b4" alt="信息图案例 037" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>这是一张以软木板为背景、采用拼贴艺术风格设计的中国航天主题信息图（Infographic），整体布局自由散落，模拟真实剪报或研究笔记的视觉效果。标题“CHINA AEROSPACE”以多种颜色和字体的拼贴字母呈现，下方配有中文“星辰大海”及英文“Infographic”，形成中英双语主标题。整个画面由多张照片、手写注释、票据、蓝图、便签纸等元素通过图钉、回形针固定在软木板上，营造出一种充满探索精神与手工质感的视觉氛围。
 
 信息图内容分为五个核心板块，每个板块均包含一张代表性的图片和一段描述性文字，分别介绍中国航天工程的重要成就：
@@ -1258,21 +1258,21 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图通过非传统的、富有创意的拼贴形式，将中国航天四大标志性工程——空间站、探月、探火、导航系统——有机整合，兼具科普性与艺术感染力，生动诠释了“星辰大海”的探索主题。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 55：EARTHEN SOULS: THE RURAL VERTICALITY OF BEING</b></div><img src="https://github.com/user-attachments/assets/5bae7e99-9018-4b03-8b24-18f51447ba53" alt="信息图案例 038" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/5bae7e99-9018-4b03-8b24-18f51447ba53" alt="信息图案例 038" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 55 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 56：Judicial Landscape: Guizhou Civil Judgment Summary,</b></div><img src="https://github.com/user-attachments/assets/f013b262-87a0-4166-a929-4593558611cd" alt="信息图案例 039" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/f013b262-87a0-4166-a929-4593558611cd" alt="信息图案例 039" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 56 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 57：THE RENAISSANCE OF PAPER</b></div><img src="https://github.com/user-attachments/assets/15c86672-f397-4ad4-b69a-d7359836e8ab" alt="信息图案例 042" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/15c86672-f397-4ad4-b69a-d7359836e8ab" alt="信息图案例 042" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 57 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 58：PSYCHOLOGICAL GUIDE TO EMOTION MANAGEMENT: UNDERSTAND &amp; REGULATE YOUR FEELINGS EFFECTIVELY,</b></div><img src="https://github.com/user-attachments/assets/83ea94f4-cfa2-44de-9eee-03b706bf1196" alt="信息图案例 055" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/83ea94f4-cfa2-44de-9eee-03b706bf1196" alt="信息图案例 055" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 58 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 59：Infographic 59</b></div><img src="https://github.com/user-attachments/assets/b3b3f910-ce90-4393-a418-61b6de433788" alt="信息图案例 064" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/b3b3f910-ce90-4393-a418-61b6de433788" alt="信息图案例 064" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为“体育界人物法律问题与争议技术剖面图”（Technical Diagram of Legal Issues &amp; Controversies in Sports Figures），采用工程蓝图（blueprint）风格设计，整体呈现为多层叠加的透明图纸，背景为浅灰色网格纸，营造出技术剖析的视觉效果。主色调为蓝色、白色和红色，关键警告信息以红色高亮显示，增强视觉冲击力。
 
 图表结构分为三个主要层次：
@@ -1331,7 +1331,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图通过高度结构化的视觉语言，完整还原了体育界人物面临的主要法律争议类型、其内在机制、传导路径及最终导致的职业与社会后果，兼具教育性和警示意义。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 60：个人成长与命运：浮世绘卷中的启示</b></div><img src="https://github.com/user-attachments/assets/c1504000-b517-4e68-a95a-7ffe3901a830" alt="信息图案例 067" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/c1504000-b517-4e68-a95a-7ffe3901a830" alt="信息图案例 067" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图采用传统日本浮世绘艺术风格，整体布局分为上下两部分：上半部分为一幅寓意深刻的插画，下半部分为三栏式文字说明区域。整体色调以蓝、白、棕、粉为主，背景带有仿古纸张质感，边框装饰有云纹和波浪纹样，营造出古典东方美学氛围。
 
 **上半部分插画描述：**
@@ -1355,7 +1355,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 61：时尚潮流产品推广</b></div><img src="https://github.com/user-attachments/assets/4d4f6fd7-59ff-4ee3-a250-2c831545b9ca" alt="信息图案例 073" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/4d4f6fd7-59ff-4ee3-a250-2c831545b9ca" alt="信息图案例 073" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“时尚潮流产品推广”为主题，采用复古波普艺术风格设计，整体布局为方形，背景为仿旧纸张质感，边缘有撕裂效果。主标题“时尚潮流产品推广”位于顶部中央，字体粗大、黑色填充，带有蓝、粉、黄三色立体轮廓，视觉冲击力强。
 
 信息图主体分为三个主要区域：左侧为“趋势洞察”，右侧为“推广策略”，底部为“核心价值”。中间区域为插画式视觉中心，描绘三位穿着潮流服饰的青年（一男两女），搭配滑板、运动鞋、背包、黑胶唱片等元素，色彩鲜艳，使用网点和几何图形构成，体现街头文化氛围。
@@ -1402,10 +1402,10 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图通过结构化分区、图文结合、色彩对比和复古美学，系统呈现了时尚潮流产品的市场趋势、推广方法及品牌核心理念，适用于品牌宣传、营销策划或行业分析场景。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 62：Understanding Investment Fees &amp; Net Returns</b></div><img src="https://github.com/user-attachments/assets/49f4debd-31a1-499b-974d-88f2eeaa2ae3" alt="信息图案例 075" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/49f4debd-31a1-499b-974d-88f2eeaa2ae3" alt="信息图案例 075" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 62 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 63：疫情期间活动举办防控指南与文明倡议</b></div><img src="https://github.com/user-attachments/assets/5536ef29-568b-44b0-97f2-52f13e0a3b51" alt="信息图案例 088" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/5536ef29-568b-44b0-97f2-52f13e0a3b51" alt="信息图案例 088" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以像素风格游戏界面为设计主题，整体背景为深蓝色，顶部显示“SCORE 5”和“STATS”进度条，营造出一种互动游戏的视觉氛围。标题为“疫情期间活动举办防控指南与文明倡议”，采用白色粗体字置于蓝色边框内，居中突出。
 
 整体布局采用对称结构，以一座横跨峡谷的木制吊桥为中心，象征“跨间隙桥梁主体”，连接左右两侧的“活动前防控准备环节”（左侧城堡图标）和“活动中现场防控管控”（右侧体育场图标）。中间区域标注“间隙区域”，解释为“筹备期到活备期到活动开展期的疫情传播风险与防控落地难点”，并配有多个病毒图案和黄色警告标志，强调潜在风险。
@@ -1441,7 +1441,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图通过游戏化设计将复杂的疫情防控流程可视化，清晰划分了“事前准备—事中管控—全民参与”的三大模块，并强调了各阶段的关键行动项与责任主体，兼具教育性与传播性。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 64：成人礼vs高考誓师大会核心差异对比</b></div><img src="https://github.com/user-attachments/assets/de5ca8ac-9ffa-4219-be88-070e520095b4" alt="信息图案例 091" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/de5ca8ac-9ffa-4219-be88-070e520095b4" alt="信息图案例 091" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以漫画风格设计，采用红、黄、蓝、黑为主色调，背景包含放射状线条和网点图案，营造出动态、醒目的视觉效果。整体布局为2x2网格结构，共四个主要模块，每个模块均有独立标题和内容区块，通过边框、颜色和图标区分不同主题。
 
 标题位于顶部红色横幅中，使用白色粗体字加黑色描边，内容为“成人礼&amp;高考誓师大会活动策划信息总览”。
@@ -1532,7 +1532,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 65：基因传递：孟德尔定律解析</b></div><img src="https://github.com/user-attachments/assets/da1e3ca8-8fb9-4278-9e35-4607db8b2dad" alt="信息图案例 094" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/da1e3ca8-8fb9-4278-9e35-4607db8b2dad" alt="信息图案例 094" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“基因传递：孟德尔定律解析”为主题，采用三维立体、科技感十足的视觉风格，整体布局呈放射状流程结构，从左至右、由上至下引导观者理解孟德尔遗传定律的发现、机制与应用。背景为柔和米色，搭配透明亚克力质感的模块和发光线条，营造出清晰、现代的科学氛围。
 
 标题“基因传递：孟德尔定律解析”位于顶部中央，使用半透明冰蓝色立体字，字体边缘有光晕效果，下方标注关键比例“3:1, 9:3:3:1”，点明核心数据。
@@ -1577,7 +1577,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 所有模块之间由金色发光线条连接，形成从“观察→定律→机制→验证→应用”的完整逻辑链条。整体设计融合了生物学符号、数学比例和现代科技美学，使复杂的遗传学概念变得直观易懂。文字全部为中文，符合中国教育和科普语境。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 66：East to West Illusion</b></div><img src="https://github.com/user-attachments/assets/b4de0d64-eade-4e59-8092-01aa620020c4" alt="信息图案例 097" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/b4de0d64-eade-4e59-8092-01aa620020c4" alt="信息图案例 097" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“EARTH’S ROTATION”（地球自转）为标题，采用手绘风格的插画与清晰排版，系统性地阐释地球自转及其引发的天文现象。整体背景为浅米色带点阵网格，文字与图形以棕色、黑色为主色调，辅以少量蓝色和黄色，营造出温暖、易读的教育氛围。布局分为中心主图与左右两侧说明区，结构清晰、逻辑分明。
 
 **标题与整体设计：**
@@ -1619,10 +1619,10 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 **总结：**
 该信息图通过符号定义、核心图形与多段文字结合的方式，全面解析地球自转机制及其对人类日常观测的影响。内容涵盖物理原理（如相对运动）、地理概念（晨昏线、昼夜周期）和生活现象（太阳东升西落），语言双语对照，图文并茂，适合科普教育使用。所有数据、标签与数值均精确呈现，无遗漏或近似处理。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 67：The Golden Bloom: Osmanthus Care,</b></div><img src="https://github.com/user-attachments/assets/781e4d2b-deb9-4106-a7d4-46566c085914" alt="信息图案例 019" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/781e4d2b-deb9-4106-a7d4-46566c085914" alt="信息图案例 019" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 67 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 68：Infographic 68</b></div><img src="https://github.com/user-attachments/assets/dce169ef-e2ce-45e4-9525-84bba98b47ce" alt="信息图案例 043" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/dce169ef-e2ce-45e4-9525-84bba98b47ce" alt="信息图案例 043" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“探索未知：中科院的科研与育人”为标题，采用简洁现代的扁平化设计风格，整体布局为2x2网格结构，分为四个象限，每个象限对应一个核心主题。顶部标题置于一个带有蓝色渐变边框的对话气泡中，字体粗大醒目，传达出探索与交流的主题氛围。
 
 整体视觉元素以黑白线条勾勒为主，辅以少量高饱和度色彩（如蓝色、红色、黄色、绿色）作为重点标识，搭配几何符号、波纹、加号和省略号等装饰性图形，增强视觉层次感和科技感。
@@ -1661,21 +1661,21 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 69：Infographic 69</b></div><img src="https://github.com/user-attachments/assets/3dde6a99-4aa9-44bc-9b46-6304c6696a8a" alt="信息图案例 048" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/3dde6a99-4aa9-44bc-9b46-6304c6696a8a" alt="信息图案例 048" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 69 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 70：International Student Higher Education Pathway,</b></div><img src="https://github.com/user-attachments/assets/8bc918b9-b64c-42a9-a181-72d5effcfbc5" alt="信息图案例 050" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/8bc918b9-b64c-42a9-a181-72d5effcfbc5" alt="信息图案例 050" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 70 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 71：Infographic 71</b></div><img src="https://github.com/user-attachments/assets/db499cc0-57d8-4a1c-80a7-3d8e86dfeb6c" alt="信息图案例 052" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/db499cc0-57d8-4a1c-80a7-3d8e86dfeb6c" alt="信息图案例 052" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 71 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 72：Degree Upgrade Planning Resource Hub</b></div><img src="https://github.com/user-attachments/assets/7dbaafdf-377c-45fb-909a-fafa31be244f" alt="信息图案例 059" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/7dbaafdf-377c-45fb-909a-fafa31be244f" alt="信息图案例 059" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 72 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 73：网络小说的类型与特点讨论</b></div><img src="https://github.com/user-attachments/assets/958d1d20-e19f-41f8-9169-7b149dfb427c" alt="信息图案例 070" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/958d1d20-e19f-41f8-9169-7b149dfb427c" alt="信息图案例 070" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“网络小说的类型与特点讨论”为主题，采用金字塔式层级结构，将网络小说的类型划分为四个层次：基础层、中间层、上层和顶层。整体设计风格融合了奇幻、科技与自然元素，背景为朦胧的森林光斑，主体为一座由岩石、电路板、布料和水晶构成的立体金字塔，每一层均通过材质与视觉符号体现其对应类型的特点。
 
 标题位于图像顶部，使用金色浮雕字体：“网络小说的类型与特点讨论”，具有强烈的视觉冲击力。
@@ -1710,7 +1710,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图通过视觉隐喻与清晰的文字标注，系统地呈现了网络小说类型的层级结构及其核心特征，兼具艺术美感与信息传达功能。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 74：Infographic 74</b></div><img src="https://github.com/user-attachments/assets/eb723963-42ca-46d0-8dd8-cee404fc5ad1" alt="信息图案例 084" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/eb723963-42ca-46d0-8dd8-cee404fc5ad1" alt="信息图案例 084" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为《儿童营养补充全指南：科学建议+产品选购要点》，采用漫画风格设计，色彩鲜明，以红、黄、蓝为主色调，布局清晰分为左右两大板块，每个板块又细分为多个模块，图文并茂地呈现了儿童营养补充的科学指导与实用建议。
 
 整体结构分为“科学参考指引”和“实操应用指南”两大核心部分，通过卡通插图、图标、爆炸式对话框、标签等视觉元素增强可读性与吸引力。
@@ -1768,7 +1768,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图内容全面，逻辑清晰，兼具科学性和实用性，适合家长快速掌握儿童营养补充的核心知识与选购技巧。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 75：从潮玩出圈的随机消费新玩法</b></div><img src="https://github.com/user-attachments/assets/2037c85b-7116-4b70-ba2c-9a432a2e74f0" alt="信息图案例 085" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/2037c85b-7116-4b70-ba2c-9a432a2e74f0" alt="信息图案例 085" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“盲盒文化全解析：核心逻辑、跨领域应用与社会影响”为标题，副标题为“从潮玩出圈的随机消费新玩法”，采用中文作为主要语言。整体布局为网格结构，分为三列和三行，共九个内容模块，左侧一列为纵向标题栏，右侧两列为横向内容栏，每个模块均用灰色边框框定，并配有尺寸标注（如300px x 200px等），呈现清晰的信息层级与视觉组织。
 
 信息图顶部标有“盲盒文化核心逻辑”的小标题，主标题字体加粗且字号较大，位于页面最上方居中位置，下方是副标题，字体稍小。
@@ -1855,15 +1855,15 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整体设计风格简洁、现代，使用灰白配色，辅以红色尺寸标注线，增强结构感。所有文本均使用中文，字体清晰易读，图表与文字结合紧密，旨在系统性地解析盲盒文化的核心机制、广泛应用及其复杂的社会效应。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 76：Infographic 76</b></div><img src="https://github.com/user-attachments/assets/e72649ce-e757-4f18-90d8-d4d2ebcb1908" alt="信息图案例 098" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/e72649ce-e757-4f18-90d8-d4d2ebcb1908" alt="信息图案例 098" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 76 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 77：Infographic 77</b></div><img src="https://github.com/user-attachments/assets/ca6e6efa-36a7-4fda-8c34-2c8c5c71c835" alt="信息图案例 099" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/ca6e6efa-36a7-4fda-8c34-2c8c5c71c835" alt="信息图案例 099" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 77 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 78：加强党的建设·严明纪律要求</b></div><img src="https://github.com/user-attachments/assets/91b6c07f-cdca-47db-83a6-798c552131d3" alt="信息图案例 029" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/91b6c07f-cdca-47db-83a6-798c552131d3" alt="信息图案例 029" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图是一份正式的党内纪律指导文件，整体采用庄重典雅的设计风格，以米黄色为背景，配以深红色与金色边框及装饰元素，营造出严肃、权威的视觉氛围。顶部中央是一个红色圆形徽章，内含金色镰刀锤子党徽图案，两侧延伸出带有传统回纹与齿轮、藤蔓、麦穗等元素的对称装饰带，象征工业与农业结合、传统与现代并存。边框四周布满精致的金色卷草纹、回纹、齿轮和麦穗图案，底部则为连续的云纹与花卉装饰，体现中国传统文化审美。
 
 标题部分位于顶部居中位置，使用醒目的红色粗体字，内容为“党建引领与纪律监察委员会 暨自我净化自我完善自我革新指导小组”，字体较大，突出发文机构的权威性。标题下方是一个发光的五角星图案，周围有放射状光芒，两侧点缀着金色莲花纹饰，象征纯洁与光辉。
@@ -1887,18 +1887,18 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整张信息图无数据图表，纯属文本公告类设计，通过层级分明的排版、色彩对比和装饰元素，强化了文件的严肃性、规范性和号召力，旨在向全体党员干部传达新时代全面从严治党的核心要求。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 79：Infographic 79</b></div><img src="https://github.com/user-attachments/assets/aa7d8da4-8a50-4d07-b41d-f1931227e353" alt="信息图案例 056" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/aa7d8da4-8a50-4d07-b41d-f1931227e353" alt="信息图案例 056" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 79 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 80：EXHIBITION POSTPONEMENT &amp; ADJUSTMENTS: A GUOCHAO PERSPECTIVE UNDER THE EPIDEMIC</b></div><img src="https://github.com/user-attachments/assets/886673f8-3b45-45da-ace5-bc50f5b12a57" alt="信息图案例 068" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/886673f8-3b45-45da-ace5-bc50f5b12a57" alt="信息图案例 068" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 80 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 81：AGE DISCRIMINATION IS FLOURISHING</b></div><img src="https://github.com/user-attachments/assets/2e619081-c312-4923-80dc-0afe198afcdf" alt="信息图案例 074" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/2e619081-c312-4923-80dc-0afe198afcdf" alt="信息图案例 074" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 81 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 82：Infographic 82</b></div><img src="https://github.com/user-attachments/assets/4a456d2b-730b-41c5-b4e3-8ed6a9d6af9d" alt="信息图案例 020" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/4a456d2b-730b-41c5-b4e3-8ed6a9d6af9d" alt="信息图案例 020" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“房屋买卖合同：从交易流程到法律风控”为标题，采用蓝白主色调的现代科技风格设计，整体布局为垂直分层结构，结合等轴测立体图形与图标元素，清晰呈现房屋交易的全流程与法律风险控制体系。标题位于顶部中央，字体加粗醒目，右侧配有盾牌箭头与金色对勾图标，象征安全与确认。
 
 信息图主体由一个类似工业流水线或数据处理链的立体结构组成，包含多个模块化方块，通过链条和虚线连接，体现交易环节的连续性与关联性。每个模块上方放置文件、房屋、天平、盾牌等图标，直观对应其功能主题。
@@ -1933,7 +1933,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整体设计通过模块化、链条式结构，将复杂的法律与交易流程可视化，运用图标、颜色编码（如蓝色代表流程、绿色代表安全）、虚实线条（虚线表示逻辑关联，实线表示物理连接）等多种数据编码方式，使抽象概念具象化。所有文本均使用简体中文，语言专业严谨，适合房地产从业者、购房者或法律专业人士阅读理解。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 83：Infographic 83</b></div><img src="https://github.com/user-attachments/assets/25758f51-edfd-4b7d-9fb3-abc9c1411cf2" alt="信息图案例 021" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/25758f51-edfd-4b7d-9fb3-abc9c1411cf2" alt="信息图案例 021" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“绿茵定格：巨星轶事”为标题，采用深色科技感界面设计，模拟录像监控或战术分析系统，整体风格酷似军事或体育战术分析软件。背景为黑白色调的足球场模糊影像，叠加了绿色、橙色、黄色、青色等高对比度线条和图形，形成视觉引导与数据层叠效果。右上角有红色“REC”录制标识及“[3x3]”网格标记，右侧边缘垂直显示比赛时间轴（MATCH 1:45 03:39:08、00:8.0 Domt 19:38:00），左侧边缘显示“MATCH Z5 FLB Doit 12:23:00”，底部有刻度尺与“100”标记，增强科技感与数据化氛围。
 
 信息图主体为一个虚拟的3x3网格系统（GRID_SYSTEM），覆盖在足球场之上，将球场划分为九个区域，用于分析球员的空间感知与战术布局。该网格由绿色垂直线与橙色水平线构成，交点处用不同颜色圆圈标记关键位置。右上角还嵌入一个黄金螺旋曲线（斐波那契螺旋），象征美学与自然比例在运动中的体现。
@@ -1972,7 +1972,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整体结构清晰，以网格为核心框架，六大模块围绕网格交点分布，形成辐射状信息架构。文本内容结合具体球员案例（哈维、C罗、马拉多纳、贝克汉姆、齐达内、托马斯·穆勒、克鲁伊夫）与战术术语，深入浅出地阐释足球运动中的空间策略、能量爆发点、地空博弈、无球跑动与传切配合等高级战术理念。设计语言融合科技、几何、运动美学，使抽象战术具象化、可视化。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 84：旬之味：主厨定制三部曲</b></div><img src="https://github.com/user-attachments/assets/d112bec6-cc3e-46f6-bbc3-2cd4ba8589a9" alt="信息图案例 034" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/d112bec6-cc3e-46f6-bbc3-2cd4ba8589a9" alt="信息图案例 034" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“旬之味：主厨定制三部曲”为主题，呈现了一套由主厨精心设计的三道式高级料理套餐。整体设计风格典雅深邃，采用暗色调木质背景搭配石质台面，营造出日式侘寂美学氛围。画面中点缀有红枫叶与竹枝剪影，增强季节感与自然意境。
 
 标题“旬之味：主厨定制三部曲”位于顶部中央，字体为金色古朴书法体，下方配有一个方形印章图案，内含“煎堂”字样（可能为餐厅或品牌标识）。标题两侧延伸出两条细金线，形成视觉平衡。
@@ -1997,10 +1997,10 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 85：Young Pioneers of China Admission Ceremony &amp; Educational Activities Guide</b></div><img src="https://github.com/user-attachments/assets/9a218fbc-0fb5-438a-9a91-726d2d92ad82" alt="信息图案例 058" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/9a218fbc-0fb5-438a-9a91-726d2d92ad82" alt="信息图案例 058" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 85 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 86：超实用居家生活小贴士</b></div><img src="https://github.com/user-attachments/assets/c6e26c34-d51c-4eb9-a0d1-2d95fe0bd1e6" alt="信息图案例 086" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/c6e26c34-d51c-4eb9-a0d1-2d95fe0bd1e6" alt="信息图案例 086" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>这是一张以黑板报风格设计的中文信息图，标题为“超实用居家生活小贴士”，整体采用手绘粉笔字和简笔画风格，背景为深黑色，边框为浅木色，营造出温馨、亲切的居家氛围。信息图通过白色线条分割成左右两大区域，左侧聚焦于两道简单快捷的家常菜食谱，右侧则提供多种日常生活的实用技巧。
 
 **整体布局与视觉元素：**
@@ -2068,7 +2068,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 该信息图结构清晰，内容实用，适合家庭主妇、上班族或学生等需要快速解决日常饮食和生活问题的人群。所有文本均为中文，无英文或其他语言内容。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 87：好习惯养成指南：重塑人生的底层逻辑</b></div><img src="https://github.com/user-attachments/assets/8f55888b-49e3-435f-9fad-3cf9cdb81244" alt="信息图案例 090" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/8f55888b-49e3-435f-9fad-3cf9cdb81244" alt="信息图案例 090" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“好习惯养成指南：重塑人生的底层逻辑”为主题，采用柔和水彩风格背景，整体布局为四象限结构，内容分为四个主要板块，辅以插画和图标增强可读性。主标题位于顶部中央，字体较大，颜色为深蓝色，具有引导性。
 
 第一板块：“培养好习惯的核心价值”，位于左上角。配有一幅插画，描绘一个人走在由齿轮和植物组成的树干上，象征习惯的自动化与成长。下方三个核心价值点分别用图标和文字说明：
@@ -2106,7 +2106,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整张信息图使用大量手绘风格插画，色彩清新自然，主要色调为蓝、绿、米白，视觉层次分明，信息结构清晰，旨在通过多维度对比和数据支撑，强调好习惯对个人发展的深远影响。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 88：根基与重构：乡村振兴的动态图谱</b></div><img src="https://github.com/user-attachments/assets/adc2293d-a344-4e36-bc3d-a096568cd907" alt="信息图案例 016" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/adc2293d-a344-4e36-bc3d-a096568cd907" alt="信息图案例 016" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“根基与重构：乡村振兴的动态图谱”为主题，采用拼贴艺术风格，融合粗麻布纹理、颜料泼洒、线条放射等视觉元素，营造出充满活力与有机质感的视觉效果。整体布局呈垂直结构，中心为一个由黄色、橙色和红色颜料从中心向外辐射的爆炸式图案，象征着乡村振兴的动能与扩散效应；背景则由绿色、棕色、米色等大地色调构成，辅以白色、银色、金色的线条和滴落颜料，形成多层次、立体化的视觉层次。
 
 标题“根基与重构：乡村振兴的动态图谱”以深棕色粗体字置于中央绿色横幅之上，字体醒目，强调主题。
@@ -2139,10 +2139,10 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 89：IP is the Ultimate Asset</b></div><img src="https://github.com/user-attachments/assets/e0cb0fa7-42d8-433a-81b1-6a0f583cf023" alt="信息图案例 024" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/e0cb0fa7-42d8-433a-81b1-6a0f583cf023" alt="信息图案例 024" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 89 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 90：共生共赢：企业社会价值跃迁之路</b></div><img src="https://github.com/user-attachments/assets/f668c2ea-fa55-41e6-8baf-9858fe308715" alt="信息图案例 027" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/f668c2ea-fa55-41e6-8baf-9858fe308715" alt="信息图案例 027" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“向上向善：2024年度企业发展与社会责任里程碑”为副标题，主标题为“共生共赢：企业社会价值跃迁之路”，整体采用清新明亮的蓝绿色调，营造出可持续发展与成长的视觉氛围。布局呈阶梯式结构，象征企业从第一季度到第四季度（年度）的逐步进阶与价值跃迁。中心是一组由透明蓝色台阶连接的三个立体平台，分别代表Q1、Q2、Q3三个季度，顶部平台则代表年度总结（ANNUAL），形成从底部到顶端的清晰路径。
 
 每个平台均配有主题图标和说明文字框，通过对话气泡形式呈现关键信息，并标注了对应季度和阶段名称：
@@ -2161,7 +2161,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整体设计风格为3D卡通化，具有现代感和亲和力。视觉元素包括发光的台阶、漂浮的云朵、小齿轮、太阳能板、金币、植物幼苗、爱心等，强化了环保、科技、人文、成长等核心主题。所有文本均为中文，语言正式且富有激励性，传达企业积极履行社会责任、追求可持续发展的愿景。信息流从Q1到Q3再到ANNUAL，逻辑清晰，层层递进，完整展现企业在2024年各阶段的战略部署与成果。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 91：Rhymes of Nature: 诗与思</b></div><img src="https://github.com/user-attachments/assets/87cec619-f5e0-4574-8d3b-ab7da427fd27" alt="信息图案例 030" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/87cec619-f5e0-4574-8d3b-ab7da427fd27" alt="信息图案例 030" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>这张信息图的标题为“Rhymes of Nature: 诗与思”，采用中英双语呈现，主标题使用黑色粗体无衬线字体，居于画面右上角。背景为浅蓝色，整体风格为现代扁平化插画风，色彩明快，线条简洁流畅，充满童趣与诗意。
 
 画面布局呈非对称分散式结构，围绕四个核心主题展开，每个主题由一个英文关键词（Listen, Flow, Look Up, Grow）及其对应的中文翻译和一段富有哲理的文字说明组成，文字内容置于白色对话框内，边角圆润，带有轻微阴影，增强视觉层次感。
@@ -2198,21 +2198,21 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 此外，画面顶部散布着半圆形、星形、月亮等装饰性几何图形，增强了梦幻与自然的主题氛围。整体构图均衡而不呆板，人物动作充满动态美感，色彩搭配和谐，营造出一种宁静、积极、富有生命力的视觉体验。该信息图旨在通过自然意象传达人生哲理，鼓励人们倾听内心、顺应变化、仰望星空、努力生长。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 92：College Entrance Pathway Reforce Comparison</b></div><img src="https://github.com/user-attachments/assets/31c5df00-c6d4-4bd5-a55f-eacbfda83128" alt="信息图案例 045" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/31c5df00-c6d4-4bd5-a55f-eacbfda83128" alt="信息图案例 045" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 92 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 93：Web Accessibility Guideline Compilation</b></div><img src="https://github.com/user-attachments/assets/9a7e46e1-aa18-4149-aa59-a8bfa44d221f" alt="信息图案例 047" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/9a7e46e1-aa18-4149-aa59-a8bfa44d221f" alt="信息图案例 047" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 93 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 94：Embroidery 101: Core Techniques &amp; Real-World Applications</b></div><img src="https://github.com/user-attachments/assets/f298b9e6-5ea0-4658-a5b1-ffd053232541" alt="信息图案例 053" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/f298b9e6-5ea0-4658-a5b1-ffd053232541" alt="信息图案例 053" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 94 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 95：A Complete Guide to Project Feasibility Study Report Compilation &amp; Professional Consulting Services,</b></div><img src="https://github.com/user-attachments/assets/cb388efb-c74f-4d8f-9ccb-bb02307333cc" alt="信息图案例 060" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/cb388efb-c74f-4d8f-9ccb-bb02307333cc" alt="信息图案例 060" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该案例展示了 U1-8B-MoT-Infographic 在第 95 个信息图场景中的生成效果，重点体现模型在版式规划、图表结构、文字渲染、背景协调性和整体视觉美观度上的能力。上方图片为对应的生成结果，可用于对比基础 8B-MoT 模型和 Infographic 专用模型在复杂信息图生成任务中的表现。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 96：高效传递信息，加快救援响应</b></div><img src="https://github.com/user-attachments/assets/80650b45-a207-4e03-82e2-091f8e74c738" alt="信息图案例 083" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/80650b45-a207-4e03-82e2-091f8e74c738" alt="信息图案例 083" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为《救援服务全解析：实用指南+真实案例分享》，旨在系统性地解析救援服务的类型、适用场景、操作流程，并通过真实案例帮助公众掌握正确的求助方法，提升风险响应能力。整体布局清晰，采用分块结构，分为“概览”、“一、常见救援服务类型及适用场景”、“二、救援申请标准化操作流程”、“三、真实救援案例复盘”四个主要部分，辅以图标、插画和文字说明，风格简洁明了，视觉元素丰富，色彩搭配以灰白背景为主，配以红色、橙色、蓝色等强调色突出重点内容。
 
 **概览部分**位于顶部，简要说明本图目的：“析图精援的商形文化，系统式明确救援服务类型、场景及和流程，结合实例案例，并功缆援应急急结合涵和真实案例，帮助掌握握正确的帮助方法，提升级风险响应。”（注：原文存在明显错别字，如“商形文化”应为“品牌形象”或类似，“功缆援应急急结合涵”可能为“功能救援与应急结合内涵”，但此处保留原始文本）。
@@ -2241,7 +2241,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 </div></details></div></td>
 </tr>
 <tr>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 97：Infographic 97</b></div><img src="https://github.com/user-attachments/assets/ed083ce0-8fb2-48a3-9ce9-cd1d042dd0b8" alt="信息图案例 087" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/ed083ce0-8fb2-48a3-9ce9-cd1d042dd0b8" alt="信息图案例 087" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为“磷化工行业核心维度信息对比表”，采用未来科技感设计风格，以深色背景搭配霓虹蓝、紫、粉等荧光线条与文字，整体呈现数字化仪表盘或虚拟界面视觉效果。图表结构为横向多列、纵向三行的表格布局，左侧为三大主题分类，顶部为五个分析维度：统计数据、核心术语、风格偏好、布局偏好、其他要求。
 
 图表内容分为三个主要部分：
@@ -2324,7 +2324,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 整个信息图通过清晰的分类和数据对比，系统展示了磷化工行业的现状、挑战与发展方向，强调其在国民经济中的基础地位，同时指出环境污染问题及绿色转型的必要性。视觉元素如箭头、图表、禁令符号和工业场景插图增强了信息传达的直观性和警示性。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 98：核心逻辑：双向作用的共生关系</b></div><img src="https://github.com/user-attachments/assets/7f53ecf5-ca88-4332-b92c-0a6055445427" alt="信息图案例 089" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/7f53ecf5-ca88-4332-b92c-0a6055445427" alt="信息图案例 089" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“核心逻辑：双向作用的共生关系”为主题，旨在梳理职场个人成长与企业文化的相互作用机制，提供适配度判断方法及相应成长策略，帮助职场人士理清两者之间的共生关系，并找到最大化成长收益的落地路径。整体设计采用暖色调背景（浅米色），内容布局清晰，分为左右两大板块，通过中央垂直分割线和“企业文化”、“双向作用”两个竖向标签进行结构化分隔，视觉上强调“双向奔赴”的核心概念。
 
 左侧部分标题为「适配度判断：3个核心评估维度」，包含三个评分项（1-5分自行打分），每个维度均配有插图、说明文字和评分提示：
@@ -2357,7 +2357,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 在左右两部分之间，有一个橙色对话框标注“核心逻辑：不是单向选择，是双向奔赴”，强化主题。整张信息图使用简洁的卡通风格插画、清晰的标题层级、统一的配色方案（主色为橙黄、棕色系）和直观的图标，使内容易于理解且富有亲和力。所有文本均为中文，语言准确、专业，适合职场人群阅读与自我评估。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 99：Infographic 99</b></div><img src="https://github.com/user-attachments/assets/bb0d51b2-ac29-46d6-9418-c33835b0acea" alt="信息图案例 093" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/bb0d51b2-ac29-46d6-9418-c33835b0acea" alt="信息图案例 093" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图以“地球四季与生命律动”为标题，采用垂直分层结构，通过三维立体视觉效果和透明玻璃板分层设计，系统阐述了地球四季形成机制及其对生命活动的驱动作用。整体风格科技感十足，背景为深蓝色宇宙空间，点缀发光羽毛和光效线条，营造出神秘而富有动感的氛围。
 
 图像从上至下分为四个主要层级，每个层级均配有文字说明框（半透明圆角矩形），内容围绕地球运动与生命响应展开：
@@ -2392,7 +2392,7 @@ All textual content is legible, with consistent font styles—bold sans-serif fo
 
 本信息图完整呈现了地球四季形成的天文基础及其对生命系统的多层次影响，图文结合严谨，逻辑清晰，适合用于科普教育场景。</div>
 </div></details></div></td>
-<td valign="top" width="25%"><div align="center" style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>案例 100：Infographic 100</b></div><img src="https://github.com/user-attachments/assets/8699dbb3-c1f7-4790-a32a-3c473716f8a5" alt="信息图案例 095" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
+<td valign="top" width="25%"><img src="https://github.com/user-attachments/assets/8699dbb3-c1f7-4790-a32a-3c473716f8a5" alt="信息图案例 095" width="100%"><div style="margin-top: 8px;"><details><summary><b>Prompt</b></summary><div style="max-height: 200px; overflow-y: auto; margin-top: 8px;">
 <div>该信息图题为“根系微观：矿物质吸收机制”，以深色土壤背景和发光的植物根系为中心视觉元素，采用科技感十足的蓝白色调与半透明结构设计，整体风格现代、富有未来感。图像中央是一棵半透明的植物根系，从土壤中延伸而出，主根与侧根清晰可见，并伴有蓝色光点与能量流线条，象征养分传输路径。围绕中心根系分布着八个信息模块，每个模块均包含一个插图和一段说明文字，通过细线连接至根系相应位置，形成逻辑关联。
 
 所有文本均为中文，字体为无衬线体，标题使用较大加粗字体，内容框内文字清晰可读。每个信息模块均采用带发光边框的矩形框，内部包含高分辨率科学插图和简明解释文字。
