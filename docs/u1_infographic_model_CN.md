@@ -2,7 +2,7 @@
 
 **SenseNova-U1-8B-MoT-Infographic** 是在 U1-8B-MoT 模型基础上延长了 MT 阶段训练，并在 MT 与 SFT 阶段调整了理解和生成任务中的数据配比产生的模型。此外，我们针对文字渲染、背景和整体美观度进行了 RL 优化，使模型更好地适配 Infographic 复杂信息图的生成场景。
 
-- **模型性能：** 在所评测开源模型中，该模型在 infographic benchmark 上排名第一；相较 SenseNova-U1-8B-MoT，BizGenEval 提升至 **46.6 / 65.4**（hard / easy），IGenBench 提升至 **69.5 / 17.0**（Q-ACC / I-ACC），同时保持接近的 OneIG 表现。
+- **模型性能：** 在 BizGenEval hard/easy 上取得 **+6.8 / +4.3 points** 的显著提升，在 IGenBench Q-ACC/I-ACC 上取得 **+18.2 / +12.8 points** 的显著提升，同时保持稳健的视觉理解能力，无明显退化。
 - **模型表现：** 模型能够生成图文交错、美观的复杂信息图，支持 100+ 种风格和布局，文字渲染能力强，能够渲染高密度小字、arXiv 论文等。
 
 ## Benchmark Highlights
