@@ -29,7 +29,7 @@
 
 ## 生成质量对比
 
-我们在以下五个关键维度上，对基础模型 **SenseNova-U1-8B-MoT** 与微调后的 **SenseNova-U1-8B-MoT-Infographic** 模型进行了定性对比：背景稳定性、图表准确性、文字渲染准确性、论文渲染质量，以及综合美观度。
+我们在以下五个关键维度上，对基础模型 **SenseNova-U1-8B-MoT** 与 **SenseNova-U1-8B-MoT-Infographic** 模型进行了定性对比：背景稳定性、图表准确性、文字渲染准确性、论文渲染质量，以及综合美观度。
 
 <table width="100%" style="table-layout: fixed; text-align: center;">
 <tr>

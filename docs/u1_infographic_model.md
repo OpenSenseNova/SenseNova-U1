@@ -29,7 +29,7 @@
 
 ## Qualitative Comparison
 
-We present a qualitative comparison between the base **SenseNova-U1-8B-MoT** and the fine-tuned **SenseNova-U1-8B-MoT-Infographic** model across five key dimensions: background stability, chart accuracy, text rendering accuracy, arXiv paper rendering quality, and overall visual aesthetics.
+We present a qualitative comparison between the **SenseNova-U1-8B-MoT** and **SenseNova-U1-8B-MoT-Infographic** model across five key dimensions: background stability, chart accuracy, text rendering accuracy, arXiv paper rendering quality, and overall visual aesthetics.
 
 <table width="100%" style="table-layout: fixed; text-align: center;">
 <tr>
