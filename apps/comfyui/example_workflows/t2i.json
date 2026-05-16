@@ -1,15 +1,15 @@
 {
   "id": "a92af27a-0106-4c6f-9d1c-f9783b652f44",
   "revision": 0,
-  "last_node_id": 7,
-  "last_link_id": 4,
+  "last_node_id": 5,
+  "last_link_id": 3,
   "nodes": [
     {
       "id": 1,
       "type": "SenseNovaU1LocalLoader",
       "pos": [
-        -573.9999844360354,
-        146.00000553894034
+        -535.8793125610355,
+        146.00520475769034
       ],
       "size": [
         504,
@@ -44,8 +44,8 @@
         "auto",
         "none",
         "",
-        "",
-        false
+        "full",
+        ""
       ]
     },
     {
@@ -60,21 +60,13 @@
         887.203125
       ],
       "flags": {},
-      "order": 3,
+      "order": 1,
       "mode": 0,
       "inputs": [
         {
           "name": "u1_model",
           "type": "SENSENOVA_U1_LOCAL_MODEL",
           "link": 1
-        },
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "widget": {
-            "name": "prompt"
-          },
-          "link": 4
         }
       ],
       "outputs": [
@@ -125,15 +117,15 @@
       "id": 3,
       "type": "PreviewImage",
       "pos": [
-        640.6572600708006,
-        153.98656866455067
+        680.5872600708007,
+        135.8365686645507
       ],
       "size": [
         614.59375,
         393.609375
       ],
       "flags": {},
-      "order": 4,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
@@ -152,15 +144,15 @@
       "id": 4,
       "type": "PreviewAny",
       "pos": [
-        639.6960766601553,
-        614.4179635620119
+        684.4660397338865,
+        621.6779303283691
       ],
       "size": [
-        612.65625,
-        409.15625
+        616.296875,
+        241
       ],
       "flags": {},
-      "order": 5,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -178,61 +170,6 @@
         null,
         null
       ]
-    },
-    {
-      "id": 6,
-      "type": "InfographicPromptGenerator",
-      "pos": [
-        -575.9188617248542,
-        643.7628305358886
-      ],
-      "size": [
-        503.8125,
-        389.65625
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            4
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "InfographicPromptGenerator"
-      },
-      "widgets_values": [
-        "\nRole: You are a Senior Visual Information Architect and Prompt Engineer.\nTask: Transform a simple user input into a high-fidelity, professional infographic tagging text that mirrors professional infographic layouts.\nTransformation Rules:\n    Visual Scene Simulation: Imagine a professional infographic based on the user's input, incorporating backgrounds, illustrations, and distinct text hierarchies.\nStrict Output Format:\n    1) 总体概述: Provide a 3-4 sentence high-level summary in English regarding the image's subject matter, core actions, and visual intent.\n    2) 结构化文字与逻辑: (Zero Metadata: Do NOT use labels like \"Action:\", \"Outcome:\", \"Phase:\". Perform a high-precision OCR extraction of the text content.)\n        a. Verbatim Extraction: Use the language corresponding to the input topic (e.g., use English if the input is in English).\n        b. Relational Mapping: Use formatting (e.g., indentations) to show how text blocks relate.\n    3) 视觉逻辑: Describe the scenery and spatial mechanics in detail (as per the user's provided style).\n        a. Layout structure (e.g., Left title, Right panels).\n        b. Background and decorative elements (e.g., robots, gears, glow effects).\nStrict Output Constraints: No introductory or concluding remarks.\n\nSimple Input to Transform:\n",
-        "生成一张教育预防电信诈骗的信息图"
-      ]
-    },
-    {
-      "id": 7,
-      "type": "Note",
-      "pos": [
-        -859.7849023437503,
-        651.1438342285156
-      ],
-      "size": [
-        240.96875,
-        116.71875
-      ],
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "properties": {},
-      "widgets_values": [
-        "This is a prompt enhancement module; you can turn it off if you don't need it."
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
     }
   ],
   "links": [
@@ -259,14 +196,6 @@
       4,
       0,
       "STRING"
-    ],
-    [
-      4,
-      6,
-      0,
-      2,
-      1,
-      "STRING"
     ]
   ],
   "groups": [],
@@ -274,10 +203,10 @@
   "extra": {
     "workflowRendererVersion": "Vue",
     "ds": {
-      "scale": 0.6830134553650711,
+      "scale": 0.7513148009015777,
       "offset": [
-        1121.5030623437508,
-        294.81697586874964
+        736.3823906250004,
+        23.45817187500008
       ]
     },
     "frontendVersion": "1.39.19",
