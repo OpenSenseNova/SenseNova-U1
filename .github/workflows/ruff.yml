@@ -1,19 +1,12 @@
-name: Ruff Lint and Format
+name: pre-commit
 
 on: [push, pull_request]
 jobs:
-  ruff:
+  pre-commit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
-      - name: Install Ruff
-        run: pip install ruff==0.14.4
-      - name: Run Ruff Check
-        run: ruff check . --output-format=github
-      - name: Run Ruff Format Check
-        run: ruff format . --check
+      - uses: pre-commit/action@v3.0.1
