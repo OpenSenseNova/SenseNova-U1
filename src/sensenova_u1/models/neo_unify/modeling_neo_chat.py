@@ -10,10 +10,11 @@ from transformers.modeling_outputs import CausalLMOutputWithPast
 from transformers.modeling_utils import PreTrainedModel
 from transformers.utils import logging
 
-from .configuration_neo_chat import NEOChatConfig
+from .configuration_neo_chat import NEOChatConfig, NEOMoELLMConfig
 from .conversation import get_conv_template
 from .modeling_neo_vit import NEOVisionModel
 from .modeling_qwen3 import Qwen3ForCausalLM, create_block_causal_mask
+from .modeling_qwen3_moe import Qwen3MoeForCausalLM
 from .modeling_fm_modules import PositionEmbedding, TimestepEmbedder, FlowMatchingHead, RMSNorm, NerfEmbedder, SimpleMLPAdaLN, ConvDecoder
 from .utils import load_image_native, SYSTEM_MESSAGE_FOR_GEN
 
@@ -147,6 +148,7 @@ class NEOChatModel(PreTrainedModel):
     _no_split_modules = [
         "NEOVisionModel",
         "Qwen3DecoderLayer",
+        "Qwen3MoeDecoderLayer",
     ]
 
     # support transformers 4.51.+
@@ -170,7 +172,14 @@ class NEOChatModel(PreTrainedModel):
         if language_model is not None:
             self.language_model = language_model
         else:
-            self.language_model = Qwen3ForCausalLM(config.llm_config)
+            # Pick the right backbone class based on the LLM config: dense
+            # Qwen3 (DANCE family) or Qwen3-MoE (A3B family). The two share
+            # the same NEO-Unify two-branch attention/norm layout, so the
+            # rest of this class works against either.
+            if isinstance(config.llm_config, NEOMoELLMConfig):
+                self.language_model = Qwen3MoeForCausalLM(config.llm_config)
+            else:
+                self.language_model = Qwen3ForCausalLM(config.llm_config)
 
         merge_size = int(1 / self.downsample_ratio)
         output_dim = 3*(patch_size*merge_size)**2

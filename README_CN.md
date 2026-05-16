@@ -23,6 +23,8 @@
 
 ## 📣 最新动态
 
+- `[2026.05.15]` 发布 [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) 模型，提升了信息图生成能力。模型细节可见 [U1 Infographic Model](docs/u1_infographic_model_CN.md)，100个生成案例可见 [✨ Infographic Showcases ](docs/u1_infographic_showcases.md)。
+
 - `[2026.05.10]` 发布 [🔥SenseNova-U1 技术报告🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf)，并开源 [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) 与 [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT) 模型权重。
 
 - `[2026.05.08]` 新增 **GGUF 量化权重支持** 与 **分层加载 VRAM 模式**，便于在单卡低显存环境下推理，详见 [低显存推理（GGUF + VRAM 模式）](#-低显存推理gguf--vram-模式)。`SenseNova-U1-8B-MoT-Merger` 的 GGUF 权重已上传至 [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf)，特别感谢 [@smthem](https://github.com/smthem) 为社区贡献量化权重。
@@ -91,6 +93,7 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 
 | 模型 | 参数量 | HF 权重 |
 | :---- | :------- | :--------- |
+| SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
 | SenseNova-U1-8B-MoT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
 | SenseNova-U1-8B-MoT-LoRA-8step-V1.0 | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors) |

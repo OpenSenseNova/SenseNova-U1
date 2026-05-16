@@ -116,14 +116,14 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path sensenova/SenseNova-U1-8B-MoT \
-    --jsonl examples/t2i/data/samples_infographic.jsonl \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
+    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
 ```
 
-可参考 [`t2i/data/samples_infographic.jsonl`](./t2i/data/samples_infographic.jsonl) 复现信息图展示样例。
+可参考 [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) 复现信息图展示样例，生成结果展示可见 [信息图案例展示](../docs/u1_infographic_showcases.md)。
 
 ### T2I 推理模式（think mode）
 
