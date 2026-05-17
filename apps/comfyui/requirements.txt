@@ -2,3 +2,13 @@ httpx
 numpy
 pillow
 python-dotenv
+# Local inference path. Use a GitHub-generated tarball, not git+https, so pip
+# doesn't run `git submodule update --init --recursive` — that pulls
+# evaluation/easi/* (hundreds of MB of benchmarking subrepos) which ComfyUI
+# users never need. GitHub's archive tarball already strips submodule trees.
+# Monorepo developers can `pip install -e .` from the repo root instead and
+# skip this line via `pip install -r requirements.txt --no-deps`.
+# TEMP: pointed at fix/relax-numpy-pin to validate the numpy>=1.24,<3
+# relaxation end-to-end via ComfyUI Manager. Switch back to refs/heads/main
+# once PR #185 is merged.
+sensenova-u1 @ https://github.com/OpenSenseNova/SenseNova-U1/archive/refs/heads/fix/relax-numpy-pin.tar.gz

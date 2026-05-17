@@ -2,6 +2,12 @@
 
 ComfyUI custom nodes for SenseNova-U1 API and local inference.
 
+> Source of truth lives in [`OpenSenseNova/SenseNova-U1`](https://github.com/OpenSenseNova/SenseNova-U1)
+> under `apps/comfyui/`. The standalone repo
+> [`OpenSenseNova/ComfyUI-SenseNova-U1`](https://github.com/OpenSenseNova/ComfyUI-SenseNova-U1)
+> is a read-only publish mirror used by Comfy Registry; please open PRs against
+> the monorepo.
+
 > Requires a ComfyUI build that ships the v3 node API (`comfy_api.latest`). The nodes are registered through `comfy_entrypoint()`; older ComfyUI installs that only support the v1 `NODE_CLASS_MAPPINGS` registration will not load them.
 
 ## Nodes
@@ -17,38 +23,44 @@ ComfyUI custom nodes for SenseNova-U1 API and local inference.
 
 ## Install
 
-From the SenseNova-U1 repository:
+### Recommended (end users): ComfyUI Manager / Comfy Registry
+
+Search for **SenseNova-U1** in ComfyUI Manager, or:
+
+```bash
+comfy node install ComfyUI-SenseNova-U1
+```
+
+This pulls the latest published release from https://registry.comfy.org and
+installs the declared dependencies (including the `sensenova-u1` Python package
+needed for local inference) into ComfyUI's Python environment automatically.
+Restart ComfyUI afterwards.
+
+### Developer install (from the SenseNova-U1 monorepo)
+
+If you're hacking on the nodes alongside the model source:
 
 ```bash
 python apps/comfyui/install.py --comfyui /path/to/ComfyUI
+python -m pip install -r apps/comfyui/requirements.txt --no-deps  # skip the git-URL line
+python -m pip install -e .                                        # install sensenova-u1 from src/
 ```
 
-By default this creates:
+`install.py` symlinks (or copies, with `--copy`) `apps/comfyui/` into
+`<ComfyUI>/custom_nodes/ComfyUI-SenseNova-U1`. Restart ComfyUI after installation.
 
-```text
-/path/to/ComfyUI/custom_nodes/ComfyUI-SenseNova-U1 -> /path/to/SenseNova-U1/apps/comfyui
-```
-
-Install the lightweight ComfyUI app dependencies in the Python environment used by ComfyUI:
-
-```bash
-python -m pip install -r apps/comfyui/requirements.txt
-```
-
-For local inference, make sure the SenseNova-U1 runtime dependencies are also installed in the
-same environment. When using this app from the main SenseNova-U1 checkout, the loader can discover
-`src/` automatically. You can override it if needed:
-
-```bash
-python -m pip install -e .
-export SENSENOVA_U1_SRC="/path/to/SenseNova-U1/src"
-```
-
-Restart ComfyUI after installation.
+**Source path auto-discovery is location-bound to the symlink.** In the
+default symlink mode, `local_pipeline.default_source_path()` resolves
+`__file__` through the symlink and uses `<repo>/src/` if it sees the file
+sitting under `apps/comfyui/` — no `SENSENOVA_U1_SRC` needed. If you move,
+rename, or delete the monorepo checkout, the link breaks; re-run
+`install.py` to recreate it. With `--copy`, the files no longer point back
+to the repo, so set `SENSENOVA_U1_SRC=/path/to/SenseNova-U1/src` (or fill
+the loader node's `sensenova_u1_src` input) yourself.
 
 ## Workflows
 
-Example workflows live in `workflows/`. Each links to a screenshot of the loaded graph in `docs/`:
+Example workflows live in `example_workflows/`. Each links to a screenshot of the loaded graph in `docs/`:
 
 | Workflow | Description | Preview |
 | --- | --- | --- |
