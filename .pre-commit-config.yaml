@@ -7,3 +7,11 @@ repos:
         args: ["--select", "I", "--fix", "--exit-non-zero-on-fix"]
       - id: ruff-format
         name: ruff format
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: pretty-format-json
+        name: format ComfyUI example workflows
+        args: ["--autofix", "--indent=2", "--no-sort-keys", "--no-ensure-ascii"]
+        files: ^apps/comfyui/example_workflows/.*\.json$
