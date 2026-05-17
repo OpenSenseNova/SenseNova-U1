@@ -1,0 +1,40 @@
+# Metadata read by `Comfy-Org/publish-node-action` when this directory is
+# published to https://registry.comfy.org as the standalone repository
+# `OpenSenseNova/ComfyUI-SenseNova-U1`. The SenseNova-U1 monorepo's build
+# (hatchling) ignores this file — see ../../pyproject.toml.
+#
+# Intentionally minimal: no [tool.ruff] / [tool.pytest] / [build-system]
+# sections, so the monorepo's root configuration continues to apply to files
+# under this directory.
+[project]
+name = "ComfyUI-SenseNova-U1"
+version = "0.1.4"
+description = "SenseNova-U1 custom nodes for ComfyUI (API + local inference)."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [{ name = "OpenSenseNova" }]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "httpx",
+    "numpy",
+    "pillow",
+    "python-dotenv",
+    # Tarball URL (not git+https) so pip skips submodule init; see
+    # requirements.txt for the full rationale. Bump to /tags/vX.Y.Z.tar.gz
+    # before each official Comfy Registry publish for reproducibility.
+    "sensenova-u1 @ https://github.com/OpenSenseNova/SenseNova-U1/archive/refs/heads/main.tar.gz",
+]
+
+[project.urls]
+Homepage = "https://github.com/OpenSenseNova/ComfyUI-SenseNova-U1"
+Repository = "https://github.com/OpenSenseNova/ComfyUI-SenseNova-U1"
+Source = "https://github.com/OpenSenseNova/SenseNova-U1/tree/main/apps/comfyui"
+
+[tool.comfy]
+PublisherId = "sensenova"
+DisplayName = "ComfyUI-SenseNova-U1"
+Icon = ""

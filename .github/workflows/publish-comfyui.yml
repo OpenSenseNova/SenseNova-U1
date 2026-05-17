@@ -1,0 +1,86 @@
+# Sync apps/comfyui/ to the standalone publish mirror
+# (OpenSenseNova/ComfyUI-SenseNova-U1) and propagate the version tag so that
+# repo's own `publish.yml` uploads to https://registry.comfy.org.
+#
+# Trigger: push a tag of the form `comfyui-vX.Y.Z` on this monorepo, or run
+# manually with `workflow_dispatch` (provide `version` like `v0.1.0`).
+#
+# Required secret: COMFYUI_MIRROR_PUSH_TOKEN
+#   A fine-grained PAT (or classic PAT with `repo` scope) belonging to a user
+#   with push access to OpenSenseNova/ComfyUI-SenseNova-U1. Configure under
+#   Settings → Secrets and variables → Actions on this monorepo.
+name: Publish ComfyUI custom node mirror
+
+on:
+  push:
+    tags:
+      - "comfyui-v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version tag to push to the mirror (e.g. v0.1.0)."
+        required: true
+        type: string
+
+jobs:
+  mirror-and-tag:
+    name: Subtree-split apps/comfyui and push to mirror
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out monorepo (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve mirror tag
+        id: resolve
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            mirror_tag="${{ inputs.version }}"
+          else
+            # github.ref_name e.g. comfyui-v0.1.0  →  v0.1.0
+            mirror_tag="${GITHUB_REF_NAME#comfyui-}"
+          fi
+          if [[ ! "$mirror_tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Resolved mirror tag '$mirror_tag' does not match v*.*.*" >&2
+            exit 1
+          fi
+          echo "mirror_tag=$mirror_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Sanity-check pyproject version matches tag
+        run: |
+          set -euo pipefail
+          tag="${{ steps.resolve.outputs.mirror_tag }}"   # v0.1.0
+          tag_ver="${tag#v}"                              # 0.1.0
+          pyproj_ver="$(grep -E '^version *= *' apps/comfyui/pyproject.toml | head -1 | sed -E 's/.*"([^"]+)".*/\1/')"
+          if [[ "$tag_ver" != "$pyproj_ver" ]]; then
+            echo "Tag $tag does not match apps/comfyui/pyproject.toml version $pyproj_ver" >&2
+            exit 1
+          fi
+
+      - name: Split apps/comfyui into a standalone branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git subtree split --prefix=apps/comfyui -b comfyui-publish
+
+      - name: Push split branch + tag to mirror
+        env:
+          GH_TOKEN: ${{ secrets.COMFYUI_MIRROR_PUSH_TOKEN }}
+        run: |
+          set -euo pipefail
+          mirror_tag="${{ steps.resolve.outputs.mirror_tag }}"
+          mirror_url="https://x-access-token:${GH_TOKEN}@github.com/OpenSenseNova/ComfyUI-SenseNova-U1.git"
+          # actions/checkout@v4 leaves behind a global http.<github>.extraheader
+          # using the monorepo's GITHUB_TOKEN; that header overrides the
+          # credentials in `mirror_url`, so the mirror push gets "Repository
+          # not found". Unset it locally for the mirror push only.
+          git config --local --unset-all "http.https://github.com/.extraheader" 2>/dev/null || true
+          git remote add mirror "$mirror_url"
+          # Force-push: the mirror's main is owned by this workflow.
+          git push --force mirror comfyui-publish:main
+          # Move the tag to the new HEAD on the mirror.
+          git tag -f "$mirror_tag" comfyui-publish
+          git push --force mirror "$mirror_tag"

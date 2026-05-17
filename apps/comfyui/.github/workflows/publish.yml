@@ -1,0 +1,27 @@
+# Runs in the published mirror repo (OpenSenseNova/ComfyUI-SenseNova-U1) after
+# the monorepo's `publish-comfyui.yml` pushes a fresh subtree + tag here.
+# It does not run in the SenseNova-U1 monorepo because the trigger tag pattern
+# `v*.*.*` is rewritten from the monorepo's `comfyui-v*.*.*` tags during sync.
+name: Publish to Comfy registry
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  publish-node:
+    name: Publish Custom Node to registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Publish Custom Node
+        uses: Comfy-Org/publish-node-action@v1
+        with:
+          personal_access_token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
