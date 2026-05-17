@@ -40,7 +40,13 @@ dependencies = [
     "huggingface-hub==0.36.2",
     "safetensors==0.6.2",
     "sentencepiece==0.2.1",
-    "numpy==2.2.0",
+    # NumPy is API-stable across 1.24..2.x for the call sites in sensenova_u1
+    # (np.arange/concatenate/cos/sin/einsum/meshgrid/stack/zeros and dtypes
+    # np.float32/64 — none of the numpy 2 removals like np.float_, np.cast,
+    # np.product are touched). Use a range so downstream consumers (notably
+    # ComfyUI environments shipping numpy 1.26.x) don't hit a dependency
+    # resolver conflict against an exact pin.
+    "numpy>=1.24,<3",
     "pillow==12.0.0",
     "tqdm==4.67.1",
     "packaging==25.0",
