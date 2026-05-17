@@ -536,12 +536,29 @@ class SenseNovaU1LocalModel:
 
 
 def default_source_path() -> str:
-    env_path = os.environ.get("SENSENOVA_U1_SRC", "")
-    if env_path:
-        return env_path
-    repo_src = Path(__file__).resolve().parents[2] / "src"
-    if repo_src.is_dir():
-        return str(repo_src)
+    """Resolve a `sensenova_u1` source path for the loader's default input.
+
+    Precedence:
+      1. ``SENSENOVA_U1_SRC`` env var (manual override; wins everywhere).
+      2. Monorepo symlink auto-discovery — *location-bound*: only fires when
+         this file resolves to ``<repo>/apps/comfyui/local_pipeline.py``,
+         which happens when ``install.py`` (default mode) symlinks the
+         directory into ``<ComfyUI>/custom_nodes/ComfyUI-SenseNova-U1``.
+         ``--copy`` mode and Registry / Manager installs land somewhere
+         else, so this branch is skipped for them.
+      3. ``DEFAULT_SOURCE_PATH`` (empty) — falls back to the installed
+         ``sensenova_u1`` wheel in the ComfyUI Python environment.
+    """
+    env = os.environ.get("SENSENOVA_U1_SRC", "").strip()
+    if env:
+        return env
+    # Path.resolve() follows symlinks, so the install.py-created link
+    # leads back to the monorepo checkout.
+    here = Path(__file__).resolve()
+    if here.parent.name == "comfyui" and here.parents[1].name == "apps":
+        repo_src = here.parents[2] / "src"
+        if repo_src.is_dir():
+            return str(repo_src)
     return DEFAULT_SOURCE_PATH
 
 
@@ -695,9 +712,11 @@ def _import_sensenova_u1():
         from sensenova_u1.utils import load_model_and_tokenizer
     except ImportError as exc:
         raise RuntimeError(
-            "Local SenseNova-U1 inference requires the sensenova_u1 package. "
-            "Install this repository into the ComfyUI Python environment, set "
-            "SENSENOVA_U1_SRC, or fill the loader's sensenova_u1_src input."
+            "Local SenseNova-U1 inference requires the `sensenova_u1` package. "
+            "Install it into the ComfyUI Python environment, e.g.:\n"
+            "  pip install 'sensenova-u1 @ git+https://github.com/OpenSenseNova/SenseNova-U1'\n"
+            "Or, for monorepo development, set SENSENOVA_U1_SRC=/path/to/SenseNova-U1/src "
+            "(or fill the loader's `sensenova_u1_src` input)."
         ) from exc
     return sensenova_u1, load_model_and_tokenizer, smart_resize
 
