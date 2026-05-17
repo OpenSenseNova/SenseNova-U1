@@ -530,11 +530,6 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 >
 > 📖 **Full design and performance profiling:** see [`docs/inference_infra.md`](./docs/inference_infra.md).
 
-<!-- ## 🖊️ Citation
-
-```bibtex
-
-``` -->
 
 ## 🌐 Join the Community!
 
@@ -552,6 +547,26 @@ Join our growing community to share feedback, get support, and stay updated on t
   </tr>
 </table>
 </div>
+
+## ✒️ Citation 
+If this project is helpful for your research, please consider **star** ⭐ and **citation** 📝 :
+
+```bibtex
+@misc{sensenova2026neounify,
+  title        = {NEO-unify: Building Native Multimodal Unified Models End to End},
+  author       = {SenseNova},
+  journal      = {Hugging Face blog},
+  url          = {https://huggingface.co/blog/sensenova/neo-unify},
+  year         = {2026}
+}
+
+@article{sensenova2026sensenovau1,
+  title        = {SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture},
+  author       = {Diao, Haiwen and Wu, Penghao and Deng, Hanming and Wang, Jiahao and Bai, Shihao and Wu, Silei and Fan, Weichen and Ye, Wenjie and Tong, Wenwen and Fan, Xiangyu and others},
+  journal      = {arXiv preprint arXiv:2605.12500},
+  year         = {2026}
+}
+```
 
 ## ⚖️ License
 

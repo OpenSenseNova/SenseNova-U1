@@ -528,12 +528,6 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 >
 > 📖 **完整架构设计与性能剖析：** 参见 [`docs/inference_infra_CN.md`](./docs/inference_infra_CN.md)。
 
-<!-- ## 🖊️ Citation
-
-```bibtex
-
-``` -->
-
 ## 🌐 加入社区！
 
 加入我们的社区，分享反馈、获取支持，并第一时间了解 SenseNova-U1 的最新进展 — 期待与你交流！
@@ -550,6 +544,28 @@ docker pull lightx2v/lightllm_lightx2v:20260407
   </tr>
 </table>
 </div>
+
+
+## ✒️ 引用 
+
+如果这个项目对您的研究有帮助，请考虑点个项目Star ⭐ 和论文引用 📝：
+
+```bibtex
+@misc{sensenova2026neounify,
+  title        = {NEO-unify: Building Native Multimodal Unified Models End to End},
+  author       = {SenseNova},
+  journal      = {Hugging Face blog},
+  url          = {https://huggingface.co/blog/sensenova/neo-unify},
+  year         = {2026}
+}
+
+@article{sensenova2026sensenovau1,
+  title        = {SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture},
+  author       = {Diao, Haiwen and Wu, Penghao and Deng, Hanming and Wang, Jiahao and Bai, Shihao and Wu, Silei and Fan, Weichen and Ye, Wenjie and Tong, Wenwen and Fan, Xiangyu and others},
+  journal      = {arXiv preprint arXiv:2605.12500},
+  year         = {2026}
+}
+```
 
 ## ⚖️ 许可证
 
