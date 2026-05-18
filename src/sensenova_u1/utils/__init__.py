@@ -1,3 +1,9 @@
+from .accel import (
+    best_available_device,
+)
+from .accel import (
+    manual_seed_all as seed_all_accelerators,
+)
 from .checkpoint_loading import (
     add_offload_args,
     infer_input_device,
@@ -32,6 +38,7 @@ __all__ = [
     "ModelParamInspector",
     "VRAM_MODE_OPTIONS",
     "add_offload_args",
+    "best_available_device",
     "build_rules",
     "format_bytes",
     "format_param_count",
@@ -45,6 +52,7 @@ __all__ = [
     "offload_layers_sync",
     "parse_max_memory",
     "save_compare",
+    "seed_all_accelerators",
     "set_gguf2meta_model",
     "vram_mode_to_prefetch_count",
 ]

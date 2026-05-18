@@ -17,6 +17,7 @@ from typing import TypeVar
 import torch
 from torch import nn
 
+from . import accel
 from .layer_offload import LayerOffloadWrapper
 
 LOGGER = logging.getLogger(__name__)
@@ -66,9 +67,8 @@ def make_offload_ctx(
 
 def _cleanup_memory() -> None:
     gc.collect()
-    if torch.cuda.is_available():
-        torch.cuda.empty_cache()
-        torch.cuda.synchronize()
+    accel.empty_cache()
+    accel.synchronize()
 
 
 def _log_vram(label: str, target_device: torch.device) -> None:
@@ -78,11 +78,12 @@ def _log_vram(label: str, target_device: torch.device) -> None:
     ``vram_mode='balanced'``. Best-effort; never raises.
     """
     try:
-        if target_device.type != "cuda" or not torch.cuda.is_available():
+        if target_device.type not in accel.SUPPORTED_DEVICE_TYPES or not accel.is_available(target_device.type):
             return
-        alloc = torch.cuda.memory_allocated(target_device) / (1024**3)
-        reserved = torch.cuda.memory_reserved(target_device) / (1024**3)
-        peak = torch.cuda.max_memory_allocated(target_device) / (1024**3)
+        mod = accel.accel_module(target_device)
+        alloc = mod.memory_allocated(target_device) / (1024**3)
+        reserved = mod.memory_reserved(target_device) / (1024**3)
+        peak = mod.max_memory_allocated(target_device) / (1024**3)
         LOGGER.info(
             "[offload vram] %-40s | alloc=%6.2f GiB  reserved=%6.2f GiB  peak=%6.2f GiB",
             label,
@@ -98,12 +99,14 @@ def _empty_host_cache(target_device: torch.device) -> None:
     """Release PyTorch's pinned host-memory cache.
 
     Without this, repeated offload runs eventually exhaust host memory
-    because the CachingHostAllocator keeps freed pinned blocks cached.
+    because the CachingHostAllocator keeps freed pinned blocks cached. The
+    host cache is global (not per-backend); we still synchronize the active
+    accelerator first so in-flight H2D copies don't reference freed blocks.
     """
-    if not torch.cuda.is_available():
+    if target_device.type not in accel.SUPPORTED_DEVICE_TYPES or not accel.is_available(target_device.type):
         return
     try:
-        torch.cuda.synchronize(device=target_device)
+        accel.synchronize(target_device)
         if hasattr(torch._C, "_host_emptyCache"):
             torch._C._host_emptyCache()
     except Exception as exc:  # pragma: no cover - best-effort cleanup

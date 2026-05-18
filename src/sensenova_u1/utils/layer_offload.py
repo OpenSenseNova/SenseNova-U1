@@ -1,7 +1,8 @@
 """Layer offload wrapper for memory-efficient inference.
 
 Keeps each layer of an ``nn.ModuleList`` in CPU pinned memory and moves it
-onto a CUDA device on demand. Two modes share a single :class:`LayerOffloadWrapper`:
+onto an accelerator device (CUDA or XPU) on demand. Two modes share a single
+:class:`LayerOffloadWrapper`:
 
 - ``prefetch_count == 0`` — synchronous: load before forward, evict after.
 - ``prefetch_count >= 1`` — asynchronous: a dedicated CUDA stream prefetches
@@ -41,6 +42,9 @@ from typing import Any
 import torch
 from torch import nn
 
+from .accel import accel_module as _accel
+from .accel import require_accelerator as _require_accelerator
+
 logger = logging.getLogger(__name__)
 
 
@@ -50,11 +54,12 @@ def _log_vram(label: str, target_device: torch.device, *, reset_peak: bool = Fal
     without explicit DEBUG opt-in.
     """
     try:
-        if target_device.type != "cuda" or not torch.cuda.is_available():
+        accel = _accel(target_device)
+        if not accel.is_available():
             return
-        alloc = torch.cuda.memory_allocated(target_device) / (1024**3)
-        reserved = torch.cuda.memory_reserved(target_device) / (1024**3)
-        peak = torch.cuda.max_memory_allocated(target_device) / (1024**3)
+        alloc = accel.memory_allocated(target_device) / (1024**3)
+        reserved = accel.memory_reserved(target_device) / (1024**3)
+        peak = accel.max_memory_allocated(target_device) / (1024**3)
         logger.info(
             "[layer_offload vram] %-40s | alloc=%6.2f GiB  reserved=%6.2f GiB  peak=%6.2f GiB",
             label,
@@ -63,7 +68,7 @@ def _log_vram(label: str, target_device: torch.device, *, reset_peak: bool = Fal
             peak,
         )
         if reset_peak:
-            torch.cuda.reset_peak_memory_stats(target_device)
+            accel.reset_peak_memory_stats(target_device)
     except Exception as exc:  # pragma: no cover - diagnostic only
         logger.debug("vram log %r failed: %s", label, exc)
 
@@ -76,23 +81,6 @@ def _resolve_attr(module: nn.Module, dotted_path: str) -> nn.ModuleList:
     if not isinstance(obj, nn.ModuleList):
         raise TypeError(f"Expected nn.ModuleList at '{dotted_path}', got {type(obj).__name__}")
     return obj
-
-
-def _require_cuda(target_device: torch.device) -> None:
-    """Reject non-CUDA target devices with a clear error.
-
-    Pinned memory, dedicated streams, and ``record_stream`` are CUDA-only
-    APIs in PyTorch; ROCm reuses the ``cuda`` namespace, so it works, but
-    MPS / XPU / CPU do not. Failing fast here is more honest than letting
-    the wrapper appear to accept any device when ``target_device`` is in
-    fact a façade.
-    """
-    if target_device.type != "cuda":
-        raise NotImplementedError(
-            f"Layer offload requires a CUDA target_device (got {target_device!r}). "
-            "Pinned memory and prefetch streams are CUDA-specific; MPS / XPU / CPU "
-            "are not supported."
-        )
 
 
 def _is_cuda_malloc_async_backend() -> bool:
@@ -152,13 +140,17 @@ class _LayerStore:
         self.target_device = target_device
         self.num_layers = len(layers)
 
+        # ``Tensor.pin_memory()`` defaults to CUDA; XPU needs an explicit
+        # device kind so the host buffer is registered with the right driver.
+        self._pin_device = target_device.type
+
         self._pinned: list[dict[str, torch.Tensor]] = []
         self._on_gpu: set[int] = set()
 
         for layer in layers:
             pinned: dict[str, torch.Tensor] = {}
             for name, tensor in itertools.chain(layer.named_parameters(), layer.named_buffers()):
-                pinned_tensor = tensor.data.pin_memory()
+                pinned_tensor = tensor.data.pin_memory(device=self._pin_device)
                 tensor.data = pinned_tensor
                 pinned[name] = pinned_tensor
             self._pinned.append(pinned)
@@ -217,16 +209,17 @@ class _AsyncPrefetcher:
     def __init__(self, store: _LayerStore, layers: nn.ModuleList) -> None:
         self._store = store
         self._layers = layers
-        self._stream = torch.cuda.Stream(device=store.target_device)
-        self._events: dict[int, torch.cuda.Event] = {}
+        self._accel = _accel(store.target_device)
+        self._stream = self._accel.Stream(device=store.target_device)
+        self._events: dict[int, Any] = {}
 
     def prefetch(self, idx: int) -> None:
         """Begin async transfer of layer *idx* to GPU (no-op if already there)."""
         if self._store.is_on_gpu(idx) or idx in self._events:
             return
-        with torch.cuda.stream(self._stream):
+        with self._accel.stream(self._stream):
             self._store.move_to_gpu(idx, self._layers[idx], non_blocking=True)
-            event = torch.cuda.Event()
+            event = self._accel.Event()
             event.record(self._stream)
             self._events[idx] = event
 
@@ -234,14 +227,15 @@ class _AsyncPrefetcher:
         """Block the compute stream until layer *idx*'s transfer completes."""
         event = self._events.pop(idx, None)
         if event is not None:
-            torch.cuda.current_stream(self._store.target_device).wait_event(event)
+            self._accel.current_stream(self._store.target_device).wait_event(event)
 
     def cleanup(self) -> None:
-        """Drain pending work and release CUDA stream/event resources."""
+        """Drain pending work and release accelerator stream/event resources."""
         self._events.clear()
         self._stream = None
         self._layers = None
         self._store = None
+        self._accel = None
 
 
 class LayerOffloadWrapper(nn.Module):
@@ -261,7 +255,8 @@ class LayerOffloadWrapper(nn.Module):
         Dotted attribute path to the ``nn.ModuleList`` of sequential layers
         (e.g. ``"transformer_blocks"`` or ``"language_model.model.layers"``).
     target_device:
-        The CUDA device to use for compute. MPS / XPU / CPU are rejected.
+        The accelerator device to use for compute (CUDA or XPU). CPU / MPS
+        are rejected.
     prefetch_count:
         ``0`` = synchronous (per-layer load/evict, lowest VRAM, slowest).
         ``>= 1`` = async prefetch this many layers ahead (faster, more VRAM).
@@ -275,7 +270,7 @@ class LayerOffloadWrapper(nn.Module):
         prefetch_count: int = 0,
     ) -> None:
         super().__init__()
-        _require_cuda(target_device)
+        _require_accelerator(target_device)
         if prefetch_count < 0:
             raise ValueError("prefetch_count must be >= 0")
         if model.training:
@@ -287,6 +282,7 @@ class LayerOffloadWrapper(nn.Module):
         self._model = model
         self._layers = _resolve_attr(model, layers_attr)
         self._target_device = target_device
+        self._accel = _accel(target_device)
         # Clamp: no point prefetching more layers than (num_layers - 1).
         max_prefetch = max(len(self._layers) - 1, 0)
         self._prefetch_count = min(prefetch_count, max_prefetch)
@@ -297,8 +293,9 @@ class LayerOffloadWrapper(nn.Module):
         # alloc/free pairing strategy: native allocator → record_stream
         # (fast, frees go to whatever stream is current); cudaMallocAsync →
         # wait_stream + free on prefetch stream (correct, slightly more
-        # serialized).
-        self._cuda_malloc_async = _is_cuda_malloc_async_backend()
+        # serialized). Only meaningful for CUDA; XPU always uses the native
+        # caching allocator and takes the record_stream fast path.
+        self._cuda_malloc_async = target_device.type == "cuda" and _is_cuda_malloc_async_backend()
         if self._async_mode:
             logger.info(
                 "LayerOffloadWrapper: async prefetch enabled (prefetch_count=%d, allocator=%s, free_path=%s)",
@@ -372,7 +369,7 @@ class LayerOffloadWrapper(nn.Module):
                     # Frees in _post_hook go to whatever stream is current
                     # (compute stream) and the allocator handles cross-stream
                     # reuse internally — no prefetch-stream barrier needed.
-                    compute_stream = torch.cuda.current_stream(self._target_device)
+                    compute_stream = self._accel.current_stream(self._target_device)
                     for param in itertools.chain(module.parameters(), module.buffers()):
                         param.data.record_stream(compute_stream)
 
@@ -395,9 +392,9 @@ class LayerOffloadWrapper(nn.Module):
                 # subsequent prefetches queued on the prefetch stream are
                 # ordered after this wait, slightly reducing pipeline depth.
                 prefetch_stream = self._prefetcher._stream  # type: ignore[union-attr]
-                compute_stream = torch.cuda.current_stream(self._target_device)
+                compute_stream = self._accel.current_stream(self._target_device)
                 prefetch_stream.wait_stream(compute_stream)
-                with torch.cuda.stream(prefetch_stream):
+                with self._accel.stream(prefetch_stream):
                     self._store.evict_to_cpu(idx, module)
             else:
                 # Native allocator path: just drop the GPU tensor refs on
@@ -447,8 +444,8 @@ class LayerOffloadWrapper(nn.Module):
             self._audit_handle = None
 
         # Drain in-flight H2D copies before tearing down stream resources, or
-        # the CUDA driver can hit use-after-free during cleanup.
-        torch.cuda.synchronize(device=self._target_device)
+        # the accelerator driver can hit use-after-free during cleanup.
+        self._accel.synchronize(device=self._target_device)
         if self._prefetcher is not None:
             self._prefetcher.cleanup()
             self._prefetcher = None

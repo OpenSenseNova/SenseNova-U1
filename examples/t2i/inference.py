@@ -15,6 +15,7 @@ from sensenova_u1.utils import (
     DEFAULT_VRAM_MODE,
     InferenceProfiler,
     add_offload_args,
+    best_available_device,
     load_and_merge_lora_weight_from_safetensors,
     load_model_and_tokenizer,
     make_offload_ctx,
@@ -243,7 +244,11 @@ def parse_args() -> argparse.Namespace:
         ),
     )
 
-    p.add_argument("--device", default="cuda")
+    p.add_argument(
+        "--device",
+        default=str(best_available_device()),
+        help="Compute device, e.g. 'cuda', 'cuda:0', 'xpu', 'xpu:0', 'cpu'. Defaults to the best available accelerator.",
+    )
     p.add_argument(
         "--dtype",
         default="bfloat16",

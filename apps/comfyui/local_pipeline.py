@@ -535,6 +535,24 @@ class SenseNovaU1LocalModel:
         )
 
 
+def default_device() -> str:
+    """Best-available accelerator string for the ComfyUI loader's default UI value.
+
+    Resolved at node-registration time. Prefers CUDA > XPU > CPU; ``torch``
+    is imported lazily so this module stays importable in tooling that
+    doesn't have torch installed.
+    """
+    try:
+        import torch
+    except ImportError:
+        return "cuda"
+    if torch.cuda.is_available():
+        return "cuda"
+    if torch.xpu.is_available():
+        return "xpu"
+    return "cpu"
+
+
 def default_source_path() -> str:
     """Resolve a `sensenova_u1` source path for the loader's default input.
 

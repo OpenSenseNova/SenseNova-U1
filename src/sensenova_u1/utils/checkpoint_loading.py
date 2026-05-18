@@ -11,14 +11,14 @@ Usage:
     model, tokenizer = load_model_and_tokenizer(
         model_path="sensenova/SenseNova-U1-8B-MoT",
         dtype=torch.bfloat16,
-        device="cuda",
+        # device=None auto-picks CUDA > XPU > CPU. Pass an explicit
+        # "cuda" / "cuda:0" / "xpu" / "xpu:0" to override.
     )
 
     # GGUF override (config / tokenizer still come from `model_path`):
     model, tokenizer = load_model_and_tokenizer(
         model_path="sensenova/SenseNova-U1-8B-MoT",
         dtype=torch.bfloat16,
-        device="cuda",
         gguf_checkpoint="/path/to/SenseNova-U1-8B-MoT-Q5_K_M.gguf",
     )
 """
@@ -35,7 +35,14 @@ from typing import Any
 import torch
 from torch import nn
 
+from . import accel
+
 LOGGER = logging.getLogger(__name__)
+
+
+def _default_device() -> torch.device:
+    """Pick CUDA, then XPU, then CPU. Used as the default ``device`` for loaders."""
+    return accel.best_available_device()
 
 
 def add_offload_args(parser: argparse.ArgumentParser) -> None:
@@ -74,12 +81,18 @@ def add_offload_args(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def infer_input_device(model: nn.Module, fallback: str | torch.device = "cuda") -> torch.device:
-    """Pick a usable device for tensors passed into a dispatched model."""
+def infer_input_device(model: nn.Module, fallback: str | torch.device | None = None) -> torch.device:
+    """Pick a usable device for tensors passed into a dispatched model.
+
+    When ``fallback`` is ``None`` (the default), auto-detects the best
+    accelerator (CUDA > XPU > CPU).
+    """
     for param in model.parameters():
         if param.device.type not in {"cpu", "meta"}:
             return param.device
-    return torch.device(fallback)
+    if fallback is None:
+        return _default_device()
+    return torch.device(fallback) if isinstance(fallback, str) else fallback
 
 
 def _resolve_local_model_path(model_path: str) -> str:
@@ -103,7 +116,7 @@ def load_model_and_tokenizer(
     model_path: str,
     *,
     dtype: torch.dtype,
-    device: str | torch.device | None = "cuda",
+    device: str | torch.device | None = None,
     gguf_checkpoint: str | None = None,
     device_map: str | None = None,
     max_memory: str | dict[int | str, str] | None = None,
@@ -139,6 +152,9 @@ def load_model_and_tokenizer(
             device_map,
         )
         device_map = None
+
+    if device is None and not device_map and not for_offload:
+        device = _default_device()
 
     model_path = _resolve_local_model_path(model_path)
     config = AutoConfig.from_pretrained(model_path)
@@ -235,6 +251,5 @@ def _load_from_gguf(
 
     del state_dict
     gc.collect()
-    if torch.cuda.is_available():
-        torch.cuda.empty_cache()
+    accel.empty_cache()
     return model.eval()

@@ -38,6 +38,7 @@ try:
         T2I_RESOLUTION_OPTIONS,
         VRAM_MODE_OPTIONS,
         SenseNovaU1LocalModel,
+        default_device,
         default_source_path,
         interleave_output_to_tuple,
         interleave_result_to_markdown,
@@ -74,6 +75,7 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         T2I_RESOLUTION_OPTIONS,
         VRAM_MODE_OPTIONS,
         SenseNovaU1LocalModel,
+        default_device,
         default_source_path,
         interleave_output_to_tuple,
         interleave_result_to_markdown,
@@ -466,7 +468,11 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                     default=default_source_path(),
                     tooltip="Optional SenseNova-U1 source checkout or src directory.",
                 ),
-                io.String.Input("device", default="cuda"),
+                io.String.Input(
+                    "device",
+                    default=default_device(),
+                    tooltip="Compute device, e.g. 'cuda', 'cuda:0', 'xpu', 'xpu:0', 'cpu'. Defaults to the best available accelerator.",
+                ),
                 io.Combo.Input("dtype", options=list(DTYPE_OPTIONS), default="bfloat16"),
                 io.Combo.Input("attn_backend", options=list(ATTN_BACKEND_OPTIONS), default="auto"),
                 io.Combo.Input(

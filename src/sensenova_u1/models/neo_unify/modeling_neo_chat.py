@@ -92,18 +92,27 @@ def clear_flash_kv_cache(past_key_values):
         if hasattr(layer, "flash_v_cache"):
             delattr(layer, "flash_v_cache")
 
-@torch.cuda.amp.autocast(dtype=torch.float32)
 def optimized_scale(positive_flat, negative_flat):
+    # Force the divisor computation to float32 regardless of the surrounding
+    # autocast (the squared-norm/division is what we don't want in fp16/bf16).
+    # ``device_type`` is taken from the input so this runs equally on CUDA and
+    # XPU; ``mps`` is rerouted to ``cpu`` because torch.autocast rejects it.
+    device_type = positive_flat.device.type
+    if device_type == "mps":
+        device_type = "cpu"
+    with torch.autocast(device_type=device_type, enabled=False):
+        positive_flat = positive_flat.float()
+        negative_flat = negative_flat.float()
 
-    # Calculate dot production
-    dot_product = torch.sum(positive_flat * negative_flat, dim=1, keepdim=True)
+        # Calculate dot production
+        dot_product = torch.sum(positive_flat * negative_flat, dim=1, keepdim=True)
 
-    # Squared norm of uncondition
-    squared_norm = torch.sum(negative_flat ** 2, dim=1, keepdim=True) + 1e-8
+        # Squared norm of uncondition
+        squared_norm = torch.sum(negative_flat ** 2, dim=1, keepdim=True) + 1e-8
 
-    # st_star = v_cond^T * v_uncond / ||v_uncond||^2
-    st_star = dot_product / squared_norm
-    
+        # st_star = v_cond^T * v_uncond / ||v_uncond||^2
+        st_star = dot_product / squared_norm
+
     return st_star
 
 def build_abs_positions_from_grid_hw(grid_hw: torch.Tensor, device=None):

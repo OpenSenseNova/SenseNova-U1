@@ -17,9 +17,11 @@ from sensenova_u1.utils import (
     DEFAULT_VRAM_MODE,
     InferenceProfiler,
     add_offload_args,
+    best_available_device,
     load_and_merge_lora_weight_from_safetensors,
     load_model_and_tokenizer,
     make_offload_ctx,
+    seed_all_accelerators,
     vram_mode_to_prefetch_count,
 )
 
@@ -62,12 +64,11 @@ DEFAULT_SYSTEM_MESSAGE = """You are a multimodal assistant capable of reasoning 
 
 
 def _set_seed(seed: int) -> None:
-    """Make sampling reproducible across python / numpy / torch (+ all CUDA devices)."""
+    """Make sampling reproducible across python / numpy / torch (+ every available accelerator backend)."""
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
+    seed_all_accelerators(seed)
 
 
 def _round_by(n: int, factor: int) -> int:
@@ -378,7 +379,11 @@ def parse_args() -> argparse.Namespace:
         ),
     )
 
-    p.add_argument("--device", default="cuda")
+    p.add_argument(
+        "--device",
+        default=str(best_available_device()),
+        help="Compute device, e.g. 'cuda', 'cuda:0', 'xpu', 'xpu:0', 'cpu'. Defaults to the best available accelerator.",
+    )
     p.add_argument(
         "--dtype",
         default="bfloat16",

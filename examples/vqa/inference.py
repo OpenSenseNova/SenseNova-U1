@@ -14,6 +14,7 @@ from sensenova_u1.utils import (
     DEFAULT_VRAM_MODE,
     InferenceProfiler,
     add_offload_args,
+    best_available_device,
     infer_input_device,
     load_model_and_tokenizer,
     make_offload_ctx,
@@ -116,7 +117,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--top_k", type=int, default=None, help="Top-k sampling (default: None).")
     p.add_argument("--repetition_penalty", type=float, default=None, help="Repetition penalty (default: None).")
 
-    p.add_argument("--device", default="cuda")
+    p.add_argument(
+        "--device",
+        default=str(best_available_device()),
+        help="Compute device, e.g. 'cuda', 'cuda:0', 'xpu', 'xpu:0', 'cpu'. Defaults to the best available accelerator.",
+    )
     p.add_argument(
         "--dtype",
         default="bfloat16",

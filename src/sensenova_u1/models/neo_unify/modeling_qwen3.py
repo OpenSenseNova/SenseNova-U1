@@ -144,7 +144,11 @@ def _sdpa_attn_func(q, k, v, dropout_p: float = 0.0, softmax_scale=None, causal:
 
 def _flash_or_sdpa(q, k, v, dropout_p: float = 0.0, softmax_scale=None, causal: bool = False):
     backend = effective_attn_backend()
-    if backend == "flash":
+    # flash-attn ships CUDA kernels only. On XPU / CPU we transparently fall
+    # back to SDPA even if the user asked for ``flash`` — the alternative
+    # (crashing on first forward) is worse, and ``set_attn_backend('flash')``
+    # already guarded against the "package missing" case.
+    if backend == "flash" and q.device.type == "cuda":
         return flash_attn_func(q, k, v, dropout_p=dropout_p, softmax_scale=softmax_scale, causal=causal)
     return _sdpa_attn_func(q, k, v, dropout_p=dropout_p, softmax_scale=softmax_scale, causal=causal)
 
