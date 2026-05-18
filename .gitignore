@@ -58,3 +58,8 @@ outputs/
 wandb/
 logs/
 output.png
+.gitnexus
+.claude/
+CLAUDE.md
+AGENTS.md
+.codex
