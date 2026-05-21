@@ -1,0 +1,57 @@
+# SenseNova-U1 training-time dependencies.
+#
+# Tested with: Python 3.10, CUDA 12.4, PyTorch 2.5.1, transformers 4.43.
+# Install order matters for the optional accelerators (see bottom block).
+#
+# Quick install (CUDA wheels of torch should be installed first, per pytorch.org):
+#   pip install -r requirements.txt
+#
+# Optional accelerators (flash-attn / apex / etc.) are listed but commented
+# below — they typically require nvcc and a matching CUDA toolchain.
+
+# ---------- core ----------
+torch>=2.5.0
+torchvision>=0.20.0
+transformers>=4.40.0
+numpy>=1.24
+einops>=0.7
+safetensors>=0.4
+tqdm
+
+# ---------- vision / data ----------
+Pillow
+timm>=0.9
+opencv-python
+imageio
+decord                          # video frame reader
+
+# ---------- utilities ----------
+dill                            # extended pickling
+
+# ---------- logging (optional, recommended) ----------
+tensorboard
+# wandb                         # uncomment to enable Weights & Biases logging
+
+# ---------- monitoring (optional) ----------
+# psutil
+# GPUtil
+# pynvml
+# py-libnuma                    # NUMA-aware CPU pinning (Linux only)
+
+# ---------- accelerator kernels (optional, build from source) ----------
+# Install separately; see each project's README for prebuilt wheels:
+#
+#   flash-attn>=2.5             # fused attention (highly recommended)
+#       pip install flash-attn --no-build-isolation
+#
+#   apex                        # NVIDIA Apex fused norms/optims
+#       git clone https://github.com/NVIDIA/apex && cd apex && \
+#       pip install -v --disable-pip-version-check --no-cache-dir \
+#                   --no-build-isolation --config-settings "--build-option=--cpp_ext" \
+#                   --config-settings "--build-option=--cuda_ext" ./
+#
+#   grouped_gemm                # MoE expert-grouped matmul (used by QwenDropless MoE)
+#       pip install grouped_gemm
+#
+#   deeplink_ext                # DeepLink fused attention/norm/rotary
+#       see https://github.com/DeepLink-org/deeplink_ext

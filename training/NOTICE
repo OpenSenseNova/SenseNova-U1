@@ -1,0 +1,52 @@
+SenseNova-U1 Training Code (Neo_Unify)
+Copyright (c) SenseNovaLM contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It includes, derives from, or is influenced by software developed by the
+following third-party projects. Each upstream project retains its own
+copyright; per-file headers in the source tree record which files derive
+from which upstream and under what license.
+
+- InternVL (https://github.com/OpenGVLab/InternVL)
+  Copyright (c) 2023 OpenGVLab. Licensed under MIT.
+
+- InternEvo (https://github.com/InternLM/InternEvo)
+  Copyright (c) OpenGVLab. Licensed under Apache-2.0.
+
+- ColossalAI (https://github.com/hpcaitech/ColossalAI)
+  Copyright (c) HPC-AI Tech. Licensed under Apache-2.0.
+
+- DeepSpeed (https://github.com/microsoft/DeepSpeed)
+  Copyright (c) Microsoft Corporation. Licensed under Apache-2.0.
+
+- FastChat (https://github.com/lm-sys/FastChat)
+  Copyright (c) lm-sys. Licensed under Apache-2.0.
+
+- Flash-Attention (https://github.com/Dao-AILab/flash-attention)
+  Copyright (c) 2022 Tri Dao. Licensed under BSD-3-Clause.
+
+- Ring-Flash-Attention (https://github.com/zhuzilin/ring-flash-attention)
+  Copyright (c) zhuzilin. Licensed under MIT.
+
+- NVIDIA Apex (https://github.com/NVIDIA/apex)
+  Copyright (c) NVIDIA Corporation. Licensed under BSD-3-Clause.
+
+- Megatron-LM (https://github.com/NVIDIA/Megatron-LM)
+  Copyright (c) NVIDIA Corporation. Licensed under a permissive license
+  (see upstream LICENSE; Apache-2.0 compatible).
+
+- OpenMMLab (https://github.com/open-mmlab)
+  Copyright (c) OpenMMLab. Licensed under Apache-2.0.
+
+- HuggingFace Transformers (https://github.com/huggingface/transformers)
+  Copyright (c) HuggingFace Inc. Licensed under Apache-2.0.
+
+- timm / PyTorch Image Models (https://github.com/huggingface/pytorch-image-models)
+  Copyright (c) Ross Wightman. Licensed under Apache-2.0.
+
+- PAL — Program-Aided Language Models (https://github.com/reasoning-machines/pal)
+  Copyright (c) PAL authors. Licensed under MIT.
+
+Per-file derivation details (upstream URL, original copyright, license) are
+recorded in the header of each derived source file.
