@@ -111,7 +111,7 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 
 ## 📋 后续计划
 
-- [ ] SenseNova-U1 训练代码
+- [x] SenseNova-U1 训练代码
 
 - [x] SenseNova-U1 最终版权重与技术报告
 

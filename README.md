@@ -112,7 +112,7 @@ Although relatively compact by today’s standards, these models already show st
 
 ## 📋 ToDo List
 
-- [ ] Training code of SenseNova-U1 
+- [x] Training code of SenseNova-U1 
 
 - [x] Final weights and technical report of SenseNova-U1
 
