@@ -122,6 +122,10 @@ extend-exclude = [
     # Third-party submodules — keep diff-clean from upstream.
     "evaluation/easi/EASI",
     "evaluation/easi/lightllm-stack/LightLLM",
+    # Training code is derived from InternEvo and was originally formatted with
+    # black/flake8/isort; keep diff-clean from those upstreams rather than churn
+    # the whole subtree through ruff-format.
+    "training",
 ]
 
 [tool.ruff.lint]

@@ -23,7 +23,7 @@
 │   ├── data/                      # streaming + packing + conv templates
 │   ├── model/sensenovavl_moe_chat # SenseNovaVLChatMoTModel + InternViT
 │   └── train/                     # get_model(), pipeline wiring
-└── data/sample/                   # tiny demo dataset (jsonl + meta JSON)
+└── data/                          # sample dataset — downloaded separately (see "Data")
 ```
 
 ---
@@ -132,17 +132,38 @@ For the exact wire format of the chat template, see
 
 ## Data
 
-The shipped `data/sample/` directory contains a tiny illustrative meta JSON
-and accompanying jsonl files for **smoke-testing only** (paths point to
-internal cluster mounts and won't resolve outside the original training
-environment). For real training:
+### Sample dataset (smoke test)
 
-1. Prepare your own jsonl files (one sample per line; each sample is a
-   `{conversations, image, ...}` dict; see `data/sample/*.jsonl` for the
-   schema).
+A tiny illustrative meta JSON, jsonl annotations, and the matching
+image / video assets are released as a separate Hugging Face dataset:
+
+**[`SenseNova/SenseNova-U1-Training-Sample`](https://huggingface.co/datasets/SenseNova/SenseNova-U1-Training-Sample)** (~680 MB)
+
+Download it into `training/data/` before launching a run:
+
+```bash
+huggingface-cli download \
+    SenseNova/SenseNova-U1-Training-Sample \
+    --repo-type dataset \
+    --local-dir training/data
+```
+
+The unpacked layout matches the paths in
+`training/data/sample/sample_data_meta.json` — no path rewriting needed,
+the shipped `shell/train_u1/{8B,A3B}.sh` will pick it up directly. The
+sample is sized to exercise every task type (see the table above), **not**
+to produce a usable model.
+
+### Real training
+
+For real training, prepare your own data in the same schema:
+
+1. Write jsonl files (one sample per line; each sample is a
+   `{conversations, image, ...}` dict; see the sample jsonls in the HF
+   dataset for the exact shape).
 2. Build a meta JSON listing your datasets with `root`, `annotation`,
-   `repeat_time`, and `task` fields (see
-   `data/sample/sample_data_meta.json`).
+   `repeat_time`, and `task` fields (modeled after
+   `sample/sample_data_meta.json` in the HF dataset).
 3. Set `mm_data_path` to that meta JSON in your shell script.
 
 A standalone data-prep guide is on the TODO list; PRs welcome.
