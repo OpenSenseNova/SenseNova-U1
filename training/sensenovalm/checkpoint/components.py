@@ -13,7 +13,7 @@ from sensenovalm.core.context import ParallelMode
 from sensenovalm.core.context import global_context as gpc
 from sensenovalm.core.trainer import TrainState
 from sensenovalm.model.moe.moe import MoEBase
-from sensenovalm.solver.optimizer import HybridZeroOptimizer, HybridZeroOptimizer_v2
+from sensenovalm.solver.optimizer import HybridZeroOptimizer
 from sensenovalm.utils.common import get_current_device
 from sensenovalm.utils.logger import get_logger
 from sensenovalm.utils.parallel import is_using_isp
@@ -722,7 +722,7 @@ def load_optimizer_checkpoint(folder, optim):
 
     states = llm_load(os.path.join(folder, fp), map_location=get_current_device())
 
-    if isinstance(optim, (HybridZeroOptimizer, HybridZeroOptimizer_v2)):
+    if isinstance(optim, HybridZeroOptimizer):
         fp_meta = os.path.join(folder, optim.rank_unique_id)
         try:
             zero_devide_optim_plan = llm_load(fp_meta)
@@ -781,7 +781,7 @@ def save_optimizer_checkpoint(optim, state_path):
 
     states = optim.state_dict()
 
-    if isinstance(optim, (HybridZeroOptimizer, HybridZeroOptimizer_v2)):
+    if isinstance(optim, HybridZeroOptimizer):
         if is_using_isp():
             if use_moe and moe_zero_size * ep_size * ewp_size > zero_size * wp_size:
                 fp = f"optimizer_ep{ep_rank}_ewp{ewp_rank}_pp{pp_rank}_zo{moe_zero_rank}.pt"

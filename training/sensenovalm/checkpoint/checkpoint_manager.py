@@ -16,7 +16,7 @@ from sensenovalm.core.trainer import TrainState
 from sensenovalm.initialize.launch import get_config_value
 from sensenovalm.model.base_model import BaseModel
 from sensenovalm.model.registry import model_initializer
-from sensenovalm.solver.optimizer import HybridZeroOptimizer, HybridZeroOptimizer_v2
+from sensenovalm.solver.optimizer import HybridZeroOptimizer
 from sensenovalm.utils.common import get_current_device
 from sensenovalm.utils.logger import get_logger
 from sensenovalm.utils.megatron_timers import megatron_timer as timer
@@ -244,7 +244,7 @@ def try_load_sensenovalm_ckpt_func(ckpt_mm, load_info, *args, func=None, **kwarg
     load_content_str += f"{CheckpointLoadContent.MODEL}, "
     sensenovalm_accelerator.synchronize()
 
-    if isinstance(ckpt_mm.optimizer, (HybridZeroOptimizer, HybridZeroOptimizer_v2)):
+    if isinstance(ckpt_mm.optimizer, HybridZeroOptimizer):
         ckpt_mm.optimizer.reload_zero_fp32_buff()
 
 
@@ -642,7 +642,7 @@ class CheckpointManager:
             # If we only load model weight, we need rewrite zero optim's fp32 buffer.
             if (
                 "optimizer" not in load_content.load_set
-                and isinstance(self.optimizer, (HybridZeroOptimizer, HybridZeroOptimizer_v2))
+                and isinstance(self.optimizer, HybridZeroOptimizer)
             ) or gpc.config.get("only_load_lr", False):
                 self.optimizer.reload_zero_fp32_buff()
 

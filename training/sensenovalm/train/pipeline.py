@@ -74,12 +74,11 @@ from sensenovalm.model.utils import _submodule_filter
 from sensenovalm.solver.optimizer import (
     FSDPadaptOptimizer,
     HybridZeroOptimizer,
-    HybridZeroOptimizer_v2,
 )
 from sensenovalm.solver.optimizer.compatible_adamw import new_compatible_adamw
 from sensenovalm.solver.schedulers.beta2_scheduler import Beta2Scheduler
 from sensenovalm.solver.schedulers.lr_scheduler import FineTuneCosineAnnealingWarmupLR
-from sensenovalm.train.utils import create_param_groups, map_param_block, timeout_input
+from sensenovalm.train.utils import create_param_groups, timeout_input
 from sensenovalm.utils.common import DummyProfile, SchedulerHook, get_current_device
 from sensenovalm.utils.logger import get_logger
 from sensenovalm.utils.megatron_timers import megatron_timer as timer
@@ -493,9 +492,6 @@ def initialize_optimizer(model: Union[nn.Module, nn.ModuleList], isp_communicato
     max_group_size = gpc.config.get("max_param_group_size", None)
     use_apex_adam = getattr(gpc.config, "use_apex_adam", False)
 
-    if "use_split_tensor_optim" in zero_cfg and zero_cfg.use_split_tensor_optim:
-        map_param_block(model)
-
     params = create_param_groups(model, adam_cfg.weight_decay, adam_cfg.lr, gpc.config.lr_scale, max_group_size)
 
     naive_optimizer = new_compatible_adamw(
@@ -527,25 +523,13 @@ def initialize_optimizer(model: Union[nn.Module, nn.ModuleList], isp_communicato
         param_bcast_sync_handler = None
 
     if not gpc.config.parallel.zero1.fsdp:
-        if (
-            "use_split_tensor_optim" not in gpc.config.hybrid_zero_optimizer
-            or not gpc.config.hybrid_zero_optimizer.use_split_tensor_optim
-        ):
-            optimizer = HybridZeroOptimizer(
-                naive_optimizer,
-                grad_scal_cfg=grad_scal_cfg,
-                zero_cfg=zero_cfg,
-                param_bcast_sync_handler=param_bcast_sync_handler,
-                isp_communicator=isp_communicator,
-            )
-        else:
-            optimizer = HybridZeroOptimizer_v2(
-                naive_optimizer,
-                grad_scal_cfg=grad_scal_cfg,
-                zero_cfg=zero_cfg,
-                param_bcast_sync_handler=param_bcast_sync_handler,
-                isp_communicator=isp_communicator,
-            )
+        optimizer = HybridZeroOptimizer(
+            naive_optimizer,
+            grad_scal_cfg=grad_scal_cfg,
+            zero_cfg=zero_cfg,
+            param_bcast_sync_handler=param_bcast_sync_handler,
+            isp_communicator=isp_communicator,
+        )
     else:
         optimizer = FSDPadaptOptimizer(
             naive_optimizer,
