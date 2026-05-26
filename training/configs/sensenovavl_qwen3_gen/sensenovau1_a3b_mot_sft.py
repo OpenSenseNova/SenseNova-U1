@@ -1,4 +1,4 @@
-# SenseNova-U1 30B-A3B (MoE + MoT image-gen branch) — SFT config.
+# SenseNova-U1 38B-A3B (MoE + MoT image-gen branch) — SFT config.
 #
 # Consumed by `train_sensenovau1.py --config`. Runtime-tuned knobs come from
 # environment variables (set by `shell/train_u1/A3B.sh`); the rest are constants.
@@ -190,7 +190,7 @@ resume_ds = env_bool('resume_ds', False)
 # -----------------------------------------------------------------------------
 VOCAB_SIZE = 151936
 
-# 30B-A3B (MoE)
+# 38B-A3B (MoE)
 HIDDEN_SIZE = 2048
 HEAD_DIM = 128
 NUM_ATTENTION_HEAD = 32

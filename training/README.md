@@ -33,8 +33,17 @@
 ### Requirements
 
 - Python 3.10+
-- CUDA-capable GPU ( ≥ 1 × 8-GPU node recommended)
 - PyTorch 2.5+ — full list in [`requirements.txt`](requirements.txt)
+
+**Minimum hardware (as shipped — `shell/train_u1/{8B,A3B}.sh` defaults):**
+
+| Model | GPUs (minimum) | HBM / GPU | Why |
+|---|---|---|---|
+| `8B.sh` (dense) | **1 × 8** | 80 GB | `wp=8 × tp=1 × pp=1 = 8` ranks; `seq_len=28672`, `num_imgs=144` |
+| `A3B.sh` (MoE)  | **2 × 8** | 80 GB | `wp=8 × tp=2 × pp=1 = 16` ranks required by ISP; same seq budget |
+
+To fit on smaller setups, reduce `seq_len` / `num_imgs` (memory) and / or
+`wp_size` / `tp_size` (topology) at the top of the launcher.
 
 ```bash
 # install PyTorch matching your CUDA from https://pytorch.org first, then:
@@ -75,12 +84,11 @@ list of consumers.
 ### Launch a training run
 
 ```bash
-# Single-node, 8 GPUs (smoke test)
-bash shell/train_u1/A3B.sh         # A3B MoE
-# or
-bash shell/train_u1/8B.sh          # 8B dense
+# 8B smoke test — single node, 8 GPUs.
+bash shell/train_u1/8B.sh
 
-# Multi-node — run on each node, replacing NODE_RANK / MASTER_ADDR:
+# A3B requires 2 nodes (wp × tp = 16 ranks under ISP) — run on each node,
+# replacing NODE_RANK / MASTER_ADDR:
 NNODES=2 NODE_RANK=0 MASTER_ADDR=10.0.0.1 bash shell/train_u1/A3B.sh
 NNODES=2 NODE_RANK=1 MASTER_ADDR=10.0.0.1 bash shell/train_u1/A3B.sh
 ```
@@ -216,7 +224,7 @@ slice at a time, so it runs comfortably inside ~32GB cgroup limits even for >100
 ## License
 
 This project is released under the **Apache License, Version 2.0** — see
-[`LICENSE`](LICENSE) for the full text.
+[`LICENSE`](../LICENSE) for the full text.
 
 Some files in [`sensenovavl/model/sensenovavl_moe_chat/`](sensenovavl/model/sensenovavl_moe_chat/)
 are **derived from [InternVL](https://github.com/OpenGVLab/InternVL)** (Copyright
