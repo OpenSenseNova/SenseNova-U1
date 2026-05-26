@@ -1,4 +1,4 @@
-# SenseNova-U1 30B-A3B (MoE + MoT image-gen branch) — pretraining config.
+# SenseNova-U1 30B-A3B (MoE + MoT image-gen branch) — SFT config.
 #
 # Consumed by `train_sensenovau1.py --config`. Runtime-tuned knobs come from
 # environment variables (set by `shell/train_u1/A3B.sh`); the rest are constants.

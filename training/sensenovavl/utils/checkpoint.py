@@ -716,7 +716,7 @@ def _load_pretrained_sensenovalm3_llm(model, model_args, model_path=None, state_
 def _load_qwen3_moe_experts_from_hf(state_dict, model, model_args, load_mot_gen: bool):
     """Pack per-expert HF weights into the internal grouped-MoE state dict.
 
-    Source layout (e.g. ``SenseNova-U1-A3B-SFT``; experts live in the ``moemodel-*-of-NNNNN.safetensors``
+    Source layout (e.g. ``SenseNova-U1-A3B-MoT-SFT``; experts live in the ``moemodel-*-of-NNNNN.safetensors``
     shards, prefix already stripped to ``model.``)::
 
         model.layers.{l}.mlp.experts.{e}.gate_proj.weight     # understanding branch, ``num_experts`` experts
@@ -870,7 +870,7 @@ def _load_pretrained_qwen2_llm(model, model_args, model_path=None, state_dict=No
 
     model_config = gpc.config.model
 
-    # MoE language model (e.g. ``SenseNova-U1-A3B-SFT``): the dense FFN weights are replaced by
+    # MoE language model (e.g. ``SenseNova-U1-A3B-MoT-SFT``): the dense FFN weights are replaced by
     # per-expert weights (``model.layers.{i}.mlp.experts.{e}.{gate,up,down}_proj.weight``) plus a
     # router (``model.layers.{i}.mlp.gate.weight``). The dense paths below skip the FFN load and the
     # experts are packed into the internal grouped-MoE layout by ``_load_qwen3_moe_experts_from_hf``.
