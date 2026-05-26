@@ -23,6 +23,8 @@
 
 ## 📣 最新动态
 
+- `[2026.05.21]` 发布 SenseNova-U1 的全参微调[训练代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/training/README.md)。
+
 - `[2026.05.15]` 发布 [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) 模型，提升了信息图生成能力。模型细节可见 [U1 Infographic Model](docs/u1_infographic_model_CN.md)，100个生成案例可见 [✨ Infographic Showcases ](docs/u1_infographic_showcases.md)。
 
 - `[2026.05.10]` 发布 [🔥SenseNova-U1 技术报告🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf)，并开源 [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) 与 [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT) 模型权重。
@@ -109,7 +111,7 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 
 ## 📋 后续计划
 
-- [ ] SenseNova-U1 训练代码
+- [x] SenseNova-U1 训练代码
 
 - [x] SenseNova-U1 最终版权重与技术报告
 

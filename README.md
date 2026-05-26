@@ -23,6 +23,8 @@
 
 ## 📣 Updated News
 
+- `[2026.05.21]` Release the full-parameter fine-tuning [training code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/training/README.md) for SenseNova-U1.
+
 - `[2026.05.15]` Release [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) model for improved infographic generation. See [U1 Infographic Model](docs/u1_infographic_model.md) for details, and [✨ Infographic Showcases ](docs/u1_infographic_showcases.md) for 100 generated examples.
 
 - `[2026.05.10]` Release [🔥SenseNova-U1 Technical Report🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf) and the weights for [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) & [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT).
@@ -110,7 +112,7 @@ Although relatively compact by today’s standards, these models already show st
 
 ## 📋 ToDo List
 
-- [ ] Training code of SenseNova-U1 
+- [x] Training code of SenseNova-U1 
 
 - [x] Final weights and technical report of SenseNova-U1
 

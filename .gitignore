@@ -63,3 +63,10 @@ output.png
 CLAUDE.md
 AGENTS.md
 .codex
+
+# Training run artifacts (training/)
+RUN/
+RUN_*
+llm_ckpts*/
+batchscript-*
+phoenix-slurm-*
