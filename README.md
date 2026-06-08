@@ -29,7 +29,7 @@
 
 - `[2026.05.10]` Release [🔥SenseNova-U1 Technical Report🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf) and the weights for [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) & [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT).
 
-- `[2026.05.08]` Add **GGUF quantized checkpoints** and **layer-offload VRAM modes** for low-VRAM single-GPU inference. See [Memory-efficient inference](#-memory-efficient-inference-gguf--vram-modes). GGUF weights for `SenseNova-U1-8B-MoT-Merger` are available at [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) — many thanks to [@smthem](https://github.com/smthem) for contributing the quantized weights.
+- `[2026.05.08]` Add **GGUF quantized checkpoints** and **layer-offload VRAM modes** for low-VRAM single-GPU inference. See [Memory-efficient inference](#-memory-efficient-inference-gguf--vram-modes). GGUF weights for `SenseNova-U1-8B-MoT-Merger` are available at [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) — many thanks to @[smthemex](https://github.com/smthemex) for contributing the quantized weights.
 
 - `[2026.05.06]` Release [SenseNova-U1-8B-MoT-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors). Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
