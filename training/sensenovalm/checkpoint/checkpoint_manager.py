@@ -21,6 +21,7 @@ from sensenovalm.utils.common import get_current_device
 from sensenovalm.utils.logger import get_logger
 from sensenovalm.utils.megatron_timers import megatron_timer as timer
 from sensenovalm.utils.storage_manager import (
+    get_fns,
     get_storage_manager,
     init_storage_manager,
     llm_load,
@@ -116,7 +117,20 @@ def try_load_internevo_ckpt(ckpt_mm, load_info, train_state: TrainState = None):
     load_content_str, load_ckpt_folder, load_content = process_load_info(load_info)
 
     if load_content.need_load(CheckpointLoadContent.MODEL):
-        load_model_checkpoint(folder=load_ckpt_folder, model=ckpt_mm.model)
+        # LoRA checkpoints contain only `lora_state.pt` (the base weights are
+        # frozen and come from the pretrained load) — restore the adapters
+        # instead of looking for full model shards.
+        lora_cfg = gpc.config.get("lora", None)
+        if lora_cfg and lora_cfg.get("enabled", False) and "lora_state.pt" in get_fns(load_ckpt_folder):
+            from sensenovavl.model.lora import load_lora_state_dict
+
+            lora_fp = os.path.join(load_ckpt_folder, "lora_state.pt")
+            payload = llm_load(lora_fp, map_location="cpu")
+            load_lora_state_dict(ckpt_mm.model, payload["lora_state_dict"])
+            if gpc.is_rank_for_log():
+                logger.info(f"[LoRA] restored {len(payload['lora_state_dict'])} adapter tensors from {lora_fp}")
+        else:
+            load_model_checkpoint(folder=load_ckpt_folder, model=ckpt_mm.model)
         load_content_str += f"{CheckpointLoadContent.MODEL}, "
 
     if load_content.not_only_load(CheckpointLoadContent.MODEL):
@@ -722,12 +736,9 @@ class CheckpointManager:
         if gpc.is_rank_for_log():
             logger.info(f"Saving checkpoint to `{folder}` at batch count:{train_state.step_count}...")
 
-        # LoRA short-circuit: when ``lora.enabled`` is true the base weights
-        # are frozen, so persisting them on every checkpoint is wasteful.
-        # Write only the lora_A / lora_B tensors and the matching config to a
-        # tiny ``lora_state.pt`` on rank-0 — the result is ~tens of MB instead
-        # of tens of GB.
-        lora_cfg = gpc.config.get("lora", None) if hasattr(gpc, "config") else None
+        # LoRA short-circuit: the base weights are frozen, so persist only the
+        # lora_A / lora_B tensors (tens of MB instead of tens of GB).
+        lora_cfg = gpc.config.get("lora", None)
         lora_enabled = bool(lora_cfg.get("enabled", False)) if lora_cfg is not None else False
 
         timer("save-model").start()
@@ -759,8 +770,6 @@ class CheckpointManager:
 
         # Save averaged model weights (optional) into a sub-folder: <folder>/averaged_model/
         # This keeps backward compatibility with existing ckpt layout.
-        # Skipped under LoRA: averaging frozen weights produces an identical
-        # copy of the base model, which is huge and useless.
         if self.averaged_model is not None and not lora_enabled:
             averaged_model_folder = os.path.join(folder, "averaged_model")
             os.makedirs(averaged_model_folder, exist_ok=True)
@@ -773,9 +782,6 @@ class CheckpointManager:
             if gpc.is_rank_for_log():
                 logger.info(f"Saved averaged model weights to `{averaged_model_folder}`")
 
-        # Optimizer state for LoRA is also tiny (only LoRA params), so keep it
-        # — it's cheap and useful for resumption. Just note that it has a very
-        # different key set from full-model checkpoints.
         timer("save-optimizer").start()
         save_optimizer_checkpoint(optim=optimizer, state_path=folder)
         timer("save-optimizer").stop()

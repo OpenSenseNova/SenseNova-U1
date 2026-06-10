@@ -222,51 +222,50 @@ def get_model(model_args, data_args):
             ):
                 param.requires_grad = True
 
-    # --- LoRA injection ------------------------------------------------------
-    # Runs last so it overrides every prior freeze/unfreeze decision: when
-    # ``lora.enabled`` is true we freeze the entire model and only add LoRA
-    # adapters under ``fm_modules.*`` as trainable. See
-    # ``sensenovavl/model/lora.py`` for the side-branch implementation.
-    lora_cfg = gpc.config.get("lora", None) if hasattr(gpc, "config") else None
+    # LoRA injection runs last so it overrides every prior freeze/unfreeze
+    # decision: the entire model is frozen and only the adapters added under
+    # ``lora.target_prefixes`` are trainable. See sensenovavl/model/lora.py.
+    lora_cfg = gpc.config.get("lora", None)
     if lora_cfg is not None and lora_cfg.get("enabled", False):
+        from sensenovalm.core.context import ParallelMode
         from sensenovavl.model.lora import count_trainable_parameters, inject_lora
 
-        r = int(lora_cfg.get("r", 8))
-        alpha = int(lora_cfg.get("alpha", 16))
-        dropout = float(lora_cfg.get("dropout", 0.0))
-        target_prefixes = tuple(lora_cfg.get("target_prefixes", ("fm_modules.",)))
-        target_leaf_names = tuple(
-            lora_cfg.get(
-                "target_leaf_names",
-                ("qkv", "proj", "q_proj", "k_proj", "v_proj", "o_proj",
-                 "gate_proj", "up_proj", "down_proj", "fc1", "fc2"),
-            )
+        assert gpc.get_world_size(ParallelMode.PIPELINE) == 1, (
+            "LoRA training requires pp_size=1: fm_modules live on the first "
+            "pipeline stage only, leaving later stages without trainable params."
         )
-        include_seq_idx = bool(lora_cfg.get("include_sequential_indices", True))
 
-        if gpc.is_rank_for_log():
-            logger.info(
-                f"[LoRA] enabling rank={r} alpha={alpha} dropout={dropout} "
-                f"prefixes={list(target_prefixes)} leaves={list(target_leaf_names)}"
+        lora_kwargs = {
+            k: lora_cfg[k]
+            for k in (
+                "r", "alpha", "dropout",
+                "target_prefixes", "target_leaf_names", "include_sequential_indices",
             )
-        wrapped, n_lora, n_frozen = inject_lora(
-            model,
-            target_prefixes=target_prefixes,
-            target_leaf_names=target_leaf_names,
-            include_sequential_indices=include_seq_idx,
-            r=r,
-            alpha=alpha,
-            dropout=dropout,
-        )
+            if k in lora_cfg
+        }
+        wrapped = inject_lora(model, **lora_kwargs)
+
+        # Reentrant activation checkpointing (use_reentrant=True in the ViT
+        # encoder) only backpropagates into a block if at least one block
+        # *input* requires grad. With the base fully frozen, the mot-gen ViT
+        # blocks would otherwise get no LoRA grads at all — force the patch
+        # embedding output to require grad to keep that path open.
+        fm = getattr(model, "fm_modules", None)
+        if fm is not None and "vision_model_mot_gen" in fm:
+            fm["vision_model_mot_gen"].embeddings.register_forward_hook(
+                lambda module, inputs, output: output.requires_grad_(True)
+            )
+
         trainable, total = count_trainable_parameters(model)
         if gpc.is_rank_for_log():
+            logger.info(f"[LoRA] config: {dict(lora_cfg)}")
             logger.info(
                 f"[LoRA] wrapped {len(wrapped)} Linear layers; "
                 f"trainable={trainable:,} / total={total:,} "
                 f"({100.0 * trainable / max(total, 1):.4f}%)."
             )
-            # Show the first few wrapped paths so users can sanity-check that
-            # they hit fm_modules and not, e.g., the LLM by accident.
+            # Preview the wrapped paths so users can sanity-check that they
+            # hit fm_modules and not, e.g., the LLM by accident.
             preview = wrapped[:8] + (["..."] if len(wrapped) > 8 else [])
             logger.info(f"[LoRA] sample wrapped paths: {preview}")
 

@@ -29,8 +29,9 @@ export CONFIG_NAME="configs/sensenovavl_qwen3_gen/sensenovau1_8b_mot_sft.py"
 export MODEL_NAME_OR_PATH=${MODEL_NAME_OR_PATH:-"/path/to/SenseNova-U1-8B-MoT-SFT"}
 export VOCAB_FILE=${VOCAB_FILE:-"/path/to/qwen3/tokenizer"}
 export TOKENIZER_PATH=${TOKENIZER_PATH:-"/path/to/qwen3/tokenizer"}
-# Point this at the meta JSON produced by tools/prepare_lora_dataset.py.
-export mm_data_path=${mm_data_path:-"training/data/pixar_lora/lora_style_meta.json"}
+# Point this at the meta JSON produced by tools/prepare_lora_dataset.py
+# (relative paths are resolved from the training/ directory).
+export mm_data_path=${mm_data_path:-"data/pixar_lora/pixar_style_meta.json"}
 export load_optimizer=${load_optimizer:-"model"}
 
 # ============================ Parallelism ============================ #
@@ -106,7 +107,8 @@ export cfg_txt_uncond_drop_prob=0.1
 export cfg_img_uncond_drop_prob=0
 export cfg_txtimg_uncond_drop_prob=0.1
 export cfg_is_uncond_drop_independent='false'
-export ema_decay=0.9999  # ignored under LoRA (averaging frozen weights is a no-op)
+# EMA is disabled by the config when lora_enabled=true (the shadow copy of a
+# frozen base wastes HBM and step time).
 export thinking_method="tag"
 
 # ============================ Understanding ============================ #

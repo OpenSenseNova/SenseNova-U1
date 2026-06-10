@@ -4,12 +4,12 @@
 
 Usage
 -----
-Minimum invocation (uses sidecar ``.txt`` captions if present, otherwise falls
-back to a default caption per image):
+Run from the ``training/`` directory. Minimum invocation (uses sidecar
+``.txt`` captions if present, otherwise just the trigger word):
 
     python tools/prepare_lora_dataset.py \\
         --image_dir /path/to/style_images \\
-        --output_dir training/data/pixar_lora \\
+        --output_dir data/pixar_lora \\
         --trigger_word "in pixar style" \\
         --dataset_name pixar_style
 
@@ -18,7 +18,7 @@ GPU and ``pip install transformers torch pillow``):
 
     python tools/prepare_lora_dataset.py \\
         --image_dir /path/to/style_images \\
-        --output_dir training/data/pixar_lora \\
+        --output_dir data/pixar_lora \\
         --trigger_word "in pixar style" \\
         --auto_caption blip \\
         --repeat_time 20
@@ -65,23 +65,12 @@ DEFAULT_CAPTION = "A high-quality illustration."
 # --------------------------------------------------------------------------- #
 # Captioners
 # --------------------------------------------------------------------------- #
-class _NullCaptioner:
-    """Returns the same default caption for every image — useful when the
-    user is happy with just the trigger word doing the work."""
-
-    def __init__(self, fallback: str = DEFAULT_CAPTION):
-        self.fallback = fallback
-
-    def __call__(self, image_path: Path) -> str:
-        return self.fallback
-
-
 class _BlipCaptioner:
-    """BLIP-2 / BLIP image captioning. Loaded lazily."""
+    """BLIP image captioning. Dependencies imported lazily."""
 
     def __init__(self, model_id: str = "Salesforce/blip-image-captioning-large", device: Optional[str] = None):
-        from transformers import BlipForConditionalGeneration, BlipProcessor  # noqa: WPS433
-        import torch  # noqa: WPS433
+        from transformers import BlipForConditionalGeneration, BlipProcessor
+        import torch
 
         self.torch = torch
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
@@ -89,9 +78,9 @@ class _BlipCaptioner:
         self.processor = BlipProcessor.from_pretrained(model_id)
         self.model = BlipForConditionalGeneration.from_pretrained(model_id).to(self.device).eval()
 
-    @ staticmethod
+    @staticmethod
     def _open(path: Path):
-        from PIL import Image  # noqa: WPS433
+        from PIL import Image
         return Image.open(path).convert("RGB")
 
     def __call__(self, image_path: Path) -> str:
@@ -103,12 +92,8 @@ class _BlipCaptioner:
         return caption or DEFAULT_CAPTION
 
 
-def _build_captioner(mode: str) -> _NullCaptioner:
-    if mode in ("none", "off", "default"):
-        return _NullCaptioner()
-    if mode == "blip":
-        return _BlipCaptioner()
-    raise ValueError(f"Unknown captioner mode: {mode}. Choose from: none, blip.")
+def _build_captioner(mode: str) -> Optional[_BlipCaptioner]:
+    return _BlipCaptioner() if mode == "blip" else None
 
 
 # --------------------------------------------------------------------------- #
@@ -187,7 +172,7 @@ def build_dataset(args: argparse.Namespace) -> None:
             continue
 
         caption = _sidecar_caption(src)
-        if caption is None and not isinstance(captioner, _NullCaptioner):
+        if caption is None and captioner is not None:
             try:
                 caption = captioner(src)
             except Exception as e:
@@ -254,10 +239,8 @@ def _parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     p.add_argument("--auto_caption", default="none", choices=("none", "blip"),
                    help="Auto-captioner. 'none' uses only the trigger word + sidecar .txt if present. "
                         "'blip' loads Salesforce/blip-image-captioning-large.")
-    p.add_argument("--symlink", action="store_true", default=True,
-                   help="Symlink images into output_dir/images/ instead of copying (default).")
-    p.add_argument("--no_symlink", dest="symlink", action="store_false",
-                   help="Force-copy images instead of symlinking.")
+    p.add_argument("--no_symlink", dest="symlink", action="store_false", default=True,
+                   help="Copy images into output_dir/images/ instead of symlinking them (the default).")
     return p.parse_args(argv)
 
 

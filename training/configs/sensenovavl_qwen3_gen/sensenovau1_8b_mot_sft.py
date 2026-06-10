@@ -114,11 +114,9 @@ post_layer_num = int(os.environ.get('post_layer_num', 0))
 # -----------------------------------------------------------------------------
 # LoRA (parameter-efficient fine-tuning of the flow-matching branch).
 #
-# When ``lora_enabled=true`` the rest of the model is fully frozen and we
-# only train low-rank adapters inserted under ``fm_modules.*`` — see
-# ``sensenovavl/model/lora.py``. Use this for small-data style fine-tunes
-# (Pixar / Studio Ghibli / etc.) — typically a few hundred to a few thousand
-# training images is plenty.
+# When ``lora_enabled=true`` the model is fully frozen and only low-rank
+# adapters under ``lora_target_prefixes`` are trained — see
+# ``sensenovavl/model/lora.py`` and ``README_LORA.md``.
 # -----------------------------------------------------------------------------
 lora_enabled = env_bool('lora_enabled', False)
 lora_r = int(os.environ.get('lora_r', 16))
@@ -422,7 +420,7 @@ model = dict(
 
 # -----------------------------------------------------------------------------
 # LoRA config block — consumed by sensenovavl/train/pipeline.py::get_model and
-# sensenovalm/checkpoint/checkpoint_manager.py::save_checkpoint.
+# sensenovalm/checkpoint/checkpoint_manager.py.
 # -----------------------------------------------------------------------------
 lora = dict(
     enabled=lora_enabled,
@@ -430,14 +428,13 @@ lora = dict(
     alpha=lora_alpha,
     dropout=lora_dropout,
     target_prefixes=lora_target_prefixes,
-    # Leaf-name filter: anything that looks like a projection in attention or
-    # MLP. ``include_sequential_indices=True`` also catches Linear children of
-    # nn.Sequential (e.g. ``TimestepEmbedder.mlp.0`` / ``fm_head.0``).
+    # Leaf-name filter for attention/MLP projections.
+    # ``include_sequential_indices=True`` also catches the Linear children of
+    # nn.Sequential (``TimestepEmbedder.mlp.0`` / ``fm_head.0``).
     target_leaf_names=(
-        "qkv", "proj",
+        "qkv", "proj", "fc1", "fc2",
         "q_proj", "k_proj", "v_proj", "o_proj",
         "gate_proj", "up_proj", "down_proj",
-        "fc1", "fc2",
     ),
     include_sequential_indices=True,
 )
@@ -446,8 +443,10 @@ lora = dict(
 # -----------------------------------------------------------------------------
 # EMA copy of the model
 # -----------------------------------------------------------------------------
+# Disabled under LoRA: the EMA shadow copies *all* params, which for a frozen
+# base is GBs of HBM and a per-step update that can never change the result.
 averaged_model = dict(
-    enable=True,
+    enable=not lora_enabled,
     decay=ema_decay,
     multi_avg_fn="ema",
     use_buffers=False,

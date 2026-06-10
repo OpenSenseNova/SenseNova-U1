@@ -2,14 +2,13 @@
 # Copyright (c) SenseNovaLM contributors. Licensed under Apache-2.0.
 """Convert an internevo LoRA checkpoint into a PEFT-compatible adapter.
 
-The training-side saver (``sensenovalm/checkpoint/checkpoint_manager.py``,
-LoRA short-circuit) writes a tiny ``lora_state.pt`` file containing:
+The training-side saver (``sensenovalm/checkpoint/checkpoint_manager.py``)
+writes a ``lora_state.pt`` file containing::
 
     {
         "lora_state_dict": {"<module>.lora_A.weight": Tensor, ...},
-        "lora_config":     {"r": 16, "alpha": 32, "dropout": 0.0,
-                             "target_prefixes": ["fm_modules."],
-                             "target_leaf_names": [...]},
+        "lora_config":     {"r": ..., "alpha": ..., "dropout": ...,
+                             "target_prefixes": [...], "target_leaf_names": [...]},
         "step":            int,
         "num_lora_tensors": int,
     }
@@ -20,25 +19,16 @@ This script reads that file and emits a PEFT-style adapter directory::
         adapter_model.safetensors    # weight tensors with PEFT key naming
         adapter_config.json          # rank/alpha/target_modules/etc.
 
-The result can then be loaded with::
+loadable with::
 
     from peft import PeftModel
     model = PeftModel.from_pretrained(base_model, "<output_dir>")
-
-Notes
------
-* The PEFT key convention is ``base_model.model.<base_qualname>.lora_A.weight``;
-  the training-side key is just ``<base_qualname>.lora_A.weight``. We rewrite
-  the prefix during export.
-* Because we only insert LoRA under ``fm_modules.*``, the resulting
-  ``target_modules`` list is a flat de-duplicated set of leaf attribute names.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import logging
-import os
 import sys
 from pathlib import Path
 from typing import Dict, List
@@ -47,6 +37,9 @@ import torch
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("export_lora_to_hf")
+
+# The training-side keys carry a leading "model." from the AMP wrapper.
+_WRAPPER_PREFIX = "model."
 
 
 def _load_lora_payload(ckpt_path: Path) -> dict:
@@ -62,38 +55,32 @@ def _load_lora_payload(ckpt_path: Path) -> dict:
 
 
 def _remap_to_peft(state: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
-    """Rewrite ``<qualname>.lora_A.weight`` → ``base_model.model.<qualname>.lora_A.default.weight``.
+    """Rewrite ``[model.]<qualname>.lora_{A,B}.weight`` → ``base_model.model.<qualname>.lora_{A,B}.weight``.
 
-    PEFT's default adapter name is ``default``; including it makes the resulting
-    files load cleanly without specifying an adapter name.
+    PEFT checkpoints store keys *without* the adapter name —
+    ``set_peft_model_state_dict`` re-inserts ``.default.`` at load time.
     """
     out: Dict[str, torch.Tensor] = {}
     for key, tensor in state.items():
-        # Identify the "lora_A" / "lora_B" component and insert ``.default``
-        # between it and ``.weight``.
-        if ".lora_A.weight" in key:
-            new_key = key.replace(".lora_A.weight", ".lora_A.default.weight")
-        elif ".lora_B.weight" in key:
-            new_key = key.replace(".lora_B.weight", ".lora_B.default.weight")
-        else:
-            logger.warning(f"Unexpected key in LoRA state, copied as-is: {key}")
-            new_key = key
-        # PEFT prefixes everything with ``base_model.model.``.
-        new_key = f"base_model.model.{new_key}"
-        out[new_key] = tensor.contiguous()
+        if ".lora_A.weight" not in key and ".lora_B.weight" not in key:
+            logger.warning(f"Skipping unexpected key in LoRA state: {key}")
+            continue
+        key = key.removeprefix(_WRAPPER_PREFIX)
+        out[f"base_model.model.{key}"] = tensor.contiguous()
     return out
 
 
 def _derive_target_modules(state: Dict[str, torch.Tensor]) -> List[str]:
-    """Extract the unique leaf attribute names that got LoRA applied."""
+    """Full module paths that received LoRA.
+
+    Full paths (rather than leaf attribute names) keep PEFT's suffix matching
+    exact — leaf names like the ``"0"`` of ``fm_head.0`` would otherwise match
+    every module whose qualname ends in ``.0``.
+    """
     names = set()
     for key in state:
-        # key looks like '<...>.<leaf>.lora_A.weight'
-        if ".lora_A.weight" not in key and ".lora_B.weight" not in key:
-            continue
-        head = key.split(".lora_")[0]
-        leaf = head.rsplit(".", 1)[-1]
-        names.add(leaf)
+        if ".lora_A." in key or ".lora_B." in key:
+            names.add(key.removeprefix(_WRAPPER_PREFIX).split(".lora_")[0])
     return sorted(names)
 
 
@@ -132,7 +119,7 @@ def _write_adapter_config(
 def _save_safetensors(state: Dict[str, torch.Tensor], output_dir: Path) -> Path:
     out_path = output_dir / "adapter_model.safetensors"
     try:
-        from safetensors.torch import save_file  # noqa: WPS433
+        from safetensors.torch import save_file
     except ImportError as e:
         raise SystemExit(
             "safetensors is required for export. Install with: pip install safetensors"
@@ -166,7 +153,7 @@ def main(argv=None) -> None:
     target_modules = _derive_target_modules(raw_state)
     if not target_modules:
         raise SystemExit("Could not derive target_modules from state dict — keys malformed?")
-    logger.info(f"Detected {len(target_modules)} target module names: {target_modules}")
+    logger.info(f"Detected {len(target_modules)} target modules: {target_modules}")
 
     peft_state = _remap_to_peft(raw_state)
     safetensors_path = _save_safetensors(peft_state, tgt)
