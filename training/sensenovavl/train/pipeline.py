@@ -222,4 +222,52 @@ def get_model(model_args, data_args):
             ):
                 param.requires_grad = True
 
+    # --- LoRA injection ------------------------------------------------------
+    # Runs last so it overrides every prior freeze/unfreeze decision: when
+    # ``lora.enabled`` is true we freeze the entire model and only add LoRA
+    # adapters under ``fm_modules.*`` as trainable. See
+    # ``sensenovavl/model/lora.py`` for the side-branch implementation.
+    lora_cfg = gpc.config.get("lora", None) if hasattr(gpc, "config") else None
+    if lora_cfg is not None and lora_cfg.get("enabled", False):
+        from sensenovavl.model.lora import count_trainable_parameters, inject_lora
+
+        r = int(lora_cfg.get("r", 8))
+        alpha = int(lora_cfg.get("alpha", 16))
+        dropout = float(lora_cfg.get("dropout", 0.0))
+        target_prefixes = tuple(lora_cfg.get("target_prefixes", ("fm_modules.",)))
+        target_leaf_names = tuple(
+            lora_cfg.get(
+                "target_leaf_names",
+                ("qkv", "proj", "q_proj", "k_proj", "v_proj", "o_proj",
+                 "gate_proj", "up_proj", "down_proj", "fc1", "fc2"),
+            )
+        )
+        include_seq_idx = bool(lora_cfg.get("include_sequential_indices", True))
+
+        if gpc.is_rank_for_log():
+            logger.info(
+                f"[LoRA] enabling rank={r} alpha={alpha} dropout={dropout} "
+                f"prefixes={list(target_prefixes)} leaves={list(target_leaf_names)}"
+            )
+        wrapped, n_lora, n_frozen = inject_lora(
+            model,
+            target_prefixes=target_prefixes,
+            target_leaf_names=target_leaf_names,
+            include_sequential_indices=include_seq_idx,
+            r=r,
+            alpha=alpha,
+            dropout=dropout,
+        )
+        trainable, total = count_trainable_parameters(model)
+        if gpc.is_rank_for_log():
+            logger.info(
+                f"[LoRA] wrapped {len(wrapped)} Linear layers; "
+                f"trainable={trainable:,} / total={total:,} "
+                f"({100.0 * trainable / max(total, 1):.4f}%)."
+            )
+            # Show the first few wrapped paths so users can sanity-check that
+            # they hit fm_modules and not, e.g., the LLM by accident.
+            preview = wrapped[:8] + (["..."] if len(wrapped) > 8 else [])
+            logger.info(f"[LoRA] sample wrapped paths: {preview}")
+
     return model

@@ -112,6 +112,25 @@ post_layer_num = int(os.environ.get('post_layer_num', 0))
 
 
 # -----------------------------------------------------------------------------
+# LoRA (parameter-efficient fine-tuning of the flow-matching branch).
+#
+# When ``lora_enabled=true`` the rest of the model is fully frozen and we
+# only train low-rank adapters inserted under ``fm_modules.*`` — see
+# ``sensenovavl/model/lora.py``. Use this for small-data style fine-tunes
+# (Pixar / Studio Ghibli / etc.) — typically a few hundred to a few thousand
+# training images is plenty.
+# -----------------------------------------------------------------------------
+lora_enabled = env_bool('lora_enabled', False)
+lora_r = int(os.environ.get('lora_r', 16))
+lora_alpha = int(os.environ.get('lora_alpha', 32))
+lora_dropout = float(os.environ.get('lora_dropout', 0.0))
+# Comma-separated qualname prefixes; default = flow-matching branch only.
+lora_target_prefixes = tuple(
+    p.strip() for p in os.environ.get('lora_target_prefixes', 'fm_modules.').split(',') if p.strip()
+)
+
+
+# -----------------------------------------------------------------------------
 # Generation / flow-matching diffusion
 # -----------------------------------------------------------------------------
 P_mean = float(os.environ.get('P_mean', 0.0))
@@ -398,6 +417,29 @@ model = dict(
             multiple_of=128,
         ),
     ),
+)
+
+
+# -----------------------------------------------------------------------------
+# LoRA config block — consumed by sensenovavl/train/pipeline.py::get_model and
+# sensenovalm/checkpoint/checkpoint_manager.py::save_checkpoint.
+# -----------------------------------------------------------------------------
+lora = dict(
+    enabled=lora_enabled,
+    r=lora_r,
+    alpha=lora_alpha,
+    dropout=lora_dropout,
+    target_prefixes=lora_target_prefixes,
+    # Leaf-name filter: anything that looks like a projection in attention or
+    # MLP. ``include_sequential_indices=True`` also catches Linear children of
+    # nn.Sequential (e.g. ``TimestepEmbedder.mlp.0`` / ``fm_head.0``).
+    target_leaf_names=(
+        "qkv", "proj",
+        "q_proj", "k_proj", "v_proj", "o_proj",
+        "gate_proj", "up_proj", "down_proj",
+        "fc1", "fc2",
+    ),
+    include_sequential_indices=True,
 )
 
 

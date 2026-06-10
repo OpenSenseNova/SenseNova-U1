@@ -722,13 +722,46 @@ class CheckpointManager:
         if gpc.is_rank_for_log():
             logger.info(f"Saving checkpoint to `{folder}` at batch count:{train_state.step_count}...")
 
+        # LoRA short-circuit: when ``lora.enabled`` is true the base weights
+        # are frozen, so persisting them on every checkpoint is wasteful.
+        # Write only the lora_A / lora_B tensors and the matching config to a
+        # tiny ``lora_state.pt`` on rank-0 — the result is ~tens of MB instead
+        # of tens of GB.
+        lora_cfg = gpc.config.get("lora", None) if hasattr(gpc, "config") else None
+        lora_enabled = bool(lora_cfg.get("enabled", False)) if lora_cfg is not None else False
+
         timer("save-model").start()
-        save_model_checkpoint(folder=folder, model=model)
+        if lora_enabled:
+            from sensenovavl.model.lora import lora_state_dict
+
+            lora_state = lora_state_dict(model)
+            if gpc.is_rank_for_log():
+                payload = {
+                    "lora_state_dict": lora_state,
+                    "lora_config": {
+                        "r": int(lora_cfg.get("r", 8)),
+                        "alpha": int(lora_cfg.get("alpha", 16)),
+                        "dropout": float(lora_cfg.get("dropout", 0.0)),
+                        "target_prefixes": list(lora_cfg.get("target_prefixes", ("fm_modules.",))),
+                        "target_leaf_names": list(lora_cfg.get("target_leaf_names", ())),
+                    },
+                    "step": train_state.step_count,
+                    "num_lora_tensors": len(lora_state),
+                }
+                llm_save(os.path.join(folder, "lora_state.pt"), saved_obj=payload)
+                logger.info(
+                    f"[LoRA] saved {len(lora_state)} lora tensors to "
+                    f"{os.path.join(folder, 'lora_state.pt')}"
+                )
+        else:
+            save_model_checkpoint(folder=folder, model=model)
         timer("save-model").stop()
 
         # Save averaged model weights (optional) into a sub-folder: <folder>/averaged_model/
         # This keeps backward compatibility with existing ckpt layout.
-        if self.averaged_model is not None:
+        # Skipped under LoRA: averaging frozen weights produces an identical
+        # copy of the base model, which is huge and useless.
+        if self.averaged_model is not None and not lora_enabled:
             averaged_model_folder = os.path.join(folder, "averaged_model")
             os.makedirs(averaged_model_folder, exist_ok=True)
             averaged_model_states = self.averaged_model.get_averaged_model_state_dict(model)
@@ -739,7 +772,10 @@ class CheckpointManager:
             timer("save-averaged-model").stop()
             if gpc.is_rank_for_log():
                 logger.info(f"Saved averaged model weights to `{averaged_model_folder}`")
-                
+
+        # Optimizer state for LoRA is also tiny (only LoRA params), so keep it
+        # — it's cheap and useful for resumption. Just note that it has a very
+        # different key set from full-model checkpoints.
         timer("save-optimizer").start()
         save_optimizer_checkpoint(optim=optimizer, state_path=folder)
         timer("save-optimizer").stop()
