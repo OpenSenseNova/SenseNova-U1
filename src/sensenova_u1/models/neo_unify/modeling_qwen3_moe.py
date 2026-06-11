@@ -285,6 +285,12 @@ class Qwen3MoeDecoderLayer(GradientCheckpointingLayer):
                 past_key_values, use_cache, cache_position, **kwargs,
             )
 
+        # Mixed und/gen path — see the NOTE in Qwen3Attention.forward (modeling_qwen3.py).
+        raise NotImplementedError(
+            "Mixed und/gen decoder-layer forward is not yet validated (issue #207). "
+            "Split the sequence at token-type boundaries and use forward_und / forward_gen."
+        )
+
         # Mixed batch: dispatch tokens per branch then merge back. Matches the
         # dense ``Qwen3DecoderLayer.forward`` mixed-path implementation.
         residual = hidden_states

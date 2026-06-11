@@ -756,7 +756,27 @@ class Qwen3Attention(nn.Module):
             return self.forward_und(hidden_states, indexes, attention_mask, past_key_values, cache_position, **kwargs)
         if not exist_non_image_gen_tokens and exist_image_gen_tokens:
             return self.forward_gen(hidden_states, indexes, attention_mask, past_key_values, cache_position, **kwargs)
-        
+
+        # Mixed und/gen path: mirrors forward_und / forward_gen per token type.
+        # (Fixed per issue #207: the time-dim qk-norm, the `.view(hidden_shape)` before
+        # chunking, and the transpose on the time chunk were previously missing.)
+        # Remaining caveats:
+        #   - not exercised by the released inference pipeline (callers pass indicators
+        #     of None or all-ones) and not yet covered by a parity test against the
+        #     two-stage forward_und-prefill / forward_gen-decode flow;
+        #   - the attention mask is used as provided; for parity with training, callers
+        #     must replicate the gen-token visibility rules (dup_boundary /
+        #     mask_image_gen_tokens in training/sensenovavl/model/sensenovavl_moe_chat/
+        #     modeling_sensenovavl_chat_mot.py);
+        #   - eager-only masked-scatter implementation; the training-side reference is
+        #     training/sensenovalm/model/modules/mha.py::_training (permutation packing).
+        # Guarded until a parity test lands — remove this raise once validated.
+        raise NotImplementedError(
+            "The mixed und/gen forward path is not yet validated (issue #207): known "
+            "issues are fixed, but it has no parity test and no production caller. "
+            "Split the sequence at token-type boundaries and use forward_und / forward_gen."
+        )
+
         assert self.config._attn_implementation == "eager"
         input_shape = hidden_states.shape[:-1]
         hidden_shape = (*input_shape, -1, self.head_dim)
@@ -766,7 +786,15 @@ class Qwen3Attention(nn.Module):
             query_states[~image_gen_indicators] = self.q_proj(hidden_states[~image_gen_indicators])
         if exist_image_gen_tokens:
             query_states[image_gen_indicators] = self.q_proj_mot_gen(hidden_states[image_gen_indicators])
+        query_states = query_states.view(hidden_shape)  # [B, S, H, D]
         query_states_t, query_states_hw = query_states.chunk(2, dim=-1)
+
+        _query_states_t = query_states_t.new_zeros(query_states_t.shape)
+        if exist_non_image_gen_tokens:
+            _query_states_t[~image_gen_indicators] = self.q_norm(query_states_t[~image_gen_indicators])
+        if exist_image_gen_tokens:
+            _query_states_t[image_gen_indicators] = self.q_norm_mot_gen(query_states_t[image_gen_indicators])
+        query_states_t = _query_states_t.transpose(1, 2)  # [B, H, S, D/2]
 
         _query_states_hw = query_states_hw.new_zeros(query_states_hw.shape)
         if exist_non_image_gen_tokens:
@@ -781,7 +809,15 @@ class Qwen3Attention(nn.Module):
             key_states[~image_gen_indicators] = self.k_proj(hidden_states[~image_gen_indicators])
         if exist_image_gen_tokens:
             key_states[image_gen_indicators] = self.k_proj_mot_gen(hidden_states[image_gen_indicators])
+        key_states = key_states.view(hidden_shape)  # [B, S, H_kv, D]
         key_states_t, key_states_hw = key_states.chunk(2, dim=-1)
+
+        _key_states_t = key_states_t.new_zeros(key_states_t.shape)
+        if exist_non_image_gen_tokens:
+            _key_states_t[~image_gen_indicators] = self.k_norm(key_states_t[~image_gen_indicators])
+        if exist_image_gen_tokens:
+            _key_states_t[image_gen_indicators] = self.k_norm_mot_gen(key_states_t[image_gen_indicators])
+        key_states_t = _key_states_t.transpose(1, 2)  # [B, H_kv, S, D/2]
 
         _key_states_hw = key_states_hw.new_zeros(key_states_hw.shape)
         if exist_non_image_gen_tokens:
@@ -967,6 +1003,12 @@ class Qwen3DecoderLayer(GradientCheckpointingLayer):
             return self.forward_und(hidden_states, image_gen_indicators, exist_non_image_gen_tokens, exist_image_gen_tokens, indexes, attention_mask, position_ids, past_key_values, use_cache, cache_position, **kwargs)
         if not exist_non_image_gen_tokens and exist_image_gen_tokens:
             return self.forward_gen(hidden_states, image_gen_indicators, exist_non_image_gen_tokens, exist_image_gen_tokens, indexes, attention_mask, position_ids, past_key_values, use_cache, cache_position, **kwargs)
+
+        # Mixed und/gen path — see the NOTE in Qwen3Attention.forward for caveats.
+        raise NotImplementedError(
+            "Mixed und/gen decoder-layer forward is not yet validated (issue #207). "
+            "Split the sequence at token-type boundaries and use forward_und / forward_gen."
+        )
 
         residual = hidden_states
 
