@@ -23,6 +23,8 @@
 
 ## 📣 最新动态
 
+- `[2026.06.11]` 发布 [SenseNova-U1-8B-MoT-Interleaved 📖](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved)，专门针对图文交错生成进行优化，在绘本、故事书、多页 PPT、图文教程等多页内容上的叙事连贯性、角色与风格一致性以及图文对齐等方面有显著提升。
+
 - `[2026.05.21]` 发布 SenseNova-U1 的全参微调[训练代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/training/README.md)。
 
 - `[2026.05.15]` 发布 [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) 模型，提升了信息图生成能力。模型细节可见 [U1 Infographic Model](docs/u1_infographic_model_CN.md)，100个生成案例可见 [✨ Infographic Showcases ](docs/u1_infographic_showcases.md)。
@@ -95,6 +97,7 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 
 | 模型 | 参数量 | HF 权重 |
 | :---- | :------- | :--------- |
+| SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
 | SenseNova-U1-8B-MoT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
