@@ -772,7 +772,7 @@ class Qwen3Attention(nn.Module):
         if exist_non_image_gen_tokens:
             _query_states_hw[~image_gen_indicators] = self.q_norm_hw(query_states_hw[~image_gen_indicators])
         if exist_image_gen_tokens:
-            _query_states_hw[image_gen_indicators] = self.q_norm_hw_mot_gen(query_states_h[image_gen_indicators])
+            _query_states_hw[image_gen_indicators] = self.q_norm_hw_mot_gen(query_states_hw[image_gen_indicators])
         query_states_hw = _query_states_hw.transpose(1, 2)
         query_states_h, query_states_w = query_states_hw.chunk(2, dim=-1)
 
@@ -787,7 +787,7 @@ class Qwen3Attention(nn.Module):
         if exist_non_image_gen_tokens:
             _key_states_hw[~image_gen_indicators] = self.k_norm_hw(key_states_hw[~image_gen_indicators])
         if exist_image_gen_tokens:
-            _key_states_hw[image_gen_indicators] = self.k_norm_hw_mot_gen(key_states_h[image_gen_indicators])
+            _key_states_hw[image_gen_indicators] = self.k_norm_hw_mot_gen(key_states_hw[image_gen_indicators])
         key_states_hw = _key_states_hw.transpose(1, 2)
         key_states_h, key_states_w = key_states_hw.chunk(2, dim=-1)
 
