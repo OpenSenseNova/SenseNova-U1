@@ -760,17 +760,7 @@ class Qwen3Attention(nn.Module):
         # Mixed und/gen path: mirrors forward_und / forward_gen per token type.
         # (Fixed per issue #207: the time-dim qk-norm, the `.view(hidden_shape)` before
         # chunking, and the transpose on the time chunk were previously missing.)
-        # Remaining caveats:
-        #   - not exercised by the released inference pipeline (callers pass indicators
-        #     of None or all-ones) and not yet covered by a parity test against the
-        #     two-stage forward_und-prefill / forward_gen-decode flow;
-        #   - the attention mask is used as provided; for parity with training, callers
-        #     must replicate the gen-token visibility rules (dup_boundary /
-        #     mask_image_gen_tokens in training/sensenovavl/model/sensenovavl_moe_chat/
-        #     modeling_sensenovavl_chat_mot.py);
-        #   - eager-only masked-scatter implementation; the training-side reference is
-        #     training/sensenovalm/model/modules/mha.py::_training (permutation packing).
-        # Guarded until a parity test lands — remove this raise once validated.
+        # Note: Remove this raise once fully tested.
         raise NotImplementedError(
             "The mixed und/gen forward path is not yet validated (issue #207): known "
             "issues are fixed, but it has no parity test and no production caller. "
