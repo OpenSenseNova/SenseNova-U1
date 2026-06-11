@@ -23,7 +23,7 @@
 
 ## 📣 最新动态
 
-- `[2026.06.11]` 发布 [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors)，用于快速信息图生成。请查看[推理示例脚本](examples/README_CN.md#信息图-8-step-lora-批量生成)。
+- `[2026.06.11]` 发布 [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors)，用于快速信息图生成。请查看[推理示例脚本](docs/base_vs_distill.md#run-base-and-distilled-model)。
 
 - `[2026.05.21]` 发布 SenseNova-U1 的全参微调[训练代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/training/README.md)。
 
