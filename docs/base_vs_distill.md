@@ -120,8 +120,7 @@ python examples/t2i/inference.py \
 | <img width="2496" height="1664" alt="Image" src="https://github.com/user-attachments/assets/35b53342-34b8-4bdf-b2bc-fa3bae4c3a8b" /> | <img width="2496" height="1664" alt="Image" src="https://github.com/user-attachments/assets/8849aebe-eb29-42d1-8dc6-61b49279d5fc" /> |
 | <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/e5472dbf-a02e-4272-ad8e-1dfb35e291ad" /> | <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/95cc7a0f-a508-46a6-be29-4749140bb4e5" /> |
 | <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/332a5316-59b8-47fe-bb12-ed2df5440a99" /> | <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/4cc92a19-4dbb-4ae5-8e84-7c134d35049a" /> |
-| <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/fa719515-fb41-4eca-a254-43411c2c9202" /> | <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/8c85760d-8375-4d99-b6ac-8f981242e6e8" /> |
-
+| <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/2ef5e9ad-71e2-4831-ad60-71ead5e3d91b" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/56c9d806-fcd0-4b8a-b22c-e7d83345a907" /> |
 
 ## Image-Editing
 
@@ -148,6 +147,6 @@ We are actively working to resolve the following known issues.
 
 | SenseNova-U1-8B-MoT-Infographic (100 NFE) | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0（8 NFE） |
 |---|---|
-|<img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/f416b49e-e484-4dfc-ab3e-6217cdc6e164" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/f416b49e-e484-4dfc-ab3e-6217cdc6e164" /> |
+|<img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/f416b49e-e484-4dfc-ab3e-6217cdc6e164" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/08ce80be-6674-4d4e-a6e2-d7a0130a34ac" /> |
 |<img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/9adb8317-d4a6-46cc-97c7-5112e1a84065" /> | <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/c859d144-65b1-4e50-9a4e-ef7ab3046a7a" /> |
 | <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/86952a1c-3ab0-4cd5-8ac7-e4c5b44ccb9e" /> | <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/6fa94b2f-4cd6-4e14-b629-592b74a52164" /> |
