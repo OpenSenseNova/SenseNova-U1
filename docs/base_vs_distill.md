@@ -108,6 +108,21 @@ python examples/t2i/inference.py \
 | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/f027e3d5-a08f-48bb-b2e3-9ab13b05dea2" /> | <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/5ab3f0a0-b803-4251-b96f-0d7140ad2df1" /> |
 
 
+## Infographic Text-to-Image
+
+| SenseNova-U1-8B-MoT-Infographic (100 NFE) | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0（8 NFE） |
+|---|---|
+| <img width="2720" height="1536" alt="Image" src="https://github.com/user-attachments/assets/8f0f22b7-9896-46d4-b3d3-5967a9dd2d9e" /> | <img width="2720" height="1536" alt="Image" src="https://github.com/user-attachments/assets/93b738b3-8239-4e64-8b65-50e323414a8f" /> |
+| <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/412c88c5-55cd-4309-8b5a-31e8f11d0bc4" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/50f64466-2385-4f5f-b51b-3d142592e3ca" /> |
+| <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/6019335f-8ab0-4d3c-ad26-7b85c3ba6996" /> | <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/37512b1a-06c1-426e-b6f8-fc22f1fcea4f" /> |
+| <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/59c6050b-67d5-4415-a1a8-d0de119797af" /> | <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/0b0deace-d73e-48d3-8a54-1f167707f24f" /> |
+| <img width="1504" height="2720" alt="Image" src="https://github.com/user-attachments/assets/49f3a913-fe8e-439b-b386-2d92724f3f87" /> | <img width="1504" height="2720" alt="Image" src="https://github.com/user-attachments/assets/3b510d5d-1601-492b-8554-56331cee68d9" /> |
+| <img width="2496" height="1664" alt="Image" src="https://github.com/user-attachments/assets/35b53342-34b8-4bdf-b2bc-fa3bae4c3a8b" /> | <img width="2496" height="1664" alt="Image" src="https://github.com/user-attachments/assets/8849aebe-eb29-42d1-8dc6-61b49279d5fc" /> |
+| <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/e5472dbf-a02e-4272-ad8e-1dfb35e291ad" /> | <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/95cc7a0f-a508-46a6-be29-4749140bb4e5" /> |
+| <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/332a5316-59b8-47fe-bb12-ed2df5440a99" /> | <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/4cc92a19-4dbb-4ae5-8e84-7c134d35049a" /> |
+| <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/fa719515-fb41-4eca-a254-43411c2c9202" /> | <img width="2368" height="1760" alt="Image" src="https://github.com/user-attachments/assets/8c85760d-8375-4d99-b6ac-8f981242e6e8" /> |
+
+
 ## Image-Editing
 
 | Reference Image | SenseNova-U1-8B-MoT (100 NFE) | SenseNova-U1-8B-MoT-8step-preview (8 NFE) |
@@ -129,4 +144,10 @@ We are actively working to resolve the following known issues.
 ### SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 (8 NFE)
 
 - Text repetition may occur in some outputs.
-<img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/de818c9f-c8f0-48db-88f1-bda2bcd87208" />
+- In some cases, a white background will be generated.
+
+| SenseNova-U1-8B-MoT-Infographic (100 NFE) | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0（8 NFE） |
+|---|---|
+|<img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/f416b49e-e484-4dfc-ab3e-6217cdc6e164" /> | <img width="2048" height="2048" alt="Image" src="https://github.com/user-attachments/assets/f416b49e-e484-4dfc-ab3e-6217cdc6e164" /> |
+|<img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/9adb8317-d4a6-46cc-97c7-5112e1a84065" /> | <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/c859d144-65b1-4e50-9a4e-ef7ab3046a7a" /> |
+| <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/86952a1c-3ab0-4cd5-8ac7-e4c5b44ccb9e" /> | <img width="2720" height="1504" alt="Image" src="https://github.com/user-attachments/assets/6fa94b2f-4cd6-4e14-b629-592b74a52164" /> |
