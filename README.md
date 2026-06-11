@@ -23,6 +23,8 @@
 
 ## 📣 Updated News
 
+- `[2026.06.11]` Release [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) for fast infographic generation. Please see the [example script](examples/README.md#infographic-focused-8-step-lora-generation).
+
 - `[2026.05.21]` Release the full-parameter fine-tuning [training code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/training/README.md) for SenseNova-U1.
 
 - `[2026.05.15]` Release [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) model for improved infographic generation. See [U1 Infographic Model](docs/u1_infographic_model.md) for details, and [✨ Infographic Showcases ](docs/u1_infographic_showcases.md) for 100 generated examples.
@@ -97,6 +99,7 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
 | SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
+| SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
 | SenseNova-U1-8B-MoT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
 | SenseNova-U1-8B-MoT-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors) |

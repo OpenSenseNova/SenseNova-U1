@@ -32,6 +32,24 @@ python examples/t2i/inference.py \
     --output_dir outputs/ \
     --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
     --profile
+
+# Run Infofraphics Base
+python examples/t2i/inference.py \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
+    --jsonl examples/t2i/data/samples_infographic.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+    --profile
+
+# Run 8-step Infographic LoRA
+huggingface-cli download sensenova/SenseNova-U1-8B-MoT-LoRAs --include "SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors" --local-dir ./sensenova/SenseNova-U1-8B-MoT-LoRAs/ --local-dir-use-symlinks False
+python examples/t2i/inference.py \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
+    --lora_path sensenova/SenseNova-U1-8B-MoT-LoRAs/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
+    --jsonl examples/t2i/data/samples_infographic.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
+    --profile
 ```
 
 ---
@@ -101,7 +119,14 @@ python examples/t2i/inference.py \
 
 ## Existing Issues
 
-A issue have been identified in the SenseNova-U1-8B-MoT-LoRA-8step-V1.0 (8 NFE), and we are actively working to resolve them. 
+We are actively working to resolve the following known issues.
+
+### SenseNova-U1-8B-MoT-LoRA-8step-V1.0 (8 NFE)
 
 - Grid artifacts may occur in certain instances.
 <img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/7b97a6a7-4e1a-4af8-884f-5df134cfdc3b" /> 
+
+### SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 (8 NFE)
+
+- Text repetition may occur in some outputs.
+<img width="1536" height="2720" alt="Image" src="https://github.com/user-attachments/assets/de818c9f-c8f0-48db-88f1-bda2bcd87208" />

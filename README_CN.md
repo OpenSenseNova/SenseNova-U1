@@ -23,6 +23,8 @@
 
 ## 📣 最新动态
 
+- `[2026.06.11]` 发布 [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors)，用于快速信息图生成。请查看[推理示例脚本](examples/README_CN.md#信息图-8-step-lora-批量生成)。
+
 - `[2026.05.21]` 发布 SenseNova-U1 的全参微调[训练代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/training/README.md)。
 
 - `[2026.05.15]` 发布 [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) 模型，提升了信息图生成能力。模型细节可见 [U1 Infographic Model](docs/u1_infographic_model_CN.md)，100个生成案例可见 [✨ Infographic Showcases ](docs/u1_infographic_showcases.md)。
@@ -96,6 +98,7 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 | 模型 | 参数量 | HF 权重 |
 | :---- | :------- | :--------- |
 | SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
+| SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
 | SenseNova-U1-8B-MoT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
 | SenseNova-U1-8B-MoT-LoRA-8step-V1.0 | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors) |

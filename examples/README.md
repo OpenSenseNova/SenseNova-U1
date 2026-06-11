@@ -134,6 +134,18 @@ python examples/t2i/inference.py \
 
 See [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) to reproduce the infographic showcases, and the generated results can be viewed in [Infographic Showcases](../docs/u1_infographic_showcases.md).
 
+Infographic-focused 8-step LoRA generation
+
+```bash
+python examples/t2i/inference.py \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
+    --lora_path sensenova/SenseNova-U1-8B-MoT-LoRAs/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
+    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
+    --profile
+```
+
 ### T2I reasoning (think mode)
 
 The model can run a **reasoning** phase before denoising: it autoregressively fills `<think>...</think>`, then generates the image.

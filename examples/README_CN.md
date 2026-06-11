@@ -125,6 +125,18 @@ python examples/t2i/inference.py \
 
 可参考 [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) 复现信息图展示样例，生成结果展示可见 [信息图案例展示](../docs/u1_infographic_showcases.md)。
 
+信息图 8-step LoRA 批量生成
+
+```bash
+python examples/t2i/inference.py \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
+    --lora_path sensenova/SenseNova-U1-8B-MoT-LoRAs/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
+    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
+    --output_dir outputs/ \
+    --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
+    --profile
+```
+
 ### T2I 推理模式（think mode）
 
 模型支持在扩散去噪前先进行一段**推理**：会先自回归生成 `<think>...</think>`，随后再生成图像。
