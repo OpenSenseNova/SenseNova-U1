@@ -23,7 +23,7 @@
 
 ## 📣 Updated News
 
-- `[2026.06.11]` Release [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) for fast infographic generation. Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
+- `[2026.06.12]` Release [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) for fast infographic generation. Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
 - `[2026.06.11]` Release [SenseNova-U1-8B-MoT-Interleaved 📖](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved), specially optimized for interleaved image-text generation, with notably improved narrative coherence, character and style consistency, and text-image alignment in multi-page content.
 

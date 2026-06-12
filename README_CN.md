@@ -23,7 +23,7 @@
 
 ## 📣 最新动态
 
-- `[2026.06.11]` 发布 [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors)，用于快速信息图生成。请查看[推理示例脚本](docs/base_vs_distill.md#run-base-and-distilled-model)。
+- `[2026.06.12]` 发布 [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors)，用于快速信息图生成。请查看[推理示例脚本](docs/base_vs_distill.md#run-base-and-distilled-model)。
 
 - `[2026.06.11]` 发布 [SenseNova-U1-8B-MoT-Interleaved 📖](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved)，专门针对图文交错生成进行优化，在绘本、故事书、多页 PPT、图文教程等多页内容上的叙事连贯性、角色与风格一致性以及图文对齐等方面有显著提升。
 
