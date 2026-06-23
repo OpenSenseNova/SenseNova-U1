@@ -4,7 +4,7 @@
 # This is a thin variant of ``8B.sh`` that:
 #   * freezes every base weight,
 #   * inserts low-rank adapters into the MoT image-generation path of the LLM
-#     (gen attention + FFN, the Wan/DiffSynth convention),
+#     (gen attention + FFN),
 #   * drops the optimizer/EMA cost accordingly,
 #   * uses a smaller dataset + more total steps, tuned for ~50–500-image
 #     style fine-tunes (Pixar / Studio Ghibli / etc.).
@@ -37,10 +37,11 @@ export load_optimizer=${load_optimizer:-"model"}
 
 # ============================ Parallelism ============================ #
 # Same as the SFT launcher; LoRA does not change topology.
-export zero1_size=-1
-export wp_size=8
-export tp_size=1
-export pp_size=1
+# Overridable so a single-GPU box can run with NPROC_PER_NODE=1 wp_size=1.
+export zero1_size=${zero1_size:--1}
+export wp_size=${wp_size:-8}
+export tp_size=${tp_size:-1}
+export pp_size=${pp_size:-1}
 
 # ============================ Optimization ============================ #
 # Higher LR is fine — only a few million params are being updated and the
@@ -85,11 +86,11 @@ export unfreeze_mot_gen=false
 # ============================ LoRA ============================ #
 export lora_enabled=true
 export lora_r=${lora_r:-32}
-export lora_alpha=${lora_alpha:-32}   # alpha == r -> scale 1.0 (Wan/DiffSynth default)
+export lora_alpha=${lora_alpha:-32}   # alpha == r -> scale 1.0
 export lora_dropout=${lora_dropout:-0.0}
 # Which generation-path weights to adapt:
-#   gen_attn_ffn -> attention + FFN of every LLM layer (Wan standard, default)
-#   gen_attn     -> attention only (original-LoRA-paper style)
+#   gen_attn_ffn -> attention + FFN of every LLM layer (default)
+#   gen_attn     -> attention only
 export lora_target=${lora_target:-"gen_attn_ffn"}
 export lora_target_prefixes=${lora_target_prefixes:-"language_model.layers."}
 

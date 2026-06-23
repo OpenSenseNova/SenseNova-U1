@@ -4,9 +4,8 @@ A self-contained recipe for training a small **style LoRA** on top of the
 released `SenseNova-U1-8B-MoT-SFT` checkpoint — e.g. Pixar, Studio Ghibli, or
 any style you can collect a few hundred example images of.
 
-We adapt the **MoT image-generation path inside the LLM** — following the
-Wan/DiffSynth convention, LoRA is inserted on the generation-path **attention
-and FFN** of every transformer layer:
+We adapt the **MoT image-generation path inside the LLM** — LoRA is inserted on
+the generation-path **attention and FFN** of every transformer layer:
 
 - attention: `language_model.layers.*.attention.{wq,wk,wv,wo}_mot_gen`
 - FFN: `language_model.layers.*.feed_forward_mot_gen.{w1,w2,w3}`
@@ -86,10 +85,10 @@ worth tweaking:
 
 | Env var               | Default              | Notes |
 |-----------------------|----------------------|-------|
-| `lora_r`              | `32`                 | Rank. 16–32 is the usual range (Wan uses 32). |
-| `lora_alpha`          | `32`                 | Effective scale = `alpha / r`. `alpha == r` → scale 1.0 (Wan default). |
+| `lora_r`              | `32`                 | Rank. 16–32 is the usual range. |
+| `lora_alpha`          | `32`                 | Effective scale = `alpha / r`. `alpha == r` → scale 1.0. |
 | `lora_dropout`        | `0.0`                | Set to 0.05 if you see overfitting on a small set. |
-| `lora_target`         | `gen_attn_ffn`       | `gen_attn_ffn` = attention + FFN (Wan standard); `gen_attn` = attention only. |
+| `lora_target`         | `gen_attn_ffn`       | `gen_attn_ffn` = attention + FFN; `gen_attn` = attention only. |
 | `lora_target_prefixes`| `language_model.layers.` | Comma-separated qualname prefixes to adapt. |
 | `lr`                  | `1e-4`               | LoRA is more LR-tolerant than full fine-tunes — 1e-4 to 5e-4 are all reasonable. |
 | `total_steps`         | `5000`               | For ~100 images × repeat_time=20, 3-5k steps usually converges. |

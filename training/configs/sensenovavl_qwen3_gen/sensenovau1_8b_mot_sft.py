@@ -115,15 +115,15 @@ post_layer_num = int(os.environ.get('post_layer_num', 0))
 # LoRA (parameter-efficient fine-tuning of the image-generation path).
 #
 # When ``lora_enabled=true`` the whole model is frozen and only low-rank
-# adapters are trained. By default we follow the Wan/DiffSynth convention:
-# adapt the generation-path attention AND FFN of every LLM layer.
+# adapters are trained. By default we adapt the generation-path attention AND
+# FFN of every LLM layer.
 #   lora_target=gen_attn      -> attention only ({wq,wk,wv,wo}_mot_gen)
 #   lora_target=gen_attn_ffn  -> attention + FFN (default; adds w1/w2/w3)
 # See sensenovavl/model/lora.py and README_LORA.md.
 # -----------------------------------------------------------------------------
 lora_enabled = env_bool('lora_enabled', False)
 lora_r = int(os.environ.get('lora_r', 32))
-lora_alpha = int(os.environ.get('lora_alpha', 32))  # alpha == r -> scale 1.0 (Wan default)
+lora_alpha = int(os.environ.get('lora_alpha', 32))  # alpha == r -> scale 1.0
 lora_dropout = float(os.environ.get('lora_dropout', 0.0))
 lora_target = os.environ.get('lora_target', 'gen_attn_ffn')
 # Comma-separated qualname prefixes; default = the LLM transformer layers.

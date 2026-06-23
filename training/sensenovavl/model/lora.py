@@ -18,8 +18,8 @@ not the weight-sharded ``llm_tp`` group — see ``param_classification``.)
 
 By default we target the MoT image-generation path inside the LLM:
 ``language_model.layers.*.attention.{wq,wk,wv,wo}_mot_gen`` and the dense
-generation FFN ``feed_forward_mot_gen.{w1,w2,w3}`` (the Wan/DiffSynth
-convention of adapting attention + FFN in every transformer block).
+generation FFN ``feed_forward_mot_gen.{w1,w2,w3}`` — i.e. the attention and
+FFN of every transformer block on the generation branch.
 """
 from __future__ import annotations
 
