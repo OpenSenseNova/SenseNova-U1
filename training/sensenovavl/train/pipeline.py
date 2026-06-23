@@ -231,27 +231,35 @@ def get_model(model_args, data_args):
         from sensenovavl.model.lora import count_trainable_parameters, inject_lora
 
         assert gpc.get_world_size(ParallelMode.PIPELINE) == 1, (
-            "LoRA training requires pp_size=1: fm_modules live on the first "
-            "pipeline stage only, leaving later stages without trainable params."
+            "LoRA training requires pp_size=1: the targeted layers would "
+            "otherwise be split across pipeline stages."
         )
 
         lora_kwargs = {
             k: lora_cfg[k]
             for k in (
                 "r", "alpha", "dropout",
-                "target_prefixes", "target_leaf_names", "include_sequential_indices",
+                "target_prefixes", "target_leaf_names",
+                "require_substrings", "include_sequential_indices",
             )
             if k in lora_cfg
         }
         wrapped = inject_lora(model, **lora_kwargs)
 
-        # Reentrant activation checkpointing (use_reentrant=True in the ViT
-        # encoder) only backpropagates into a block if at least one block
-        # *input* requires grad. With the base fully frozen, the mot-gen ViT
-        # blocks would otherwise get no LoRA grads at all — force the patch
-        # embedding output to require grad to keep that path open.
+        # Reentrant activation checkpointing (use_reentrant=True in both the LLM
+        # decoder and the ViT encoder) only backpropagates into a checkpointed
+        # block when at least one of its *inputs* requires grad. With the base
+        # fully frozen, the first trainable thing is a LoRA branch *inside* the
+        # block, so without this the adapters would silently get no gradient.
+        # Force the block input to require grad at each entry point we target.
+        def _force_input_grad(_module, args):
+            if args and torch.is_tensor(args[0]) and args[0].is_floating_point() and not args[0].requires_grad:
+                args[0].requires_grad_(True)
+
+        if any(w.startswith("language_model.") for w in wrapped):
+            model.language_model.layers[0].register_forward_pre_hook(_force_input_grad)
         fm = getattr(model, "fm_modules", None)
-        if fm is not None and "vision_model_mot_gen" in fm:
+        if fm is not None and "vision_model_mot_gen" in fm and any(w.startswith("fm_modules.") for w in wrapped):
             fm["vision_model_mot_gen"].embeddings.register_forward_hook(
                 lambda module, inputs, output: output.requires_grad_(True)
             )
@@ -264,8 +272,6 @@ def get_model(model_args, data_args):
                 f"trainable={trainable:,} / total={total:,} "
                 f"({100.0 * trainable / max(total, 1):.4f}%)."
             )
-            # Preview the wrapped paths so users can sanity-check that they
-            # hit fm_modules and not, e.g., the LLM by accident.
             preview = wrapped[:8] + (["..."] if len(wrapped) > 8 else [])
             logger.info(f"[LoRA] sample wrapped paths: {preview}")
 

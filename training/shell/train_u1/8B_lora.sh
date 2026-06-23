@@ -3,7 +3,8 @@
 #
 # This is a thin variant of ``8B.sh`` that:
 #   * freezes every base weight,
-#   * inserts low-rank adapters under ``fm_modules.*`` only,
+#   * inserts low-rank adapters into the MoT image-generation path of the LLM
+#     (gen attention + FFN, the Wan/DiffSynth convention),
 #   * drops the optimizer/EMA cost accordingly,
 #   * uses a smaller dataset + more total steps, tuned for ~50–500-image
 #     style fine-tunes (Pixar / Studio Ghibli / etc.).
@@ -12,7 +13,7 @@
 #   bash shell/train_u1/8B_lora.sh
 #
 # Override any env var the same way as ``8B.sh``:
-#   mm_data_path=training/data/pixar_lora/lora_style_meta.json bash shell/train_u1/8B_lora.sh
+#   mm_data_path=data/pixar_lora/pixar_style_meta.json bash shell/train_u1/8B_lora.sh
 
 set -e
 cd "$(dirname "$0")/../.."  # repo root
@@ -83,11 +84,14 @@ export unfreeze_mot_gen=false
 
 # ============================ LoRA ============================ #
 export lora_enabled=true
-export lora_r=${lora_r:-16}
-export lora_alpha=${lora_alpha:-32}
+export lora_r=${lora_r:-32}
+export lora_alpha=${lora_alpha:-32}   # alpha == r -> scale 1.0 (Wan/DiffSynth default)
 export lora_dropout=${lora_dropout:-0.0}
-# Comma-separated module-qualname prefixes. Default = flow-matching branch only.
-export lora_target_prefixes=${lora_target_prefixes:-"fm_modules."}
+# Which generation-path weights to adapt:
+#   gen_attn_ffn -> attention + FFN of every LLM layer (Wan standard, default)
+#   gen_attn     -> attention only (original-LoRA-paper style)
+export lora_target=${lora_target:-"gen_attn_ffn"}
+export lora_target_prefixes=${lora_target_prefixes:-"language_model.layers."}
 
 # ============================ Generation / diffusion ============================ #
 export time_schedule="standard"

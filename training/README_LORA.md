@@ -4,12 +4,23 @@ A self-contained recipe for training a small **style LoRA** on top of the
 released `SenseNova-U1-8B-MoT-SFT` checkpoint — e.g. Pixar, Studio Ghibli, or
 any style you can collect a few hundred example images of.
 
-Only the **flow-matching generation branch** (`fm_modules.*`) is adapted —
-everything else (the LLM, the ViT, the MLP adapter) stays frozen. That keeps
-the trainable parameter count to a few million, fits comfortably on a
-single 8 × 80 GB node, and produces a checkpoint that is tens of MB rather
-than tens of GB.
+We adapt the **MoT image-generation path inside the LLM** — following the
+Wan/DiffSynth convention, LoRA is inserted on the generation-path **attention
+and FFN** of every transformer layer:
 
+- attention: `language_model.layers.*.attention.{wq,wk,wv,wo}_mot_gen`
+- FFN: `language_model.layers.*.feed_forward_mot_gen.{w1,w2,w3}`
+
+Everything else (the understanding path, the ViT, the MLP adapter, the
+flow-matching heads in `fm_modules`) stays frozen. Set `lora_target=gen_attn`
+for an attention-only adapter (closer to the original LoRA paper).
+
+> **Note (8B vs A3B):** the 8B LLM has a *dense* generation FFN, so `w1/w2/w3`
+> are plain linears and LoRA covers them directly. The A3B variant uses an
+> *MoE* generation FFN — its experts are skipped (expert-parallel LoRA is not
+> supported), so on A3B only the attention is adapted.
+
+The base stays frozen, so checkpoints are tens of MB rather than tens of GB.
 All commands below are run from the `training/` directory.
 
 ---
@@ -73,14 +84,15 @@ bash shell/train_u1/8B_lora.sh
 Override anything else from the command line — these are the knobs most
 worth tweaking:
 
-| Env var               | Default       | Notes |
-|-----------------------|---------------|-------|
-| `lora_r`              | `16`          | Rank. 8–32 covers most style fine-tunes. |
-| `lora_alpha`          | `32`          | Effective scale = `alpha / r`. Keep the ratio ≈ 2 unless you know why. |
-| `lora_dropout`        | `0.0`         | Set to 0.05 if you see overfitting on a small set. |
-| `lora_target_prefixes`| `fm_modules.` | Comma-separated. Add `language_model.layers.` to also adapt the LLM — much more capacity, much slower. |
-| `lr`                  | `1e-4`        | LoRA is more LR-tolerant than full fine-tunes — 1e-4 to 5e-4 are all reasonable. |
-| `total_steps`         | `5000`        | For ~100 images × repeat_time=20, 3-5k steps usually converges. |
+| Env var               | Default              | Notes |
+|-----------------------|----------------------|-------|
+| `lora_r`              | `32`                 | Rank. 16–32 is the usual range (Wan uses 32). |
+| `lora_alpha`          | `32`                 | Effective scale = `alpha / r`. `alpha == r` → scale 1.0 (Wan default). |
+| `lora_dropout`        | `0.0`                | Set to 0.05 if you see overfitting on a small set. |
+| `lora_target`         | `gen_attn_ffn`       | `gen_attn_ffn` = attention + FFN (Wan standard); `gen_attn` = attention only. |
+| `lora_target_prefixes`| `language_model.layers.` | Comma-separated qualname prefixes to adapt. |
+| `lr`                  | `1e-4`               | LoRA is more LR-tolerant than full fine-tunes — 1e-4 to 5e-4 are all reasonable. |
+| `total_steps`         | `5000`               | For ~100 images × repeat_time=20, 3-5k steps usually converges. |
 
 A successful run prints, soon after start-up:
 
@@ -88,7 +100,7 @@ A successful run prints, soon after start-up:
 [LoRA] wrapped N Linear layers; trainable=4,xxx,xxx / total=8,xxx,xxx,xxx (0.0xx%)
 ```
 
-If `trainable=0`, double-check `lora_target_prefixes` and the
+If `trainable=0`, double-check `lora_target` / `lora_target_prefixes` and the
 `target_leaf_names` list in the config — your model variant might use a
 different naming convention.
 
@@ -114,22 +126,27 @@ from peft import PeftModel
 model = PeftModel.from_pretrained(base_model, "outputs/pixar_lora_hf")
 ```
 
-The adapter's `target_modules` use the training-side module paths; if the
-inference-side modeling file nests `fm_modules` differently, adjust the paths
-in `adapter_config.json` accordingly.
+The adapter's `target_modules` use the training-side module paths (e.g.
+`language_model.layers.0.attention.wq_mot_gen`); if the inference-side modeling
+file nests these differently, adjust the paths in `adapter_config.json`.
 
 ---
 
 ## 4. Limitations / gotchas
 
-- The shipped LoRA config only touches `fm_modules.*` — the understanding
-  branch (CE-supervised) is fully frozen, so don't expect this LoRA to change
+- Only the **generation** path is adapted; the understanding branch
+  (CE-supervised) is fully frozen, so don't expect this LoRA to change
   captioning behavior.
 - Under ISP weight-parallel (`wp_size=8`) the base linears are sharded, but
   each LoRA branch is built at the *full* layer dimensions and replicated on
   every rank (its gradients are reduced through the existing replica-param
-  machinery). Cumulative HBM is `wp_size ×` per adapter — still negligible
-  at r=16.
+  machinery, via the `fm_modules` param group). Cumulative HBM is `wp_size ×`
+  per adapter — negligible at r=32.
+- Requires `pp_size=1` (asserted): the targeted layers must all live on one
+  pipeline stage.
+- On the A3B variant the generation FFN is MoE; its experts are skipped, so
+  only the attention gets LoRA there. Use the 8B (dense FFN) for full
+  attention + FFN coverage.
 - Resuming (`auto_resume=true` or pointing `load_ckpt_folder` at a LoRA
   checkpoint) restores `lora_state.pt` instead of full model shards — the
   run must use the same `lora_*` settings, otherwise adapter shapes won't

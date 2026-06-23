@@ -112,20 +112,32 @@ post_layer_num = int(os.environ.get('post_layer_num', 0))
 
 
 # -----------------------------------------------------------------------------
-# LoRA (parameter-efficient fine-tuning of the flow-matching branch).
+# LoRA (parameter-efficient fine-tuning of the image-generation path).
 #
-# When ``lora_enabled=true`` the model is fully frozen and only low-rank
-# adapters under ``lora_target_prefixes`` are trained — see
-# ``sensenovavl/model/lora.py`` and ``README_LORA.md``.
+# When ``lora_enabled=true`` the whole model is frozen and only low-rank
+# adapters are trained. By default we follow the Wan/DiffSynth convention:
+# adapt the generation-path attention AND FFN of every LLM layer.
+#   lora_target=gen_attn      -> attention only ({wq,wk,wv,wo}_mot_gen)
+#   lora_target=gen_attn_ffn  -> attention + FFN (default; adds w1/w2/w3)
+# See sensenovavl/model/lora.py and README_LORA.md.
 # -----------------------------------------------------------------------------
 lora_enabled = env_bool('lora_enabled', False)
-lora_r = int(os.environ.get('lora_r', 16))
-lora_alpha = int(os.environ.get('lora_alpha', 32))
+lora_r = int(os.environ.get('lora_r', 32))
+lora_alpha = int(os.environ.get('lora_alpha', 32))  # alpha == r -> scale 1.0 (Wan default)
 lora_dropout = float(os.environ.get('lora_dropout', 0.0))
-# Comma-separated qualname prefixes; default = flow-matching branch only.
+lora_target = os.environ.get('lora_target', 'gen_attn_ffn')
+# Comma-separated qualname prefixes; default = the LLM transformer layers.
 lora_target_prefixes = tuple(
-    p.strip() for p in os.environ.get('lora_target_prefixes', 'fm_modules.').split(',') if p.strip()
+    p.strip() for p in os.environ.get('lora_target_prefixes', 'language_model.layers.').split(',') if p.strip()
 )
+_LORA_ATTN_LEAVES = ('wq_mot_gen', 'wk_mot_gen', 'wv_mot_gen', 'wo_mot_gen')
+_LORA_FFN_LEAVES = ('w1', 'w2', 'w3')
+if lora_target == 'gen_attn':
+    lora_target_leaf_names = _LORA_ATTN_LEAVES
+elif lora_target == 'gen_attn_ffn':
+    lora_target_leaf_names = _LORA_ATTN_LEAVES + _LORA_FFN_LEAVES
+else:
+    raise ValueError(f"unknown lora_target={lora_target!r}; choose 'gen_attn' or 'gen_attn_ffn'")
 
 
 # -----------------------------------------------------------------------------
@@ -428,15 +440,12 @@ lora = dict(
     alpha=lora_alpha,
     dropout=lora_dropout,
     target_prefixes=lora_target_prefixes,
-    # Leaf-name filter for attention/MLP projections.
-    # ``include_sequential_indices=True`` also catches the Linear children of
-    # nn.Sequential (``TimestepEmbedder.mlp.0`` / ``fm_head.0``).
-    target_leaf_names=(
-        "qkv", "proj", "fc1", "fc2",
-        "q_proj", "k_proj", "v_proj", "o_proj",
-        "gate_proj", "up_proj", "down_proj",
-    ),
-    include_sequential_indices=True,
+    target_leaf_names=lora_target_leaf_names,
+    # Every generation-path weight has "mot_gen" in its qualname; requiring it
+    # disambiguates the FFN w1/w2/w3 (the frozen understanding FFN reuses those
+    # leaf names) and excludes the understanding attention wq/wk/wv/wo.
+    require_substrings=('mot_gen',),
+    include_sequential_indices=False,
 )
 
 

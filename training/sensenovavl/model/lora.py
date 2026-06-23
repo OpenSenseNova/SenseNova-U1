@@ -10,13 +10,16 @@ The base linear is left untouched, including its parallel-comm wrapping
 unchanged. The LoRA branch is two plain ``nn.Linear`` modules replicated
 across WP/TP ranks; under ISP the base layer consumes and produces full-dim
 activations (weights are all-gathered inside forward), so the replicated
-branch computes the same delta on every rank. The branch params fall under
-``fm_modules.*`` and are therefore tagged ``IS_REPLICA_ZERO_PARALLEL`` by
-``set_parallel_attr_for_param_groups`` — init sync and grad reduction reuse
-the existing replica machinery.
+branch computes the same delta on every rank. The two branch ``nn.Linear`` modules are plain (not parallel), so
+``set_parallel_attr_for_param_groups`` tags them ``IS_REPLICA_ZERO_PARALLEL``
+— init sync and grad reduction reuse the existing replica machinery. (For the
+same reason ``create_param_groups`` must place them in a replica param group,
+not the weight-sharded ``llm_tp`` group — see ``param_classification``.)
 
-We only target ``fm_modules.*`` (timestep_embedder, fm_head,
-vision_model_mot_gen, optional noise_scale_embedder) by default.
+By default we target the MoT image-generation path inside the LLM:
+``language_model.layers.*.attention.{wq,wk,wv,wo}_mot_gen`` and the dense
+generation FFN ``feed_forward_mot_gen.{w1,w2,w3}`` (the Wan/DiffSynth
+convention of adapting attention + FFN in every transformer block).
 """
 from __future__ import annotations
 
@@ -146,27 +149,24 @@ def _set_submodule(root: nn.Module, qualname: str, new_module: nn.Module) -> Non
 
 def inject_lora(
     model: nn.Module,
-    target_prefixes: Sequence[str] = ("fm_modules.",),
+    target_prefixes: Sequence[str] = ("language_model.layers.",),
     target_leaf_names: Sequence[str] = (
-        # Vision-MoT attention / MLP (NEOVisionModel)
-        "qkv",
-        "proj",
-        "fc1",
-        "fc2",
-        # Standard projection names, in case a future config rewires
-        "q_proj",
-        "k_proj",
-        "v_proj",
-        "o_proj",
-        "gate_proj",
-        "up_proj",
-        "down_proj",
+        # MoT generation-path attention (SWA_MoT)
+        "wq_mot_gen",
+        "wk_mot_gen",
+        "wv_mot_gen",
+        "wo_mot_gen",
+        # MoT generation-path dense FFN (SwiGLU)
+        "w1",
+        "w2",
+        "w3",
     ),
-    include_sequential_indices: bool = True,
-    r: int = 8,
-    alpha: int = 16,
+    require_substrings: Sequence[str] = ("mot_gen",),
+    include_sequential_indices: bool = False,
+    r: int = 32,
+    alpha: int = 32,
     dropout: float = 0.0,
-    skip_substrings: Sequence[str] = ("lora_A", "lora_B"),
+    skip_substrings: Sequence[str] = ("lora_A", "lora_B", "moe_layer", "experts"),
 ) -> List[str]:
     """Inject LoRA adapters into every nn.Linear under ``target_prefixes``.
 
@@ -179,12 +179,19 @@ def inject_lora(
             of these.
         target_leaf_names: glob patterns matched against the layer's *leaf*
             attribute name. Use ``("*",)`` to match all.
-        include_sequential_indices: also wrap numeric leaf names like ``"0"`` —
-            the Linear children of ``TimestepEmbedder.mlp`` and ``fm_head``
-            are addressed this way.
+        require_substrings: if non-empty, additionally require the *full*
+            qualname to contain one of these. This disambiguates leaf names
+            shared by frozen and trainable branches — e.g. the generation FFN
+            ``feed_forward_mot_gen.w1`` and the frozen understanding FFN
+            ``feed_forward.w1`` both have leaf ``w1``; requiring ``mot_gen``
+            keeps only the former.
+        include_sequential_indices: also wrap numeric leaf names like ``"0"``
+            (the Linear children of an ``nn.Sequential``, e.g. ``fm_head.0``).
         r / alpha / dropout: LoRA hyper-parameters (effective scale = alpha / r).
         skip_substrings: never wrap a module whose qualname contains one of
-            these (guards against double-wrapping on a second call).
+            these — guards against double-wrapping (``lora_A``/``lora_B``) and
+            against MoE expert linears (``moe_layer``/``experts``), which are
+            expert-parallel and unsupported by the replicated side branch.
 
     Returns:
         The list of wrapped module qualnames.
@@ -205,6 +212,8 @@ def inject_lora(
         if any(s in name for s in skip_substrings):
             continue
         if not any(name.startswith(p) for p in target_prefixes):
+            continue
+        if require_substrings and not any(s in name for s in require_substrings):
             continue
         leaf = name.rsplit(".", 1)[-1]
         if _matches_any(leaf, target_leaf_names) or (include_sequential_indices and leaf.isdigit()):

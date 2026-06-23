@@ -750,26 +750,25 @@ class CheckpointManager:
                 payload = {
                     "lora_state_dict": lora_state,
                     "lora_config": {
-                        "r": int(lora_cfg.get("r", 8)),
-                        "alpha": int(lora_cfg.get("alpha", 16)),
+                        "r": int(lora_cfg.get("r", 32)),
+                        "alpha": int(lora_cfg.get("alpha", 32)),
                         "dropout": float(lora_cfg.get("dropout", 0.0)),
-                        "target_prefixes": list(lora_cfg.get("target_prefixes", ("fm_modules.",))),
+                        "target_prefixes": list(lora_cfg.get("target_prefixes", ())),
                         "target_leaf_names": list(lora_cfg.get("target_leaf_names", ())),
+                        "require_substrings": list(lora_cfg.get("require_substrings", ())),
                     },
                     "step": train_state.step_count,
                     "num_lora_tensors": len(lora_state),
                 }
                 llm_save(os.path.join(folder, "lora_state.pt"), saved_obj=payload)
-                logger.info(
-                    f"[LoRA] saved {len(lora_state)} lora tensors to "
-                    f"{os.path.join(folder, 'lora_state.pt')}"
-                )
+                logger.info(f"[LoRA] saved {len(lora_state)} lora tensors to {os.path.join(folder, 'lora_state.pt')}")
         else:
             save_model_checkpoint(folder=folder, model=model)
         timer("save-model").stop()
 
         # Save averaged model weights (optional) into a sub-folder: <folder>/averaged_model/
         # This keeps backward compatibility with existing ckpt layout.
+        # (EMA is disabled by the config under LoRA, so this is skipped there.)
         if self.averaged_model is not None and not lora_enabled:
             averaged_model_folder = os.path.join(folder, "averaged_model")
             os.makedirs(averaged_model_folder, exist_ok=True)
@@ -781,7 +780,7 @@ class CheckpointManager:
             timer("save-averaged-model").stop()
             if gpc.is_rank_for_log():
                 logger.info(f"Saved averaged model weights to `{averaged_model_folder}`")
-
+                
         timer("save-optimizer").start()
         save_optimizer_checkpoint(optim=optimizer, state_path=folder)
         timer("save-optimizer").stop()
