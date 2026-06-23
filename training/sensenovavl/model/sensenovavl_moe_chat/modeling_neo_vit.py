@@ -639,6 +639,9 @@ class NEOVisionModel(PreTrainedModel):
     main_input_name = "pixel_values"
     config_class = NEOVisionConfig
     _no_split_modules = ["InternVisionEncoderLayer"]
+    # transformers>=4.50 defines a read-only ``tp_size`` property on
+    # PreTrainedModel; shadow it so ``self.tp_size = ...`` in __init__ works.
+    tp_size = None
 
     def __init__(self, config: NEOVisionConfig):
 

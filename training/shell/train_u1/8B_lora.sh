@@ -37,10 +37,11 @@ export load_optimizer=${load_optimizer:-"model"}
 
 # ============================ Parallelism ============================ #
 # Same as the SFT launcher; LoRA does not change topology.
-export zero1_size=-1
-export wp_size=8
-export tp_size=1
-export pp_size=1
+# Overridable so a single-GPU box can run with NPROC_PER_NODE=1 wp_size=1.
+export zero1_size=${zero1_size:--1}
+export wp_size=${wp_size:-8}
+export tp_size=${tp_size:-1}
+export pp_size=${pp_size:-1}
 
 # ============================ Optimization ============================ #
 # Higher LR is fine — only a few million params are being updated and the
