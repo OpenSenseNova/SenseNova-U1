@@ -94,7 +94,7 @@ A: Open-sourcing the RL code is on our roadmap. Stay tuned.
 
 **Q: How do I run it on my local machine? Which deployment framework do you recommend?**
 
-A: U1 can be deployed locally. Framework recommendations: ollama (easy to use, but average performance); llama.cpp (slightly more involved to set up, but the best performance); vLLM (fast and GPU-friendly). If you'd rather not deploy it yourself, you can also create an API key through the [Token Plan](https://www.sensenova.cn/token-plan) and call it directly(China only; global version coming in July).
+A: U1 can be deployed locally. Framework recommendations: ollama (easy to use, but average performance); llama.cpp (slightly more involved to set up, but the best performance); vLLM (fast and GPU-friendly). If you'd rather not deploy it yourself, you can also create an API key through the [Token Plan](https://www.sensenova.cn/token-plan) and call it directly (China only; global version coming in July).
 
 **Q: How much VRAM is needed to generate a 2K image?**
 
