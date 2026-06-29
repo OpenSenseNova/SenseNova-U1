@@ -72,7 +72,7 @@ A: [The full-parameter fine-tuning code for SenseNova-U1](https://github.com/Ope
 
 **Q: Was video data used during training?**
 
-A: Video data was used to pre-train the understanding component, though its share in this round of training was relatively small; we expect to increase the ratio in the next version. Video frames are handled roughly as follows: a timestamp is prepended to the image token of each frame—for example, [mm:ss.ff]:<image>. A more detailed description will be provided in a future technical report.
+A: Video data was used to pre-train the understanding component, though its share in this round of training was relatively small; we expect to increase the ratio in the next version. Video frames are handled roughly as follows: a timestamp is prepended to the image token of each frame—for example, `[mm:ss.ff]:<image>`. A more detailed description will be provided in a future technical report.
 
 **Q: Will the LoRA training code be open-sourced?**
 
