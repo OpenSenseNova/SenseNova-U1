@@ -1,4 +1,4 @@
-# SenseNova-U1-8B-MoT-Infographic 系列模型 📊
+# SenseNova-U1 信息图模型系列 📊
 
 本页汇总 SenseNova-U1 信息图模型系列的权重、评测和生成效果。
 

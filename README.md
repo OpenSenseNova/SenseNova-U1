@@ -23,7 +23,7 @@
 
 ## 📣 Updated News
 
-- `[2026.06.29]` Release [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model with improved small-text rendering with sharper text edges, stronger complex dense-layout generation, and better overall visual aesthetics, plus a fix for the black-background issue. See [U1 Infographic Model](docs/u1_infographic_model.md) for details.
+- `[2026.06.29]` Release [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model with improved small-text rendering with sharper text edges, stronger complex dense-layout generation, and better overall visual aesthetics, plus a fix for the black-background issue. See [U1 Infographic Model Series](docs/u1_infographic_model.md) for details.
 
 - `[2026.06.12]` Release [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) for faster infographic generation. Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
@@ -31,7 +31,7 @@
 
 - `[2026.05.21]` Release the full-parameter fine-tuning [training code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/training/README.md) for SenseNova-U1.
 
-- `[2026.05.15]` Release [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) model for improved infographic generation. See [U1 Infographic Model](docs/u1_infographic_model.md) for details, and [✨ Infographic Showcases ](docs/u1_infographic_showcases.md) for 100 generated examples.
+- `[2026.05.15]` Release [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) model for improved infographic generation. See [U1 Infographic Model Series](docs/u1_infographic_model.md) for details, and [✨ Infographic Showcases ](docs/u1_infographic_showcases.md) for 100 generated examples.
 
 - `[2026.05.10]` Release [🔥SenseNova-U1 Technical Report🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf) and the weights for [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) & [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT).
 
@@ -450,7 +450,7 @@ python examples/t2i/inference.py --model_path sensenova/SenseNova-U1-8B-MoT --pr
 
 > Default resolution is 2048×2048 (1:1). See [supported resolution buckets](./examples/README.md#supported-resolution-buckets) for other aspect ratios.
 
-> For high-quality infographic generation, use [`SenseNova-U1-8B-MoT-Infographic-V2`](./docs/u1_infographic_model.md) and apply [prompt enhancement](./docs/prompt_enhancement.md) before generating images.
+> For high-quality infographic generation, it is recommended to apply [prompt enhancement](./docs/prompt_enhancement.md) before generating images.
 
 
 <details open>

@@ -1,4 +1,4 @@
-# SenseNova-U1-8B-MoT-Infographic Models 📊
+# SenseNova-U1 Infographic Model Series 📊
 
 This page summarizes model weights, benchmarks, and generation results for the SenseNova-U1 infographic model family.
 
