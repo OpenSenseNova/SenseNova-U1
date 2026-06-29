@@ -41,7 +41,7 @@ It also fixes the black-background issue, avoiding unintended black or overly da
 | Qwen-Image | 2.8 / 23.8 | 36.0 | 0.0 | 53.9 | 54.8 |
 | Bagel | 2.0 / 3.7 | 4.9 | 0.0 | 36.1 | 37.0 |
 
-<sub>IGenBench scores are reported as percentages. Models are ordered by the arithmetic mean of BizGenEval hard, BizGenEval easy, IGenBench Q-ACC, and IGenBench I-ACC within the commercial and open-source groups separately. OneIG is included as a general generation reference. Full per-category results are intended for the Hugging Face model card.</sub>
+<sub>Note: IGenBench scores are reported as percentages. Commercial and open-source models are sorted separately by the average of BizGenEval hard/easy and IGenBench Q-ACC/I-ACC. OneIG is included as a general generation reference.</sub>
 
 
 

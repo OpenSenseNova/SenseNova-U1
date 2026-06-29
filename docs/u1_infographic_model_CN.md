@@ -41,7 +41,7 @@
 | Qwen-Image | 2.8 / 23.8 | 36.0 | 0.0 | 53.9 | 54.8 |
 | Bagel | 2.0 / 3.7 | 4.9 | 0.0 | 36.1 | 37.0 |
 
-<sub>IGenBench 分数以百分制展示。商业模型与开源模型组内按照 BizGenEval hard、BizGenEval easy、IGenBench Q-ACC、IGenBench I-ACC 四项算术平均值排序。OneIG 作为通用生成能力参考。完整分项结果建议放在 Hugging Face model card 中。</sub>
+<sub>注：IGenBench 指标按百分制展示；商业模型与开源模型分别按 BizGenEval hard/easy、IGenBench Q-ACC/I-ACC 四项平均分排序。OneIG 仅作为通用生成能力参考。</sub>
 
 
 ## V2 生成质量对比：SenseNova-U1-8B-MoT-Infographic vs. SenseNova-U1-8B-MoT-Infographic-V2
