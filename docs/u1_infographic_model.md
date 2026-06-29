@@ -11,7 +11,7 @@ This page summarizes model weights, benchmarks, and generation results for the S
 
 ## SenseNova-U1-8B-MoT-Infographic-V2
 
-**SenseNova-U1-8B-MoT-Infographic-V2** continues training from **SenseNova-U1-8B-MoT-Infographic**. During MT / SFT, we introduced more high-quality synthetic data and further adjusted the ratio of infographic-related data, focusing on small-text rendering, complex dense layouts, and high-aesthetic samples. During RL, we introduced DPO training to improve overall visual quality; in the GPPO stage, we continued optimizing the reward recipe so the model more reliably avoids unintended black or overly dark backgrounds.
+**SenseNova-U1-8B-MoT-Infographic-V2** is an upgraded version of **SenseNova-U1-8B-MoT-Infographic**. In the MT/SFT phases, we further optimized the training data composition by incorporating more and better high-quality synthetic/real data and rebalancing the distribution within infographic-related samples as well as their proportion relative to other data, with targeted improvements for small-text rendering, complex dense layouts, and high-aesthetic generation. During RL, we introduced DPO training to improve overall visual quality; in the GPPO stage, we continued optimizing the reward recipe so the model more reliably avoids unintended black or overly dark backgrounds.
 
 - **Model Performance:** Compared with **SenseNova-U1-8B-MoT-Infographic**, V2 improves BizGenEval hard/easy from 46.6 / 65.4 to 50.3 / 67.9 (+3.7 / +2.5), and IGenBench Q-ACC/I-ACC from 69.5 / 17.0 to 71.4 / 18.3 (+1.9 / +1.3). OneIG(EN/ZH) is 55.4 / 53.5, roughly on par with the previous version, indicating that infographic-specific capability improves while general generation ability remains stable.
 
