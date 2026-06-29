@@ -1,6 +1,6 @@
 # SenseNova-U1-8B-MoT-Infographic Models 📊
 
-This page summarizes model weights, benchmarks, and generation results for the SenseNova-U1 infographic model family. For infographic generation, we recommend using **SenseNova-U1-8B-MoT-Infographic-V2**.
+This page summarizes model weights, benchmarks, and generation results for the SenseNova-U1 infographic model family.
 
 ## Model Overview
 
@@ -11,9 +11,9 @@ This page summarizes model weights, benchmarks, and generation results for the S
 
 ## SenseNova-U1-8B-MoT-Infographic-V2
 
-**SenseNova-U1-8B-MoT-Infographic-V2** further improves small-text rendering, complex dense layout, and overall visual aesthetics: text edges are sharper, high-information-density layouts are more stable, and poster, dashboard, and report-style infographics look more polished.
+**SenseNova-U1-8B-MoT-Infographic-V2** builds on **SenseNova-U1-8B-MoT-Infographic** and further improves small-text rendering, complex dense layout, and overall visual aesthetics: text edges are sharper, high-information-density layouts are more stable, and poster, dashboard, and report-style infographics look more polished.
 
-It also fixes the black-background issue, reducing unintended black or overly dark backgrounds.
+It also fixes the black-background issue, avoiding unintended black or overly dark backgrounds.
 
 ## SenseNova-U1-8B-MoT-Infographic
 
@@ -33,9 +33,9 @@ It also fixes the black-background issue, reducing unintended black or overly da
 | Qwen-Image-2.0 | 45.5 / 65.8 | 50.0 | 3.0 | 54.1 | 50.9 |
 | Seedream-4.5 | 30.1 / 66.2 | 61.0 | 6.0 | 56.4 | 55.0 |
 | ***Open-source Models*** | | | | | |
-| **SenseNova-U1-8B-MoT-Infographic-V2** | **50.3 / 67.9** | **71.4** | **18.3** | 55.4 | **53.5** |
-| **SenseNova-U1-8B-MoT-Infographic** | **46.6 / 65.4** | **69.5** | **17.0** | **55.6** | **53.3** |
-| **SenseNova-U1-8B-MoT** | 39.8 / 61.1 | 51.3 | 4.2 | 54.5 | 53.8 |
+| **SenseNova-U1-8B-MoT-Infographic-V2** | **50.3 / 67.9** | **71.4** | **18.3** | 55.4 | 53.5 |
+| **SenseNova-U1-8B-MoT-Infographic** | 46.6 / 65.4 | 69.5 | 17.0 | **55.6** | 53.3 |
+| **SenseNova-U1-8B-MoT** | 39.8 / 61.1 | 51.3 | 4.2 | 54.5 | **53.8** |
 | Z-Image | 8.2 / 43.8 | 30.0 | 1.0 | 54.6 | 53.5 |
 | Qwen-Image-2512 | 6.3 / 41.0 | 32.2 | 1.0 | 53.0 | 51.5 |
 | Qwen-Image | 2.8 / 23.8 | 36.0 | 0.0 | 53.9 | 54.8 |
