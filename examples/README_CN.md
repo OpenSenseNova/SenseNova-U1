@@ -137,7 +137,7 @@ python examples/t2i/inference.py \
     --profile
 ```
 
-上述 8-step 信息图 LoRA 面向 `SenseNova-U1-8B-MoT-Infographic` 发布。如需最新小字渲染、复杂密集排版和美观度提升，以及背景变黑问题修复，请使用完整 V2 checkpoint。
+上述 8-step 信息图 LoRA 面向 `SenseNova-U1-8B-MoT-Infographic` 发布，也可搭配 `SenseNova-U1-8B-MoT-Infographic-V2` 使用以获得更快生成速度，但可能带来美观度下降、文字模糊或重复等问题。追求最佳质量时，建议使用完整 V2 checkpoint。
 
 ### T2I 推理模式（think mode）
 

@@ -146,7 +146,7 @@ python examples/t2i/inference.py \
     --profile
 ```
 
-The 8-step infographic LoRA above is released for `SenseNova-U1-8B-MoT-Infographic`. Use the full V2 checkpoint for the latest small-text rendering, complex dense-layout, and aesthetic improvements, plus the black-background fix.
+The 8-step infographic LoRA above is released for `SenseNova-U1-8B-MoT-Infographic` and can also be used with `SenseNova-U1-8B-MoT-Infographic-V2` for faster generation, but may reduce aesthetics or cause blurry/repeated text. For best quality, use the full V2 checkpoint.
 
 ### T2I reasoning (think mode)
 
