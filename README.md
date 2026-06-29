@@ -23,7 +23,7 @@
 
 ## 📣 Updated News
 
-- `[2026.06.29]` Release [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model with improved small-text rendering with sharper text edges, stronger complex dense-layout generation, and better overall visual aesthetics, plus a fix for the black-background issue. See [U1 Infographic Model Series](docs/u1_infographic_model.md) for details.
+- `[2026.06.29]` Release [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model with improved small-text rendering with sharper text edges, stronger complex dense-layout generation, and better overall visual aesthetics, plus a fix for the black-background issue. See [U1 Infographic Model Series](docs/u1_infographic_model.md) for more details.
 
 - `[2026.06.12]` Release [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) for faster infographic generation. Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
