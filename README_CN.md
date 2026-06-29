@@ -23,7 +23,7 @@
 
 ## 📣 最新动态
 
-- `[2026.06.29]` 发布 [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2)，新版信息图模型提升小字渲染能力，文字边缘更加锐利；增强复杂密集排版能力，并提升整体美观度。此外修复背景变黑问题。模型细节可见 [U1 Infographic Model Series](docs/u1_infographic_model_CN.md)。
+- `[2026.06.29]` 发布 [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2)，新版信息图模型提升密集小字渲染能力，文字边缘更加锐利清晰；增强复杂密集图的排版能力，并提升整体画面美观和谐度。此外修复背景变黑问题。模型细节及可视化效果可见 [✨ U1 Infographic Model Series](docs/u1_infographic_model_CN.md)。
 
 - `[2026.06.12]` 发布 [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors)，用于快速生成信息图。请查看[推理示例脚本](docs/base_vs_distill.md#run-base-and-distilled-model)。
 
