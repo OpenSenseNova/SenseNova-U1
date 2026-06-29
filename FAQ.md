@@ -8,7 +8,7 @@ This document collects the questions most frequently raised by the community sin
 > - [Try NOW](https://unify.light-ai.top/)
 > - [Discord community](https://discord.gg/Su5mnbYFWf)
 > 
-> 💡 Note: Note: The Free Token plan for global users will update in July. Stay tuned on Discord!
+> 💡 Note: The Free Token plan for global users will update in July. Stay tuned on Discord!
 
 ## 1. Product & Experience
 
