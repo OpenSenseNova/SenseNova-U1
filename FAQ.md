@@ -139,7 +139,7 @@ A: lightllm_lightx2v does not currently support arm64; it only supports Linux + 
 
 **Q: Memory / VRAM usage is high and machines with lower specs can't run it. Is there a more resource-efficient option?**
 
-A: The model does have fairly high memory / VRAM requirements. When resources are limited, we recommend using [the GGUF](https://github.com/OpenSenseNova/SenseNova-U) low / balanced tiers.
+A: The model does have fairly high memory / VRAM requirements. When resources are limited, we recommend using [the GGUF](https://github.com/OpenSenseNova/SenseNova-U1) low / balanced tiers.
 
 **Q: GGUF balanced mode runs on 8 GB, but full mode (e.g. Q6) blows past the VRAM limit. Is that normal?**
 
