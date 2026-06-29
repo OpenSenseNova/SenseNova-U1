@@ -1,21 +1,39 @@
-# SenseNova-U1-8B-MoT-Infographic 📊
+# SenseNova-U1-8B-MoT-Infographic 系列模型 📊
 
-**SenseNova-U1-8B-MoT-Infographic** 是在 U1-8B-MoT 模型基础上延长了 MT 阶段训练，并在 MT 与 SFT 阶段调整了理解和生成任务中的数据配比产生的模型。在 RL 阶段，我们进一步优化了 reward recipe，以减少生成信息图中非预期黑色背景的出现。
+本页汇总 SenseNova-U1 信息图模型系列的权重、评测和生成效果。信息图生成任务推荐使用 **SenseNova-U1-8B-MoT-Infographic-V2**。
 
-- **模型性能：** 相比基础版 **SenseNova-U1-8B-MoT** 模型，BizGenEval hard/easy 从 **39.8 / 61.1** 提升至 **46.6 / 65.4**（**+6.8 / +4.3 points**），IGenBench Q-ACC/I-ACC 从 **51.3 / 4.2** 提升至 **69.5 / 17.0**（**+18.2 / +12.8 points**），同时保持稳健的视觉理解能力，无明显退化。
-- **生成质量：** 模型能够生成涵盖 100+ 种风格与布局的复杂信息图，具备更优的视觉美观度与文字渲染能力 —— 甚至能够渲染如 arXiv 风格页面等高密度小字。
+## 模型概览
 
-## Benchmark Highlights
+| 模型 | HF 权重 | 说明 |
+| :--- | :------ | :--- |
+| SenseNova-U1-8B-MoT-Infographic-V2 | [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | 推荐使用的信息图模型，提升小字渲染、复杂密集排版和整体美观度，并修复背景变黑问题。 |
+| SenseNova-U1-8B-MoT-Infographic | [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) | 基于 SenseNova-U1-8B-MoT 的信息图模型，强化复杂信息图生成、文字渲染和背景稳定性。 |
 
-| Model | BizGenEval Avg. (hard / easy) ↑ | IGenBench Q-ACC  ↑ | IGenBench I-ACC ↑ | OneIG(EN) ↑ | OneIG(ZH) ↑ |
+## SenseNova-U1-8B-MoT-Infographic-V2
+
+**SenseNova-U1-8B-MoT-Infographic-V2** 进一步提升小字渲染、复杂密集排版和整体美观度：小字边缘更加锐利，高信息密度版面组织更稳定，海报、看板、报告类信息图的视觉效果更精致。
+
+同时，该模型修复了背景变黑问题，避免非预期黑底或过暗背景。
+
+## SenseNova-U1-8B-MoT-Infographic
+
+**SenseNova-U1-8B-MoT-Infographic** 是基于 **SenseNova-U1-8B-MoT** 的信息图模型。该模型延长了 MT 阶段训练，并在 MT / SFT 阶段调整理解与生成任务的数据配比；RL 阶段进一步优化 reward recipe，以减少生成信息图中非预期黑色背景的出现。
+
+- **能力侧重：** 强化复杂信息图生成、文字渲染、图表生成、论文风格高密度小字页面，以及整体视觉美观度。
+- **案例覆盖：** 支持 100+ 种信息图风格与布局，生成效果可见下方对比和案例展示。
+
+## 评测结果
+
+| 模型 | BizGenEval Avg. (hard / easy) ↑ | IGenBench Q-ACC ↑ | IGenBench I-ACC ↑ | OneIG(EN) ↑ | OneIG(ZH) ↑ |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| ***Commercial Models*** ||
+| ***Commercial Models*** | | | | | |
 | Nano-Banana-Pro | 76.7 / 93.7 | 90.6 | 48.8 | 58.1 | 56.8 |
 | Nano-Banana-2.0 | 68.5 / 92.5 | 85.6 | 34.4 | 54.0 | 54.9 |
 | GPT-Image-1.5 | 35.9 / 81.6 | 55.0 | 12.0 | - | - |
 | Qwen-Image-2.0 | 45.5 / 65.8 | 50.0 | 3.0 | 54.1 | 50.9 |
 | Seedream-4.5 | 30.1 / 66.2 | 61.0 | 6.0 | 56.4 | 55.0 |
-| ***Open-source Models*** ||
+| ***Open-source Models*** | | | | | |
+| **SenseNova-U1-8B-MoT-Infographic-V2** | **50.3 / 67.9** | **71.4** | **18.3** | 55.4 | **53.5** |
 | **SenseNova-U1-8B-MoT-Infographic** | **46.6 / 65.4** | **69.5** | **17.0** | **55.6** | **53.3** |
 | **SenseNova-U1-8B-MoT** | 39.8 / 61.1 | 51.3 | 4.2 | 54.5 | 53.8 |
 | Z-Image | 8.2 / 43.8 | 30.0 | 1.0 | 54.6 | 53.5 |
@@ -23,11 +41,10 @@
 | Qwen-Image | 2.8 / 23.8 | 36.0 | 0.0 | 53.9 | 54.8 |
 | Bagel | 2.0 / 3.7 | 4.9 | 0.0 | 36.1 | 37.0 |
 
-<sub>IGenBench 分数以百分制展示。Commercial 与 open-source 组内模型按照 BizGenEval hard、BizGenEval easy、IGenBench Q-ACC、IGenBench I-ACC 四项算术平均值排序。OneIG 作为通用生成能力参考。完整分项结果建议放在 Hugging Face model card 中。</sub>
+<sub>IGenBench 分数以百分制展示。商业模型与开源模型组内按照 BizGenEval hard、BizGenEval easy、IGenBench Q-ACC、IGenBench I-ACC 四项算术平均值排序。OneIG 作为通用生成能力参考。完整分项结果建议放在 Hugging Face model card 中。</sub>
 
 
-
-## 生成质量对比
+## 生成质量对比：SenseNova-U1-8B-MoT vs. SenseNova-U1-8B-MoT-Infographic
 
 我们在以下五个关键维度上，对基础模型 **SenseNova-U1-8B-MoT** 与微调后的 **SenseNova-U1-8B-MoT-Infographic** 模型进行了定性对比：背景稳定性、图表准确性、文字渲染准确性、论文渲染质量，以及综合美观度。
 
@@ -228,4 +245,3 @@
 ## 案例展示
 
 > ✨ **想了解模型的实际效果？欢迎前往 👉 [ 🖼️ 信息图案例展示 ](./u1_infographic_showcases.md) 👈 浏览 100 个生成样例！**
-
