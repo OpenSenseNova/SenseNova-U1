@@ -37,7 +37,7 @@
         "Node name for S&R": "SenseNovaU1LocalLoader"
       },
       "widgets_values": [
-        "sensenova/SenseNova-U1-8B-MoT-Infographic",
+        "sensenova/SenseNova-U1-8B-MoT-Infographic-V2",
         "",
         "cuda",
         "bfloat16",

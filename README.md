@@ -23,6 +23,8 @@
 
 ## 📣 Updated News
 
+- `[2026.06.29]` Release [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model with improved small-text rendering with sharper text edges, stronger complex dense-layout generation, and better overall visual aesthetics, plus a fix for the black-background issue. See [U1 Infographic Model](docs/u1_infographic_model.md) for details.
+
 - `[2026.06.12]` Release [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) for faster infographic generation. Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
 - `[2026.06.11]` Release [SenseNova-U1-8B-MoT-Interleaved 📖](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved), specially optimized for interleaved image-text generation, with notably improved narrative coherence, character and style consistency, and text-image alignment in multi-page content.
@@ -101,6 +103,7 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
+| SenseNova-U1-8B-MoT-Infographic-V2 | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) |
 | SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
 | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
@@ -447,7 +450,7 @@ python examples/t2i/inference.py --model_path sensenova/SenseNova-U1-8B-MoT --pr
 
 > Default resolution is 2048×2048 (1:1). See [supported resolution buckets](./examples/README.md#supported-resolution-buckets) for other aspect ratios.
 
-> For high-quality infographic generation, it is recommended to apply [prompt enhancement](./docs/prompt_enhancement.md) before generating images.
+> For high-quality infographic generation, use [`SenseNova-U1-8B-MoT-Infographic-V2`](./docs/u1_infographic_model.md) and apply [prompt enhancement](./docs/prompt_enhancement.md) before generating images.
 
 
 <details open>
