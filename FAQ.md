@@ -3,7 +3,6 @@
 This document collects the questions most frequently raised by the community since SenseNova U1 was open-sourced, organized by topic. If your question isn't covered here, feel free to reach out via [GitHub Issues](https://github.com/OpenSenseNova/SenseNova-U1/issues) or our [Discord community](https://discord.gg/Su5mnbYFWf).
 
 > **Useful links**
-> Useful links
 > - [GitHub repository](https://github.com/OpenSenseNova/SenseNova-U1)
 > - [Technical report](https://arxiv.org/abs/2605.12500)
 > - [Try NOW](https://unify.light-ai.top/)
