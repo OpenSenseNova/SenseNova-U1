@@ -48,7 +48,7 @@ A: The Token Plan is already live in mainland China, supporting 1,500 calls per 
 
 **Q: How do I get an API key to make calls?**
 
-A: We recommend creating an API key through the Token Plan. SenseNova 6.7 Flash-Lite is currently free to use—you can sign up at [this website](https://platform.sensenova.cn/token-plan)(Chinese users only; global version coming in July), and [the documentation](https://platform.sensenova.cn/docs) here.
+A: We recommend creating an API key through the Token Plan. SenseNova 6.7 Flash-Lite is currently free to use—you can sign up at [this website](https://platform.sensenova.cn/token-plan) (Chinese users only; global version coming in July). See [the documentation](https://platform.sensenova.cn/docs) for details.
 
 **Q: Is there a lighter, framework-agnostic way to make U1 directly compatible with the OpenAI API spec?**
 
