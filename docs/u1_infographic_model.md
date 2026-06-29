@@ -4,23 +4,26 @@ This page summarizes model weights, benchmarks, and generation results for the S
 
 ## Model Overview
 
-| Model | HF Weights | Notes |
-| :--- | :--------- | :---- |
-| SenseNova-U1-8B-MoT-Infographic-V2 | [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | Recommended infographic model, improving small-text rendering, complex dense layout, and overall visual aesthetics while fixing the black-background issue. |
-| SenseNova-U1-8B-MoT-Infographic | [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) | Infographic model based on SenseNova-U1-8B-MoT, strengthening complex infographic generation, text rendering, and background stability. |
+| Model | Notes |
+| :--- | :---- |
+| [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | Recommended infographic model, improving small-text rendering, complex dense layout, and overall visual aesthetics while fixing the black-background issue. |
+| [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) | Infographic model based on SenseNova-U1-8B-MoT, strengthening complex infographic generation, text rendering, and background stability. |
 
 ## SenseNova-U1-8B-MoT-Infographic-V2
 
-**SenseNova-U1-8B-MoT-Infographic-V2** builds on **SenseNova-U1-8B-MoT-Infographic** and further improves small-text rendering, complex dense layout, and overall visual aesthetics: text edges are sharper, high-information-density layouts are more stable, and poster, dashboard, and report-style infographics look more polished.
+**SenseNova-U1-8B-MoT-Infographic-V2** continues training from **SenseNova-U1-8B-MoT-Infographic**. During MT / SFT, we introduced more high-quality synthetic data and further adjusted the ratio of infographic-related data, focusing on small-text rendering, complex dense layouts, and high-aesthetic samples. During RL, we introduced DPO training to improve overall visual quality; in the GPPO stage, we continued optimizing the reward recipe so the model more reliably avoids unintended black or overly dark backgrounds.
 
-It also fixes the black-background issue, avoiding unintended black or overly dark backgrounds.
+- **Model Performance:** Compared with **SenseNova-U1-8B-MoT-Infographic**, V2 improves BizGenEval hard/easy from 46.6 / 65.4 to 50.3 / 67.9 (+3.7 / +2.5), and IGenBench Q-ACC/I-ACC from 69.5 / 17.0 to 71.4 / 18.3 (+1.9 / +1.3). OneIG(EN/ZH) is 55.4 / 53.5, roughly on par with the previous version, indicating that infographic-specific capability improves while general generation ability remains stable.
+
+- **Generation Quality:** V2 further improves small-text rendering, complex dense layout, and overall visual aesthetics: text edges are sharper, high-information-density layouts are more stable, and poster, dashboard, and report-style infographics look more polished. It also fixes the black-background issue, avoiding unintended black or overly dark backgrounds.
 
 ## SenseNova-U1-8B-MoT-Infographic
 
-**SenseNova-U1-8B-MoT-Infographic** is an infographic model based on **SenseNova-U1-8B-MoT**. It extends the MT training phase, adjusts the data ratio between understanding and generation tasks during MT / SFT, and further optimizes the reward recipe in RL to reduce unintended black backgrounds in generated infographics.
+**SenseNova-U1-8B-MoT-Infographic** is produced by extending the MT training phase on top of **SenseNova-U1-8B-MoT** and adjusting the data ratio between understanding and generation tasks during MT / SFT. During RL, we further optimized the reward recipe to reduce unintended black backgrounds in generated infographics.
 
-- **Focus:** strengthens complex infographic generation, text rendering, chart generation, arXiv-style high-density small-text pages, and overall visual aesthetics.
-- **Showcases:** supports 100+ infographic styles and layouts; see comparisons and examples below.
+- **Model Performance:** Compared with the base **SenseNova-U1-8B-MoT**, BizGenEval hard/easy improves from 39.8 / 61.1 to 46.6 / 65.4 (+6.8 / +4.3), and IGenBench Q-ACC/I-ACC improves from 51.3 / 4.2 to 69.5 / 17.0 (+18.2 / +12.8). The model also maintains robust visual understanding capability without noticeable degradation.
+
+- **Generation Quality:** The model can generate complex infographics across 100+ styles and layouts, with improved visual aesthetics and text rendering, including dense small-text scenarios such as arXiv-style pages.
 
 ## Benchmark Results
 
@@ -35,7 +38,7 @@ It also fixes the black-background issue, avoiding unintended black or overly da
 | ***Open-source Models*** | | | | | |
 | **SenseNova-U1-8B-MoT-Infographic-V2** | **50.3 / 67.9** | **71.4** | **18.3** | 55.4 | 53.5 |
 | **SenseNova-U1-8B-MoT-Infographic** | 46.6 / 65.4 | 69.5 | 17.0 | **55.6** | 53.3 |
-| **SenseNova-U1-8B-MoT** | 39.8 / 61.1 | 51.3 | 4.2 | 54.5 | **53.8** |
+| **SenseNova-U1-8B-MoT** | 39.8 / 61.1 | 51.3 | 4.2 | 54.5 | 53.8 |
 | Z-Image | 8.2 / 43.8 | 30.0 | 1.0 | 54.6 | 53.5 |
 | Qwen-Image-2512 | 6.3 / 41.0 | 32.2 | 1.0 | 53.0 | 51.5 |
 | Qwen-Image | 2.8 / 23.8 | 36.0 | 0.0 | 53.9 | 54.8 |

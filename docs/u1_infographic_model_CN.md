@@ -4,23 +4,26 @@
 
 ## 模型概览
 
-| 模型 | HF 权重 | 说明 |
-| :--- | :------ | :--- |
-| SenseNova-U1-8B-MoT-Infographic-V2 | [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | 推荐使用的信息图模型，提升小字渲染、复杂密集排版和整体美观度，并修复背景变黑问题。 |
-| SenseNova-U1-8B-MoT-Infographic | [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) | 基于 SenseNova-U1-8B-MoT 的信息图模型，强化复杂信息图生成、文字渲染和背景稳定性。 |
+| 模型 | 说明 |
+| :--- | :--- |
+| [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | 推荐使用的信息图模型，提升小字渲染、复杂密集排版和整体美观度，并修复背景变黑问题。 |
+| [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |  基于 SenseNova-U1-8B-MoT 的信息图模型，强化复杂信息图生成、文字渲染和背景稳定性。 |
 
 ## SenseNova-U1-8B-MoT-Infographic-V2
 
-**SenseNova-U1-8B-MoT-Infographic-V2** 在 **SenseNova-U1-8B-MoT-Infographic** 的基础上，进一步提升小字渲染、复杂密集排版和整体美观度：小字边缘更加锐利，高信息密度版面组织更稳定，海报、看板、报告类信息图的视觉效果更精致。
+**SenseNova-U1-8B-MoT-Infographic-V2** 在 **SenseNova-U1-8B-MoT-Infographic** 的基础上继续训练。在 MT / SFT 阶段，我们加入了更多高质量的合成数据，并进一步调整了信息图相关数据的配比，重点加强小字渲染、复杂密集排版以及高美观度样本；在 RL 阶段引入 DPO 训练，提升整体视觉质感；并在 GPPO 阶段继续优化 reward recipe，使模型更稳定地避免非预期黑底或过暗背景。
 
-同时，该模型修复了背景变黑问题，避免非预期黑底或过暗背景。
+- **模型性能：** 相比 **SenseNova-U1-8B-MoT-Infographic**，V2 在 BizGenEval hard/easy 上从 46.6 / 65.4 提升到 50.3 / 67.9（+3.7 / +2.5），IGenBench Q-ACC/I-ACC 从 69.5 / 17.0 提升到 71.4 / 18.3（+1.9 / +1.3）。OneIG(EN/ZH) 为 55.4 / 53.5，与上一版基本持平，说明信息图专项能力提升的同时，通用生成能力保持稳定。
+
+- **生成质量：** V2 进一步提升小字渲染、复杂密集排版和整体美观度：小字边缘更加锐利，高信息密度版面组织更稳定，海报、看板、报告类信息图的视觉效果更精致。同时，该模型修复了背景变黑问题，避免非预期黑底或过暗背景。
 
 ## SenseNova-U1-8B-MoT-Infographic
 
-**SenseNova-U1-8B-MoT-Infographic** 是基于 **SenseNova-U1-8B-MoT** 的信息图模型。该模型延长了 MT 阶段训练，并在 MT / SFT 阶段调整理解与生成任务的数据配比；RL 阶段进一步优化 reward recipe，以减少生成信息图中非预期黑色背景的出现。
+**SenseNova-U1-8B-MoT-Infographic** 是在 U1-8B-MoT 模型基础上延长了 MT 阶段训练，并在 MT 与 SFT 阶段调整了理解和生成任务中的数据配比产生的模型。在 RL 阶段，我们进一步优化了 reward recipe，以减少生成信息图中非预期黑色背景的出现。
 
-- **能力侧重：** 强化复杂信息图生成、文字渲染、图表生成、论文风格高密度小字页面，以及整体视觉美观度。
-- **案例覆盖：** 支持 100+ 种信息图风格与布局，生成效果可见下方对比和案例展示。
+- **模型性能：** 相比基础模型 **SenseNova-U1-8B-MoT**，BizGenEval hard/easy 从 39.8 / 61.1 提升到 46.6 / 65.4（+6.8 / +4.3），IGenBench Q-ACC/I-ACC 从 51.3 / 4.2 提升到 69.5 / 17.0（+18.2 / +12.8）。同时，模型仍保持稳健的视觉理解能力，没有出现明显退化。
+
+- **生成质量：** 模型能够生成涵盖 100+ 种风格与布局的复杂信息图，具备更优的视觉美观度与文字渲染能力 —— 甚至能够渲染如 arXiv 风格页面等高密度小字。
 
 ## 评测结果
 
@@ -35,7 +38,7 @@
 | ***Open-source Models*** | | | | | |
 | **SenseNova-U1-8B-MoT-Infographic-V2** | **50.3 / 67.9** | **71.4** | **18.3** | 55.4 | 53.5 |
 | **SenseNova-U1-8B-MoT-Infographic** | 46.6 / 65.4 | 69.5 | 17.0 | **55.6** | 53.3 |
-| **SenseNova-U1-8B-MoT** | 39.8 / 61.1 | 51.3 | 4.2 | 54.5 | **53.8** |
+| **SenseNova-U1-8B-MoT** | 39.8 / 61.1 | 51.3 | 4.2 | 54.5 | 53.8 |
 | Z-Image | 8.2 / 43.8 | 30.0 | 1.0 | 54.6 | 53.5 |
 | Qwen-Image-2512 | 6.3 / 41.0 | 32.2 | 1.0 | 53.0 | 51.5 |
 | Qwen-Image | 2.8 / 23.8 | 36.0 | 0.0 | 53.9 | 54.8 |
