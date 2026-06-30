@@ -398,6 +398,7 @@ We view these areas as active directions and expect continued improvements in fu
 
 ## 🛠️ Quick Start
 
+> 💡 **Tip:** If you encounter any issues during setup or running, please check our [FAQ](docs/FAQ.md).
 
 ### 🌐 Use with SenseNova-Studio
 
