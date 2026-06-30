@@ -11,7 +11,7 @@
 
 ## SenseNova-U1-8B-MoT-Infographic-V2
 
-**SenseNova-U1-8B-MoT-Infographic-V2** 是 **SenseNova-U1-8B-MoT-Infographic** 的升级版本。在 MT/SFT 阶段，我们通过引入更多更好的高质量合成/真实数据，并重新平衡信息图相关样本内分布以及和其他数据分布，进一步优化训练数据组成，针对小字渲染、复杂密集排版和高美观度生成能力进行重点提升。在 RL 阶段，我们引入 DPO 训练以提升整体视觉质量；在 GPPO 阶段，继续优化 reward recipe，使模型更稳定地避免非预期黑底或过暗背景。
+**SenseNova-U1-8B-MoT-Infographic-V2** 是 **SenseNova-U1-8B-MoT-Infographic** 的升级版本。在 MT/SFT 阶段，我们通过引入更多更好的高质量合成/真实数据，并重新平衡信息图相关样本内分布以及和其他数据分布，进一步优化训练数据组成，针对小字渲染、复杂密集排版和高美观度生成能力进行重点提升。在 RL 阶段，我们引入 DPO 训练以提升整体视觉质量；在 GRPO 阶段，继续优化 reward recipe，使模型更稳定地避免非预期黑底或过暗背景。
 
 - **模型性能：** 相比 **SenseNova-U1-8B-MoT-Infographic**，V2 在 BizGenEval hard/easy 上从 46.6 / 65.4 提升到 50.3 / 67.9（+3.7 / +2.5），IGenBench Q-ACC/I-ACC 从 69.5 / 17.0 提升到 71.4 / 18.3（+1.9 / +1.3）。OneIG(EN/ZH) 为 55.4 / 53.5，与上一版基本持平，说明信息图专项能力提升的同时，通用生成能力保持稳定。
 
