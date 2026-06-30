@@ -1,4 +1,4 @@
-# FAQ\-zh
+# 常见问题 (FAQ)
 
 本文档汇总 SenseNova U1 开源以来社区高频问题，按主题分类整理。如有未覆盖的问题，欢迎在 [GitHub Issues](https://github.com/OpenSenseNova/SenseNova-U1/issues) 或 [Discord 社群](https://discord\.gg/Su5mnbYFWf)反馈。
 
