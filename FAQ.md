@@ -14,11 +14,11 @@ This document collects the questions most frequently raised by the community sin
 
 **Q: Where can I request an invite code for the interleaved text-and-image feature?**
 
-A: The interleaved text-and-image feature is now available. You can try it using the [SenseNova Interleaved demo platform](https://unify.light-ai.top/).
+A: The interleaved text-and-image feature is now available. You can try it using the [SenseNova Interleaved demo platform](https://unify.light-ai.top).
 
 **Q: Is there a website where I can try it online directly?**
 
-A: Yes, you're welcome to use our [online demo platform](https://unify.light-ai.top/).
+A: Yes, you're welcome to use our [online demo platform](https://unify.light-ai.top).
 
 **Q: Where can I find benchmark comparisons between U1 and other leading models?**
 
@@ -48,7 +48,7 @@ A: The Token Plan is already live in mainland China, supporting 1,500 calls per 
 
 **Q: How do I get an API key to make calls?**
 
-A: We recommend creating an API key through the Token Plan. SenseNova 6.7 Flash-Lite is currently free to use—you can sign up at [this website](https://platform.sensenova.cn/token-plan) (Chinese users only; global version coming in July). See [the documentation](https://platform.sensenova.cn/docs) for details.
+A: We recommend creating an API key through the Token Plan. SenseNova 6.7 Flash-Lite is currently free to use—you can sign up at [this website](https://www.sensenova.cn/token-plan) (Chinese users only; global version coming in July). See [the documentation](https://platform.sensenova.cn/docs) for details.
 
 **Q: Is there a lighter, framework-agnostic way to make U1 directly compatible with the OpenAI API spec?**
 
@@ -198,7 +198,7 @@ A: You can refer to the example outputs and prompt structures in the [Prompt Gal
 
 A: Local models are supported. See the [documentation](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/prompt_enhancement.md).
 For the prompt template, see [this file](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/src/sensenova_u1/prompt_enhance/templates/infographic_system.md). 
-In addition, SenseNova 6.7 Flash-Lite is currently free and can be used for prompt enhancement, please refer to the [SenseNova Token Plan](https://platform.sensenova.cn/token-plan).
+In addition, SenseNova 6.7 Flash-Lite is currently free and can be used for prompt enhancement, please refer to the [SenseNova Token Plan](https://www.sensenova.cn/token-plan).
 
 ## 7. Common Errors
 
