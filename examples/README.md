@@ -125,26 +125,28 @@ Infographic-focused batched generation:
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
-    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V2 \
+    --jsonl examples/t2i/data/samples_infographic_V2.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
 ```
 
-See [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) to reproduce the infographic showcases, and the generated results can be viewed in [Infographic Showcases](../docs/u1_infographic_showcases.md).
+See [`t2i/data/samples_infographic_V2.jsonl`](./t2i/data/samples_infographic_V2.jsonl) to run the infographic showcase prompts. For model details, see [Infographic Model](../docs/u1_infographic_model.md).
 
-Infographic-focused 8-step LoRA generation
+Infographic-focused 8-step LoRA generation (V1.0 LoRA)
 
 ```bash
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
     --lora_path sensenova/SenseNova-U1-8B-MoT-LoRAs/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
-    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
+    --jsonl examples/t2i/data/samples_infographic.jsonl \
     --output_dir outputs/ \
     --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
     --profile
 ```
+
+The 8-step infographic LoRA above is released for `SenseNova-U1-8B-MoT-Infographic` and can also be used with `SenseNova-U1-8B-MoT-Infographic-V2` for faster generation, but may reduce aesthetics or cause blurry/repeated text. For best quality, use the full V2 checkpoint.
 
 ### T2I reasoning (think mode)
 

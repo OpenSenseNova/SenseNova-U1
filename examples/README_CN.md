@@ -116,26 +116,28 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
-    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V2 \
+    --jsonl examples/t2i/data/samples_infographic_V2.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
 ```
 
-可参考 [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) 复现信息图展示样例，生成结果展示可见 [信息图案例展示](../docs/u1_infographic_showcases.md)。
+可参考 [`t2i/data/samples_infographic_V2.jsonl`](./t2i/data/samples_infographic_V2.jsonl) 运行信息图展示 prompt。模型细节可见 [Infographic Model](../docs/u1_infographic_model_CN.md)。
 
-信息图 8-step LoRA 批量生成
+信息图 8-step LoRA 批量生成（V1.0 LoRA）
 
 ```bash
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
     --lora_path sensenova/SenseNova-U1-8B-MoT-LoRAs/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
-    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
+    --jsonl examples/t2i/data/samples_infographic.jsonl \
     --output_dir outputs/ \
     --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
     --profile
 ```
+
+上述 8-step 信息图 LoRA 面向 `SenseNova-U1-8B-MoT-Infographic` 发布，也可搭配 `SenseNova-U1-8B-MoT-Infographic-V2` 使用以获得更快生成速度，但可能带来美观度下降、文字模糊或重复等问题。追求最佳质量时，建议使用完整 V2 checkpoint。
 
 ### T2I 推理模式（think mode）
 

@@ -23,13 +23,15 @@
 
 ## 📣 Updated News
 
+- `[2026.06.29]` Release [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model with improved dense small-text rendering with sharper text edges, stronger complex dense-layout generation, and better overall visual aesthetics and harmony, plus a fix for the black-background issue. Model details and visual examples are available in [✨ U1 Infographic Model Series](docs/u1_infographic_model.md).
+
 - `[2026.06.12]` Release [SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) for faster infographic generation. Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
 - `[2026.06.11]` Release [SenseNova-U1-8B-MoT-Interleaved 📖](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved), specially optimized for interleaved image-text generation, with notably improved narrative coherence, character and style consistency, and text-image alignment in multi-page content.
 
 - `[2026.05.21]` Release the full-parameter fine-tuning [training code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/training/README.md) for SenseNova-U1.
 
-- `[2026.05.15]` Release [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) model for improved infographic generation. See [U1 Infographic Model](docs/u1_infographic_model.md) for details, and [✨ Infographic Showcases ](docs/u1_infographic_showcases.md) for 100 generated examples.
+- `[2026.05.15]` Release [SenseNova-U1-8B-MoT-Infographic 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) model for improved infographic generation. See [U1 Infographic Model Series](docs/u1_infographic_model.md) for details, and [✨ Infographic Showcases ](docs/u1_infographic_showcases.md) for 100 generated examples.
 
 - `[2026.05.10]` Release [🔥SenseNova-U1 Technical Report🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf) and the weights for [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) & [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT).
 
@@ -101,6 +103,7 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
+| SenseNova-U1-8B-MoT-Infographic-V2 | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) |
 | SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
 | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
