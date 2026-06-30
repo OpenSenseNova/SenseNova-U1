@@ -154,7 +154,7 @@ A: The model itself doesn't restrict the Python version. There is, however, a bi
 
 **Q: Why weren't the ComfyUI nodes uploaded to the official ComfyUI node Registry? How do I install them?**
 
-A: The official ComfyUI nodes have been published and registered in [the ComfyUI node Registry](https://registry.comfy.org/zh/nodes/ComfyUI-SenseNova-U1). For installation, see [this documentation](https://github.com/OpenSenseNova/SenseNova-U1/tree/main/apps/comfyui).
+A: The official ComfyUI nodes have been published and registered in [the ComfyUI node Registry](https://registry.comfy.org/nodes/ComfyUI-SenseNova-U1). For installation, see [this documentation](https://github.com/OpenSenseNova/SenseNova-U1/tree/main/apps/comfyui).
 
 **Q: After turning on `think_mode`, will it run 1024 steps and take far too long?**
 
