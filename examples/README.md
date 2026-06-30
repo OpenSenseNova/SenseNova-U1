@@ -126,7 +126,7 @@ Infographic-focused batched generation:
 ```bash
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V2 \
-    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
+    --jsonl examples/t2i/data/samples_infographic_V2.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
@@ -140,7 +140,7 @@ Infographic-focused 8-step LoRA generation (V1.0 LoRA)
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
     --lora_path sensenova/SenseNova-U1-8B-MoT-LoRAs/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
-    --jsonl examples/t2i/data/samples_infographic_showcases.jsonl \
+    --jsonl examples/t2i/data/samples_infographic.jsonl \
     --output_dir outputs/ \
     --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
     --profile
