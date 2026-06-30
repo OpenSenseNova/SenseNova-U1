@@ -142,7 +142,7 @@ A: The model does have fairly high memory / VRAM requirements. When resources ar
 
 **Q: GGUF balanced mode runs on 8 GB, but full mode (e.g. Q6) blows past the VRAM limit. Is that normal?**
 
-A: Yes—full mode has high VRAM requirements, and this is expected. When resources are limited, we recommend switching to [the GGUF](https://github.com/OpenSenseNova/SenseNova-U1) low / balanced tiers.
+A: Yes. Full mode has high VRAM requirements, and this is expected. When resources are limited, we recommend switching to the [GGUF + VRAM modes](https://github.com/OpenSenseNova/SenseNova-U1#-memory-efficient-inference-gguf--vram-modes) low / balanced tiers.
 
 **Q: Is there a multi-GPU (2-card / 4-card) inference script? A single card runs out of VRAM.**
 
