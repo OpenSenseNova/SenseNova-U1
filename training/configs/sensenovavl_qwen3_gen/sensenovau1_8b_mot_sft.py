@@ -112,6 +112,35 @@ post_layer_num = int(os.environ.get('post_layer_num', 0))
 
 
 # -----------------------------------------------------------------------------
+# LoRA (parameter-efficient fine-tuning of the image-generation path).
+#
+# When ``lora_enabled=true`` the whole model is frozen and only low-rank
+# adapters are trained. By default we adapt the generation-path attention AND
+# FFN of every LLM layer.
+#   lora_target=gen_attn      -> attention only ({wq,wk,wv,wo}_mot_gen)
+#   lora_target=gen_attn_ffn  -> attention + FFN (default; adds w1/w2/w3)
+# See sensenovavl/model/lora.py and README_LORA.md.
+# -----------------------------------------------------------------------------
+lora_enabled = env_bool('lora_enabled', False)
+lora_r = int(os.environ.get('lora_r', 32))
+lora_alpha = int(os.environ.get('lora_alpha', 32))  # alpha == r -> scale 1.0
+lora_dropout = float(os.environ.get('lora_dropout', 0.0))
+lora_target = os.environ.get('lora_target', 'gen_attn_ffn')
+# Comma-separated qualname prefixes; default = the LLM transformer layers.
+lora_target_prefixes = tuple(
+    p.strip() for p in os.environ.get('lora_target_prefixes', 'language_model.layers.').split(',') if p.strip()
+)
+_LORA_ATTN_LEAVES = ('wq_mot_gen', 'wk_mot_gen', 'wv_mot_gen', 'wo_mot_gen')
+_LORA_FFN_LEAVES = ('w1', 'w2', 'w3')
+if lora_target == 'gen_attn':
+    lora_target_leaf_names = _LORA_ATTN_LEAVES
+elif lora_target == 'gen_attn_ffn':
+    lora_target_leaf_names = _LORA_ATTN_LEAVES + _LORA_FFN_LEAVES
+else:
+    raise ValueError(f"unknown lora_target={lora_target!r}; choose 'gen_attn' or 'gen_attn_ffn'")
+
+
+# -----------------------------------------------------------------------------
 # Generation / flow-matching diffusion
 # -----------------------------------------------------------------------------
 P_mean = float(os.environ.get('P_mean', 0.0))
@@ -402,10 +431,31 @@ model = dict(
 
 
 # -----------------------------------------------------------------------------
+# LoRA config block — consumed by sensenovavl/train/pipeline.py::get_model and
+# sensenovalm/checkpoint/checkpoint_manager.py.
+# -----------------------------------------------------------------------------
+lora = dict(
+    enabled=lora_enabled,
+    r=lora_r,
+    alpha=lora_alpha,
+    dropout=lora_dropout,
+    target_prefixes=lora_target_prefixes,
+    target_leaf_names=lora_target_leaf_names,
+    # Every generation-path weight has "mot_gen" in its qualname; requiring it
+    # disambiguates the FFN w1/w2/w3 (the frozen understanding FFN reuses those
+    # leaf names) and excludes the understanding attention wq/wk/wv/wo.
+    require_substrings=('mot_gen',),
+    include_sequential_indices=False,
+)
+
+
+# -----------------------------------------------------------------------------
 # EMA copy of the model
 # -----------------------------------------------------------------------------
+# Disabled under LoRA: the EMA shadow copies *all* params, which for a frozen
+# base is GBs of HBM and a per-step update that can never change the result.
 averaged_model = dict(
-    enable=True,
+    enable=not lora_enabled,
     decay=ema_decay,
     multi_avg_fn="ema",
     use_buffers=False,

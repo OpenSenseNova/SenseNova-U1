@@ -236,6 +236,13 @@ def param_classification(name):
     if name.startswith("sensenovavl."):
         name = name[len("sensenovavl.") :]
 
+    # LoRA adapters are plain nn.Linear replicated across TP/WP ranks (tagged
+    # IS_REPLICA_ZERO_PARALLEL). They must land in a replica param group like
+    # ``fm_modules`` — never the weight-sharded ``llm_tp`` group their qualname
+    # prefix would otherwise select, which would reduce their grads wrongly.
+    if "lora_A" in name or "lora_B" in name:
+        return "fm_modules"
+
     if name.endswith("gate.wg.weight"):
         return "moe_gate"
 

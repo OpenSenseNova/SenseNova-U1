@@ -222,4 +222,57 @@ def get_model(model_args, data_args):
             ):
                 param.requires_grad = True
 
+    # LoRA injection runs last so it overrides every prior freeze/unfreeze
+    # decision: the entire model is frozen and only the adapters added under
+    # ``lora.target_prefixes`` are trainable. See sensenovavl/model/lora.py.
+    lora_cfg = gpc.config.get("lora", None)
+    if lora_cfg is not None and lora_cfg.get("enabled", False):
+        from sensenovalm.core.context import ParallelMode
+        from sensenovavl.model.lora import count_trainable_parameters, inject_lora
+
+        assert gpc.get_world_size(ParallelMode.PIPELINE) == 1, (
+            "LoRA training requires pp_size=1: the targeted layers would "
+            "otherwise be split across pipeline stages."
+        )
+
+        lora_kwargs = {
+            k: lora_cfg[k]
+            for k in (
+                "r", "alpha", "dropout",
+                "target_prefixes", "target_leaf_names",
+                "require_substrings", "include_sequential_indices",
+            )
+            if k in lora_cfg
+        }
+        wrapped = inject_lora(model, **lora_kwargs)
+
+        # Reentrant activation checkpointing (use_reentrant=True in both the LLM
+        # decoder and the ViT encoder) only backpropagates into a checkpointed
+        # block when at least one of its *inputs* requires grad. With the base
+        # fully frozen, the first trainable thing is a LoRA branch *inside* the
+        # block, so without this the adapters would silently get no gradient.
+        # Force the block input to require grad at each entry point we target.
+        def _force_input_grad(_module, args):
+            if args and torch.is_tensor(args[0]) and args[0].is_floating_point() and not args[0].requires_grad:
+                args[0].requires_grad_(True)
+
+        if any(w.startswith("language_model.") for w in wrapped):
+            model.language_model.layers[0].register_forward_pre_hook(_force_input_grad)
+        fm = getattr(model, "fm_modules", None)
+        if fm is not None and "vision_model_mot_gen" in fm and any(w.startswith("fm_modules.") for w in wrapped):
+            fm["vision_model_mot_gen"].embeddings.register_forward_hook(
+                lambda module, inputs, output: output.requires_grad_(True)
+            )
+
+        trainable, total = count_trainable_parameters(model)
+        if gpc.is_rank_for_log():
+            logger.info(f"[LoRA] config: {dict(lora_cfg)}")
+            logger.info(
+                f"[LoRA] wrapped {len(wrapped)} Linear layers; "
+                f"trainable={trainable:,} / total={total:,} "
+                f"({100.0 * trainable / max(total, 1):.4f}%)."
+            )
+            preview = wrapped[:8] + (["..."] if len(wrapped) > 8 else [])
+            logger.info(f"[LoRA] sample wrapped paths: {preview}")
+
     return model
