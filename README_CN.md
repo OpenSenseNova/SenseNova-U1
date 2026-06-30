@@ -397,6 +397,7 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 
 ## 🛠️ 快速开始
 
+> 💡 提示: 如果在配置或运行过程中遇到任何问题，请参考我们的 [常见问题](docs/FAQ_CN.md)
 
 ### 🌐 使用 SenseNova-Studio
 
