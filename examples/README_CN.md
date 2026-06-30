@@ -123,7 +123,7 @@ python examples/t2i/inference.py \
     --profile
 ```
 
-可参考 [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) 运行信息图展示 prompt。模型细节可见 [Infographic Model](../docs/u1_infographic_model_CN.md)。
+可参考 [`t2i/data/samples_infographic_V2.jsonl`](./t2i/data/samples_infographic_V2.jsonl) 运行信息图展示 prompt。模型细节可见 [Infographic Model](../docs/u1_infographic_model_CN.md)。
 
 信息图 8-step LoRA 批量生成（V1.0 LoRA）
 
