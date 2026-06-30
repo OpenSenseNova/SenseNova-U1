@@ -132,7 +132,7 @@ python examples/t2i/inference.py \
     --profile
 ```
 
-See [`t2i/data/samples_infographic_showcases.jsonl`](./t2i/data/samples_infographic_showcases.jsonl) to run the infographic showcase prompts. For model details, see [Infographic Model](../docs/u1_infographic_model.md).
+See [`t2i/data/samples_infographic_V2.jsonl`](./t2i/data/samples_infographic_V2.jsonl) to run the infographic showcase prompts. For model details, see [Infographic Model](../docs/u1_infographic_model.md).
 
 Infographic-focused 8-step LoRA generation (V1.0 LoRA)
 
