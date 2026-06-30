@@ -168,6 +168,26 @@ A: The official Studio, API, and local deployment models have all been upgraded 
 
 A: The XPU-related adaptations have been updated, so we recommend pulling the latest code and trying again. Also, the infographic model may throw a cast error when using f16; switching to bf16 can help. If problems persist, feel free to report them via [GitHub Issues](https://github.com/OpenSenseNova/SenseNova-U1/issues).
 
+**Q: What hardware is required to run the model?**
+
+A: The bf16 model is about 36 GB in size. Running it in full mode requires a machine with more than 36 GB of VRAM; when resources are limited, we recommend using the GGUF low / balanced tiers. For details, see [single-card layered offloading](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/README.md).
+
+**Q: With two cards totaling 32 GB of VRAM, I get OOM when using `--x2i_server_deploy_mode colocate --tp 2`. How do I configure it to use system memory?**
+
+A: The bf16 model is about 36 GB in size, so it generally requires a machine with more VRAM, or you can use multi-GPU inference instead.
+
+**Q: How do I successfully deploy the 38B model? What configuration is required?**
+
+A: The 38B model needs about 76 GB of VRAM. We recommend a dual-card 80 GB machine, or a 4-card 32 GB machine (such as the 5090).
+
+**Q: Which settings need to be changed to run on a single card? Should both tp and cfg be set to 1?**
+
+A: Yes, just set both to 1.
+
+**Q: How can I wrap the script as a vLLM / SGLang service?**
+
+A: vLLM deployment is now supported. See [Issue #93](https://github.com/OpenSenseNova/SenseNova-U1/issues/93).
+
 ## 6. Prompts
 
 **Q: How should I write prompts? The same prompt produces quite different results across platforms.**
