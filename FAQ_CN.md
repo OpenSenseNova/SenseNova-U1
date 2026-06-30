@@ -168,7 +168,7 @@ A：XPU 相关适配已更新，建议拉取最新代码重试。另外 infograp
 
 **Q：模型运行需要什么硬件配置？**
 
-A：bf16 模型约为 36G 大小，要求机器显存大于 36G，或者采取多卡推理的方式来使用。
+A：bf16 模型约为 36G 大小，`full`要求机器显存大于 36G，或者资源有限时建议使用 GGUF 的 `low/balanced` 档位。详情可参考 [单卡分层卸载](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/README_CN.md#--vram_mode%E5%8D%95%E5%8D%A1%E5%88%86%E5%B1%82%E5%8D%B8%E8%BD%BD)。
 
 **Q：双卡共 32G 显存，使用 `--x2i_server_deploy_mode colocate --tp 2` 时出现 OOM，如何设置参数以使用系统内存？**
 
