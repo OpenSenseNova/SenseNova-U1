@@ -22,6 +22,7 @@
 </p>
 
 ## 📣 Updated News
+- `[2026.07.16]` Release [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model builds on the strong text-to-image infographic capabilities of V2 while introducing dedicated optimizations for infographic editing. It supports 10 major editing task categories, enabling more accurate, flexible, and visually consistent modifications across diverse infographic scenarios. Model details and visual examples are available in [✨ U1 Infographic Model Series](docs/u1_infographic_model.md).
 
 - `[2026.06.29]` Release [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model with improved dense small-text rendering with sharper text edges, stronger complex dense-layout generation, and better overall visual aesthetics and harmony, plus a fix for the black-background issue. Model details and visual examples are available in [✨ U1 Infographic Model Series](docs/u1_infographic_model.md).
 
