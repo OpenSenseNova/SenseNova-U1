@@ -6,7 +6,7 @@ This page summarizes model weights, benchmarks, and generation results for the S
 
 | Model | Positioning and Core Capabilities |
 | :--- | :--- |
-| [SenseNova-U1-8B-MoT-Infographic-V3](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) | **Currently recommended release** for integrated infographic generation and editing. Supports T2I and IT2I, including local text/content editing and global style/layout editing. |
+| [SenseNova-U1-8B-MoT-Infographic-V3](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) | **Currently recommended release** for integrated infographic generation and editing. Supports T2I and IT2I, with a stronger focus on infographic editing. It covers 10 editing tasks across 4 major categories: general infographic editing, single-reference style transfer, precise text replacement, single-image subject card generation, local defect/artifact fixing, bbox-constrained local editing, data-chart linked editing, comprehensive layout rearrangement and element management, full-page structure reconstruction, and natural insertion within red-box masks. It also supports precise text repair in dense text regions while preserving the consistency of non-edited areas. |
 | [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | Infographic T2I specialist, improving small-text rendering, complex dense layouts, and overall aesthetics while fixing the black-background issue. |
 | [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) | First infographic-specialized release, strengthening complex infographic generation, text rendering, and background stability across 100+ styles and layouts. |
 
@@ -17,9 +17,9 @@ This page summarizes model weights, benchmarks, and generation results for the S
 
 ### SenseNova-U1-8B-MoT-Infographic-V3
 
-**SenseNova-U1-8B-MoT-Infographic-V2** and **SenseNova-U1-8B-MoT-Infographic-V3** are independently trained from the same base model and optimized for different objectives. V2 primarily focuses on infographic text-to-image generation, while V3 targets an integrated infographic generation-and-editing workflow, retaining text-to-image (T2I) capability and adding image editing (IT2I).
+**SenseNova-U1-8B-MoT-Infographic-V2** and **SenseNova-U1-8B-MoT-Infographic-V3** are independently trained from the same base model and optimized with different priorities. V2 primarily focuses on infographic text-to-image generation, while V3 targets an integrated infographic generation-and-editing workflow, preserving text-to-image (T2I) capability while significantly strengthening image editing (IT2I) capability.
 
-To balance generation and editing capabilities, V3 restarts training from the MT stage with diverse infographic editing data and jointly trains T2I and image-editing tasks at a controlled ratio, followed by SFT and RL stages.
+To balance generation and editing capabilities, V3 restarts training from the MT stage with diverse infographic editing task data and jointly trains T2I and image-editing tasks at a reasonable ratio, followed by SFT and RL stages.
 
 - **Model Performance:** V3 reaches an Overall Total of 50.23 on Qwen-Image-Bench, improving by 2.23 over V2's 48.00. It also achieves an Average of 5.89 on WeEdit and an overall score of 7.89 on GEdit-Bench, ranking first among the open-source models included in both evaluations.
 - **Generation Quality:** While retaining infographic T2I capability, V3 adds IT2I and supports either region-marked precise changes or natural-language-only editing. It handles localized text edits, local content insertion/removal/replacement, global style editing, and layout editing while preserving unedited regions whenever possible.
@@ -41,21 +41,6 @@ The first infographic-specialized release extends MT training from **SenseNova-U
 </details>
 
 ## Benchmark Results
-
-### Qwen-Image-Bench (Text-to-Image)
-
-| Model | Quality&nbsp;↑ | Aesthetics&nbsp;↑ | Alignment&nbsp;↑ | Real-world Fidelity&nbsp;↑ | Creative Generation&nbsp;↑ | Overall Total&nbsp;↑ |
-| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| GPT-Image-2 | **59.09** | **68.48** | **65.78** | **59.40** | **75.34** | **64.58** |
-| Nano-Banana-Pro | 55.30 | 61.38 | 60.30 | 55.91 | 64.54 | 57.84 |
-| Qwen-Image-2.0 | 55.16 | 60.36 | 57.86 | 53.06 | 63.59 | 57.84 |
-| HunyuanImage-3.0 | 50.76 | 54.66 | 53.16 | 45.33 | 48.33 | 50.81 |
-| **SenseNova-U1-8B-MoT-Infographic-V3** | 49.53 | 52.82 | 52.00 | 44.32 | 48.34 | 50.23 |
-| SenseNova-U1-8B-MoT-Infographic-V2 | 48.15 | 49.60 | 50.08 | 43.68 | 44.65 | 48.00 |
-| SenseNova-U1-8B-MoT-Infographic | 47.12 | 48.15 | 48.90 | 43.35 | 45.40 | 47.11 |
-| HiDream-O1 | 44.20 | 45.35 | 43.74 | 40.28 | 36.24 | 42.84 |
-
-<sub>Note: Higher is better. Column-best scores and the V3 model name are bolded. V3 reaches an Overall Total of 50.23, improving by 2.23 over V2's 48.00.</sub>
 
 ### WeEdit (Image Editing)
 
@@ -99,7 +84,23 @@ The first infographic-specialized release extends MT training from **SenseNova-U
 | UniWorld-v1 | 4.93 | 7.43 | 4.85 |
 | AnyEdit | 3.18 | 5.82 | 3.21 |
 
-<sub>Note: Higher is better. Group-best scores are bolded. V3 delivers the best overall performance among the open-source models included in this evaluation.</sub>
+<sub>Note: Higher is better. Group-best scores are bolded. V3 delivers the best overall performance among the open-source models.</sub>
+
+
+### Qwen-Image-Bench (Text-to-Image)
+
+| Model | Quality&nbsp;↑ | Aesthetics&nbsp;↑ | Alignment&nbsp;↑ | Real-world Fidelity&nbsp;↑ | Creative Generation&nbsp;↑ | Overall Total&nbsp;↑ |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| GPT-Image-2 | **59.09** | **68.48** | **65.78** | **59.40** | **75.34** | **64.58** |
+| Nano-Banana-Pro | 55.30 | 61.38 | 60.30 | 55.91 | 64.54 | 57.84 |
+| Qwen-Image-2.0 | 55.16 | 60.36 | 57.86 | 53.06 | 63.59 | 57.84 |
+| HunyuanImage-3.0 | 50.76 | 54.66 | 53.16 | 45.33 | 48.33 | 50.81 |
+| **SenseNova-U1-8B-MoT-Infographic-V3** | 49.53 | 52.82 | 52.00 | 44.32 | 48.34 | 50.23 |
+| SenseNova-U1-8B-MoT-Infographic-V2 | 48.15 | 49.60 | 50.08 | 43.68 | 44.65 | 48.00 |
+| SenseNova-U1-8B-MoT-Infographic | 47.12 | 48.15 | 48.90 | 43.35 | 45.40 | 47.11 |
+| HiDream-O1 | 44.20 | 45.35 | 43.74 | 40.28 | 36.24 | 42.84 |
+
+<sub>Note: Higher is better. Column-best scores and the V3 model name are bolded. V3 reaches an Overall Total of 50.23, improving by 2.23 over V2's 48.00.</sub>
 
 ### Historical Infographic Generation Benchmarks
 
@@ -126,7 +127,7 @@ The first infographic-specialized release extends MT training from **SenseNova-U
 
 <sub>Note: V3 is the current release and is pinned to the first row of the open-source section. IGenBench scores are reported as percentages; the remaining commercial and open-source models are sorted separately by the average of BizGenEval hard/easy and IGenBench Q-ACC/I-ACC. OneIG is included as a general generation reference.</sub>
 
-V2 and V3 are independently trained from the same base model with different task and data mixtures. V3 jointly trains infographic text-to-image generation and image editing with a lower proportion of IGenBench-related training data than V2, resulting in lower IGenBench scores than the generation-focused V2. At the same time, V3 remains broadly comparable to V2 on BizGenEval, improves the broader Qwen-Image-Bench score from 48.00 to 50.23, and adds infographic image-editing capability.
+V2 and V3 are independently trained from the same base model with different task and data mixtures. V3 jointly trains infographic text-to-image generation and image editing with a slightly lower proportion of chart-related training data than V2, resulting in lower IGenBench scores than the generation-focused V2. At the same time, V3 remains broadly comparable to V2 on BizGenEval, improves the broader Qwen-Image-Bench score from 48.00 to 50.23, and delivers a clear improvement in infographic editing capability.
 
 </details>
 

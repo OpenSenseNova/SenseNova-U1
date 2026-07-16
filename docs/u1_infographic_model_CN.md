@@ -6,7 +6,7 @@
 
 | 模型 | 版本定位与核心能力 |
 | :--- | :--- |
-| [SenseNova-U1-8B-MoT-Infographic-V3](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) | **当前推荐版本**；面向信息图生成与编辑一体化场景，支持 T2I 与 IT2I，包括局部文字与内容编辑、全局风格与布局编辑。 |
+| [SenseNova-U1-8B-MoT-Infographic-V3](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) | **当前推荐版本**；面向信息图生成与编辑一体化场景，支持 T2I 与 IT2I，重点增强了信息图编辑能力，支持覆盖 4 大类的 10 大编辑任务：覆盖常规信息图编辑、单参考风格迁移、精确文本替换、单图主体卡片生成、局部缺陷/伪影修复、带框约束局部修改、数据与图表联动编辑、综合版面重排与元素管理、整页结构重构、红框掩码内自然插入等 10 类编辑任务，并支持在密集文本中精确的修复文字，保持非编辑部分的一致性。 |
 | [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | 信息图 T2I 专项版本；重点提升小字渲染、复杂密集排版和整体美观度，并修复背景变黑问题。 |
 | [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) | 首个信息图专项版本；强化复杂信息图生成、文字渲染和背景稳定性，支持 100+ 种风格与布局。 |
 
@@ -17,9 +17,9 @@
 
 ### SenseNova-U1-8B-MoT-Infographic-V3
 
-**SenseNova-U1-8B-MoT-Infographic-V2** 与 **SenseNova-U1-8B-MoT-Infographic-V3** 均从同一基础模型出发独立训练，并面向不同目标进行优化。V2 主要聚焦信息图文生图；V3 则面向信息图生成与编辑一体化场景，保留文生图（T2I）能力，并新增图像编辑（IT2I）能力。
+**SenseNova-U1-8B-MoT-Infographic-V2** 与 **SenseNova-U1-8B-MoT-Infographic-V3** 均从同一基础模型出发独立训练，并面向不同目标进行重点优化。V2 主要聚焦信息图文生图；V3 则面向信息图生成与编辑一体化场景，保留文生图（T2I）能力不下降的同时，并重点增强图像编辑（IT2I）能力。
 
-为兼顾生成与编辑能力，V3 从 MT 阶段重新启动训练，构建多样的信息图编辑数据，并按一定比例联合训练 T2I 与图像编辑任务，随后进入 SFT 和 RL 阶段。
+为兼顾生成与编辑能力，V3 从 MT 阶段重新启动训练，构建多样的信息图编辑任务数据，并按合理比例联合训练 T2I 与图像编辑任务，随后进入 SFT 和 RL 阶段。
 
 - **模型性能：** Qwen-Image-Bench Overall Total 为 50.23，相比 V2 的 48.00 提升 2.23；WeEdit Average 为 5.89，GEdit-Bench 综合得分为 7.89，均在本次评测的开源模型中排名第一。
 - **生成质量：** V3 在保留信息图 T2I 能力的同时新增 IT2I 能力，既可通过标记目标区域定点修改，也可仅使用自然语言指令进行编辑；支持局部文字修改、局部内容插入/删除/替换、全局风格编辑和布局编辑，同时尽可能保持未编辑区域不变。
@@ -41,21 +41,6 @@ V2 是上一版本的升级版本。在 MT/SFT 阶段，我们引入更多高质
 </details>
 
 ## 评测结果
-
-### Qwen-Image-Bench（文生图）
-
-| 模型 | Quality&nbsp;↑ | Aesthetics&nbsp;↑ | Alignment&nbsp;↑ | Real-world Fidelity&nbsp;↑ | Creative Generation&nbsp;↑ | Overall Total&nbsp;↑ |
-| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| GPT-Image-2 | **59.09** | **68.48** | **65.78** | **59.40** | **75.34** | **64.58** |
-| Nano-Banana-Pro | 55.30 | 61.38 | 60.30 | 55.91 | 64.54 | 57.84 |
-| Qwen-Image-2.0 | 55.16 | 60.36 | 57.86 | 53.06 | 63.59 | 57.84 |
-| HunyuanImage-3.0 | 50.76 | 54.66 | 53.16 | 45.33 | 48.33 | 50.81 |
-| **SenseNova-U1-8B-MoT-Infographic-V3** | 49.53 | 52.82 | 52.00 | 44.32 | 48.34 | 50.23 |
-| SenseNova-U1-8B-MoT-Infographic-V2 | 48.15 | 49.60 | 50.08 | 43.68 | 44.65 | 48.00 |
-| SenseNova-U1-8B-MoT-Infographic | 47.12 | 48.15 | 48.90 | 43.35 | 45.40 | 47.11 |
-| HiDream-O1 | 44.20 | 45.35 | 43.74 | 40.28 | 36.24 | 42.84 |
-
-<sub>注：越高越好；各列最高分加粗，V3 模型名加粗。V3 的 Overall Total 为 50.23，相比 V2 的 48.00 提升 2.23。</sub>
 
 ### WeEdit（图像编辑）
 
@@ -99,7 +84,23 @@ V2 是上一版本的升级版本。在 MT/SFT 阶段，我们引入更多高质
 | UniWorld-v1 | 4.93 | 7.43 | 4.85 |
 | AnyEdit | 3.18 | 5.82 | 3.21 |
 
-<sub>注：越高越好；粗体为组内最高分。V3 在本次评测的开源模型中综合表现最优。</sub>
+<sub>注：越高越好；粗体为组内最高分。V3 在开源模型中综合表现最优。</sub>
+
+
+### Qwen-Image-Bench（文生图）
+
+| 模型 | Quality&nbsp;↑ | Aesthetics&nbsp;↑ | Alignment&nbsp;↑ | Real-world Fidelity&nbsp;↑ | Creative Generation&nbsp;↑ | Overall Total&nbsp;↑ |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| GPT-Image-2 | **59.09** | **68.48** | **65.78** | **59.40** | **75.34** | **64.58** |
+| Nano-Banana-Pro | 55.30 | 61.38 | 60.30 | 55.91 | 64.54 | 57.84 |
+| Qwen-Image-2.0 | 55.16 | 60.36 | 57.86 | 53.06 | 63.59 | 57.84 |
+| HunyuanImage-3.0 | 50.76 | 54.66 | 53.16 | 45.33 | 48.33 | 50.81 |
+| **SenseNova-U1-8B-MoT-Infographic-V3** | 49.53 | 52.82 | 52.00 | 44.32 | 48.34 | 50.23 |
+| SenseNova-U1-8B-MoT-Infographic-V2 | 48.15 | 49.60 | 50.08 | 43.68 | 44.65 | 48.00 |
+| SenseNova-U1-8B-MoT-Infographic | 47.12 | 48.15 | 48.90 | 43.35 | 45.40 | 47.11 |
+| HiDream-O1 | 44.20 | 45.35 | 43.74 | 40.28 | 36.24 | 42.84 |
+
+<sub>注：越高越好；各列最高分加粗，V3 模型名加粗。V3 的 Overall Total 为 50.23，相比 V2 的 48.00 提升 2.23。</sub>
 
 ### 历史信息图生成评测
 
@@ -126,7 +127,7 @@ V2 是上一版本的升级版本。在 MT/SFT 阶段，我们引入更多高质
 
 <sub>注：V3 为当前发布版本，固定列于开源模型首行。IGenBench 指标按百分制展示；其余商业模型与开源模型分别按 BizGenEval hard/easy、IGenBench Q-ACC/I-ACC 四项平均分排序。OneIG 仅作为通用生成能力参考。</sub>
 
-V2 与 V3 从同一基础模型出发独立训练，并采用不同的任务与数据配比。V3 联合训练信息图文生图和图像编辑任务，图表相关训练数据占比低于 V2，因此其 IGenBench 分数低于以信息图生成为主要目标的 V2。与此同时，V3 在 BizGenEval 上与 V2 基本持平，在覆盖更广泛文生图能力的 Qwen-Image-Bench 上由 48.00 提升至 50.23，并新增了信息图编辑能力。
+V2 与 V3 从同一基础模型出发独立训练，并采用不同的任务与数据配比。V3 联合训练信息图文生图和图像编辑任务，图表相关训练数据占比略低于 V2，因此其 IGenBench 分数低于以信息图生成为主要目标的 V2。与此同时，V3 在 BizGenEval 上与 V2 基本持平，在覆盖更广泛文生图能力的 Qwen-Image-Bench 上由 48.00 提升至 50.23，并在信息图编辑能力上有明显提升。
 
 </details>
 
