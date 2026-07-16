@@ -116,7 +116,7 @@ python examples/t2i/inference.py \
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V2 \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V3 \
     --jsonl examples/t2i/data/samples_infographic_V2.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -232,6 +232,21 @@ python examples/editing/inference.py \
     --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
     --timestep_shift 3.0 --num_steps 50 \
     --profile --compare
+```
+
+### 信息图编辑
+
+使用 `SenseNova-U1-8B-MoT-Infographic-V3` 进行信息图编辑：
+
+```bash
+python examples/editing/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V3 \
+  --prompt "将信息图的主标题修改为‘SenseNova-U1 V3’，保持其他内容和布局不变。" \
+  --image docs/assets/showcases/t2i_infographic/0004.webp \
+  --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
+  --timestep_shift 3.0 --num_steps 50 \
+  --output edited_infographic.png \
+  --profile --compare
 ```
 
 输出分辨率共支持两种模式：

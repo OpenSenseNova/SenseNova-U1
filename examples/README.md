@@ -121,18 +121,18 @@ python examples/t2i/inference.py \
 
 See [`t2i/data/samples.jsonl`](./t2i/data/samples.jsonl) for a tiny starter file. Run `python examples/t2i/inference.py --help` for the full flag list.
 
-Infographic-focused batched generation:
+Infographic-focused V3 batched generation:
 
 ```bash
 python examples/t2i/inference.py \
-    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V2 \
+    --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V3 \
     --jsonl examples/t2i/data/samples_infographic_V2.jsonl \
     --output_dir outputs/ \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
 ```
 
-See [`t2i/data/samples_infographic_V2.jsonl`](./t2i/data/samples_infographic_V2.jsonl) to run the infographic showcase prompts. For model details, see [Infographic Model](../docs/u1_infographic_model.md).
+The prompts in the existing [`t2i/data/samples_infographic_V2.jsonl`](./t2i/data/samples_infographic_V2.jsonl) are also suitable for V3. For model details, see [Infographic Model](../docs/u1_infographic_model.md).
 
 Infographic-focused 8-step LoRA generation (V1.0 LoRA)
 
@@ -244,6 +244,21 @@ python examples/editing/inference.py \
     --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
     --timestep_shift 3.0 --num_steps 50 \
     --profile --compare
+```
+
+### Infographic Editing (V3)
+
+Use `SenseNova-U1-8B-MoT-Infographic-V3` for infographic editing:
+
+```bash
+python examples/editing/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT-Infographic-V3 \
+  --prompt "Change the main title to 'SenseNova-U1 V3' while preserving the remaining content and layout." \
+  --image docs/assets/showcases/t2i_infographic/0004.webp \
+  --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
+  --timestep_shift 3.0 --num_steps 50 \
+  --output edited_infographic.png \
+  --profile --compare
 ```
 
 Output resolution has two modes:
