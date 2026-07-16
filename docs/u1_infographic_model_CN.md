@@ -6,7 +6,7 @@
 
 | 模型 | 版本定位与核心能力 |
 | :--- | :--- |
-| [SenseNova-U1-8B-MoT-Infographic-V3](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) | **当前推荐版本**；面向信息图生成与编辑一体化场景，支持 T2I 与 IT2I，重点增强了信息图编辑能力，支持覆盖 4 大类的 10 大编辑任务：覆盖常规信息图编辑、单参考风格迁移、精确文本替换、单图主体卡片生成、局部缺陷/伪影修复、带框约束局部修改、数据与图表联动编辑、综合版面重排与元素管理、整页结构重构、红框掩码内自然插入等 10 类编辑任务，并支持在密集文本中精确的修复文字，保持非编辑部分的一致性。 |
+| [SenseNova-U1-8B-MoT-Infographic-V3](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) | **当前推荐版本**；面向信息图生成与编辑一体化场景，支持 T2I 与 IT2I，重点增强了信息图编辑能力：覆盖常规信息图编辑、单参考风格迁移、精确文本替换、单图主体卡片生成、局部缺陷/伪影修复、带框局部修改、图表编辑、版面元素重排、整页结构重构、红框掩码自然插入等 10 类编辑任务，并支持在密集文本中精确的修复文字，保持非编辑部分的一致性。 |
 | [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | 信息图 T2I 专项版本；重点提升小字渲染、复杂密集排版和整体美观度，并修复背景变黑问题。 |
 | [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) | 首个信息图专项版本；强化复杂信息图生成、文字渲染和背景稳定性，支持 100+ 种风格与布局。 |
 
