@@ -21,7 +21,7 @@ This page summarizes model weights, benchmarks, and generation results for the S
 
 To balance generation and editing capabilities, V3 restarts training from the MT stage with diverse infographic editing data and jointly trains T2I and image-editing tasks at a controlled ratio, followed by SFT and RL stages.
 
-- **Model Performance:** V3 reaches an Overall Total of 50.23 on Qwen-Image-Bench, improving by 2.23 over V2's 48.00. It also achieves an Average of 5.89 on WeEdit and an EN_G_O score of 7.89 on GEdit-Bench, ranking first among the open-source models included in both evaluations.
+- **Model Performance:** V3 reaches an Overall Total of 50.23 on Qwen-Image-Bench, improving by 2.23 over V2's 48.00. It also achieves an Average of 5.89 on WeEdit and an overall score of 7.89 on GEdit-Bench, ranking first among the open-source models included in both evaluations.
 - **Generation Quality:** While retaining infographic T2I capability, V3 adds IT2I and supports either region-marked precise changes or natural-language-only editing. It handles localized text edits, local content insertion/removal/replacement, global style editing, and layout editing while preserving unedited regions whenever possible.
 
 ### SenseNova-U1-8B-MoT-Infographic-V2
@@ -44,7 +44,7 @@ The first infographic-specialized release extends MT training from **SenseNova-U
 
 ### Qwen-Image-Bench (Text-to-Image)
 
-| Model | Quality ↑ | Aesthetics ↑ | Alignment ↑ | Real-world Fidelity ↑ | Creative Generation ↑ | Overall Total ↑ |
+| Model | Quality&nbsp;↑ | Aesthetics&nbsp;↑ | Alignment&nbsp;↑ | Real-world Fidelity&nbsp;↑ | Creative Generation&nbsp;↑ | Overall Total&nbsp;↑ |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
 | GPT-Image-2 | **59.09** | **68.48** | **65.78** | **59.40** | **75.34** | **64.58** |
 | Nano-Banana-Pro | 55.30 | 61.38 | 60.30 | 55.91 | 64.54 | 57.84 |
@@ -59,7 +59,7 @@ The first infographic-specialized release extends MT training from **SenseNova-U
 
 ### WeEdit (Image Editing)
 
-| Model | Instruction Adherence ↑ | Text Clarity ↑ | Background Preservation ↑ | Average ↑ |
+| Model | Instruction Adherence&nbsp;↑ | Text Clarity&nbsp;↑ | Background Preservation&nbsp;↑ | Average&nbsp;↑ |
 | :--- | ---: | ---: | ---: | ---: |
 | ***Closed-source Models*** | | | | |
 | Nano-Banana-Pro | **8.58** | **9.10** | **8.85** | **8.84** |
@@ -79,7 +79,7 @@ The first infographic-specialized release extends MT training from **SenseNova-U
 
 ### GEdit-Bench (Image Editing)
 
-| Model (scored by GPT-4o) | EN_G_SC ↑ | EN_G_PQ ↑ | EN_G_O ↑ |
+| Model | EN_G_SC&nbsp;↑ | EN_G_PQ&nbsp;↑ | EN_G_O&nbsp;↑ |
 | :--- | ---: | ---: | ---: |
 | ***Closed-source Models*** | | | |
 | Qwen-Image-2.0 | **9.02** | 8.02 | **8.37** |
@@ -99,14 +99,14 @@ The first infographic-specialized release extends MT training from **SenseNova-U
 | UniWorld-v1 | 4.93 | 7.43 | 4.85 |
 | AnyEdit | 3.18 | 5.82 | 3.21 |
 
-<sub>Note: Higher is better. Group-best scores are bolded. V3 ranks first by EN_G_O among the open-source models included in this evaluation.</sub>
+<sub>Note: Higher is better. Group-best scores are bolded. V3 delivers the best overall performance among the open-source models included in this evaluation.</sub>
 
 ### Historical Infographic Generation Benchmarks
 
 <details>
 <summary><b>Expand for complete BizGenEval, IGenBench, and OneIG results</b></summary>
 
-| Model | BizGenEval Avg. (hard / easy) ↑ | IGenBench Q-ACC ↑ | IGenBench I-ACC ↑ | OneIG(EN) ↑ | OneIG(ZH) ↑ |
+| Model | BizGenEval Avg. (hard / easy)&nbsp;↑ | IGenBench Q-ACC&nbsp;↑ | IGenBench I-ACC&nbsp;↑ | OneIG(EN)&nbsp;↑ | OneIG(ZH)&nbsp;↑ |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | ***Commercial Models*** | | 
 | Nano-Banana-Pro | 76.7 / 93.7 | 90.6 | 48.8 | 58.1 | 56.8 |

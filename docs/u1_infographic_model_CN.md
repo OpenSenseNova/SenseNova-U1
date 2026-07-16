@@ -21,7 +21,7 @@
 
 为兼顾生成与编辑能力，V3 从 MT 阶段重新启动训练，构建多样的信息图编辑数据，并按一定比例联合训练 T2I 与图像编辑任务，随后进入 SFT 和 RL 阶段。
 
-- **模型性能：** Qwen-Image-Bench Overall Total 为 50.23，相比 V2 的 48.00 提升 2.23；WeEdit Average 为 5.89，GEdit-Bench EN_G_O 为 7.89，均在本次评测的开源模型中排名第一。
+- **模型性能：** Qwen-Image-Bench Overall Total 为 50.23，相比 V2 的 48.00 提升 2.23；WeEdit Average 为 5.89，GEdit-Bench 综合得分为 7.89，均在本次评测的开源模型中排名第一。
 - **生成质量：** V3 在保留信息图 T2I 能力的同时新增 IT2I 能力，既可通过标记目标区域定点修改，也可仅使用自然语言指令进行编辑；支持局部文字修改、局部内容插入/删除/替换、全局风格编辑和布局编辑，同时尽可能保持未编辑区域不变。
 
 ### SenseNova-U1-8B-MoT-Infographic-V2
@@ -44,7 +44,7 @@ V2 是上一版本的升级版本。在 MT/SFT 阶段，我们引入更多高质
 
 ### Qwen-Image-Bench（文生图）
 
-| 模型 | Quality ↑ | Aesthetics ↑ | Alignment ↑ | Real-world Fidelity ↑ | Creative Generation ↑ | Overall Total ↑ |
+| 模型 | Quality&nbsp;↑ | Aesthetics&nbsp;↑ | Alignment&nbsp;↑ | Real-world Fidelity&nbsp;↑ | Creative Generation&nbsp;↑ | Overall Total&nbsp;↑ |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
 | GPT-Image-2 | **59.09** | **68.48** | **65.78** | **59.40** | **75.34** | **64.58** |
 | Nano-Banana-Pro | 55.30 | 61.38 | 60.30 | 55.91 | 64.54 | 57.84 |
@@ -59,7 +59,7 @@ V2 是上一版本的升级版本。在 MT/SFT 阶段，我们引入更多高质
 
 ### WeEdit（图像编辑）
 
-| 模型 | Instruction Adherence ↑ | Text Clarity ↑ | Background Preservation ↑ | Average ↑ |
+| 模型 | Instruction Adherence&nbsp;↑ | Text Clarity&nbsp;↑ | Background Preservation&nbsp;↑ | Average&nbsp;↑ |
 | :--- | ---: | ---: | ---: | ---: |
 | ***闭源模型*** | | | | |
 | Nano-Banana-Pro | **8.58** | **9.10** | **8.85** | **8.84** |
@@ -79,7 +79,7 @@ V2 是上一版本的升级版本。在 MT/SFT 阶段，我们引入更多高质
 
 ### GEdit-Bench（图像编辑）
 
-| 模型（GPT-4o 打分） | EN_G_SC ↑ | EN_G_PQ ↑ | EN_G_O ↑ |
+| 模型 | EN_G_SC&nbsp;↑ | EN_G_PQ&nbsp;↑ | EN_G_O&nbsp;↑ |
 | :--- | ---: | ---: | ---: |
 | ***闭源模型*** | | | |
 | Qwen-Image-2.0 | **9.02** | 8.02 | **8.37** |
@@ -99,14 +99,14 @@ V2 是上一版本的升级版本。在 MT/SFT 阶段，我们引入更多高质
 | UniWorld-v1 | 4.93 | 7.43 | 4.85 |
 | AnyEdit | 3.18 | 5.82 | 3.21 |
 
-<sub>注：越高越好；粗体为组内最高分。V3 的 EN_G_O 在本次评测的开源模型中排名第一。</sub>
+<sub>注：越高越好；粗体为组内最高分。V3 在本次评测的开源模型中综合表现最优。</sub>
 
 ### 历史信息图生成评测
 
 <details>
 <summary><b>展开查看 BizGenEval、IGenBench 与 OneIG 完整结果</b></summary>
 
-| 模型 | BizGenEval Avg. (hard / easy) ↑ | IGenBench Q-ACC ↑ | IGenBench I-ACC ↑ | OneIG(EN) ↑ | OneIG(ZH) ↑ |
+| 模型 | BizGenEval Avg. (hard / easy)&nbsp;↑ | IGenBench Q-ACC&nbsp;↑ | IGenBench I-ACC&nbsp;↑ | OneIG(EN)&nbsp;↑ | OneIG(ZH)&nbsp;↑ |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | ***Commercial Models*** | | 
 | Nano-Banana-Pro | 76.7 / 93.7 | 90.6 | 48.8 | 58.1 | 56.8 |
