@@ -10,7 +10,6 @@
 | [SenseNova-U1-8B-MoT-Infographic-V2](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) | 信息图 T2I 专项版本；重点提升小字渲染、复杂密集排版和整体美观度，并修复背景变黑问题。 |
 | [SenseNova-U1-8B-MoT-Infographic](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) | 首个信息图专项版本；强化复杂信息图生成、文字渲染和背景稳定性，支持 100+ 种风格与布局。 |
 
-> V2 与 V3 从同一基础模型出发独立训练，并分别面向信息图生成和生成编辑一体化场景进行优化。
 
 <details>
 <summary><b>展开查看各版本的训练与能力说明</b></summary>
