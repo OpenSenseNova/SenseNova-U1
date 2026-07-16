@@ -23,7 +23,7 @@
 
 ## 📣 最新动态
 
-- `[2026.07.16]` 发布 [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3)。新版本面向信息图生成与编辑一体化场景，在保留文生图能力的同时，新增局部文字与内容修改、全局风格编辑和布局编辑能力，并尽可能保持未编辑区域不变。模型详情及评测结果可见 [✨ U1 Infographic Model Series](docs/u1_infographic_model_CN.md)。
+- `[2026.07.16]` 发布 [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3)。新版本面向信息图生成与编辑一体化场景，它在保留强大的文本生成图像（text-to-image, T2I）能力的基础上，重点增强了信息图编辑能力，支持覆盖 4 大类的 10 大编辑任务：局部文字编辑、局部内容编辑、全局风格编辑和全局布局编辑等，能够在密集文本中精确的修复文字，并在编辑过程中尽可能保持未编辑区域的一致性与完整性。更多模型细节及基准测试结果请参阅 [✨ U1 Infographic Model Series](docs/u1_infographic_model_CN.md)。
 
 - `[2026.06.29]` 发布 [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2)，新版信息图模型提升密集小字渲染能力，文字边缘更加锐利清晰；增强复杂密集图的排版能力，并提升整体画面美观和谐度。此外修复背景变黑问题。模型细节及可视化效果可见 [✨ U1 Infographic Model Series](docs/u1_infographic_model_CN.md)。
 
