@@ -173,6 +173,31 @@ def _explicit_size_from_sample(sample: dict) -> tuple[int, int] | None:
     return None
 
 
+def _maybe_enhance_edit_prompt(
+    image_paths: Sequence[str | Path],
+    prompt: str,
+    *,
+    enabled: bool,
+    print_result: bool,
+    model: str,
+) -> str:
+    """Rewrite an edit prompt with ``edit_pe`` when enabled."""
+    if not enabled:
+        return prompt
+
+    from sensenova_u1.prompt_enhance.edit_pe import enhance_edit_prompt
+
+    enhanced = enhance_edit_prompt(
+        image_paths,
+        prompt,
+        model=model,
+    )
+    if print_result:
+        print(f"[edit_pe] original : {prompt}")
+        print(f"[edit_pe] enhanced : {enhanced}")
+    return enhanced
+
+
 class SenseNovaU1Editing:
     """Thin wrapper calling ``model.it2i_generate`` on top of ``AutoModel``."""
 
@@ -435,6 +460,33 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     p.add_argument(
+        "--use_edit_pe",
+        "--use-edit-pe",
+        dest="use_edit_pe",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Enhance each edit instruction with sensenova_u1.prompt_enhance.edit_pe "
+            "before inference. The enhancer receives the ordered input image paths "
+            "and requires TOKENHUB_API_KEY. Enabled by default; disable with "
+            "--no-use-edit-pe."
+        ),
+    )
+    p.add_argument(
+        "--print_edit_pe",
+        "--print-edit-pe",
+        dest="print_edit_pe",
+        action="store_true",
+        help="With --use_edit_pe: print the original and enhanced edit prompts.",
+    )
+    p.add_argument(
+        "--edit_pe_model",
+        "--edit-pe-model",
+        dest="edit_pe_model",
+        default="gpt-5.5",
+        help="Backend model used by edit_pe (default: gpt-5.5).",
+    )
+    p.add_argument(
         "--compare",
         action="store_true",
         help=(
@@ -450,6 +502,8 @@ def parse_args() -> argparse.Namespace:
         p.error("--prompt requires at least one --image.")
     if args.jsonl is not None and args.image:
         p.error("--image is only valid with --prompt; in --jsonl mode, put 'image' in the JSONL.")
+    if args.print_edit_pe and not args.use_edit_pe:
+        p.error("--print_edit_pe requires --use_edit_pe.")
     if (args.width is None) != (args.height is None):
         p.error("--width and --height must be given together (or both omitted).")
     if args.width is not None:
@@ -498,6 +552,13 @@ def main() -> None:
     cli_explicit_size: tuple[int, int] | None = (args.width, args.height) if args.width is not None else None
 
     if args.prompt is not None:
+        prompt = _maybe_enhance_edit_prompt(
+            args.image,
+            args.prompt,
+            enabled=args.use_edit_pe,
+            print_result=args.print_edit_pe,
+            model=args.edit_pe_model,
+        )
         input_max_pixels = _resolve_input_max_pixels(args.input_max_pixels, len(args.image))
         _print_input_resize_hint(
             len(args.image), input_max_pixels, args.input_max_pixels or "model-default", args.do_resize
@@ -511,7 +572,7 @@ def main() -> None:
         # _set_seed(args.seed)
         with profiler.time_generate(w, h, args.batch_size):
             outputs, think_text = engine.edit(
-                args.prompt,
+                prompt,
                 images,
                 image_size=(w, h),
                 cfg_scale=args.cfg_scale,
@@ -532,7 +593,7 @@ def main() -> None:
             think_path.write_text(think_text, encoding="utf-8")
             print(f"[saved] {think_path}")
         if args.compare:
-            save_compare(out_path, images, outputs[0], args.prompt)
+            save_compare(out_path, images, outputs[0], prompt)
         profiler.report()
         return
 
@@ -550,6 +611,13 @@ def main() -> None:
 
     for i, sample in enumerate(tqdm(samples, desc="Editing")):
         paths = _coerce_image_paths(sample["image"])
+        prompt = _maybe_enhance_edit_prompt(
+            paths,
+            sample["prompt"],
+            enabled=args.use_edit_pe,
+            print_result=args.print_edit_pe,
+            model=args.edit_pe_model,
+        )
         sample_input_max_pixels = sample.get("input_max_pixels", args.input_max_pixels)
         sample_do_resize = _coerce_bool(sample.get("do_resize", args.do_resize))
         input_max_pixels = _resolve_input_max_pixels(str(sample_input_max_pixels), len(paths))
@@ -568,7 +636,7 @@ def main() -> None:
         # _set_seed(int(sample.get("seed", args.seed)))
         with profiler.time_generate(w, h, 1):
             outputs, think_text = engine.edit(
-                sample["prompt"],
+                prompt,
                 images,
                 image_size=(w, h),
                 cfg_scale=args.cfg_scale,
@@ -589,7 +657,7 @@ def main() -> None:
             think_path = sample_out.with_suffix(".think.txt")
             think_path.write_text(think_text, encoding="utf-8")
         if args.compare:
-            save_compare(sample_out, images, outputs[0], sample["prompt"])
+            save_compare(sample_out, images, outputs[0], prompt)
 
     profiler.report()
 
