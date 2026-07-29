@@ -1,0 +1,4 @@
+interface:
+  display_name: "SenseNova U1.5 Prompt Enhancement"
+  short_description: "Create precise, text-safe SenseNova image prompts"
+  default_prompt: "Use $sensenova-u1-5-prompt-enhancement to transform this image brief into faithful, compact Render JSON."
