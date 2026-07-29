@@ -24,6 +24,7 @@ from sensenova_u1.utils import (
     save_compare,
     vram_mode_to_prefetch_count,
 )
+from sensenova_u1_5.edit.edit_pe import enhance_edit_prompt
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
@@ -184,8 +185,6 @@ def _maybe_enhance_edit_prompt(
     """Rewrite an edit prompt with ``edit_pe`` when enabled."""
     if not enabled:
         return prompt
-
-    from sensenova_u1.prompt_enhance.edit_pe import enhance_edit_prompt
 
     enhanced = enhance_edit_prompt(
         image_paths,
@@ -466,7 +465,7 @@ def parse_args() -> argparse.Namespace:
         action=argparse.BooleanOptionalAction,
         default=True,
         help=(
-            "Enhance each edit instruction with sensenova_u1.prompt_enhance.edit_pe "
+            "Enhance each edit instruction with src/sensenova_u1_5/edit/edit_pe.py "
             "before inference. The enhancer receives the ordered input image paths "
             "and requires TOKENHUB_API_KEY. Enabled by default; disable with "
             "--no-use-edit-pe."
