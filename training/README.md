@@ -1,6 +1,6 @@
 # SenseNova-U1
 
-> Training code for **SenseNova-U1**.
+> Training code for **SenseNova-U1** and **SenseNova-U1.5 Preview**.
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
@@ -11,7 +11,7 @@
 ├── train_sensenovau1.py           # entry point
 ├── configs/sensenovavl_qwen3_gen/ # 8B + A3B training configs (env-var driven)
 ├── shell/                         # torchrun launchers
-│   └── train_u1/{8B,A3B}.sh       # per-model env-var presets + torchrun call
+│   └── train_u1/{8B,A3B,U1.5_8B}.sh # per-model env-var presets + torchrun call
 ├── sensenovalm/                   # training framework (derived from InternEvo)
 │   ├── core/                      # trainer, scheduler, parallel context
 │   ├── checkpoint/                # save/resume, HF-format conversion
@@ -35,11 +35,12 @@
 - Python 3.10+
 - PyTorch 2.5+ — full list in [`requirements.txt`](requirements.txt)
 
-**Minimum hardware (as shipped — `shell/train_u1/{8B,A3B}.sh` defaults):**
+**Minimum hardware (as shipped — `shell/train_u1/{8B,A3B,U1.5_8B}.sh` defaults):**
 
 | Model | GPUs (minimum) | HBM / GPU | Why |
 |---|---|---|---|
 | `8B.sh` (dense) | **1 × 8** | 80 GB | `wp=8 × tp=1 × pp=1 = 8` ranks; `seq_len=28672`, `num_imgs=144` |
+| `U1.5_8B.sh` (pixel-head PT) | **1 × 8** | 80 GB | Same topology; `seq_len=8192`, up to 1024² generation |
 | `A3B.sh` (MoE)  | **2 × 8** | 80 GB | `wp=8 × tp=2 × pp=1 = 16` ranks required by ISP; same seq budget |
 
 To fit on smaller setups, reduce `seq_len` / `num_imgs` (memory) and / or
@@ -54,7 +55,7 @@ pip install -r requirements.txt
 
 ### Configure your environment
 
-The launchers are plain `torchrun` wrappers — edit `shell/train_u1/{8B,A3B}.sh`
+The launchers are plain `torchrun` wrappers — edit `shell/train_u1/{8B,A3B,U1.5_8B}.sh`
 and set at least:
 
 | Variable | Purpose |
@@ -86,6 +87,9 @@ list of consumers.
 ```bash
 # 8B smoke test — single node, 8 GPUs.
 bash shell/train_u1/8B.sh
+
+# U1.5 8B generation pre-training with the Pixel Shuffle convolution head.
+bash shell/train_u1/U1.5_8B.sh
 
 # A3B requires 2 nodes (wp × tp = 16 ranks under ISP) — run on each node,
 # replacing NODE_RANK / MASTER_ADDR:
@@ -185,7 +189,7 @@ to the training-only surface area.
 
 What's in scope:
 
-- Distributed training of SenseNova-U1 (8B dense and 38B-A3B MoE)
+- Distributed training of SenseNova-U1 (8B dense and 38B-A3B MoE) and U1.5 8B generation PT
 - Mixed task training across the five `type_id` categories above
 - Streaming-resumable data loading with checkpoint state
 - HF-format checkpoint export via [`tools/revert2hf.py`](tools/revert2hf.py)

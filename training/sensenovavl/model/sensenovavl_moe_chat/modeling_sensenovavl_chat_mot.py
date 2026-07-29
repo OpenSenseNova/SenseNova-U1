@@ -21,7 +21,7 @@ from sensenovalm.utils.common import get_current_device
 from sensenovalm.utils.logger import get_logger
 from sensenovalm.utils.parallel import is_using_isp
 from sensenovavl.utils.utils import build_abs_positions_from_grid_hw
-from sensenovavl.model.modules.fm_modules import TimestepEmbedder
+from sensenovavl.model.modules.fm_modules import ConvDecoder, TimestepEmbedder
 
 from .configuration_sensenovavl_chat import SenseNovaVLChatConfig
 from .modeling_neo_vit import NEOVisionModel
@@ -480,6 +480,7 @@ class SenseNovaVLChatMoTModel(PreTrainedModel):
         self.P_mean = config.P_mean
         self.P_std = config.P_std
         self.t_eps = config.t_eps
+        self.use_pixel_head = config.use_pixel_head
 
         if first is True and self.pure_llm is False:
             if gpc.is_rank_for_log():
@@ -511,6 +512,9 @@ class SenseNovaVLChatMoTModel(PreTrainedModel):
                     "vision_model_mot_gen": vision_model_mot_gen
                 }
             )
+
+            if self.use_pixel_head:
+                self.fm_modules["fm_head"] = ConvDecoder(llm_hidden_size)
 
             if self.add_noise_scale_embedding:
                 noise_scale_embedder = TimestepEmbedder(llm_hidden_size)
@@ -1403,7 +1407,39 @@ class SenseNovaVLChatMoTModel(PreTrainedModel):
                 image_gen_indicators = torch.cat([image_gen_indicators_packed[:pad_dummy_image_num].view(1, -1), image_gen_indicators], 1)
             image_gen_hidden_states = hidden_states_before_output.view(-1, hidden_states_before_output.shape[-1])[image_gen_indicators.view(-1)]
 
-            image_gen_pred_x = self.fm_modules['fm_head'](image_gen_hidden_states)
+            if self.use_pixel_head:
+                gen_grid_hw = [
+                    grid_hw[image_i]
+                    for image_i in range(len(image_for_gen_flags[0]))
+                    if image_for_gen_flags[0][image_i]
+                ]
+                merge_size = round(1 / self.downsample_ratio)
+                if pad_dummy_image_gen:
+                    dummy_h_tok, dummy_w_tok = 16, 8
+                    assert dummy_h_tok * dummy_w_tok == pad_dummy_image_num
+                    gen_grid_hw = [
+                        torch.tensor(
+                            [dummy_h_tok * merge_size, dummy_w_tok * merge_size],
+                            device=image_gen_hidden_states.device,
+                            dtype=torch.long,
+                        )
+                    ] + gen_grid_hw
+
+                split_sizes = [int((hw[0] // merge_size) * (hw[1] // merge_size)) for hw in gen_grid_hw]
+                pixel_list_1d = torch.split(image_gen_hidden_states, split_sizes, dim=0)
+                out_1d_list = []
+                patch_size = self.config.vision_config.patch_size * merge_size
+                for pixels_1d, hw in zip(pixel_list_1d, gen_grid_hw):
+                    h_tok = int(hw[0] // merge_size)
+                    w_tok = int(hw[1] // merge_size)
+                    img_2d = pixels_1d.view(1, h_tok, w_tok, -1).permute(0, 3, 1, 2).contiguous()
+                    decoded = self.fm_modules["fm_head"](img_2d)
+                    decoded = decoded.view(1, 3, h_tok, patch_size, w_tok, patch_size)
+                    decoded = torch.einsum("b c h p w q -> b h w p q c", decoded)
+                    out_1d_list.append(decoded.contiguous().view(-1, patch_size * patch_size * 3))
+                image_gen_pred_x = torch.cat(out_1d_list, dim=0)
+            else:
+                image_gen_pred_x = self.fm_modules['fm_head'](image_gen_hidden_states)
 
             # calculate v loss
             image_gen_pred_v = (image_gen_pred_x - image_gen_z) / (1 - image_gen_t.view(-1, 1)).clamp_min(self.t_eps)

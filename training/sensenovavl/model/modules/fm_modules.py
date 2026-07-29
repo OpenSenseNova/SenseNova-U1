@@ -40,3 +40,22 @@ class TimestepEmbedder(nn.Module):
             t_freq = t_freq.to(weight_dtype)
         t_emb = self.mlp(t_freq)
         return t_emb
+
+
+class ConvDecoder(nn.Module):
+    """Decode an H/32 token grid into RGB pixels with local spatial mixing."""
+
+    def __init__(self, input_dim=4096, hidden_dim=1024):
+        super().__init__()
+        self.ps1 = nn.PixelShuffle(2)
+        self.conv1 = nn.Conv2d(input_dim // 4, hidden_dim, kernel_size=3, padding=1)
+        self.act1 = nn.GELU()
+
+        self.ps2 = nn.PixelShuffle(2)
+        self.conv2 = nn.Conv2d(hidden_dim // 4, 192, kernel_size=3, padding=1)
+
+        self.ps3 = nn.PixelShuffle(8)
+
+    def forward(self, x):
+        x = self.act1(self.conv1(self.ps1(x)))
+        return self.ps3(self.conv2(self.ps2(x)))

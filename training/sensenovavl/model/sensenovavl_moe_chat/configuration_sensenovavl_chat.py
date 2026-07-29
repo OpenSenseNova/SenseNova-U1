@@ -58,6 +58,7 @@ class SenseNovaVLChatConfig(PretrainedConfig):
         fm_head_dim=1536,
         fm_head_layers=12,
         fm_head_mlp_ratio=1,
+        use_pixel_head=False,
         extra_num_layers_post=0,
         **kwargs,
     ):
@@ -105,6 +106,7 @@ class SenseNovaVLChatConfig(PretrainedConfig):
         self.fm_head_dim = fm_head_dim
         self.fm_head_layers = fm_head_layers
         self.fm_head_mlp_ratio = fm_head_mlp_ratio
+        self.use_pixel_head = use_pixel_head
         self.extra_num_layers_post = extra_num_layers_post
 
         logger.info(f"vision_select_layer: {self.select_layer}")
