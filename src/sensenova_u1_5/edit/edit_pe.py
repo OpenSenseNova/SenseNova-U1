@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Enhance one image-edit prompt from one or more input images with gpt-5.5.
 
+Optional environment variables:
+    OPENAI_MODEL      Model name (default: gpt-5.5)
+    OPENAI_BASE_URL   OpenAI-compatible API endpoint
+
 Python usage:
 
     from sensenova_u1_5.edit.edit_pe import enhance_edit_prompt
@@ -13,10 +17,10 @@ Python usage:
 
 Command-line usage:
 
-    TOKENHUB_API_KEY=... python src/sensenova_u1_5/edit/edit_pe.py \
+    OPENAI_API_KEY=... python src/sensenova_u1_5/edit/edit_pe.py \
         /path/to/input.png "把天空改成晚霞"
 
-    TOKENHUB_API_KEY=... python src/sensenova_u1_5/edit/edit_pe.py \
+    OPENAI_API_KEY=... python src/sensenova_u1_5/edit/edit_pe.py \
         /path/to/base.png /path/to/reference.png "参考第二张图的风格修改第一张图"
 """
 
@@ -27,13 +31,9 @@ import base64
 import mimetypes
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Sequence, Union
+from typing import Sequence, Union
+from openai import OpenAI
 
-if TYPE_CHECKING:
-    from openai import OpenAI
-
-MODEL = "gpt-5.5"
-BASE_URL = "https://tokenhub.sensetime.com/v1"
 MAX_TOKENS = 8192
 EXTRA_BODY = {"reasoning_effort": "low"}
 USER_SUFFIX = "\n\nRewritten Prompt:"
@@ -113,10 +113,10 @@ Please provide only the rewritten instruction in the same language as the origin
 
 
 def _load_api_key() -> str:
-    """Read the TokenHub key without embedding credentials in source code."""
-    api_key = os.environ.get("TOKENHUB_API_KEY", "").strip()
+    """Read the OpenAI API key without embedding credentials in source code."""
+    api_key = os.environ.get("OPENAI_API_KEY", "").strip()
     if not api_key:
-        raise RuntimeError("TokenHub API key not found; set TOKENHUB_API_KEY")
+        raise RuntimeError("OpenAI API key not found; set OPENAI_API_KEY")
     return api_key
 
 
@@ -150,7 +150,8 @@ def enhance_edit_prompt(
     prompt: str,
     *,
     client: OpenAI | None = None,
-    model: str = MODEL,
+    model: str = "gpt-5.5",
+    base_url: str | None = None,
     retries: int = 3,
 ) -> str:
     """Return an enhanced edit prompt for input image(s) and one raw prompt.
@@ -160,9 +161,10 @@ def enhance_edit_prompt(
             local path, HTTP(S) URL, or ``data:`` URL. For multi-image tasks,
             order determines the image numbering understood by the model.
         prompt: Original image-edit instruction.
-        client: Optional preconfigured OpenAI client. If omitted, a TokenHub
-            client is created from ``TOKENHUB_API_KEY``.
+        client: Optional preconfigured OpenAI client. If omitted, a client is
+            created from ``OPENAI_API_KEY``.
         model: Backend model name.
+        base_url: Optional OpenAI-compatible API endpoint.
         retries: Total number of API attempts.
     """
     if not isinstance(prompt, str) or not prompt.strip():
@@ -179,7 +181,7 @@ def enhance_edit_prompt(
                 "The 'openai' package is required; install it with "
                 "`python3 -m pip install openai`"
             ) from exc
-        api_client = OpenAI(api_key=_load_api_key(), base_url=BASE_URL)
+        api_client = OpenAI(api_key=_load_api_key(), base_url=base_url)
     else:
         api_client = client
     messages = [
@@ -239,7 +241,8 @@ def main() -> int:
         help="Ordered local image path(s), HTTP(S) URL(s), or data URL(s)",
     )
     parser.add_argument("prompt", help="Original image-edit prompt")
-    parser.add_argument("--model", default=MODEL, help="Backend model name")
+    parser.add_argument("--model", default=os.getenv("OPENAI_MODEL", "gpt-5.5"))
+    parser.add_argument("--base-url", default=os.getenv("OPENAI_BASE_URL"))
     parser.add_argument("--retries", type=int, default=3, help="API attempts")
     args = parser.parse_args()
 
@@ -248,6 +251,7 @@ def main() -> int:
             args.images,
             args.prompt,
             model=args.model,
+            base_url=args.base_url,
             retries=args.retries,
         )
     )
