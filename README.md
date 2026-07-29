@@ -22,6 +22,8 @@
 </p>
 
 ## 📣 Updated News
+- `[2026.07.29]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview). This preview focuses on native 4K image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
+
 - `[2026.07.16]` Release [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3), designed for integrated infographic generation and editing. It retains strong text-to-image (T2I) capabilities while significantly enhancing infographic editing, supporting localized text and content editing, global style editing, and global layout editing. See [✨ U1 Infographic Model Series](docs/u1_infographic_model.md) for model details and benchmark results.
 
 - `[2026.06.29]` Release [SenseNova-U1-8B-MoT-Infographic-V2 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2), an upgraded infographic model with improved dense small-text rendering with sharper text edges, stronger complex dense-layout generation, and better overall visual aesthetics and harmony, plus a fix for the black-background issue. Model details and visual examples are available in [✨ U1 Infographic Model Series](docs/u1_infographic_model.md).
@@ -103,6 +105,7 @@ In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
 
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
+| [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview.md) | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |
 | SenseNova-U1-8B-MoT-Infographic-V2 | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) |
