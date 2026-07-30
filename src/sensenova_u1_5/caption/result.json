@@ -4,8 +4,8 @@
   "aspect_ratio": "3:4",
   "orientation": "portrait",
   "language": "English with handwritten decorative phrases",
-  "theme": "retro Japan travel scrapbook portrait poster",
-  "visual_concept": "A nostalgic handmade scrapbook poster celebrating Japan, centered on a soft portrait of a young woman wearing white headphones, surrounded by torn paper notes, taped photo cutouts, stamps, doodles and large hand-lettered typography. The image should feel like a personal travel journal page, aged, tactile and romantic.",
+  "theme": "retro Shanghai travel scrapbook portrait poster",
+  "visual_concept": "A nostalgic handmade scrapbook poster celebrating Shanghai, centered on a soft portrait of a young woman wearing white headphones, surrounded by torn paper notes, taped photo cutouts, stamps, doodles and large hand-lettered typography. The image should feel like a personal travel journal page, aged, tactile and romantic.",
   "style": {
     "overall": "vintage scrapbook collage, retro travel journal, handmade paper craft aesthetic",
     "medium": "photorealistic portrait blended with torn-paper collage, hand lettering, stickers and printed ephemera",
@@ -41,22 +41,22 @@
     "layout": "vertical poster with a central oval portrait, large decorative headline at the top and oversized script word at the bottom",
     "background": "dark olive-green aged paper board with distressed cream torn border around the entire poster",
     "top_typography": "large cream-and-green hand-painted script phrase across the top",
-    "bottom_typography": "oversized sweeping script word 'Japan' across the lower third, with thick cream outline and dark green fill",
+    "bottom_typography": "oversized sweeping script word 'Shanghai' across the lower third, with thick cream outline and dark green fill",
     "collage_elements": [
       "torn note paper pinned on the left",
       "handwritten note paper taped on the right",
       "two eye close-up photo cutouts near the lower sides",
       "small postage-stamp landscape in the lower-right area",
       "doodle camera icon",
-      "train doodle",
+      "tram doodle",
       "small flower sticker",
-      "guardian lion / komainu illustration sticker",
+      "guardian lion / stone lion illustration sticker",
       "pressed dried flowers",
       "green gingham tape",
       "polka-dot tape",
       "round olive push pins"
     ],
-    "visual_flow": "viewer reads the top phrase, moves to the central portrait, then lands on the large 'Japan' lettering"
+    "visual_flow": "viewer reads the top phrase, moves to the central portrait, then lands on the large 'Shanghai' lettering"
   },
   "visible_text": [
     {
@@ -65,12 +65,12 @@
       "style": "dark green brush script with thick cream paper-like outline"
     },
     {
-      "text": "Japan",
+      "text": "Shanghai",
       "placement": "bottom third, very large decorative script",
       "style": "bold dark green retro script with thick cream outline and shadow"
     },
     {
-      "text": "made in Japan",
+      "text": "made in Shanghai",
       "placement": "left torn note",
       "style": "casual handwritten dark green ink"
     },
@@ -108,7 +108,7 @@
     "finish": "high-resolution tactile print collage, analog scrapbook texture"
   },
   "quality_requirements": [
-    "strong vintage Japan travel scrapbook feeling",
+    "strong vintage Shanghai travel scrapbook feeling",
     "central portrait must be soft and attractive",
     "torn paper layers must feel physical and handmade",
     "large decorative typography must be legible",
