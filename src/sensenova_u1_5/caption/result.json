@@ -1,151 +1,135 @@
 {
-    "json":
+  "use_case": "stylized-concept",
+  "asset_type": "vertical vintage scrapbook travel poster",
+  "aspect_ratio": "3:4",
+  "orientation": "portrait",
+  "language": "English with handwritten decorative phrases",
+  "theme": "retro Japan travel scrapbook portrait poster",
+  "visual_concept": "A nostalgic handmade scrapbook poster celebrating Japan, centered on a soft portrait of a young woman wearing white headphones, surrounded by torn paper notes, taped photo cutouts, stamps, doodles and large hand-lettered typography. The image should feel like a personal travel journal page, aged, tactile and romantic.",
+  "style": {
+    "overall": "vintage scrapbook collage, retro travel journal, handmade paper craft aesthetic",
+    "medium": "photorealistic portrait blended with torn-paper collage, hand lettering, stickers and printed ephemera",
+    "mood": "nostalgic, romantic, dreamy, warm, youthful, personal",
+    "color_palette": [
+      "deep olive green",
+      "aged cream paper",
+      "warm beige",
+      "dark forest green",
+      "muted brown",
+      "soft ivory",
+      "faded sepia"
+    ],
+    "texture": [
+      "aged paper grain",
+      "torn deckled edges",
+      "creased notebook paper",
+      "transparent tape",
+      "push pins",
+      "faded ink",
+      "film dust",
+      "scratched print texture"
+    ]
+  },
+  "main_subject": {
+    "description": "young East Asian woman with long dark hair, soft natural makeup, wearing large white over-ear headphones and an ivory knit sweater",
+    "pose": "turning back over her shoulder, looking calmly toward the viewer",
+    "framing": "oval portrait cutout in the center, like a pasted magazine photo with torn cream border",
+    "lighting": "soft outdoor sunlight with warm highlights and gentle bokeh background",
+    "expression": "quiet, gentle, slightly wistful"
+  },
+  "composition": {
+    "layout": "vertical poster with a central oval portrait, large decorative headline at the top and oversized script word at the bottom",
+    "background": "dark olive-green aged paper board with distressed cream torn border around the entire poster",
+    "top_typography": "large cream-and-green hand-painted script phrase across the top",
+    "bottom_typography": "oversized sweeping script word 'Japan' across the lower third, with thick cream outline and dark green fill",
+    "collage_elements": [
+      "torn note paper pinned on the left",
+      "handwritten note paper taped on the right",
+      "two eye close-up photo cutouts near the lower sides",
+      "small postage-stamp landscape in the lower-right area",
+      "doodle camera icon",
+      "train doodle",
+      "small flower sticker",
+      "guardian lion / komainu illustration sticker",
+      "pressed dried flowers",
+      "green gingham tape",
+      "polka-dot tape",
+      "round olive push pins"
+    ],
+    "visual_flow": "viewer reads the top phrase, moves to the central portrait, then lands on the large 'Japan' lettering"
+  },
+  "visible_text": [
     {
-        "type": "复古情绪海报",
-        "theme": "松弛、幽默、无所谓的生活态度",
-        "language": "en",
-        "canvas":
-        {
-            "aspect_ratio": "1:1",
-            "orientation": "方形",
-            "resolution": "高分辨率",
-            "framing": "近距离生活抓拍"
-        },
-        "style":
-        {
-            "visual_style": "千禧年代家庭录像截图、早期便携式数码相机摄影",
-            "texture": "明显胶片颗粒、VHS水平扫描线、轻微色彩错位、柔焦、压缩噪点和暗角",
-            "mood": "复古、随性、幽默、慵懒",
-            "color_palette":
-            [
-                "深灰黑",
-                "暖米白",
-                "褪色橙黄",
-                "淡粉色",
-                "蓝紫色"
-            ]
-        },
-        "main_subject":
-        {
-            "description": "一名金色齐刘海短发的幼童慵懒地躺在深灰色婴儿推车中",
-            "appearance":
-            {
-                "hair": "金色短发、整齐齐刘海",
-                "eyewear": "白色椭圆镜框、蓝紫色镜片的复古儿童太阳镜",
-                "clothing": "浅灰色蓬松羊羔绒外套与淡粉色长裤",
-                "expression": "平静、松弛、略带不耐烦"
-            },
-            "pose": "身体向后倚靠，左臂向画面左侧伸展并举起饮料瓶，右手抬起且手掌朝向镜头",
-            "props": "一只装有橙色饮料、带绿色瓶盖的透明塑料瓶"
-        },
-        "background":
-        {
-            "setting": "光线昏暗的室内入口或普通店铺内部",
-            "elements":
-            [
-                "深色玻璃门及反光",
-                "模糊的桌椅和杂物",
-                "暗部中的圆形卡通装饰物",
-                "婴儿推车靠背与前方安全扶手"
-            ],
-            "depth": "背景较暗且细节弱化，主体清晰突出"
-        },
-        "lighting":
-        {
-            "source": "画面右侧斜射而来的强烈暖色自然光",
-            "contrast": "高反差，背景阴影深沉，人物面部、外套、手掌和饮料瓶具有暖色高光",
-            "exposure": "局部轻微过曝、暗部压黑，呈现旧录像有限动态范围"
-        },
-        "camera":
-        {
-            "viewpoint": "与推车中的人物大致平视",
-            "shot_type": "中近景",
-            "lens_feel": "普通便携式相机视角，略带随手抓拍的不完美构图",
-            "image_character": "低动态范围、轻微运动拖影、白平衡偏暖、模拟重复翻录的家庭录像画质"
-        },
-        "typography":
-        {
-            "text": "chill bro",
-            "placement": "画面左上方至上部中央",
-            "font_style": "超粗体小写无衬线字体",
-            "color": "纯白色",
-            "scale": "大型标题，占据画面上部约三分之一宽度",
-            "alignment": "左对齐",
-            "treatment": "高对比度排版，边缘带轻微模拟录像柔化与色散，无描边、无阴影"
-        },
-        "composition":
-        {
-            "subject_position": "人物位于画面右下区域",
-            "text_position": "标题位于左上区域",
-            "visual_balance": "人物与推车形成右下方视觉重量，伸出的手臂和饮料瓶向左延伸，与左上标题建立对角线平衡",
-            "foreground": "深灰色推车安全扶手横贯画面下部",
-            "negative_space": "暗色背景为白色标题提供充足留白"
-        },
-        "composition_rules":
-        [
-            "采用1:1方形画幅",
-            "使用对角线构图连接标题、饮料瓶和人物面部",
-            "主体集中在右下三分区",
-            "上方保留深色负空间承载醒目标题",
-            "让推车扶手形成稳定的横向视觉锚点",
-            "保持自然抓拍感，避免过度工整和商业化摆拍"
-        ],
-        "quality_tags":
-        [
-            "photorealistic",
-            "candid snapshot",
-            "early 2000s",
-            "VHS aesthetic",
-            "analog grain",
-            "scan lines",
-            "soft focus",
-            "compression artifacts",
-            "warm sunlight",
-            "high contrast",
-            "nostalgic",
-            "square composition",
-            "internet mood poster"
-        ],
-        "negative_prompt":
-        [
-            "水印",
-            "二维码",
-            "平台角标",
-            "账号名",
-            "作者署名",
-            "来源标识",
-            "品牌名",
-            "商标",
-            "公司标识",
-            "产品型号",
-            "联系方式",
-            "地址",
-            "证件信息",
-            "乱码",
-            "错别字",
-            "错误英文",
-            "多余文字",
-            "额外字幕",
-            "重复人物",
-            "多余肢体",
-            "多余手掌",
-            "多余手指",
-            "畸形手指",
-            "手部结构错误",
-            "重复饮料瓶",
-            "扭曲太阳镜",
-            "面部畸形",
-            "不自然姿势",
-            "过度锐化",
-            "现代HDR效果",
-            "商业棚拍光线",
-            "塑料质感皮肤",
-            "动漫风格",
-            "插画风格",
-            "三维渲染感"
-        ]
+      "text": "with the beautiful girl that i met",
+      "placement": "top area, large hand-painted cursive lettering",
+      "style": "dark green brush script with thick cream paper-like outline"
     },
-    "nlp": "一名金色齐刘海短发的幼童戴着白色椭圆太阳镜，慵懒地躺在深灰色婴儿推车中，左手举起橙色饮料，右手朝镜头随意抬起。人物被右侧斜射的暖色阳光照亮，而室内入口、玻璃反光和杂物背景则沉入深色阴影。画面采用1:1方形构图，人物集中在右下方，粗大的白色小写标题“chill bro”占据左上方暗色留白。整体具有早期家庭录像的扫描线、颗粒、柔焦、色偏和压缩噪点，呈现松弛、幽默且略带不耐烦的千禧年代互联网情绪海报风格。",
-    "language": "zh",
-    "task": "复古情绪海报"
+    {
+      "text": "Japan",
+      "placement": "bottom third, very large decorative script",
+      "style": "bold dark green retro script with thick cream outline and shadow"
+    },
+    {
+      "text": "made in Japan",
+      "placement": "left torn note",
+      "style": "casual handwritten dark green ink"
+    },
+    {
+      "text": "The beauty of her face was beyond of my wildest dream",
+      "placement": "right torn note",
+      "style": "handwritten dark green ink"
+    },
+    {
+      "text": "moka / Shoujie",
+      "placement": "bottom small note",
+      "style": "small casual handwriting"
+    }
+  ],
+  "typography": {
+    "primary_style": "large expressive brush-script lettering, handmade and slightly imperfect",
+    "secondary_style": "casual handwritten notes in dark green ink",
+    "requirements": [
+      "text should look hand-drawn and integrated into paper collage",
+      "large words must be readable",
+      "small handwriting may feel organic but should remain plausible",
+      "avoid digital clean typography"
+    ]
+  },
+  "materials_and_details": {
+    "paper": "layered torn cream paper, aged notebook scraps, rough fibrous edges",
+    "tape": "semi-transparent green washi tape and dotted tape holding photos and notes",
+    "pins": "round olive-green metal push pins casting tiny shadows",
+    "photos": "slightly faded printed photos with film grain, dust and worn edges",
+    "doodles": "simple black ink travel doodles and small decorative stars"
+  },
+  "camera_and_rendering": {
+    "poster_view": "flat-lay scanned scrapbook page, straight-on view",
+    "depth": "subtle layered shadows between paper pieces",
+    "finish": "high-resolution tactile print collage, analog scrapbook texture"
+  },
+  "quality_requirements": [
+    "strong vintage Japan travel scrapbook feeling",
+    "central portrait must be soft and attractive",
+    "torn paper layers must feel physical and handmade",
+    "large decorative typography must be legible",
+    "green and cream palette should remain cohesive",
+    "avoid overly clean modern design"
+  ],
+  "negative_prompt": [
+    "modern clean poster",
+    "flat vector design",
+    "neon colors",
+    "overly saturated colors",
+    "plastic 3D render",
+    "generic social media template",
+    "perfect digital typography",
+    "messy unreadable main title",
+    "extra faces",
+    "distorted eyes",
+    "bad hands",
+    "watermark",
+    "logo",
+    "low resolution",
+    "garbled large text"
+  ]
 }
