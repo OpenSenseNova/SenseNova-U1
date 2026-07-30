@@ -32,6 +32,7 @@ import mimetypes
 import os
 from pathlib import Path
 from typing import Sequence, Union
+
 from openai import OpenAI
 
 MAX_TOKENS = 8192
@@ -178,8 +179,7 @@ def enhance_edit_prompt(
             from openai import OpenAI
         except ImportError as exc:
             raise RuntimeError(
-                "The 'openai' package is required; install it with "
-                "`python3 -m pip install openai`"
+                "The 'openai' package is required; install it with `python3 -m pip install openai`"
             ) from exc
         api_client = OpenAI(api_key=_load_api_key(), base_url=base_url)
     else:
@@ -220,9 +220,7 @@ def enhance_edit_prompt(
         except Exception as exc:  # noqa: BLE001 - retry transient API errors
             last_error = exc
 
-    raise RuntimeError(
-        f"prompt enhancement failed after {retries} attempts: {last_error!r}"
-    )
+    raise RuntimeError(f"prompt enhancement failed after {retries} attempts: {last_error!r}")
 
 
 # A descriptive alias for callers migrating from the batch implementation.
@@ -232,9 +230,7 @@ edit_pe = enhance_edit_prompt
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Enhance one image-edit prompt from one or more images."
-    )
+    parser = argparse.ArgumentParser(description="Enhance one image-edit prompt from one or more images.")
     parser.add_argument(
         "images",
         nargs="+",

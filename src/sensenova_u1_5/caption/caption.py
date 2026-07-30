@@ -26,7 +26,6 @@ from pathlib import Path
 from openai import OpenAI
 from PIL import Image
 
-
 TARGET_RATIOS = {
     "16:9": 16 / 9,
     "3:2": 3 / 2,
