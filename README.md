@@ -22,7 +22,7 @@
 </p>
 
 ## 📣 Updated News
-- `[2026.07.29]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview). This preview focuses on native 4K image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
+- `[2026.07.31]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview). This preview focuses on native 4K image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
 
 - `[2026.07.16]` Release [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3), designed for integrated infographic generation and editing. It retains strong text-to-image (T2I) capabilities while significantly enhancing infographic editing, supporting localized text and content editing, global style editing, and global layout editing. See [✨ U1 Infographic Model Series](docs/u1_infographic_model.md) for model details and benchmark results.
 
