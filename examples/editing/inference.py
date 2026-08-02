@@ -463,12 +463,12 @@ def parse_args() -> argparse.Namespace:
         "--use-edit-pe",
         dest="use_edit_pe",
         action=argparse.BooleanOptionalAction,
-        default=True,
+        default=False,
         help=(
             "Enhance each edit instruction with src/sensenova_u1_5/edit/edit_pe.py "
             "before inference. The enhancer receives the ordered input image paths "
-            "and requires TOKENHUB_API_KEY. Enabled by default; disable with "
-            "--no-use-edit-pe."
+            "and requires OPENAI_API_KEY. Disabled by default; enable with "
+            "--use-edit-pe."
         ),
     )
     p.add_argument(
