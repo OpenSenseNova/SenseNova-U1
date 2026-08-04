@@ -1,6 +1,6 @@
 # SenseNova-U1 信息图模型系列 📊
 
-本页汇总 SenseNova-U1 信息图模型系列的权重、评测和生成效果。**SenseNova-U1-8B-MoT-Infographic-V3** 是面向信息图生成与编辑一体化场景的当前推荐版本。
+本页汇总 SenseNova-U1 信息图模型系列的权重、评测和生成效果。**SenseNova-U1-8B-MoT-Infographic-V3** 是面向信息图生成与编辑一体化场景的当前推荐版本，并更新了对应支持的 [ComfyUI workflow](../apps/comfyui/example_workflows/infographic_series_t2i_edit.json)。
 
 ## 模型概览
 

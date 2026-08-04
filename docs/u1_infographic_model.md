@@ -1,6 +1,6 @@
 # SenseNova-U1 Infographic Model Series 📊
 
-This page summarizes model weights, benchmarks, and generation results for the SenseNova-U1 infographic model family. **SenseNova-U1-8B-MoT-Infographic-V3** is the currently recommended release for an integrated infographic generation-and-editing workflow.
+This page summarizes model weights, benchmarks, and generation results for the SenseNova-U1 infographic model family. **SenseNova-U1-8B-MoT-Infographic-V3** is the currently recommended release for an integrated infographic generation-and-editing workflow. A corresponding supported [ComfyUI workflow](../apps/comfyui/example_workflows/infographic_series_t2i_edit.json) is also available.
 
 ## Model Overview
 
