@@ -1,0 +1,5 @@
+# This file is generated from pyproject.toml by scripts/render_requirements.py.
+# Source: training/pyproject.toml [project.optional-dependencies].flash
+# Direct dependencies only; use uv.lock for an exact reproducible environment.
+
+flash-attn>=2.5,<3
