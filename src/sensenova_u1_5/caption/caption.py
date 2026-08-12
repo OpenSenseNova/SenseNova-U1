@@ -37,6 +37,7 @@ TARGET_RATIOS = {
 }
 SUPPORTED_FORMATS = {"JPEG": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}
 MAX_RETRIES = 5
+MAX_IMGINPUT = 2048*2048
 
 SYSTEM_PROMPT = """你是一个文生图 prompt 撰写助手。请仔细观察用户提供的图片，
 提取主体、构图、风格、色彩、光影、视角、排版和文字设计，并为同一画面生成
@@ -66,15 +67,18 @@ def image_to_data_uri(path):
     with Image.open(path) as image:
         image.load()
         width, height = image.size
-        mime = SUPPORTED_FORMATS.get(image.format)
 
-        if mime:
-            content = path.read_bytes()
-        else:
-            buffer = BytesIO()
-            image.convert("RGB").save(buffer, "PNG")
-            content = buffer.getvalue()
-            mime = "image/png"
+        if width*height > MAX_IMGINPUT:
+            image.thumbnail((2048, 2048), Image.LANCZOS)
+            width, height = image.size
+            
+        """使用压缩后的图像"""
+        buffer = BytesIO()
+        fmt = image.format or "PNG"
+        save_format = "JPEG" if fmt == "JPEG" else fmt
+        image.save(buffer, save_format)
+        content = buffer.getvalue()
+        mime = SUPPORTED_FORMATS.get(save_format, "image/png")
 
     encoded = base64.b64encode(content).decode("ascii")
     return f"data:{mime};base64,{encoded}", width, height
