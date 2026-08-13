@@ -36,14 +36,23 @@ installs the declared dependencies (including the `sensenova-u1` Python package
 needed for local inference) into ComfyUI's Python environment automatically.
 Restart ComfyUI afterwards.
 
+Before upgrading, remove or disable any manually copied legacy node directory
+such as `ComfyUI_SenseNova_U1`. Keeping both copies makes ComfyUI import the
+same node IDs twice, so the active implementation depends on scan order.
+
+Release 0.1.5 supports the `transformers>=4.57.1,<6` runtime range. Core
+compatibility is continuously checked against the minimum/final v4 releases
+and the latest v5 release; local U1.5 text-to-image and image-edit inference
+has also been verified through ComfyUI with Transformers 5.x.
+
 ### Developer install (from the SenseNova-U1 monorepo)
 
 If you're hacking on the nodes alongside the model source:
 
 ```bash
 python apps/comfyui/install.py --comfyui /path/to/ComfyUI
-python -m pip install -r apps/comfyui/requirements.txt --no-deps  # skip the git-URL line
-python -m pip install -e .                                        # install sensenova-u1 from src/
+python -m pip install httpx numpy pillow python-dotenv
+python -m pip install -e .  # install sensenova-u1 from src/
 ```
 
 `install.py` symlinks (or copies, with `--copy`) `apps/comfyui/` into
@@ -65,9 +74,9 @@ Example workflows live in `example_workflows/`. Each links to a screenshot of th
 | Workflow | Description | Preview |
 | --- | --- | --- |
 | `api_u1_fast_t2i.json` | API U1-Fast text-to-image | ![api_u1_fast_t2i](docs/api_u1_fast_t2i.jpg) |
-| `local_t2i.json` | Local SenseNova-U1 text-to-image | ![t2i](docs/t2i.jpg) |
-| `local_editing.json` | Local SenseNova-U1 image editing | ![editing](docs/editing.jpg) |
-| `local_interleave.json` | Local SenseNova-U1 interleaved generation | ![interleave](docs/interleave.jpg) |
+| `t2i.json` | Local SenseNova-U1 text-to-image | ![t2i](docs/t2i.jpg) |
+| `editing.json` | Local SenseNova-U1 image editing | ![editing](docs/editing.jpg) |
+| `interleave.json` | Local SenseNova-U1 interleaved generation | ![interleave](docs/interleave.jpg) |
 
 Drag a workflow JSON into ComfyUI, then update `model_path`, `device`, `device_map`, and prompt
 settings as needed. For a smoke test, set `num_steps` to `1` or `2` before returning to the

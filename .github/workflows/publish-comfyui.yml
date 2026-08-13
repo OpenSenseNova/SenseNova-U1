@@ -38,17 +38,30 @@ jobs:
           set -euo pipefail
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             mirror_tag="${{ inputs.version }}"
+            source_tag="comfyui-${mirror_tag}"
           else
             # github.ref_name e.g. comfyui-v0.1.0  →  v0.1.0
             mirror_tag="${GITHUB_REF_NAME#comfyui-}"
+            source_tag="$GITHUB_REF_NAME"
           fi
           if [[ ! "$mirror_tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Resolved mirror tag '$mirror_tag' does not match v*.*.*" >&2
             exit 1
           fi
           echo "mirror_tag=$mirror_tag" >> "$GITHUB_OUTPUT"
+          echo "source_tag=$source_tag" >> "$GITHUB_OUTPUT"
 
-      - name: Sanity-check pyproject version matches tag
+      - name: Check out source release tag
+        run: |
+          set -euo pipefail
+          source_tag="${{ steps.resolve.outputs.source_tag }}"
+          if ! git rev-parse --verify --quiet "refs/tags/${source_tag}^{commit}"; then
+            echo "Source tag $source_tag does not exist; create and push it before manually retrying the release" >&2
+            exit 1
+          fi
+          git checkout --detach "$source_tag"
+
+      - name: Sanity-check release metadata matches tag
         run: |
           set -euo pipefail
           tag="${{ steps.resolve.outputs.mirror_tag }}"   # v0.1.0
@@ -58,6 +71,29 @@ jobs:
             echo "Tag $tag does not match apps/comfyui/pyproject.toml version $pyproj_ver" >&2
             exit 1
           fi
+
+          archive_url="https://github.com/OpenSenseNova/SenseNova-U1/archive/refs/tags/comfyui-${tag}.tar.gz"
+          python - "$archive_url" <<'PY'
+          import sys
+          import tomllib
+          from pathlib import Path
+
+          archive_url = sys.argv[1]
+          expected = f"sensenova-u1 @ {archive_url}"
+          with Path("apps/comfyui/pyproject.toml").open("rb") as file:
+              dependencies = tomllib.load(file)["project"]["dependencies"]
+          requirements = [
+              line.strip()
+              for line in Path("apps/comfyui/requirements.txt").read_text().splitlines()
+              if line.strip() and not line.startswith("#")
+          ]
+          for metadata_file, entries in (
+              ("apps/comfyui/pyproject.toml", dependencies),
+              ("apps/comfyui/requirements.txt", requirements),
+          ):
+              if expected not in entries:
+                  raise SystemExit(f"{metadata_file} does not pin sensenova-u1 to {archive_url}")
+          PY
 
       - name: Split apps/comfyui into a standalone branch
         run: |
