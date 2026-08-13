@@ -22,6 +22,9 @@
 </p>
 
 ## 📣 Updated News
+
+- `[2026.08.04]` Community contributor [smthem on Hugging Face](https://huggingface.co/smthem) (GitHub [@smthemex](https://github.com/smthemex)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) (19.9 GB). Thank you for continuing to maintain and share quantized SenseNova-U1 weights with the community.
+
 - `[2026.07.31]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview). This preview focuses on native 4K image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
 
 - `[2026.07.16]` Release [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3), designed for integrated infographic generation and editing. It retains strong text-to-image (T2I) capabilities while significantly enhancing infographic editing, supporting localized text and content editing, global style editing, and global layout editing. See [✨ U1 Infographic Model Series](docs/u1_infographic_model.md) for model details and benchmark results. A corresponding supported [ComfyUI workflow](apps/comfyui/example_workflows/infographic_series_t2i_edit.json) is also available.
@@ -38,7 +41,7 @@
 
 - `[2026.05.10]` Release [🔥SenseNova-U1 Technical Report🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf) and the weights for [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) & [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT).
 
-- `[2026.05.08]` Add **GGUF quantized checkpoints** and **layer-offload VRAM modes** for low-VRAM single-GPU inference. See [Memory-efficient inference](#-memory-efficient-inference-gguf--vram-modes). GGUF weights for `SenseNova-U1-8B-MoT-Merger` are available at [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) — many thanks to @[smthemex](https://github.com/smthemex) for contributing the quantized weights.
+- `[2026.05.08]` Add **GGUF quantized checkpoints** and **layer-offload VRAM modes** for low-VRAM single-GPU inference. See [Memory-efficient inference](#-memory-efficient-inference-gguf--vram-modes). GGUF weights for `SenseNova-U1-8B-MoT-Merger` are available at [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) — many thanks to [@smthemex](https://github.com/smthemex) for contributing the quantized weights.
 
 - `[2026.05.06]` Release [SenseNova-U1-8B-MoT-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors). Please see the [example script](docs/base_vs_distill.md#run-base-and-distilled-model).
 
@@ -503,13 +506,16 @@ python examples/t2i/inference.py \
   --output output.png
 ```
 
-GGUF weights for `SenseNova-U1-8B-MoT-Merger` (multiple quant levels: Q3 / Q4 / Q5 / Q6 / Q8) are available at:
+Community-maintained GGUF weights are available at:
 
-| Quantized weights | HF link |
-| :---------------- | :------ |
-| SenseNova-U1-8B-MoT-Merger-gguf | [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) |
+| Model | GGUF checkpoint | Quantization | Size | HF link |
+| :---- | :-------------- | :----------- | :--- | :------ |
+| SenseNova-U1 8B variants | Multiple files | Q4 / Q6 / Q8 | Varies | [🤗 Repository](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/tree/main) |
+| SenseNova-U1.5-8B-MoT-Preview | `SenseNova-U1.5-8B-MoT-Preview-Q8.gguf` | Q8 | 19.9 GB | [🤗 Download](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) |
 
-> 🙏 Thanks to GitHub user [@smthem](https://github.com/smthem) for contributing the quantized GGUF weights to the community.
+For U1.5, keep `--model_path` pointed at `sensenova/SenseNova-U1.5-8B-MoT-Preview` and pass the downloaded Q8 file through `--gguf_checkpoint`. The checkpoint is a community contribution and is maintained independently from the official SenseNova model releases.
+
+> 🙏 Thanks to Hugging Face user [smthem](https://huggingface.co/smthem) / GitHub [@smthemex](https://github.com/smthemex) for creating and maintaining these quantized weights for the community.
 
 #### `--vram_mode`: single-GPU layer offload
 

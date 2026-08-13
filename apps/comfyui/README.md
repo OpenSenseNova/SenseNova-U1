@@ -106,6 +106,14 @@ default empty selection keeps the safetensors path.
 Drop your `.gguf` file into either folder and restart ComfyUI to refresh the
 dropdown.
 
+Community contributor [smthem on Hugging Face](https://huggingface.co/smthem)
+(GitHub [@smthemex](https://github.com/smthemex)) maintains a collection of
+[SenseNova-U1 GGUF checkpoints](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/tree/main),
+including the 19.9 GB Q8 file
+[`SenseNova-U1.5-8B-MoT-Preview-Q8.gguf`](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf).
+These weights are community-maintained independently from official SenseNova
+model releases. Thank you to the author for making them available.
+
 Requirements: install the `gguf` extra in the ComfyUI Python environment, e.g.
 
 ```bash

@@ -23,6 +23,8 @@
 
 ## 📣 最新动态
 
+- `[2026.08.04]` 社区贡献者 Hugging Face 用户 [smthem](https://huggingface.co/smthem)（GitHub [@smthemex](https://github.com/smthemex)）发布了 [SenseNova-U1.5-8B-MoT-Preview 的 Q8 GGUF 权重](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf)（19.9 GB）。感谢作者持续维护并向社区分享 SenseNova-U1 系列量化权重。
+
 - `[2026.07.31]` 发布 [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview)。本次预览重点升级原生 4K 图像生成、局部纹理与真实质感和复杂版式生成，以及图像编辑中的主体与非编辑区域保持能力。更多细节请参阅 [U1.5 Preview 文档](docs/u1.5_preview_CN.md)。
 
 - `[2026.07.16]` 发布 [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3)。新版本同时支持信息图的生成和编辑，在保留信息图生成能力的基础上，重点增强局部文字、局部内容、全局风格和全局布局等信息图编辑能力，可支持在密集文本中精确的修复文字。更多模型细节及基准测试结果请参阅 [✨ U1 Infographic Model Series](docs/u1_infographic_model_CN.md)。并更新了对应支持的 [ComfyUI workflow](apps/comfyui/example_workflows/infographic_series_t2i_edit.json)。
@@ -39,7 +41,7 @@
 
 - `[2026.05.10]` 发布 [🔥SenseNova-U1 技术报告🔥](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/docs/pdf/SenseNOVA_U1.pdf)，并开源 [SenseNova-U1-A3B-MoT-SFT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) 与 [SenseNova-U1-A3B-MoT](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT) 模型权重。
 
-- `[2026.05.08]` 新增 **GGUF 量化权重支持** 与 **分层加载 VRAM 模式**，便于在单卡低显存环境下推理，详见 [低显存推理（GGUF + VRAM 模式）](#-低显存推理gguf--vram-模式)。`SenseNova-U1-8B-MoT-Merger` 的 GGUF 权重已上传至 [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf)，特别感谢 [@smthem](https://github.com/smthem) 为社区贡献量化权重。
+- `[2026.05.08]` 新增 **GGUF 量化权重支持** 与 **分层加载 VRAM 模式**，便于在单卡低显存环境下推理，详见 [低显存推理（GGUF + VRAM 模式）](#-低显存推理gguf--vram-模式)。`SenseNova-U1-8B-MoT-Merger` 的 GGUF 权重已上传至 [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf)，特别感谢 [@smthemex](https://github.com/smthemex) 为社区贡献量化权重。
 
 - `[2026.05.06]` 发布[SenseNova-U1-8B-MoT-LoRA-8step-V1.0](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors). 请查看[推理示例脚本](docs/base_vs_distill.md#run-base-and-distilled-model)。
 
@@ -502,13 +504,16 @@ python examples/t2i/inference.py \
   --output output.png
 ```
 
-`SenseNova-U1-8B-MoT-Merger` 的 GGUF 权重（提供 Q3 / Q4 / Q5 / Q6 / Q8 等多档量化）：
+社区维护的 GGUF 权重如下：
 
-| 量化权重 | HF 链接 |
-| :------- | :------ |
-| SenseNova-U1-8B-MoT-Merger-gguf | [🤗 smthem/SenseNova-U1-8B-MoT-Merger-gguf](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf) |
+| 模型 | GGUF 权重 | 量化类型 | 大小 | HF 链接 |
+| :--- | :-------- | :------- | :--- | :------ |
+| SenseNova-U1 8B 系列变体 | 多个文件 | Q4 / Q6 / Q8 | 依文件而定 | [🤗 仓库](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/tree/main) |
+| SenseNova-U1.5-8B-MoT-Preview | `SenseNova-U1.5-8B-MoT-Preview-Q8.gguf` | Q8 | 19.9 GB | [🤗 下载](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) |
 
-> 🙏 特别感谢 GitHub 用户 [@smthem](https://github.com/smthem) 为社区贡献 GGUF 量化权重。
+使用 U1.5 时，`--model_path` 仍指向 `sensenova/SenseNova-U1.5-8B-MoT-Preview`，并通过 `--gguf_checkpoint` 传入下载的 Q8 文件。该权重属于社区贡献，由作者独立于 SenseNova 官方模型版本进行维护。
+
+> 🙏 特别感谢 Hugging Face 用户 [smthem](https://huggingface.co/smthem) / GitHub [@smthemex](https://github.com/smthemex) 制作并持续维护这些社区量化权重。
 
 #### `--vram_mode`：单卡分层卸载
 
