@@ -145,6 +145,7 @@ def load_model_and_tokenizer(
     from transformers import AutoConfig, AutoModel, AutoTokenizer
 
     from .. import check_checkpoint_compatibility
+    from ..models.neo_unify.transformers_compat import pretrained_dtype_kwargs
 
     if for_offload and device_map:
         LOGGER.warning(
@@ -165,7 +166,7 @@ def load_model_and_tokenizer(
         gguf_device = torch.device("cpu") if for_offload else device
         model = _load_from_gguf(config, gguf_checkpoint, dtype=dtype, device=gguf_device)
     else:
-        model_kwargs: dict[str, Any] = {"config": config, "torch_dtype": dtype}
+        model_kwargs: dict[str, Any] = {"config": config, **pretrained_dtype_kwargs(dtype)}
         if device_map:
             model_kwargs["device_map"] = device_map
             parsed_max_memory = _normalize_max_memory(max_memory)

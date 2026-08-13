@@ -12,9 +12,8 @@ from transformers.modeling_layers import GradientCheckpointingLayer
 from transformers.modeling_outputs import BaseModelOutputWithPast, CausalLMOutputWithPast
 from transformers.modeling_utils import PreTrainedModel
 from transformers.processing_utils import Unpack
-from transformers.utils import TransformersKwargs, auto_docstring, can_return_tuple
+from transformers.utils import TransformersKwargs, can_return_tuple
 from transformers.utils.deprecation import deprecate_kwarg
-from transformers.utils.generic import check_model_inputs
 
 from .configuration_neo_chat import NEOMoELLMConfig
 from .modeling_qwen3 import (
@@ -22,6 +21,7 @@ from .modeling_qwen3 import (
     Qwen3RMSNorm,
     create_block_causal_mask,
 )
+from .transformers_compat import causal_mask_kwargs, model_input_compat, tied_weights_keys
 
 
 class Qwen3MoeMLP(nn.Module):
@@ -344,7 +344,6 @@ class Qwen3MoeDecoderLayer(GradientCheckpointingLayer):
         return hidden_states
 
 
-@auto_docstring
 class Qwen3MoePreTrainedModel(PreTrainedModel):
     config: NEOMoELLMConfig
     base_model_prefix = "model"
@@ -363,7 +362,6 @@ class Qwen3MoePreTrainedModel(PreTrainedModel):
     }
 
 
-@auto_docstring
 class Qwen3MoeModel(Qwen3MoePreTrainedModel):
     def __init__(self, config: NEOMoELLMConfig):
         super().__init__(config)
@@ -383,8 +381,7 @@ class Qwen3MoeModel(Qwen3MoePreTrainedModel):
 
         self.post_init()
 
-    @check_model_inputs
-    @auto_docstring
+    @model_input_compat
     def forward(
         self,
         input_ids: Optional[torch.LongTensor] = None,
@@ -425,14 +422,15 @@ class Qwen3MoeModel(Qwen3MoePreTrainedModel):
 
         if not isinstance(causal_mask_mapping := attention_mask, dict):
             if input_ids is not None:
-                mask_kwargs = {
-                    "config": self.config,
-                    "input_embeds": inputs_embeds,
-                    "attention_mask": attention_mask,
-                    "cache_position": cache_position,
-                    "past_key_values": past_key_values,
-                    "position_ids": position_ids,
-                }
+                mask_kwargs = causal_mask_kwargs(
+                    create_causal_mask,
+                    config=self.config,
+                    inputs_embeds=inputs_embeds,
+                    attention_mask=attention_mask,
+                    cache_position=cache_position,
+                    past_key_values=past_key_values,
+                    position_ids=position_ids,
+                )
                 causal_mask_mapping = {
                     "full_attention": create_causal_mask(**mask_kwargs),
                 }
@@ -479,9 +477,8 @@ class Qwen3MoeModel(Qwen3MoePreTrainedModel):
         )
 
 
-@auto_docstring
 class Qwen3MoeForCausalLM(Qwen3MoePreTrainedModel, GenerationMixin):
-    _tied_weights_keys = ["lm_head.weight"]
+    _tied_weights_keys = tied_weights_keys("lm_head.weight", "model.embed_tokens.weight")
     _tp_plan = {"lm_head": "colwise_rep"}
     _pp_plan = {"lm_head": (["hidden_states"], ["logits"])}
 
@@ -493,7 +490,6 @@ class Qwen3MoeForCausalLM(Qwen3MoePreTrainedModel, GenerationMixin):
         self.post_init()
 
     @can_return_tuple
-    @auto_docstring
     def forward(
         self,
         input_ids: Optional[torch.LongTensor] = None,

@@ -22,10 +22,11 @@ from transformers.modeling_outputs import BaseModelOutputWithPast, CausalLMOutpu
 from transformers.modeling_rope_utils import ROPE_INIT_FUNCTIONS, dynamic_rope_update
 from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS, PreTrainedModel
 from transformers.processing_utils import Unpack
-from transformers.utils import TransformersKwargs, auto_docstring, can_return_tuple
+from transformers.utils import TransformersKwargs, can_return_tuple
 from transformers.utils.deprecation import deprecate_kwarg
-from transformers.utils.generic import check_model_inputs
 from transformers import Qwen3Config
+
+from .transformers_compat import causal_mask_kwargs, model_input_compat, tied_weights_keys
 
 try:
     from flash_attn import flash_attn_func  # type: ignore
@@ -308,6 +309,8 @@ def _compute_default_rope_parameters(config, device=None, **_kwargs):
 class Qwen3RotaryEmbedding(nn.Module):
     inv_freq: torch.Tensor  # fix linting for `register_buffer`
 
+    compute_default_rope_parameters = staticmethod(_compute_default_rope_parameters)
+
     def __init__(self, config: Qwen3Config, device=None):
         super().__init__()
         # BC: "rope_type" was originally "type"
@@ -420,6 +423,8 @@ class Qwen3Attention(nn.Module):
         hw_config = copy.deepcopy(config)
         hw_config.head_dim = config.head_dim // 4
         hw_config.rope_theta = config.rope_theta_hw
+        if isinstance(getattr(hw_config, "rope_parameters", None), dict):
+            hw_config.rope_parameters = {**hw_config.rope_parameters, "rope_theta": config.rope_theta_hw}
         hw_config.max_position_embeddings = config.max_position_embeddings_hw
         self.rotary_emb_hw = Qwen3RotaryEmbedding(config=hw_config)
     
@@ -1040,7 +1045,6 @@ class Qwen3DecoderLayer(GradientCheckpointingLayer):
         return hidden_states
 
 
-@auto_docstring
 class Qwen3PreTrainedModel(PreTrainedModel):
     config: Qwen3Config
     base_model_prefix = "model"
@@ -1059,7 +1063,6 @@ class Qwen3PreTrainedModel(PreTrainedModel):
     }
 
 
-@auto_docstring
 class Qwen3Model(Qwen3PreTrainedModel):
     def __init__(self, config: Qwen3Config):
         super().__init__(config)
@@ -1080,8 +1083,7 @@ class Qwen3Model(Qwen3PreTrainedModel):
         # Initialize weights and apply final processing
         self.post_init()
 
-    @check_model_inputs
-    @auto_docstring
+    @model_input_compat
     def forward(
         self,
         input_ids: Optional[torch.LongTensor] = None,
@@ -1129,14 +1131,15 @@ class Qwen3Model(Qwen3PreTrainedModel):
         if not isinstance(causal_mask_mapping := attention_mask, dict):
             # Prepare mask arguments
             if input_ids is not None:
-                mask_kwargs = {
-                    "config": self.config,
-                    "input_embeds": inputs_embeds,
-                    "attention_mask": attention_mask,
-                    "cache_position": cache_position,
-                    "past_key_values": past_key_values,
-                    "position_ids": position_ids,
-                }
+                mask_kwargs = causal_mask_kwargs(
+                    create_causal_mask,
+                    config=self.config,
+                    inputs_embeds=inputs_embeds,
+                    attention_mask=attention_mask,
+                    cache_position=cache_position,
+                    past_key_values=past_key_values,
+                    position_ids=position_ids,
+                )
                 # Create the masks
                 causal_mask_mapping = {
                     "full_attention": create_causal_mask(**mask_kwargs),
@@ -1187,9 +1190,8 @@ class Qwen3Model(Qwen3PreTrainedModel):
         )
 
 
-@auto_docstring
 class Qwen3ForCausalLM(Qwen3PreTrainedModel, GenerationMixin):
-    _tied_weights_keys = ["lm_head.weight"]
+    _tied_weights_keys = tied_weights_keys("lm_head.weight", "model.embed_tokens.weight")
     _tp_plan = {"lm_head": "colwise_rep"}
     _pp_plan = {"lm_head": (["hidden_states"], ["logits"])}
 
@@ -1203,7 +1205,6 @@ class Qwen3ForCausalLM(Qwen3PreTrainedModel, GenerationMixin):
         self.post_init()
 
     @can_return_tuple
-    @auto_docstring
     def forward(
         self,
         input_ids: Optional[torch.LongTensor] = None,

@@ -240,6 +240,12 @@ class NEOChatModel(PreTrainedModel):
         self.conv_template = get_conv_template(self.template)
         self.system_message = self.conv_template.system_message
 
+        # Transformers 5 builds composite-model metadata (including
+        # ``all_tied_weights_keys``) in ``post_init``.  Without this call a
+        # real checkpoint reaches the final loading pass with that metadata
+        # missing, even though the nested language model initialized it.
+        self.post_init()
+
     def forward(
             self,
             pixel_values: torch.FloatTensor,

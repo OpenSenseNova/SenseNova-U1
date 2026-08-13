@@ -50,9 +50,7 @@ def render_project_requirements(pyproject: Path, extra: str | None) -> str:
 
     uv = project.get("tool", {}).get("uv", {})
     indexes = {index["name"]: index["url"] for index in uv.get("index", [])}
-    configured_sources = {
-        name.lower().replace("_", "-"): config for name, config in uv.get("sources", {}).items()
-    }
+    configured_sources = {name.lower().replace("_", "-"): config for name, config in uv.get("sources", {}).items()}
     index_urls = []
     for dependency in dependencies:
         package_source = configured_sources.get(requirement_name(dependency), {})

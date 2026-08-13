@@ -1,0 +1,49 @@
+name: Transformers compatibility
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+jobs:
+  inference-compat:
+    name: Transformers ${{ matrix.label }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: "4.57.1 (minimum)"
+            specifier: "==4.57.1"
+          - label: "4.57.6 (final v4)"
+            specifier: "==4.57.6"
+          - label: "latest v5"
+            specifier: ">=5,<6"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Create virtual environment
+        run: uv venv --python 3.11
+
+      - name: Install CPU runtime
+        run: uv pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install SenseNova-U1
+        run: uv pip install -e . pytest
+
+      - name: Select compatibility endpoint
+        run: uv pip install "transformers${{ matrix.specifier }}"
+
+      - name: Validate resolved environment
+        run: uv pip check
+
+      - name: Run inference compatibility tests
+        run: .venv/bin/python -m pytest -q tests/test_project_boundaries.py tests/test_transformers_compat.py

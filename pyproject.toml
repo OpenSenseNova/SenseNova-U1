@@ -28,23 +28,17 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
-# Core dependencies.
-#
-# Versions here are pinned to match the internal reference environment
-# (`miniconda3/envs/lmms_engine`, Python 3.11, CUDA 12.8) so that checkpoints
-# trained there can be loaded and run bit-exactly. Every pinned package below
-# ships wheels for CPython 3.10–3.13, which matches the project-wide
-# `requires-python` window; the 3.11 reference is for reproducibility, not a
-# language-feature requirement. When bumping any of these, please re-verify
-# inference on a reference checkpoint.
+# Core dependencies. Hardware-facing packages stay pinned to the reference
+# inference environment. Transformers and its companion libraries use bounded
+# compatibility ranges so this package can coexist with other ComfyUI nodes;
+# uv.lock remains the exact, tested default environment.
 dependencies = [
     "torch==2.8.0",
     "torchvision==0.23.0",
-    "transformers==4.57.1",
-    "tokenizers==0.22.1",
-    "accelerate==1.10.1",
-    "huggingface-hub==0.36.2",
-    "safetensors==0.6.2",
+    "transformers>=4.57.1,<6",
+    "accelerate>=1.1,<2",
+    "huggingface-hub>=0.34,<2",
+    "safetensors>=0.4.3,<1",
     "sentencepiece==0.2.1",
     # NumPy is API-stable across 1.24..2.x for the call sites in sensenova_u1
     # (np.arange/concatenate/cos/sin/einsum/meshgrid/stack/zeros and dtypes

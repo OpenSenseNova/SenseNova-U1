@@ -43,6 +43,11 @@ class ProjectBoundariesTest(unittest.TestCase):
         self.assertTrue(training_only.isdisjoint(inference_dependencies))
         self.assertNotIn("pre-commit", inference_dependencies)
         self.assertIn("torch==2.8.0", inference["project"]["dependencies"])
+        self.assertIn("transformers>=4.57.1,<6", inference["project"]["dependencies"])
+        self.assertIn("accelerate>=1.1,<2", inference["project"]["dependencies"])
+        self.assertIn("huggingface-hub>=0.34,<2", inference["project"]["dependencies"])
+        self.assertIn("safetensors>=0.4.3,<1", inference["project"]["dependencies"])
+        self.assertNotIn("tokenizers", inference_dependencies)
         self.assertIn("torch==2.5.1", training["project"]["dependencies"])
         self.assertEqual(training["project"]["optional-dependencies"]["flash"], ["flash-attn>=2.5,<3"])
         self.assertEqual(
@@ -86,9 +91,13 @@ class ProjectBoundariesTest(unittest.TestCase):
             if cuda_index is None:
                 self.assertNotIn("--extra-index-url", contents)
             else:
-                index_url = next(index["url"] for index in (
-                    inference if requirements == REPO_ROOT / "requirements.txt" else training
-                )["tool"]["uv"]["index"] if index["name"] == cuda_index)
+                index_url = next(
+                    index["url"]
+                    for index in (inference if requirements == REPO_ROOT / "requirements.txt" else training)["tool"][
+                        "uv"
+                    ]["index"]
+                    if index["name"] == cuda_index
+                )
                 self.assertIn(f"--extra-index-url {index_url}", contents)
 
 
