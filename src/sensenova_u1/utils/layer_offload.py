@@ -37,6 +37,7 @@ from __future__ import annotations
 import functools
 import itertools
 import logging
+import math
 from typing import Any
 
 import torch
@@ -51,6 +52,36 @@ _GROUP_SHARED = "shared"
 _GROUP_UNDERSTANDING = "understanding"
 _GROUP_GENERATION = "generation"
 _ALL_TENSOR_GROUPS = frozenset({_GROUP_SHARED, _GROUP_UNDERSTANDING, _GROUP_GENERATION})
+_GIB = 1024**3
+DEFAULT_FAST_VRAM_FRACTION = 0.90
+DEFAULT_FAST_VRAM_HEADROOM_GIB = 2.0
+DEFAULT_FAST_ACTIVATION_RESERVE_GIB = 4.0
+
+
+def _resident_memory_limit(
+    total_memory_bytes: int,
+    *,
+    memory_fraction: float = DEFAULT_FAST_VRAM_FRACTION,
+    headroom_bytes: int = int(DEFAULT_FAST_VRAM_HEADROOM_GIB * _GIB),
+    budget_bytes: int | None = None,
+) -> int:
+    """Return the allocator watermark used by generation-weight residency.
+
+    An explicit ``budget_bytes`` overrides the fraction-derived budget. Both
+    paths still preserve ``headroom_bytes`` below physical device capacity.
+    """
+    if total_memory_bytes < 0:
+        raise ValueError("total_memory_bytes must be >= 0")
+    if not math.isfinite(memory_fraction) or not 0 < memory_fraction <= 1:
+        raise ValueError("memory_fraction must satisfy 0 < value <= 1")
+    if headroom_bytes < 0:
+        raise ValueError("headroom_bytes must be >= 0")
+    if budget_bytes is not None and budget_bytes <= 0:
+        raise ValueError("budget_bytes must be > 0 when set")
+    if total_memory_bytes <= headroom_bytes:
+        return 0
+    requested_limit = budget_bytes if budget_bytes is not None else int(total_memory_bytes * memory_fraction)
+    return min(requested_limit, total_memory_bytes - headroom_bytes)
 
 
 def _log_vram(label: str, target_device: torch.device, *, reset_peak: bool = False) -> None:
@@ -289,6 +320,16 @@ class _LayerStore:
     def transfer_stats(self) -> tuple[int, dict[str, int]]:
         return self._bytes_moved, dict(self._bytes_moved_by_group)
 
+    def group_nbytes(self, idx: int, group: str) -> int:
+        """Return the pinned bytes belonging to one tensor group in a layer."""
+        self._check_idx(idx)
+        tensor_groups = self._tensor_groups[idx]
+        return sum(
+            tensor.numel() * tensor.element_size()
+            for name, tensor in self._pinned[idx].items()
+            if tensor_groups.get(name, _GROUP_SHARED) == group
+        )
+
     def managed_tensor_ids(self) -> set[int]:
         ids: set[int] = set()
         for pinned in self._pinned:
@@ -371,6 +412,18 @@ class LayerOffloadWrapper(nn.Module):
     prefetch_count:
         ``0`` = synchronous (per-layer load/evict, lowest VRAM, slowest).
         ``>= 1`` = async prefetch this many layers ahead (faster, more VRAM).
+    keep_generation_resident:
+        Retain generation-branch weights across decoder forwards while they
+        fit the configured fast-mode budget.
+    fast_vram_fraction:
+        Automatic budget as a fraction of physical device memory.
+    fast_vram_headroom_gib:
+        Physical device memory that must remain available.
+    fast_activation_reserve_gib:
+        Projected allocation added to each residency decision for work that
+        happens after the decoder-layer hooks.
+    fast_vram_budget_gib:
+        Optional absolute budget overriding ``fast_vram_fraction``.
     """
 
     def __init__(
@@ -379,6 +432,11 @@ class LayerOffloadWrapper(nn.Module):
         layers_attr: str,
         target_device: torch.device,
         prefetch_count: int = 0,
+        keep_generation_resident: bool = False,
+        fast_vram_fraction: float = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | None = None,
     ) -> None:
         super().__init__()
         _require_accelerator(target_device)
@@ -398,6 +456,18 @@ class LayerOffloadWrapper(nn.Module):
         max_prefetch = max(len(self._layers) - 1, 0)
         self._prefetch_count = min(prefetch_count, max_prefetch)
         self._async_mode = self._prefetch_count >= 1
+        self._keep_generation_resident = keep_generation_resident
+        self._resident_generation_layers: set[int] = set()
+        self._resident_generation_bytes = 0
+        self._resident_memory_limit_bytes = 0
+        if not math.isfinite(fast_vram_headroom_gib) or fast_vram_headroom_gib < 0:
+            raise ValueError("fast_vram_headroom_gib must be finite and >= 0")
+        if not math.isfinite(fast_activation_reserve_gib) or fast_activation_reserve_gib < 0:
+            raise ValueError("fast_activation_reserve_gib must be finite and >= 0")
+        if fast_vram_budget_gib is not None and (not math.isfinite(fast_vram_budget_gib) or fast_vram_budget_gib <= 0):
+            raise ValueError("fast_vram_budget_gib must be finite and > 0 when set")
+        self._resident_headroom_bytes = int(fast_vram_headroom_gib * _GIB)
+        self._activation_reserve_bytes = int(fast_activation_reserve_gib * _GIB)
         # ``cudaMallocAsync`` keeps per-stream memory pools and never reuses
         # freed blocks across streams without explicit ordering. Detect the
         # backend at construction time so the hooks can pick the right
@@ -414,6 +484,29 @@ class LayerOffloadWrapper(nn.Module):
                 "cudaMallocAsync" if self._cuda_malloc_async else "native",
                 "prefetch-stream + wait_stream" if self._cuda_malloc_async else "compute-stream + record_stream",
             )
+        if self._keep_generation_resident:
+            try:
+                total_memory = int(self._accel.get_device_properties(target_device).total_memory)
+                budget_bytes = None if fast_vram_budget_gib is None else int(fast_vram_budget_gib * _GIB)
+                self._resident_memory_limit_bytes = _resident_memory_limit(
+                    total_memory,
+                    memory_fraction=fast_vram_fraction,
+                    headroom_bytes=self._resident_headroom_bytes,
+                    budget_bytes=budget_bytes,
+                )
+                if self._activation_reserve_bytes < 0:
+                    raise ValueError("fast_activation_reserve_gib must be >= 0")
+                logger.info(
+                    "LayerOffloadWrapper: generation residency budget=%.2f GiB "
+                    "(fraction=%.3f, headroom=%.2f GiB, activation_reserve=%.2f GiB, explicit_budget=%s)",
+                    self._resident_memory_limit_bytes / _GIB,
+                    fast_vram_fraction,
+                    self._resident_headroom_bytes / _GIB,
+                    self._activation_reserve_bytes / _GIB,
+                    "auto" if budget_bytes is None else f"{budget_bytes / _GIB:.2f} GiB",
+                )
+            except Exception as exc:  # pragma: no cover - backend-specific fallback
+                raise ValueError(f"Invalid generation residency configuration: {exc}") from exc
         self._hooks: list[torch.utils.hooks.RemovableHandle] = []
         self._audit_handle: torch.utils.hooks.RemovableHandle | None = None
         self._prefetcher: _AsyncPrefetcher | None = None
@@ -479,7 +572,38 @@ class LayerOffloadWrapper(nn.Module):
             else:
                 for idx, layer in enumerate(self._layers):
                     self._store.evict_to_cpu(idx, layer)
+            self._resident_generation_layers.clear()
+            self._resident_generation_bytes = 0
         self._active_groups = groups
+
+    def _generation_groups_to_evict(self, idx: int, groups: frozenset[str]) -> frozenset[str]:
+        """Keep generation weights resident while below the VRAM watermark."""
+        if not self._keep_generation_resident or _GROUP_GENERATION not in groups:
+            return groups
+
+        allocated = int(self._accel.memory_allocated(self._target_device))
+        required_free_memory = self._resident_headroom_bytes + self._activation_reserve_bytes
+        try:
+            driver_free_memory = int(self._accel.mem_get_info(self._target_device)[0])
+            reserved = int(self._accel.memory_reserved(self._target_device))
+            reclaimable_cache = max(reserved - allocated, 0)
+            effective_free_memory = driver_free_memory + reclaimable_cache
+        except Exception:  # pragma: no cover - backend-specific fallback
+            effective_free_memory = required_free_memory
+        projected_peak = allocated + self._activation_reserve_bytes
+        keep_resident = (
+            projected_peak <= self._resident_memory_limit_bytes and effective_free_memory >= required_free_memory
+        )
+        group_bytes = self._store.group_nbytes(idx, _GROUP_GENERATION)
+        if keep_resident:
+            if idx not in self._resident_generation_layers:
+                self._resident_generation_layers.add(idx)
+                self._resident_generation_bytes += group_bytes
+            return groups - {_GROUP_GENERATION}
+        if idx in self._resident_generation_layers:
+            self._resident_generation_layers.remove(idx)
+            self._resident_generation_bytes -= group_bytes
+        return groups
 
     def _register_hooks(self) -> None:
         idx_map: dict[int, int] = {id(layer): idx for idx, layer in enumerate(self._layers)}
@@ -518,6 +642,7 @@ class LayerOffloadWrapper(nn.Module):
 
         def _post_hook(module: nn.Module, _args: Any, _output: Any, *, idx: int) -> None:
             groups = active_groups_by_layer.pop(idx, _ALL_TENSOR_GROUPS)
+            groups_to_evict = self._generation_groups_to_evict(idx, groups)
             if self._async_mode and self._cuda_malloc_async:
                 # cudaMallocAsync slow-but-safe path: per-stream pools
                 # require alloc and free on the same stream. Since
@@ -531,12 +656,12 @@ class LayerOffloadWrapper(nn.Module):
                 compute_stream = self._accel.current_stream(self._target_device)
                 prefetch_stream.wait_stream(compute_stream)
                 with self._accel.stream(prefetch_stream):
-                    self._store.evict_to_cpu(idx, module, groups=groups)
+                    self._store.evict_to_cpu(idx, module, groups=groups_to_evict)
             else:
                 # Native allocator path: just drop the GPU tensor refs on
                 # the compute stream. record_stream in _pre_hook ensures the
                 # blocks are not reused before the kernel finishes.
-                self._store.evict_to_cpu(idx, module, groups=groups)
+                self._store.evict_to_cpu(idx, module, groups=groups_to_evict)
 
         for layer in self._layers:
             idx = idx_map[id(layer)]
@@ -569,7 +694,9 @@ class LayerOffloadWrapper(nn.Module):
         """
         _log_vram(
             f"wrapper.teardown: enter (on_gpu={len(self._store._on_gpu)}, "
-            f"events={len(self._prefetcher._events) if self._prefetcher is not None else 0})",
+            f"events={len(self._prefetcher._events) if self._prefetcher is not None else 0}, "
+            f"resident_generation_layers={len(self._resident_generation_layers)}, "
+            f"resident_generation_gib={self._resident_generation_bytes / _GIB:.2f})",
             self._target_device,
         )
         for h in self._hooks:
@@ -588,6 +715,8 @@ class LayerOffloadWrapper(nn.Module):
 
         for idx, layer in enumerate(self._layers):
             self._store.evict_to_cpu(idx, layer)
+        self._resident_generation_layers.clear()
+        self._resident_generation_bytes = 0
 
         for p in self._model.parameters():
             p.data = p.data.to("cpu")

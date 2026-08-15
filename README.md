@@ -519,13 +519,31 @@ For U1.5, keep `--model_path` pointed at `sensenova/SenseNova-U1.5-8B-MoT-Previe
 
 #### `--vram_mode`: single-GPU layer offload
 
-Pass `--vram_mode` to keep the language-model layers resident on CPU pinned memory and stream them onto the GPU on-demand during forward, freeing weight VRAM while keeping activations on-device.
+Pass `--vram_mode` to control language-model layer residency and CPU-to-GPU streaming while keeping activations on-device.
 
 | Mode | Behavior | When to use |
 | :--- | :--- | :--- |
 | `full` *(default)* | No offload; whole model on GPU | Plenty of VRAM, best speed |
+| `fast` | Async prefetch, then retain generation layers within the GPU memory budget | 24 GB class GPU, near-full speed |
 | `low` | Synchronous per-layer CPU↔GPU swap | Lowest VRAM footprint |
 | `balanced` | Async prefetch overlaps H2D copy with compute | Tight on VRAM but want to recover speed |
+
+`fast` defaults to a 90% automatic VRAM budget, 2 GiB of reusable headroom,
+and a 4 GiB activation reserve. All values are configurable:
+
+```bash
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --vram_mode fast \
+  --fast_vram_fraction 0.90 \
+  --fast_vram_headroom_gib 2 \
+  --fast_activation_reserve_gib 4 \
+  --fast_vram_budget_gib 20.5 \
+  --prompt "..." --output output.png
+```
+
+`--fast_vram_budget_gib` is optional and overrides the fraction-derived
+budget. Omit it for automatic sizing.
 
 ```bash
 python examples/t2i/inference.py \

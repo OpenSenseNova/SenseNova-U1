@@ -27,6 +27,9 @@ try:
     from .local_pipeline import (
         ATTN_BACKEND_OPTIONS,
         CFG_NORM_OPTIONS,
+        DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        DEFAULT_FAST_VRAM_FRACTION,
+        DEFAULT_FAST_VRAM_HEADROOM_GIB,
         DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
         DEFAULT_SEED,
         DEFAULT_VRAM_MODE,
@@ -64,6 +67,9 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
     from local_pipeline import (
         ATTN_BACKEND_OPTIONS,
         CFG_NORM_OPTIONS,
+        DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        DEFAULT_FAST_VRAM_FRACTION,
+        DEFAULT_FAST_VRAM_HEADROOM_GIB,
         DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
         DEFAULT_SEED,
         DEFAULT_VRAM_MODE,
@@ -503,12 +509,45 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                         "activations / KV cache grow with workload — especially in interleave "
                         "mode where each generated image enlarges the cache).\n"
                         "  full     — no offload, whole model on GPU, fastest (default)\n"
+                        "  fast     — async prefetch, then retain generation weights within budget\n"
                         "  low      — synchronous per-layer CPU<->GPU swap, smallest weight\n"
                         "             footprint, slowest\n"
                         "  balanced — async prefetch, overlaps H2D with compute, faster than low\n"
                         "Anything other than 'full' forces device_map='none' (use device_map "
                         "for multi-GPU sharding instead)."
                     ),
+                ),
+                io.Float.Input(
+                    "fast_vram_fraction",
+                    default=DEFAULT_FAST_VRAM_FRACTION,
+                    min=0.1,
+                    max=1.0,
+                    step=0.01,
+                    tooltip="Automatic fast-mode VRAM budget as a fraction of physical memory.",
+                ),
+                io.Float.Input(
+                    "fast_vram_headroom_gib",
+                    default=DEFAULT_FAST_VRAM_HEADROOM_GIB,
+                    min=0.0,
+                    max=32.0,
+                    step=0.25,
+                    tooltip="Reusable VRAM headroom reserved after projected activation growth.",
+                ),
+                io.Float.Input(
+                    "fast_activation_reserve_gib",
+                    default=DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+                    min=0.0,
+                    max=32.0,
+                    step=0.25,
+                    tooltip="Allowance for activations allocated after decoder-layer forwards.",
+                ),
+                io.Float.Input(
+                    "fast_vram_budget_gib",
+                    default=0.0,
+                    min=0.0,
+                    max=128.0,
+                    step=0.25,
+                    tooltip="Absolute fast-mode VRAM budget. 0 uses fast_vram_fraction.",
                 ),
                 io.Combo.Input(
                     "gguf_checkpoint",
@@ -541,6 +580,10 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         device_map: str,
         max_memory: str,
         vram_mode: str,
+        fast_vram_fraction: float,
+        fast_vram_headroom_gib: float,
+        fast_activation_reserve_gib: float,
+        fast_vram_budget_gib: float,
         gguf_checkpoint: str,
     ) -> str:
         key = (
@@ -552,6 +595,10 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             device_map,
             max_memory.strip(),
             vram_mode,
+            fast_vram_fraction,
+            fast_vram_headroom_gib,
+            fast_activation_reserve_gib,
+            fast_vram_budget_gib,
             _resolve_gguf_choice(gguf_checkpoint.strip()),
         )
         return hashlib.sha256(str(key).encode()).hexdigest()
@@ -567,6 +614,10 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         device_map: str,
         max_memory: str,
         vram_mode: str,
+        fast_vram_fraction: float,
+        fast_vram_headroom_gib: float,
+        fast_activation_reserve_gib: float,
+        fast_vram_budget_gib: float,
         gguf_checkpoint: str,
     ) -> io.NodeOutput:
         resolved_gguf = _resolve_gguf_choice(gguf_checkpoint.strip())
@@ -579,6 +630,10 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             device_map,
             max_memory.strip(),
             vram_mode,
+            fast_vram_fraction,
+            fast_vram_headroom_gib,
+            fast_activation_reserve_gib,
+            fast_vram_budget_gib,
             resolved_gguf,
         )
         if cache_key not in _LOCAL_MODEL_CACHE:
@@ -601,6 +656,10 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                 max_memory=max_memory,
                 gguf_checkpoint=resolved_gguf,
                 vram_mode=vram_mode,
+                fast_vram_fraction=fast_vram_fraction,
+                fast_vram_headroom_gib=fast_vram_headroom_gib,
+                fast_activation_reserve_gib=fast_activation_reserve_gib,
+                fast_vram_budget_gib=fast_vram_budget_gib,
             )
         else:
             LOGGER.info("SenseNova U1 loader: reusing cached model for %s", model_path)

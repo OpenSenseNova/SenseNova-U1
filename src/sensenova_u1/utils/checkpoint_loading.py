@@ -29,6 +29,7 @@ import argparse
 import gc
 import json
 import logging
+import math
 from pathlib import Path
 from typing import Any
 
@@ -47,7 +48,31 @@ def _default_device() -> torch.device:
 
 def add_offload_args(parser: argparse.ArgumentParser) -> None:
     """Add Transformers/Accelerate device-map and layer-offload flags to an example CLI."""
-    from .offload import DEFAULT_VRAM_MODE, VRAM_MODE_OPTIONS
+    from .offload import (
+        DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        DEFAULT_FAST_VRAM_FRACTION,
+        DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        DEFAULT_VRAM_MODE,
+        VRAM_MODE_OPTIONS,
+    )
+
+    def fraction(value: str) -> float:
+        parsed = float(value)
+        if not math.isfinite(parsed) or not 0 < parsed <= 1:
+            raise argparse.ArgumentTypeError("must satisfy 0 < value <= 1")
+        return parsed
+
+    def nonnegative_gib(value: str) -> float:
+        parsed = float(value)
+        if not math.isfinite(parsed) or parsed < 0:
+            raise argparse.ArgumentTypeError("must be >= 0")
+        return parsed
+
+    def positive_gib(value: str) -> float:
+        parsed = float(value)
+        if not math.isfinite(parsed) or parsed <= 0:
+            raise argparse.ArgumentTypeError("must be > 0")
+        return parsed
 
     parser.add_argument(
         "--device_map",
@@ -74,10 +99,35 @@ def add_offload_args(parser: argparse.ArgumentParser) -> None:
         help=(
             "Single-GPU layer-offload mode. "
             "'full' = no offload, whole model on GPU, fastest (default). "
+            "'fast' = async prefetch, then retain generation layers within the GPU memory budget. "
             "'low' = synchronous per-layer CPU<->GPU swap, smallest weight footprint. "
             "'balanced' = async prefetch, overlaps H2D with compute, faster than 'low'. "
             "Mutually exclusive with --device_map (layer offload requires the model on CPU)."
         ),
+    )
+    parser.add_argument(
+        "--fast_vram_fraction",
+        type=fraction,
+        default=DEFAULT_FAST_VRAM_FRACTION,
+        help="Fast-mode automatic VRAM budget as a fraction of physical memory (default: 0.90).",
+    )
+    parser.add_argument(
+        "--fast_vram_headroom_gib",
+        type=nonnegative_gib,
+        default=DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        help="Fast-mode reusable VRAM headroom reserved after projected activation growth (default: 2 GiB).",
+    )
+    parser.add_argument(
+        "--fast_activation_reserve_gib",
+        type=nonnegative_gib,
+        default=DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        help="Fast-mode allowance for activations allocated after decoder layers (default: 4 GiB).",
+    )
+    parser.add_argument(
+        "--fast_vram_budget_gib",
+        type=positive_gib,
+        default=None,
+        help="Optional absolute fast-mode VRAM budget in GiB; overrides --fast_vram_fraction.",
     )
 
 

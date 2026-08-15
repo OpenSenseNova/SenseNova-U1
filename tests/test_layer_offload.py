@@ -1,8 +1,10 @@
+import argparse
 import unittest
 
 import torch
 from torch import nn
 
+from sensenova_u1.utils.checkpoint_loading import add_offload_args
 from sensenova_u1.utils.layer_offload import (
     _ALL_TENSOR_GROUPS,
     _GROUP_GENERATION,
@@ -10,6 +12,15 @@ from sensenova_u1.utils.layer_offload import (
     _GROUP_UNDERSTANDING,
     _partition_layer_tensor_names,
     _required_tensor_groups,
+    _resident_memory_limit,
+)
+from sensenova_u1.utils.offload import (
+    DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+    DEFAULT_FAST_VRAM_FRACTION,
+    DEFAULT_FAST_VRAM_HEADROOM_GIB,
+    VRAM_MODE_OPTIONS,
+    vram_mode_keeps_generation_resident,
+    vram_mode_to_prefetch_count,
 )
 
 
@@ -62,6 +73,71 @@ class LayerOffloadPartitionTest(unittest.TestCase):
             ),
             _ALL_TENSOR_GROUPS,
         )
+
+    def test_generation_residency_keeps_safety_headroom(self) -> None:
+        gib = 1024**3
+
+        self.assertEqual(_resident_memory_limit(24 * gib), int(21.6 * gib))
+        self.assertEqual(_resident_memory_limit(16 * gib), 14 * gib)
+        self.assertEqual(_resident_memory_limit(2 * gib), 0)
+
+    def test_fast_mode_uses_prefetch_and_generation_residency(self) -> None:
+        self.assertEqual(VRAM_MODE_OPTIONS, ("full", "fast", "balanced", "low"))
+        self.assertEqual(vram_mode_to_prefetch_count("fast"), 2)
+        self.assertTrue(vram_mode_keeps_generation_resident("fast"))
+
+        for mode in ("full", "balanced", "low"):
+            self.assertFalse(vram_mode_keeps_generation_resident(mode))
+
+    def test_generation_residency_budget_is_configurable(self) -> None:
+        gib = 1024**3
+
+        self.assertEqual(
+            _resident_memory_limit(24 * gib, memory_fraction=0.85),
+            int(20.4 * gib),
+        )
+        self.assertEqual(
+            _resident_memory_limit(24 * gib, headroom_bytes=4 * gib),
+            20 * gib,
+        )
+        self.assertEqual(
+            _resident_memory_limit(24 * gib, memory_fraction=0.5, budget_bytes=20 * gib),
+            20 * gib,
+        )
+
+        with self.assertRaises(ValueError):
+            _resident_memory_limit(24 * gib, memory_fraction=0)
+        with self.assertRaises(ValueError):
+            _resident_memory_limit(24 * gib, headroom_bytes=-1)
+        with self.assertRaises(ValueError):
+            _resident_memory_limit(24 * gib, budget_bytes=0)
+
+    def test_offload_cli_exposes_fast_mode_budget_controls(self) -> None:
+        parser = argparse.ArgumentParser()
+        add_offload_args(parser)
+
+        defaults = parser.parse_args([])
+        self.assertEqual(defaults.fast_vram_fraction, DEFAULT_FAST_VRAM_FRACTION)
+        self.assertEqual(defaults.fast_vram_headroom_gib, DEFAULT_FAST_VRAM_HEADROOM_GIB)
+        self.assertEqual(defaults.fast_activation_reserve_gib, DEFAULT_FAST_ACTIVATION_RESERVE_GIB)
+        self.assertIsNone(defaults.fast_vram_budget_gib)
+
+        custom = parser.parse_args(
+            [
+                "--fast_vram_fraction",
+                "0.85",
+                "--fast_vram_headroom_gib",
+                "3",
+                "--fast_activation_reserve_gib",
+                "5",
+                "--fast_vram_budget_gib",
+                "20.5",
+            ]
+        )
+        self.assertEqual(custom.fast_vram_fraction, 0.85)
+        self.assertEqual(custom.fast_vram_headroom_gib, 3.0)
+        self.assertEqual(custom.fast_activation_reserve_gib, 5.0)
+        self.assertEqual(custom.fast_vram_budget_gib, 20.5)
 
 
 if __name__ == "__main__":

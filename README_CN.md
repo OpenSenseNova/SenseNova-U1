@@ -517,13 +517,29 @@ python examples/t2i/inference.py \
 
 #### `--vram_mode`：单卡分层卸载
 
-`--vram_mode` 将语言模型各层常驻 CPU pinned memory，仅在前向时按需流式拷贝到 GPU 上参与计算，从而显著降低权重的 VRAM 占用，激活值仍保留在显卡上。
+`--vram_mode` 用于控制语言模型层的驻留方式和 CPU→GPU 流式搬运，激活值仍保留在显卡上。
 
 | 模式 | 行为 | 适用场景 |
 | :--- | :--- | :--- |
 | `full`（默认） | 不做卸载，整模放在 GPU 上 | 显存充裕，追求最快速度 |
+| `fast` | 异步预取，并在显存预算内常驻 generation 层 | 24 GB 级显卡、接近 full 的速度 |
 | `low` | 同步逐层 CPU↔GPU 交换 | 显存最为紧张 |
 | `balanced` | 异步预取，将 H2D 拷贝与计算重叠 | 显存吃紧但希望恢复部分速度 |
+
+`fast` 默认使用 90% 自动显存预算、2 GiB 可复用显存余量和 4 GiB 激活预留，均可从外部配置：
+
+```bash
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
+  --vram_mode fast \
+  --fast_vram_fraction 0.90 \
+  --fast_vram_headroom_gib 2 \
+  --fast_activation_reserve_gib 4 \
+  --fast_vram_budget_gib 20.5 \
+  --prompt "..." --output output.png
+```
+
+`--fast_vram_budget_gib` 为可选的绝对预算，会覆盖 fraction 自动预算；不传时保持自动计算。
 
 ```bash
 python examples/t2i/inference.py \

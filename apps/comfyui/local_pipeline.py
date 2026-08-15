@@ -176,8 +176,11 @@ CFG_NORM_OPTIONS = ("none", "global", "channel", "cfg_zero_star")
 ATTN_BACKEND_OPTIONS = ("auto", "flash", "sdpa")
 DEVICE_MAP_OPTIONS = ("none", "auto", "balanced", "balanced_low_0", "sequential")
 
-VRAM_MODE_OPTIONS = ("full", "low", "balanced")
+VRAM_MODE_OPTIONS = ("full", "fast", "balanced", "low")
 DEFAULT_VRAM_MODE = "full"
+DEFAULT_FAST_VRAM_FRACTION = 0.90
+DEFAULT_FAST_VRAM_HEADROOM_GIB = 2.0
+DEFAULT_FAST_ACTIVATION_RESERVE_GIB = 4.0
 
 # vram_mode -> prefetch_count (the underlying knob on the layer-offload wrapper)
 # 0 = no offload, 1 = synchronous, >=2 = async prefetch this many layers ahead.
@@ -185,6 +188,7 @@ DEFAULT_VRAM_MODE = "full"
 # interleave mode), so modes describe the *mechanism*, not a fixed budget.
 _VRAM_MODE_TO_PREFETCH: dict[str, int] = {
     "full": 0,  # no offload, whole model on GPU
+    "fast": 2,  # async prefetch, then retain generation layers within budget
     "low": 1,  # sync per-layer offload, smallest weight footprint, slowest
     "balanced": 2,  # async prefetch, overlaps H2D with compute
 }
@@ -217,11 +221,23 @@ class SenseNovaU1LocalModel:
         max_memory: str = "",
         gguf_checkpoint: str = "",
         vram_mode: str = DEFAULT_VRAM_MODE,
+        fast_vram_fraction: float = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float = 0.0,
     ) -> None:
         if not model_path.strip():
             raise RuntimeError("Local model_path cannot be empty.")
         if vram_mode not in _VRAM_MODE_TO_PREFETCH:
             raise RuntimeError(f"Unsupported vram_mode={vram_mode!r}. Choose one of {VRAM_MODE_OPTIONS}.")
+        if not math.isfinite(fast_vram_fraction) or not 0 < fast_vram_fraction <= 1:
+            raise RuntimeError("fast_vram_fraction must satisfy 0 < value <= 1.")
+        if not math.isfinite(fast_vram_headroom_gib) or fast_vram_headroom_gib < 0:
+            raise RuntimeError("fast_vram_headroom_gib must be >= 0.")
+        if not math.isfinite(fast_activation_reserve_gib) or fast_activation_reserve_gib < 0:
+            raise RuntimeError("fast_activation_reserve_gib must be >= 0.")
+        if not math.isfinite(fast_vram_budget_gib) or fast_vram_budget_gib < 0:
+            raise RuntimeError("fast_vram_budget_gib must be >= 0; use 0 for automatic.")
         prefetch_count = _VRAM_MODE_TO_PREFETCH[vram_mode]
 
         injected_path = _maybe_add_source_path(sensenova_u1_src)
@@ -255,6 +271,10 @@ class SenseNovaU1LocalModel:
         self.gguf_checkpoint = normalized_gguf or ""
         self.vram_mode = vram_mode
         self.prefetch_count = int(prefetch_count)
+        self.fast_vram_fraction = float(fast_vram_fraction)
+        self.fast_vram_headroom_gib = float(fast_vram_headroom_gib)
+        self.fast_activation_reserve_gib = float(fast_activation_reserve_gib)
+        self.fast_vram_budget_gib = float(fast_vram_budget_gib) or None
         self.effective_attn_backend = sensenova_u1.effective_attn_backend()
         _vram_snapshot(f"loader: pre-load (vram_mode={vram_mode})", device=device, reset_peak=True)
         self.model, self.tokenizer = load_model_and_tokenizer(
@@ -280,6 +300,10 @@ class SenseNovaU1LocalModel:
             "gguf_checkpoint": self.gguf_checkpoint,
             "vram_mode": self.vram_mode,
             "prefetch_count": self.prefetch_count,
+            "fast_vram_fraction": self.fast_vram_fraction,
+            "fast_vram_headroom_gib": self.fast_vram_headroom_gib,
+            "fast_activation_reserve_gib": self.fast_activation_reserve_gib,
+            "fast_vram_budget_gib": self.fast_vram_budget_gib,
         }
 
     def _offload_ctx(self):
@@ -293,10 +317,30 @@ class SenseNovaU1LocalModel:
         from sensenova_u1.utils import offload_layers_async, offload_layers_sync
 
         target = torch.device(self.device)
+        keep_generation_resident = self.vram_mode == "fast"
         if self.prefetch_count == 1:
-            inner = offload_layers_sync(self.model, DEFAULT_LAYERS_ATTR, target)
+            inner = offload_layers_sync(
+                self.model,
+                DEFAULT_LAYERS_ATTR,
+                target,
+                keep_generation_resident=keep_generation_resident,
+                fast_vram_fraction=self.fast_vram_fraction,
+                fast_vram_headroom_gib=self.fast_vram_headroom_gib,
+                fast_activation_reserve_gib=self.fast_activation_reserve_gib,
+                fast_vram_budget_gib=self.fast_vram_budget_gib,
+            )
         else:
-            inner = offload_layers_async(self.model, DEFAULT_LAYERS_ATTR, target, prefetch_count=self.prefetch_count)
+            inner = offload_layers_async(
+                self.model,
+                DEFAULT_LAYERS_ATTR,
+                target,
+                prefetch_count=self.prefetch_count,
+                keep_generation_resident=keep_generation_resident,
+                fast_vram_fraction=self.fast_vram_fraction,
+                fast_vram_headroom_gib=self.fast_vram_headroom_gib,
+                fast_activation_reserve_gib=self.fast_activation_reserve_gib,
+                fast_vram_budget_gib=self.fast_vram_budget_gib,
+            )
         return self._instrumented_offload_ctx(inner)
 
     @contextmanager
