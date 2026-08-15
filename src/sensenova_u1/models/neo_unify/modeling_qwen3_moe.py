@@ -399,8 +399,11 @@ class Qwen3MoeModel(Qwen3MoePreTrainedModel):
             exist_non_image_gen_tokens = True
             exist_image_gen_tokens = False
         else:
-            exist_non_image_gen_tokens = (~image_gen_indicators).any()
-            exist_image_gen_tokens = image_gen_indicators.any()
+            # Convert the CUDA reductions once before the decoder loop. If the
+            # scalar tensors reach every layer, each Python branch can force a
+            # host-device synchronization and collapse async weight prefetch.
+            exist_non_image_gen_tokens = bool((~image_gen_indicators).any().item())
+            exist_image_gen_tokens = bool(image_gen_indicators.any().item())
 
         if (input_ids is None) ^ (inputs_embeds is not None):
             raise ValueError("You must specify exactly one of input_ids or inputs_embeds")

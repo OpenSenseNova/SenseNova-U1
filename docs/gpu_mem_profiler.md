@@ -196,13 +196,14 @@ python examples/t2i/inference.py \
     --timestep_shift 3.0 \
     --num_steps 50 \
     --vram_mode <full|balanced|low> \
+    --attn_backend sdpa \
     --profile
 ```
 
 | `--vram_mode` | Strategy                                                              | Load Peak VRAM (GiB) | Gen Peak VRAM (GiB) | Load CPU RSS (GiB) | Gen CPU RSS (GiB) | Avg Time (s) | Throughput (tok/s) |
 |:-------------:|:----------------------------------------------------------------------|:--------------------:|:-------------------:|:-----------------:|:-----------------:|:------------:|:------------------:|
-| `full`        | Entire model resident on GPU, no offload (default, fastest)           | 32.77 / 33.10        | 34.83 / 35.82       | 5.59              | 5.59              | 22.108       | 185.27             |
-| `balanced`    | Async prefetch (H2D overlapped with compute), greatly reduced VRAM    | —                    | 6.78 / 12.50        | 0.95              | 47.18             | 112.394      | 36.44              |
-| `low`         | Synchronous CPU↔GPU swap per layer, minimum GPU VRAM, slowest        | —                    | 5.34 / 5.85         | 0.98              | 47.22             | 130.191      | 31.46              |
+| `full`        | Entire model resident on GPU, no offload (default, fastest)           | 32.70 / 33.02        | 34.79 / 35.72       | 5.56              | 5.56              | 20.894       | 196.04             |
+| `balanced`    | Async prefetch (H2D overlapped with compute), greatly reduced VRAM    | —                    | 5.68 / 9.34         | 0.91              | 42.16             | 31.456       | 130.21             |
+| `low`         | Synchronous CPU↔GPU swap per layer, minimum GPU VRAM, slowest        | —                    | 4.96 / 5.53         | 0.91              | 42.21             | 51.535       | 79.48              |
 
-> VRAM columns are formatted as `allocated / reserved`. `balanced` and `low` modes use lazy loading — no GPU VRAM is allocated during model load (shown as —); weights are swapped in on demand, causing CPU RSS to rise significantly during generation.
+> Tests use `SenseNova-U1-8B-MoT`, BF16, SDPA, 2048×2048 output, 50 steps, batch size 1, and seed 42 on a single NVIDIA H100 80 GB. Generation results are steady-state measurements after one pinned-memory/CUDA warm-up. VRAM columns are formatted as `allocated / reserved`; — indicates no GPU allocation during lazy model loading. Outputs from all three modes are pixel-identical.

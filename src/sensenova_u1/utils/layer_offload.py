@@ -47,6 +47,11 @@ from .accel import require_accelerator as _require_accelerator
 
 logger = logging.getLogger(__name__)
 
+_GROUP_SHARED = "shared"
+_GROUP_UNDERSTANDING = "understanding"
+_GROUP_GENERATION = "generation"
+_ALL_TENSOR_GROUPS = frozenset({_GROUP_SHARED, _GROUP_UNDERSTANDING, _GROUP_GENERATION})
+
 
 def _log_vram(label: str, target_device: torch.device, *, reset_peak: bool = False) -> None:
     """Cheap VRAM snapshot for diagnosing offload-mode leaks across repeated
@@ -81,6 +86,55 @@ def _resolve_attr(module: nn.Module, dotted_path: str) -> nn.ModuleList:
     if not isinstance(obj, nn.ModuleList):
         raise TypeError(f"Expected nn.ModuleList at '{dotted_path}', got {type(obj).__name__}")
     return obj
+
+
+def _partition_layer_tensor_names(layer: nn.Module) -> dict[str, str]:
+    """Classify layer tensors into shared, understanding, and generation groups.
+
+    NEO-Unify stores the two task branches side by side. Generation modules
+    carry a ``_mot_gen`` suffix while their understanding counterparts use the
+    same path without the suffix. A tensor without such a paired counterpart
+    (for example RoPE buffers) is shared by both branches.
+
+    For ordinary transformer blocks with no ``_mot_gen`` names every tensor is
+    classified as shared, preserving the wrapper's general-purpose behaviour.
+    """
+    names = {name for name, _tensor in itertools.chain(layer.named_parameters(), layer.named_buffers())}
+    groups: dict[str, str] = {}
+    for name in names:
+        parts = name.split(".")
+        if any(part.endswith("_mot_gen") for part in parts[:-1]):
+            groups[name] = _GROUP_GENERATION
+            continue
+
+        has_generation_pair = False
+        for idx in range(len(parts) - 1):
+            candidate = parts.copy()
+            candidate[idx] = f"{candidate[idx]}_mot_gen"
+            if ".".join(candidate) in names:
+                has_generation_pair = True
+                break
+        groups[name] = _GROUP_UNDERSTANDING if has_generation_pair else _GROUP_SHARED
+    return groups
+
+
+def _required_tensor_groups(kwargs: dict[str, Any]) -> frozenset[str]:
+    """Return the weight groups required by one decoder-layer invocation.
+
+    The model normalises the two branch flags to Python ``bool`` values before
+    entering the layer loop. Unknown/custom callers fall back to all groups so
+    branch-aware streaming can never omit a weight merely because a module has
+    a different forward signature.
+    """
+    use_understanding = kwargs.get("exist_non_image_gen_tokens")
+    use_generation = kwargs.get("exist_image_gen_tokens")
+    if not isinstance(use_understanding, bool) or not isinstance(use_generation, bool):
+        return _ALL_TENSOR_GROUPS
+    if use_understanding and not use_generation:
+        return frozenset({_GROUP_SHARED, _GROUP_UNDERSTANDING})
+    if use_generation and not use_understanding:
+        return frozenset({_GROUP_SHARED, _GROUP_GENERATION})
+    return _ALL_TENSOR_GROUPS
 
 
 def _is_cuda_malloc_async_backend() -> bool:
@@ -145,7 +199,11 @@ class _LayerStore:
         self._pin_device = target_device.type
 
         self._pinned: list[dict[str, torch.Tensor]] = []
+        self._tensor_groups: list[dict[str, str]] = []
+        self._resident_groups: list[set[str]] = []
         self._on_gpu: set[int] = set()
+        self._bytes_moved = 0
+        self._bytes_moved_by_group = {group: 0 for group in _ALL_TENSOR_GROUPS}
 
         for layer in layers:
             pinned: dict[str, torch.Tensor] = {}
@@ -154,35 +212,82 @@ class _LayerStore:
                 tensor.data = pinned_tensor
                 pinned[name] = pinned_tensor
             self._pinned.append(pinned)
+            self._tensor_groups.append(_partition_layer_tensor_names(layer))
+            self._resident_groups.append(set())
 
     def _check_idx(self, idx: int) -> None:
         if idx < 0 or idx >= self.num_layers:
             raise IndexError(f"Layer index {idx} out of range [0, {self.num_layers})")
 
-    def is_on_gpu(self, idx: int) -> bool:
-        return idx in self._on_gpu
+    def is_on_gpu(self, idx: int, groups: frozenset[str] | None = None) -> bool:
+        self._check_idx(idx)
+        if groups is None:
+            return idx in self._on_gpu
+        return groups.issubset(self._resident_groups[idx])
 
-    def move_to_gpu(self, idx: int, layer: nn.Module, *, non_blocking: bool = False) -> None:
+    def move_to_gpu(
+        self,
+        idx: int,
+        layer: nn.Module,
+        *,
+        groups: frozenset[str] = _ALL_TENSOR_GROUPS,
+        non_blocking: bool = False,
+    ) -> None:
         """Move layer *idx* parameters from pinned CPU to ``target_device``."""
         self._check_idx(idx)
-        if idx in self._on_gpu:
+        missing_groups = groups - self._resident_groups[idx]
+        if not missing_groups:
             return
         pinned = self._pinned[idx]
+        tensor_groups = self._tensor_groups[idx]
         for name, param in itertools.chain(layer.named_parameters(), layer.named_buffers()):
-            if name in pinned:
-                param.data = pinned[name].to(self.target_device, non_blocking=non_blocking)
+            group = tensor_groups.get(name, _GROUP_SHARED)
+            if name in pinned and group in missing_groups:
+                source = pinned[name]
+                param.data = source.to(self.target_device, non_blocking=non_blocking)
+                moved = source.numel() * source.element_size()
+                self._bytes_moved += moved
+                self._bytes_moved_by_group[group] += moved
+        self._resident_groups[idx].update(missing_groups)
         self._on_gpu.add(idx)
 
-    def evict_to_cpu(self, idx: int, layer: nn.Module) -> None:
+    def evict_to_cpu(
+        self,
+        idx: int,
+        layer: nn.Module,
+        *,
+        groups: frozenset[str] = _ALL_TENSOR_GROUPS,
+    ) -> None:
         """Swap layer *idx* parameters back to their pinned CPU copies."""
         self._check_idx(idx)
         if idx not in self._on_gpu:
             return
         pinned = self._pinned[idx]
+        tensor_groups = self._tensor_groups[idx]
         for name, param in itertools.chain(layer.named_parameters(), layer.named_buffers()):
-            if name in pinned:
+            if name in pinned and tensor_groups.get(name, _GROUP_SHARED) in groups:
                 param.data = pinned[name]
-        self._on_gpu.discard(idx)
+        self._resident_groups[idx].difference_update(groups)
+        if not self._resident_groups[idx]:
+            self._on_gpu.discard(idx)
+
+    def tensors_for_groups(
+        self,
+        idx: int,
+        layer: nn.Module,
+        groups: frozenset[str],
+    ) -> list[torch.Tensor]:
+        """Return tensors belonging to ``groups`` for stream recording."""
+        self._check_idx(idx)
+        tensor_groups = self._tensor_groups[idx]
+        return [
+            tensor
+            for name, tensor in itertools.chain(layer.named_parameters(), layer.named_buffers())
+            if tensor_groups.get(name, _GROUP_SHARED) in groups
+        ]
+
+    def transfer_stats(self) -> tuple[int, dict[str, int]]:
+        return self._bytes_moved, dict(self._bytes_moved_by_group)
 
     def managed_tensor_ids(self) -> set[int]:
         ids: set[int] = set()
@@ -196,6 +301,8 @@ class _LayerStore:
         for pinned_dict in self._pinned:
             pinned_dict.clear()
         self._pinned.clear()
+        self._tensor_groups.clear()
+        self._resident_groups.clear()
         self._on_gpu.clear()
 
 
@@ -211,23 +318,27 @@ class _AsyncPrefetcher:
         self._layers = layers
         self._accel = _accel(store.target_device)
         self._stream = self._accel.Stream(device=store.target_device)
-        self._events: dict[int, Any] = {}
+        self._events: dict[int, tuple[Any, frozenset[str]]] = {}
 
-    def prefetch(self, idx: int) -> None:
+    def prefetch(self, idx: int, groups: frozenset[str]) -> None:
         """Begin async transfer of layer *idx* to GPU (no-op if already there)."""
-        if self._store.is_on_gpu(idx) or idx in self._events:
+        if self._store.is_on_gpu(idx, groups) or idx in self._events:
             return
         with self._accel.stream(self._stream):
-            self._store.move_to_gpu(idx, self._layers[idx], non_blocking=True)
+            self._store.move_to_gpu(idx, self._layers[idx], groups=groups, non_blocking=True)
             event = self._accel.Event()
             event.record(self._stream)
-            self._events[idx] = event
+            self._events[idx] = (event, groups)
 
     def wait(self, idx: int) -> None:
         """Block the compute stream until layer *idx*'s transfer completes."""
-        event = self._events.pop(idx, None)
-        if event is not None:
+        pending = self._events.pop(idx, None)
+        if pending is not None:
+            event, _groups = pending
             self._accel.current_stream(self._store.target_device).wait_event(event)
+
+    def clear_events(self) -> None:
+        self._events.clear()
 
     def cleanup(self) -> None:
         """Drain pending work and release accelerator stream/event resources."""
@@ -306,6 +417,7 @@ class LayerOffloadWrapper(nn.Module):
         self._hooks: list[torch.utils.hooks.RemovableHandle] = []
         self._audit_handle: torch.utils.hooks.RemovableHandle | None = None
         self._prefetcher: _AsyncPrefetcher | None = None
+        self._active_groups: frozenset[str] | None = None
 
         _log_vram("wrapper.__init__: pre-setup", target_device, reset_peak=True)
         self._setup()
@@ -336,11 +448,10 @@ class LayerOffloadWrapper(nn.Module):
             if id(b) not in layer_tensor_ids:
                 b.data = b.data.to(self._target_device)
 
-        # 3. In async mode: pre-load the first (1 + prefetch_count) layers and
-        #    spin up the prefetch stream.
+        # 3. In async mode spin up the prefetch stream. The first weights are
+        #    loaded lazily because the layer kwargs tell us whether this pass
+        #    needs the understanding branch or the generation branch.
         if self._async_mode:
-            for idx in range(min(self._prefetch_count + 1, len(self._layers))):
-                self._store.move_to_gpu(idx, self._layers[idx])
             self._prefetcher = _AsyncPrefetcher(self._store, self._layers)
 
         # 4. Register layer load/evict hooks.
@@ -351,16 +462,40 @@ class LayerOffloadWrapper(nn.Module):
         #    the construction-time scan.
         self._audit_handle = self._model.register_forward_hook(self._audit_first_forward)
 
+    def _switch_async_groups(self, groups: frozenset[str]) -> None:
+        """Reset stale prefetch state when inference changes task branch."""
+        if self._active_groups == groups:
+            return
+        if self._active_groups is not None:
+            # Branch transitions are infrequent (typically prefix -> denoise).
+            # A one-time drain is preferable to carrying the unused branch's
+            # prefetched weights through every subsequent layer.
+            self._accel.synchronize(device=self._target_device)
+            self._prefetcher.clear_events()  # type: ignore[union-attr]
+            if self._cuda_malloc_async:
+                with self._accel.stream(self._prefetcher._stream):  # type: ignore[union-attr]
+                    for idx, layer in enumerate(self._layers):
+                        self._store.evict_to_cpu(idx, layer)
+            else:
+                for idx, layer in enumerate(self._layers):
+                    self._store.evict_to_cpu(idx, layer)
+        self._active_groups = groups
+
     def _register_hooks(self) -> None:
         idx_map: dict[int, int] = {id(layer): idx for idx, layer in enumerate(self._layers)}
         num_layers = len(self._layers)
 
-        def _pre_hook(module: nn.Module, _args: Any, *, idx: int) -> None:
+        active_groups_by_layer: dict[int, frozenset[str]] = {}
+
+        def _pre_hook(module: nn.Module, _args: Any, kwargs: dict[str, Any], *, idx: int) -> None:
+            groups = _required_tensor_groups(kwargs)
+            active_groups_by_layer[idx] = groups
             if self._async_mode:
+                self._switch_async_groups(groups)
                 # Wait only for THIS layer's H2D transfer.
                 self._prefetcher.wait(idx)  # type: ignore[union-attr]
-                if not self._store.is_on_gpu(idx):
-                    self._store.move_to_gpu(idx, module)
+                if not self._store.is_on_gpu(idx, groups):
+                    self._store.move_to_gpu(idx, module, groups=groups)
 
                 if not self._cuda_malloc_async:
                     # Native caching allocator fast path: tell the allocator
@@ -370,18 +505,19 @@ class LayerOffloadWrapper(nn.Module):
                     # (compute stream) and the allocator handles cross-stream
                     # reuse internally — no prefetch-stream barrier needed.
                     compute_stream = self._accel.current_stream(self._target_device)
-                    for param in itertools.chain(module.parameters(), module.buffers()):
+                    for param in self._store.tensors_for_groups(idx, module, groups):
                         param.data.record_stream(compute_stream)
 
                 # Kick off prefetch for upcoming layers (wraps around for next pass).
                 for offset in range(1, self._prefetch_count + 1):
-                    self._prefetcher.prefetch((idx + offset) % num_layers)  # type: ignore[union-attr]
+                    self._prefetcher.prefetch((idx + offset) % num_layers, groups)  # type: ignore[union-attr]
             else:
                 # Sync mode: the H2D dispatches on the compute stream itself,
                 # which serialises naturally with the kernel that follows.
-                self._store.move_to_gpu(idx, module, non_blocking=True)
+                self._store.move_to_gpu(idx, module, groups=groups, non_blocking=True)
 
         def _post_hook(module: nn.Module, _args: Any, _output: Any, *, idx: int) -> None:
+            groups = active_groups_by_layer.pop(idx, _ALL_TENSOR_GROUPS)
             if self._async_mode and self._cuda_malloc_async:
                 # cudaMallocAsync slow-but-safe path: per-stream pools
                 # require alloc and free on the same stream. Since
@@ -395,16 +531,16 @@ class LayerOffloadWrapper(nn.Module):
                 compute_stream = self._accel.current_stream(self._target_device)
                 prefetch_stream.wait_stream(compute_stream)
                 with self._accel.stream(prefetch_stream):
-                    self._store.evict_to_cpu(idx, module)
+                    self._store.evict_to_cpu(idx, module, groups=groups)
             else:
                 # Native allocator path: just drop the GPU tensor refs on
                 # the compute stream. record_stream in _pre_hook ensures the
                 # blocks are not reused before the kernel finishes.
-                self._store.evict_to_cpu(idx, module)
+                self._store.evict_to_cpu(idx, module, groups=groups)
 
         for layer in self._layers:
             idx = idx_map[id(layer)]
-            h1 = layer.register_forward_pre_hook(functools.partial(_pre_hook, idx=idx))
+            h1 = layer.register_forward_pre_hook(functools.partial(_pre_hook, idx=idx), with_kwargs=True)
             h2 = layer.register_forward_hook(functools.partial(_post_hook, idx=idx))
             self._hooks.extend([h1, h2])
 
@@ -458,6 +594,14 @@ class LayerOffloadWrapper(nn.Module):
         for b in self._model.buffers():
             b.data = b.data.to("cpu")
 
+        total_bytes, by_group = self._store.transfer_stats()
+        logger.info(
+            "LayerOffloadWrapper transfer totals: %.2f GiB (shared=%.2f, understanding=%.2f, generation=%.2f)",
+            total_bytes / (1024**3),
+            by_group[_GROUP_SHARED] / (1024**3),
+            by_group[_GROUP_UNDERSTANDING] / (1024**3),
+            by_group[_GROUP_GENERATION] / (1024**3),
+        )
         self._store.cleanup()
         _log_vram("wrapper.teardown: exit (pre-empty_cache)", self._target_device)
 

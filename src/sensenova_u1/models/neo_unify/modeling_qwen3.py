@@ -1106,8 +1106,12 @@ class Qwen3Model(Qwen3PreTrainedModel):
             exist_non_image_gen_tokens = True
             exist_image_gen_tokens = False
         else:
-            exist_non_image_gen_tokens = (~image_gen_indicators).any()
-            exist_image_gen_tokens = image_gen_indicators.any()
+            # Normalize once before the decoder loop. Leaving these as CUDA
+            # scalar tensors makes every layer's Python branch read them back
+            # to the host, serializing the compute stream and defeating weight
+            # prefetch overlap.
+            exist_non_image_gen_tokens = bool((~image_gen_indicators).any().item())
+            exist_image_gen_tokens = bool(image_gen_indicators.any().item())
         
         if (input_ids is None) ^ (inputs_embeds is not None):
             raise ValueError("You must specify exactly one of input_ids or inputs_embeds")
