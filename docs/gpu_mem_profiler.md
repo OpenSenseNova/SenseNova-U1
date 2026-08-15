@@ -150,7 +150,7 @@ Profile summary
 
 > VRAM columns are formatted as `allocated / reserved`. CPU RSS is the peak RSS during the generation phase.
 
-## Low-VRAM Inference (Text-to-Image as Example)
+## Low-VRAM Inference
 
 ### VRAM Budget Cap (`--max_memory`)
 
@@ -195,15 +195,27 @@ python examples/t2i/inference.py \
     --cfg_norm none \
     --timestep_shift 3.0 \
     --num_steps 50 \
-    --vram_mode <full|balanced|low> \
+    --vram_mode <full|fast|balanced|low> \
     --attn_backend sdpa \
     --profile
 ```
 
+#### Text-to-Image
+
 | `--vram_mode` | Strategy                                                              | Load Peak VRAM (GiB) | Gen Peak VRAM (GiB) | Load CPU RSS (GiB) | Gen CPU RSS (GiB) | Avg Time (s) | Throughput (tok/s) |
 |:-------------:|:----------------------------------------------------------------------|:--------------------:|:-------------------:|:-----------------:|:-----------------:|:------------:|:------------------:|
 | `full`        | Entire model resident on GPU, no offload (default, fastest)           | 32.70 / 33.02        | 34.79 / 35.72       | 5.56              | 5.56              | 20.894       | 196.04             |
+| `fast`        | Async prefetch with generation layers retained within memory budget   | —                    | 19.68 / 20.41       | 0.91              | 42.14             | 22.851       | 179.25             |
 | `balanced`    | Async prefetch (H2D overlapped with compute), greatly reduced VRAM    | —                    | 5.68 / 9.34         | 0.91              | 42.16             | 31.456       | 130.21             |
 | `low`         | Synchronous CPU↔GPU swap per layer, minimum GPU VRAM, slowest        | —                    | 4.96 / 5.53         | 0.91              | 42.21             | 51.535       | 79.48              |
 
-> Tests use `SenseNova-U1-8B-MoT`, BF16, SDPA, 2048×2048 output, 50 steps, batch size 1, and seed 42 on a single NVIDIA H100 80 GB. Generation results are steady-state measurements after one pinned-memory/CUDA warm-up. VRAM columns are formatted as `allocated / reserved`; — indicates no GPU allocation during lazy model loading. Outputs from all three modes are pixel-identical.
+#### Image Editing
+
+| `--vram_mode` | Gen Peak VRAM (GiB) | Avg Time (s) | Throughput (tok/s) |
+|:-------------:|:-------------------:|:------------:|:------------------:|
+| `full`        | 35.28 / 35.79       | 21.475       | 190.74             |
+| `fast`        | 20.18 / 20.75       | 23.372       | 175.25             |
+| `balanced`    | 6.16 / 9.66         | 31.439       | 130.28             |
+| `low`         | 5.44 / 5.80         | 52.291       | 78.33              |
+
+> Tests use `SenseNova-U1-8B-MoT`, BF16, SDPA, 2048×2048 output, 50 steps, batch size 1, and seed 42 on a single NVIDIA H100 80 GB. Text-to-image uses `cfg_scale=4.0`; image editing uses `cfg_scale=4.0` and `img_cfg_scale=1.0`. Results are steady-state measurements after one pinned-memory/CUDA warm-up. VRAM columns are formatted as `allocated / reserved`; — indicates no GPU allocation during lazy model loading. Outputs from all four modes are pixel-identical for each task.

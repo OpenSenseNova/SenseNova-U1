@@ -150,7 +150,7 @@ Profile summary
 
 > 显存列格式为 `allocated / reserved`；CPU 内存为生成阶段 RSS 峰值。
 
-## 低显存推理（以文生图为例）
+## 低显存推理
 
 ### 显存上限约束（`--max_memory`）
 
@@ -195,15 +195,27 @@ python examples/t2i/inference.py \
     --cfg_norm none \
     --timestep_shift 3.0 \
     --num_steps 50 \
-    --vram_mode <full|balanced|low> \
+    --vram_mode <full|fast|balanced|low> \
     --attn_backend sdpa \
     --profile
 ```
 
+#### 文生图
+
 | `--vram_mode` | 策略说明                                         | 加载峰值显存 (GiB) | 生成峰值显存 (GiB) | 加载 CPU RSS (GiB) | 生成 CPU RSS (GiB) | 平均耗时 (s) | 吞吐量 (tok/s) |
 |:-------------:|:------------------------------------------------|:-----------------:|:-----------------:|:-----------------:|:-----------------:|:-----------:|:-------------:|
 | `full`        | 整模型常驻 GPU，不做 offload（默认，速度最快）     | 32.70 / 33.02     | 34.79 / 35.72     | 5.56              | 5.56              | 20.894      | 196.04        |
+| `fast`        | 异步预取，并在显存预算内常驻 generation 层        | —                 | 19.68 / 20.41     | 0.91              | 42.14             | 22.851      | 179.25        |
 | `balanced`    | 异步预取（H2D 与计算重叠），显存占用大幅降低       | —                 | 5.68 / 9.34       | 0.91              | 42.16             | 31.456      | 130.21        |
 | `low`         | 每层同步 CPU↔GPU 交换，GPU 显存占用最小，速度最慢 | —                 | 4.96 / 5.53       | 0.91              | 42.21             | 51.535      | 79.48         |
 
-> 测试使用 `SenseNova-U1-8B-MoT`、BF16、SDPA、2048×2048 输出、50 steps、batch size 1、seed 42，在单张 NVIDIA H100 80 GB 上完成。生成结果为一次 pinned-memory/CUDA 预热后的稳态数据。显存列格式为 `allocated / reserved`；— 表示懒加载阶段未分配 GPU 显存。三种模式的输出图像逐像素一致。
+#### 图像编辑
+
+| `--vram_mode` | 生成峰值显存 (GiB) | 平均耗时 (s) | 吞吐量 (tok/s) |
+|:-------------:|:-----------------:|:-----------:|:-------------:|
+| `full`        | 35.28 / 35.79     | 21.475      | 190.74        |
+| `fast`        | 20.18 / 20.75     | 23.372      | 175.25        |
+| `balanced`    | 6.16 / 9.66       | 31.439      | 130.28        |
+| `low`         | 5.44 / 5.80       | 52.291      | 78.33         |
+
+> 测试使用 `SenseNova-U1-8B-MoT`、BF16、SDPA、2048×2048 输出、50 steps、batch size 1、seed 42，在单张 NVIDIA H100 80 GB 上完成。文生图使用 `cfg_scale=4.0`；图像编辑使用 `cfg_scale=4.0`、`img_cfg_scale=1.0`。结果为一次 pinned-memory/CUDA 预热后的稳态数据。显存列格式为 `allocated / reserved`；— 表示懒加载阶段未分配 GPU 显存。每个任务下四种模式的输出图像逐像素一致。
