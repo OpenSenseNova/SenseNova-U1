@@ -8,7 +8,7 @@
 # under this directory.
 [project]
 name = "ComfyUI-SenseNova-U1"
-version = "0.1.5"
+version = "0.2.0"
 description = "SenseNova-U1 custom nodes for ComfyUI (API + local inference)."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -26,7 +26,7 @@ dependencies = [
     # Tarball URL (not git+https) so pip skips submodule init; see
     # requirements.txt for the full rationale. Keep this aligned with the
     # monorepo's comfyui-vX.Y.Z release tag for reproducible installs.
-    "sensenova-u1 @ https://github.com/OpenSenseNova/SenseNova-U1/archive/refs/tags/comfyui-v0.1.5.tar.gz",
+    "sensenova-u1 @ https://github.com/OpenSenseNova/SenseNova-U1/archive/refs/tags/comfyui-v0.2.0.tar.gz",
 ]
 
 [project.urls]
