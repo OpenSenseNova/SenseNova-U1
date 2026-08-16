@@ -14,6 +14,7 @@ from .comparison import save_compare
 from .gguf_loader import load_gguf_checkpoint, match_state_dict, set_gguf2meta_model
 from .lora import load_and_merge_lora_weight_from_safetensors
 from .offload import (
+    DEFAULT_AUXILIARY_OFFLOAD_ATTRS,
     DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
     DEFAULT_FAST_VRAM_FRACTION,
     DEFAULT_FAST_VRAM_HEADROOM_GIB,
@@ -35,6 +36,7 @@ from .param_count import (
 from .profiler import DEFAULT_IMAGE_PATCH_SIZE, InferenceProfiler
 
 __all__ = [
+    "DEFAULT_AUXILIARY_OFFLOAD_ATTRS",
     "DEFAULT_FAST_ACTIVATION_RESERVE_GIB",
     "DEFAULT_FAST_VRAM_FRACTION",
     "DEFAULT_FAST_VRAM_HEADROOM_GIB",

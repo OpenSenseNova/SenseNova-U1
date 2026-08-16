@@ -38,6 +38,10 @@ _VRAM_MODE_TO_PREFETCH: dict[str, int] = {
     "balanced": 2,
 }
 DEFAULT_LAYERS_ATTR: str = "language_model.model.layers"
+DEFAULT_AUXILIARY_OFFLOAD_ATTRS: tuple[str, ...] = (
+    "language_model.model.embed_tokens",
+    "language_model.lm_head",
+)
 
 
 def vram_mode_to_prefetch_count(mode: str) -> int:
@@ -69,6 +73,7 @@ def make_offload_ctx(
     fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
     fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
     fast_vram_budget_gib: float | None = None,
+    offload_auxiliary_attrs: tuple[str, ...] = DEFAULT_AUXILIARY_OFFLOAD_ATTRS,
 ) -> AbstractContextManager[nn.Module]:
     """Pick the right offload context for ``prefetch_count``.
 
@@ -89,6 +94,7 @@ def make_offload_ctx(
             fast_vram_headroom_gib=fast_vram_headroom_gib,
             fast_activation_reserve_gib=fast_activation_reserve_gib,
             fast_vram_budget_gib=fast_vram_budget_gib,
+            offload_auxiliary_attrs=offload_auxiliary_attrs,
         )
     return offload_layers_async(
         model,
@@ -100,6 +106,7 @@ def make_offload_ctx(
         fast_vram_headroom_gib=fast_vram_headroom_gib,
         fast_activation_reserve_gib=fast_activation_reserve_gib,
         fast_vram_budget_gib=fast_vram_budget_gib,
+        offload_auxiliary_attrs=offload_auxiliary_attrs,
     )
 
 
@@ -162,6 +169,7 @@ def _offload_layers(
     fast_vram_headroom_gib: float,
     fast_activation_reserve_gib: float,
     fast_vram_budget_gib: float | None,
+    offload_auxiliary_attrs: tuple[str, ...],
 ) -> Iterator[nn.Module]:
     wrapper = LayerOffloadWrapper(
         model,
@@ -173,6 +181,7 @@ def _offload_layers(
         fast_vram_headroom_gib=fast_vram_headroom_gib,
         fast_activation_reserve_gib=fast_activation_reserve_gib,
         fast_vram_budget_gib=fast_vram_budget_gib,
+        offload_auxiliary_attrs=offload_auxiliary_attrs,
     )
     try:
         yield wrapper
@@ -202,6 +211,7 @@ def offload_layers_sync(
     fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
     fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
     fast_vram_budget_gib: float | None = None,
+    offload_auxiliary_attrs: tuple[str, ...] = DEFAULT_AUXILIARY_OFFLOAD_ATTRS,
 ) -> AbstractContextManager[nn.Module]:
     """Synchronous CPU<->GPU layer offload. Lower memory, slower.
 
@@ -218,6 +228,7 @@ def offload_layers_sync(
         fast_vram_headroom_gib=fast_vram_headroom_gib,
         fast_activation_reserve_gib=fast_activation_reserve_gib,
         fast_vram_budget_gib=fast_vram_budget_gib,
+        offload_auxiliary_attrs=offload_auxiliary_attrs,
     )
 
 
@@ -232,6 +243,7 @@ def offload_layers_async(
     fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
     fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
     fast_vram_budget_gib: float | None = None,
+    offload_auxiliary_attrs: tuple[str, ...] = DEFAULT_AUXILIARY_OFFLOAD_ATTRS,
 ) -> AbstractContextManager[nn.Module]:
     """Async-prefetch layer offload. Higher memory, faster.
 
@@ -250,4 +262,5 @@ def offload_layers_async(
         fast_vram_headroom_gib=fast_vram_headroom_gib,
         fast_activation_reserve_gib=fast_activation_reserve_gib,
         fast_vram_budget_gib=fast_vram_budget_gib,
+        offload_auxiliary_attrs=offload_auxiliary_attrs,
     )

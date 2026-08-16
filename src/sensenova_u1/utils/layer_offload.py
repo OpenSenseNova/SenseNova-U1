@@ -119,6 +119,31 @@ def _resolve_attr(module: nn.Module, dotted_path: str) -> nn.ModuleList:
     return obj
 
 
+def _resolve_optional_module_attrs(module: nn.Module, dotted_paths: tuple[str, ...]) -> list[tuple[str, nn.Module]]:
+    """Resolve optional dotted module paths, skipping missing paths.
+
+    This keeps the wrapper generic: NEO-Unify can offload known large
+    non-layer modules, while other models simply ignore those paths.
+    """
+    modules: list[tuple[str, nn.Module]] = []
+    seen: set[int] = set()
+    for dotted_path in dotted_paths:
+        obj: Any = module
+        try:
+            for part in dotted_path.split("."):
+                obj = getattr(obj, part)
+        except AttributeError:
+            logger.debug("LayerOffloadWrapper: optional module %r was not found; skipping", dotted_path)
+            continue
+        if not isinstance(obj, nn.Module):
+            raise TypeError(f"Expected nn.Module at '{dotted_path}', got {type(obj).__name__}")
+        if id(obj) in seen:
+            continue
+        seen.add(id(obj))
+        modules.append((dotted_path, obj))
+    return modules
+
+
 def _partition_layer_tensor_names(layer: nn.Module) -> dict[str, str]:
     """Classify layer tensors into shared, understanding, and generation groups.
 
@@ -233,12 +258,14 @@ class _LayerStore:
         self._tensor_groups: list[dict[str, str]] = []
         self._resident_groups: list[set[str]] = []
         self._on_gpu: set[int] = set()
+        self._managed_tensor_ids: set[int] = set()
         self._bytes_moved = 0
         self._bytes_moved_by_group = {group: 0 for group in _ALL_TENSOR_GROUPS}
 
         for layer in layers:
             pinned: dict[str, torch.Tensor] = {}
             for name, tensor in itertools.chain(layer.named_parameters(), layer.named_buffers()):
+                self._managed_tensor_ids.add(id(tensor))
                 pinned_tensor = tensor.data.pin_memory(device=self._pin_device)
                 tensor.data = pinned_tensor
                 pinned[name] = pinned_tensor
@@ -331,11 +358,7 @@ class _LayerStore:
         )
 
     def managed_tensor_ids(self) -> set[int]:
-        ids: set[int] = set()
-        for pinned in self._pinned:
-            for t in pinned.values():
-                ids.add(id(t))
-        return ids
+        return set(self._managed_tensor_ids)
 
     def cleanup(self) -> None:
         """Drop the pinned-tensor refs so they can be freed by the GC."""
@@ -345,6 +368,87 @@ class _LayerStore:
         self._tensor_groups.clear()
         self._resident_groups.clear()
         self._on_gpu.clear()
+        self._managed_tensor_ids.clear()
+
+
+class _AuxiliaryModuleStore:
+    """CPU-pinned store for large non-layer modules used only in prefix/text phases."""
+
+    def __init__(
+        self,
+        modules: list[tuple[str, nn.Module]],
+        target_device: torch.device,
+        *,
+        exclude_tensor_ids: set[int],
+    ) -> None:
+        self.target_device = target_device
+        self._pin_device = target_device.type
+        self._pinned: dict[int, torch.Tensor] = {}
+        self._module_tensor_ids: dict[int, set[int]] = {}
+        self._managed_tensor_ids: set[int] = set()
+        self._bytes_moved = 0
+
+        for path, module in modules:
+            tensor_ids: set[int] = set()
+            for tensor in itertools.chain(module.parameters(), module.buffers()):
+                tensor_id = id(tensor)
+                if tensor_id in exclude_tensor_ids:
+                    continue
+                tensor_ids.add(tensor_id)
+                self._managed_tensor_ids.add(tensor_id)
+                if tensor_id not in self._pinned:
+                    pinned_tensor = tensor.data.pin_memory(device=self._pin_device)
+                    tensor.data = pinned_tensor
+                    self._pinned[tensor_id] = pinned_tensor
+            if tensor_ids:
+                self._module_tensor_ids[id(module)] = tensor_ids
+                total_bytes = sum(
+                    self._pinned[tensor_id].numel() * self._pinned[tensor_id].element_size() for tensor_id in tensor_ids
+                )
+                logger.info(
+                    "LayerOffloadWrapper: auxiliary module %r offloaded to pinned CPU (%.2f GiB)",
+                    path,
+                    total_bytes / _GIB,
+                )
+
+    def has_tensors(self, module: nn.Module) -> bool:
+        return bool(self._module_tensor_ids.get(id(module)))
+
+    def move_to_gpu(self, module: nn.Module, *, non_blocking: bool = False) -> None:
+        tensor_ids = self._module_tensor_ids.get(id(module))
+        if not tensor_ids:
+            return
+        for tensor in itertools.chain(module.parameters(), module.buffers()):
+            tensor_id = id(tensor)
+            if tensor_id in tensor_ids:
+                source = self._pinned[tensor_id]
+                if tensor.device != self.target_device:
+                    tensor.data = source.to(self.target_device, non_blocking=non_blocking)
+                    self._bytes_moved += source.numel() * source.element_size()
+
+    def evict_to_cpu(self, module: nn.Module) -> None:
+        tensor_ids = self._module_tensor_ids.get(id(module))
+        if not tensor_ids:
+            return
+        for tensor in itertools.chain(module.parameters(), module.buffers()):
+            tensor_id = id(tensor)
+            if tensor_id in tensor_ids:
+                tensor.data = self._pinned[tensor_id]
+
+    def evict_all(self, modules: list[tuple[str, nn.Module]]) -> None:
+        for _path, module in modules:
+            self.evict_to_cpu(module)
+
+    def managed_tensor_ids(self) -> set[int]:
+        return set(self._managed_tensor_ids)
+
+    def transfer_stats(self) -> int:
+        return self._bytes_moved
+
+    def cleanup(self) -> None:
+        self._pinned.clear()
+        self._module_tensor_ids.clear()
+        self._managed_tensor_ids.clear()
 
 
 class _AsyncPrefetcher:
@@ -424,6 +528,9 @@ class LayerOffloadWrapper(nn.Module):
         happens after the decoder-layer hooks.
     fast_vram_budget_gib:
         Optional absolute budget overriding ``fast_vram_fraction``.
+    offload_auxiliary_attrs:
+        Optional dotted module paths outside ``layers_attr`` that should be
+        moved onto GPU only around their own forward calls.
     """
 
     def __init__(
@@ -437,6 +544,7 @@ class LayerOffloadWrapper(nn.Module):
         fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
         fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
         fast_vram_budget_gib: float | None = None,
+        offload_auxiliary_attrs: tuple[str, ...] = (),
     ) -> None:
         super().__init__()
         _require_accelerator(target_device)
@@ -450,6 +558,9 @@ class LayerOffloadWrapper(nn.Module):
 
         self._model = model
         self._layers = _resolve_attr(model, layers_attr)
+        self._offload_auxiliary_attrs = offload_auxiliary_attrs
+        self._auxiliary_modules: list[tuple[str, nn.Module]] = []
+        self._auxiliary_store: _AuxiliaryModuleStore | None = None
         self._target_device = target_device
         self._accel = _accel(target_device)
         # Clamp: no point prefetching more layers than (num_layers - 1).
@@ -527,30 +638,41 @@ class LayerOffloadWrapper(nn.Module):
     def _setup(self) -> None:
         # 1. Pin all layer tensors in CPU memory.
         self._store = _LayerStore(self._layers, self._target_device)
-
-        # 2. Move all NON-layer params/buffers to GPU permanently.
         layer_tensor_ids: set[int] = set()
         for layer in self._layers:
             for t in itertools.chain(layer.parameters(), layer.buffers()):
                 layer_tensor_ids.add(id(t))
 
+        # 2. Pin selected large non-layer modules in CPU memory. These are
+        #    temporarily moved to GPU by their own forward hooks instead of
+        #    remaining resident throughout denoising.
+        self._auxiliary_modules = _resolve_optional_module_attrs(self._model, self._offload_auxiliary_attrs)
+        self._auxiliary_store = _AuxiliaryModuleStore(
+            self._auxiliary_modules,
+            self._target_device,
+            exclude_tensor_ids=layer_tensor_ids,
+        )
+
+        managed_tensor_ids = layer_tensor_ids | self._auxiliary_store.managed_tensor_ids()
+
+        # 3. Move all permanently-resident params/buffers to GPU.
         for p in self._model.parameters():
-            if id(p) not in layer_tensor_ids:
+            if id(p) not in managed_tensor_ids:
                 p.data = p.data.to(self._target_device)
         for b in self._model.buffers():
-            if id(b) not in layer_tensor_ids:
+            if id(b) not in managed_tensor_ids:
                 b.data = b.data.to(self._target_device)
 
-        # 3. In async mode spin up the prefetch stream. The first weights are
+        # 4. In async mode spin up the prefetch stream. The first weights are
         #    loaded lazily because the layer kwargs tell us whether this pass
         #    needs the understanding branch or the generation branch.
         if self._async_mode:
             self._prefetcher = _AsyncPrefetcher(self._store, self._layers)
 
-        # 4. Register layer load/evict hooks.
+        # 5. Register layer and auxiliary-module load/evict hooks.
         self._register_hooks()
 
-        # 5. One-shot audit: catch lazy params/buffers materialised inside the
+        # 6. One-shot audit: catch lazy params/buffers materialised inside the
         #    first forward (RoPE caches, attention masks, etc.) that escaped
         #    the construction-time scan.
         self._audit_handle = self._model.register_forward_hook(self._audit_first_forward)
@@ -669,9 +791,28 @@ class LayerOffloadWrapper(nn.Module):
             h2 = layer.register_forward_hook(functools.partial(_post_hook, idx=idx))
             self._hooks.extend([h1, h2])
 
+        def _aux_pre_hook(module: nn.Module, _args: Any) -> None:
+            if self._auxiliary_store is not None:
+                self._auxiliary_store.move_to_gpu(module, non_blocking=True)
+
+        def _aux_post_hook(module: nn.Module, _args: Any, _output: Any) -> None:
+            if self._auxiliary_store is not None:
+                self._auxiliary_store.evict_to_cpu(module)
+
+        if self._auxiliary_store is not None:
+            for _path, module in self._auxiliary_modules:
+                if not self._auxiliary_store.has_tensors(module):
+                    continue
+                h1 = module.register_forward_pre_hook(_aux_pre_hook)
+                h2 = module.register_forward_hook(_aux_post_hook)
+                self._hooks.extend([h1, h2])
+
     def _audit_first_forward(self, _module: nn.Module, _inputs: Any, _outputs: Any) -> None:
         _log_vram("wrapper.audit: pre", self._target_device)
-        moved = _audit_lazy_state(self._model, self._target_device, self._store.managed_tensor_ids())
+        managed_tensor_ids = self._store.managed_tensor_ids()
+        if self._auxiliary_store is not None:
+            managed_tensor_ids |= self._auxiliary_store.managed_tensor_ids()
+        moved = _audit_lazy_state(self._model, self._target_device, managed_tensor_ids)
         if moved:
             logger.warning(
                 "LayerOffloadWrapper: moved %d lazy param(s)/buffer(s) onto %s after "
@@ -717,6 +858,8 @@ class LayerOffloadWrapper(nn.Module):
             self._store.evict_to_cpu(idx, layer)
         self._resident_generation_layers.clear()
         self._resident_generation_bytes = 0
+        if self._auxiliary_store is not None:
+            self._auxiliary_store.evict_all(self._auxiliary_modules)
 
         for p in self._model.parameters():
             p.data = p.data.to("cpu")
@@ -724,14 +867,21 @@ class LayerOffloadWrapper(nn.Module):
             b.data = b.data.to("cpu")
 
         total_bytes, by_group = self._store.transfer_stats()
+        auxiliary_bytes = 0 if self._auxiliary_store is None else self._auxiliary_store.transfer_stats()
         logger.info(
-            "LayerOffloadWrapper transfer totals: %.2f GiB (shared=%.2f, understanding=%.2f, generation=%.2f)",
+            "LayerOffloadWrapper transfer totals: %.2f GiB "
+            "(shared=%.2f, understanding=%.2f, generation=%.2f, auxiliary=%.2f)",
             total_bytes / (1024**3),
             by_group[_GROUP_SHARED] / (1024**3),
             by_group[_GROUP_UNDERSTANDING] / (1024**3),
             by_group[_GROUP_GENERATION] / (1024**3),
+            auxiliary_bytes / (1024**3),
         )
         self._store.cleanup()
+        if self._auxiliary_store is not None:
+            self._auxiliary_store.cleanup()
+            self._auxiliary_store = None
+        self._auxiliary_modules.clear()
         _log_vram("wrapper.teardown: exit (pre-empty_cache)", self._target_device)
 
     # ------------------------------------------------------------------

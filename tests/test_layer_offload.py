@@ -13,8 +13,10 @@ from sensenova_u1.utils.layer_offload import (
     _partition_layer_tensor_names,
     _required_tensor_groups,
     _resident_memory_limit,
+    _resolve_optional_module_attrs,
 )
 from sensenova_u1.utils.offload import (
+    DEFAULT_AUXILIARY_OFFLOAD_ATTRS,
     DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
     DEFAULT_FAST_VRAM_FRACTION,
     DEFAULT_FAST_VRAM_HEADROOM_GIB,
@@ -33,6 +35,16 @@ class _TwoBranchLayer(nn.Module):
         self.mlp = nn.Sequential(nn.Linear(4, 8, bias=False), nn.Linear(8, 4, bias=False))
         self.mlp_mot_gen = nn.Sequential(nn.Linear(4, 8, bias=False), nn.Linear(8, 4, bias=False))
         self.register_buffer("shared_scale", torch.ones(()))
+
+
+class _ModelWithOptionalModules(nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.language_model = nn.Module()
+        self.language_model.model = nn.Module()
+        self.language_model.model.embed_tokens = nn.Embedding(8, 4)
+        self.language_model.lm_head = nn.Linear(4, 8, bias=False)
+        self.scalar = 1
 
 
 class LayerOffloadPartitionTest(unittest.TestCase):
@@ -112,9 +124,36 @@ class LayerOffloadPartitionTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             _resident_memory_limit(24 * gib, budget_bytes=0)
 
+    def test_optional_auxiliary_modules_skip_missing_paths_and_deduplicate(self) -> None:
+        model = _ModelWithOptionalModules()
+        modules = _resolve_optional_module_attrs(
+            model,
+            (
+                "language_model.model.embed_tokens",
+                "missing.path",
+                "language_model.lm_head",
+                "language_model.lm_head",
+            ),
+        )
+
+        self.assertEqual(
+            [path for path, _module in modules],
+            ["language_model.model.embed_tokens", "language_model.lm_head"],
+        )
+        self.assertIs(modules[0][1], model.language_model.model.embed_tokens)
+        self.assertIs(modules[1][1], model.language_model.lm_head)
+
+        with self.assertRaises(TypeError):
+            _resolve_optional_module_attrs(model, ("scalar",))
+
     def test_offload_cli_exposes_fast_mode_budget_controls(self) -> None:
         parser = argparse.ArgumentParser()
         add_offload_args(parser)
+
+        self.assertEqual(
+            DEFAULT_AUXILIARY_OFFLOAD_ATTRS,
+            ("language_model.model.embed_tokens", "language_model.lm_head"),
+        )
 
         defaults = parser.parse_args([])
         self.assertEqual(defaults.fast_vram_fraction, DEFAULT_FAST_VRAM_FRACTION)
