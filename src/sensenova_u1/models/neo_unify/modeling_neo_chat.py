@@ -1453,7 +1453,8 @@ class NEOChatModel(PreTrainedModel):
                 use_cache=True,
             )
             past_key_values_condition = outputs_condition.past_key_values
-            prefix_reference = outputs_condition.logits
+            device = outputs_condition.logits.device
+            dtype = outputs_condition.logits.dtype
             t_index_condition = indexes_condition[0].max().item()
             past_key_values_condition, t_index_condition, think_text = self._generate_think(
                 tokenizer,
@@ -1467,9 +1468,12 @@ class NEOChatModel(PreTrainedModel):
             )
             del outputs_condition
         else:
-            past_key_values_condition, prefix_reference = self._it2i_prefix_forward(
+            past_key_values_condition, prefix_hidden_states = self._it2i_prefix_forward(
                 input_embeds_condition, indexes_condition, attention_mask_condition_prefix
             )
+            device = prefix_hidden_states.device
+            dtype = prefix_hidden_states.dtype
+            del prefix_hidden_states
         past_key_values_img_condition = None
         if input_embeds_img_condition is not None:
             past_key_values_img_condition, _ = self._it2i_prefix_forward(
@@ -1481,16 +1485,12 @@ class NEOChatModel(PreTrainedModel):
                 input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
             )
 
-        device = prefix_reference.device
-        dtype = prefix_reference.dtype
-
         del pixel_values, grid_hw
         del input_embeds_condition, indexes_condition, attention_mask_condition_prefix
         if input_embeds_img_condition is not None:
             del input_embeds_img_condition, indexes_img_condition, attention_mask_img_condition_prefix
         if input_embeds_uncondition is not None:
             del input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
-        del prefix_reference
 
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(
@@ -1715,7 +1715,8 @@ class NEOChatModel(PreTrainedModel):
                 use_cache=True,
             )
             past_key_values_condition = outputs_condition.past_key_values
-            prefix_reference = outputs_condition.logits
+            device = outputs_condition.logits.device
+            dtype = outputs_condition.logits.dtype
             t_index_condition = indexes_condition[0].max().item()
             past_key_values_condition, t_index_condition, think_text = self._generate_think(
                 tokenizer,
@@ -1729,18 +1730,17 @@ class NEOChatModel(PreTrainedModel):
             )
             del outputs_condition
         else:
-            past_key_values_condition, prefix_reference = self._t2i_prefix_forward(input_ids_condition, indexes_condition, attention_mask_condition_prefix)
+            past_key_values_condition, prefix_hidden_states = self._t2i_prefix_forward(input_ids_condition, indexes_condition, attention_mask_condition_prefix)
+            device = prefix_hidden_states.device
+            dtype = prefix_hidden_states.dtype
+            del prefix_hidden_states
         past_key_values_uncondition = None
         if input_ids_uncondition is not None:
             past_key_values_uncondition, _ = self._t2i_prefix_forward(input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix)
 
-        device = prefix_reference.device
-        dtype = prefix_reference.dtype
-
         del input_ids_condition, indexes_condition, attention_mask_condition_prefix
         if input_ids_uncondition is not None:
             del input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
-        del prefix_reference
 
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(batch_size, *past_key_values_condition.layers[layer_idx].keys.shape[1:])
