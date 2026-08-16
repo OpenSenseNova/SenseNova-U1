@@ -10,7 +10,12 @@ import torch
 from packaging.version import Version
 
 try:
-    from transformers.utils.generic import merge_with_config_defaults as model_input_compat
+    from transformers.utils.generic import merge_with_config_defaults
+    from transformers.utils.output_capturing import capture_outputs
+
+    def model_input_compat(func: Callable[..., Any]) -> Callable[..., Any]:
+        return merge_with_config_defaults(capture_outputs(func))
+
 except ImportError:  # Transformers 4.x
     from transformers.utils.generic import check_model_inputs as model_input_compat
 

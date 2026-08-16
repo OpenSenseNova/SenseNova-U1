@@ -33,6 +33,28 @@ class TransformersCompatibilityTest(unittest.TestCase):
         self.assertGreaterEqual(generated.shape[1], input_ids.shape[1] + 1)
         self.assertLessEqual(generated.shape[1], input_ids.shape[1] + 2)
 
+    def assert_base_model_output_controls(self, model, *, num_hidden_layers: int) -> None:
+        model.eval()
+        input_ids = torch.tensor([[1, 3, 4]])
+
+        with torch.no_grad():
+            outputs = model(
+                input_ids=input_ids,
+                output_hidden_states=True,
+                output_attentions=True,
+            )
+
+        self.assertEqual(outputs.last_hidden_state.shape[:2], input_ids.shape)
+        self.assertIsNotNone(outputs.hidden_states)
+        self.assertEqual(len(outputs.hidden_states), num_hidden_layers + 1)
+        self.assertIsNotNone(outputs.attentions)
+        self.assertEqual(len(outputs.attentions), num_hidden_layers)
+
+        with torch.no_grad():
+            tuple_outputs = model(input_ids=input_ids, return_dict=False)
+
+        self.assertIsInstance(tuple_outputs, tuple)
+
     def test_dense_model_forward_cache_decode_and_generate(self) -> None:
         from sensenova_u1.models.neo_unify.configuration_neo_chat import NEOLLMConfig
         from sensenova_u1.models.neo_unify.modeling_qwen3 import Qwen3ForCausalLM
@@ -63,6 +85,27 @@ class TransformersCompatibilityTest(unittest.TestCase):
             )
 
         self.assertEqual(reloaded.dtype, torch.float32)
+
+    def test_dense_base_model_captures_outputs_and_honors_tuple_return(self) -> None:
+        from sensenova_u1.models.neo_unify.configuration_neo_chat import NEOLLMConfig
+        from sensenova_u1.models.neo_unify.modeling_qwen3 import Qwen3Model
+
+        config = NEOLLMConfig(
+            vocab_size=32,
+            hidden_size=16,
+            intermediate_size=32,
+            num_hidden_layers=2,
+            num_attention_heads=2,
+            num_key_value_heads=2,
+            head_dim=8,
+            max_position_embeddings=64,
+            bos_token_id=1,
+            eos_token_id=2,
+            pad_token_id=0,
+        )
+        config._attn_implementation = "eager"
+
+        self.assert_base_model_output_controls(Qwen3Model(config), num_hidden_layers=2)
 
     def test_auto_config_and_model_registration(self) -> None:
         from transformers import AutoConfig, AutoModel
@@ -167,6 +210,30 @@ class TransformersCompatibilityTest(unittest.TestCase):
         )
         config._attn_implementation = "eager"
         self.assert_inference_paths(Qwen3MoeForCausalLM(config))
+
+    def test_moe_base_model_captures_outputs_and_honors_tuple_return(self) -> None:
+        from sensenova_u1.models.neo_unify.configuration_neo_chat import NEOMoELLMConfig
+        from sensenova_u1.models.neo_unify.modeling_qwen3_moe import Qwen3MoeModel
+
+        config = NEOMoELLMConfig(
+            vocab_size=32,
+            hidden_size=16,
+            intermediate_size=32,
+            moe_intermediate_size=16,
+            num_hidden_layers=2,
+            num_attention_heads=2,
+            num_key_value_heads=2,
+            head_dim=8,
+            num_experts=2,
+            num_experts_per_tok=1,
+            max_position_embeddings=64,
+            bos_token_id=1,
+            eos_token_id=2,
+            pad_token_id=0,
+        )
+        config._attn_implementation = "eager"
+
+        self.assert_base_model_output_controls(Qwen3MoeModel(config), num_hidden_layers=2)
 
     def test_spatial_rope_theta_is_preserved_for_non_default_rope(self) -> None:
         from sensenova_u1.models.neo_unify.configuration_neo_chat import NEOLLMConfig
