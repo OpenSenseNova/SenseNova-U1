@@ -159,6 +159,10 @@ class NEOChatModel(PreTrainedModel):
         "Qwen3DecoderLayer",
         "Qwen3MoeDecoderLayer",
     ]
+    _denoise_offload_module_paths = (
+        "language_model.model.embed_tokens",
+        "language_model.lm_head",
+    )
 
     # support transformers 4.51.+
     _tp_plan = ''
@@ -245,6 +249,11 @@ class NEOChatModel(PreTrainedModel):
         # real checkpoint reaches the final loading pass with that metadata
         # missing, even though the nested language model initialized it.
         self.post_init()
+
+    def _notify_layer_offload_phase(self, phase: str) -> None:
+        callback = getattr(self, "_layer_offload_phase_callback", None)
+        if callback is not None:
+            callback(phase)
 
     def forward(
             self,
@@ -1355,6 +1364,7 @@ class NEOChatModel(PreTrainedModel):
     @torch.no_grad()
     def it2i_generate(self, tokenizer, prompt, images, cfg_scale=1, img_cfg_scale=1, cfg_norm='none', enable_timestep_shift=True, timestep_shift=1, image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False, seed=0):
         assert cfg_norm in ['none', 'global', 'channel']
+        self._notify_layer_offload_phase("prefix")
 
         self.img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
         self.config.t_eps = t_eps
@@ -1491,6 +1501,7 @@ class NEOChatModel(PreTrainedModel):
             del input_embeds_img_condition, indexes_img_condition, attention_mask_img_condition_prefix
         if input_embeds_uncondition is not None:
             del input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
+        self._notify_layer_offload_phase("denoise")
 
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(
@@ -1677,6 +1688,7 @@ class NEOChatModel(PreTrainedModel):
     def t2i_generate(self, tokenizer, prompt, cfg_scale=1, timestep_shift=1, enable_timestep_shift=True, cfg_norm='none', image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False, seed=0):
         assert self.concat_time_token_num == 0
         assert cfg_norm in ['cfg_zero_star', 'global', 'none', 'channel']
+        self._notify_layer_offload_phase("prefix")
         merge_size = int(1 / self.downsample_ratio)
 
         self.config.t_eps = t_eps
@@ -1741,6 +1753,7 @@ class NEOChatModel(PreTrainedModel):
         del input_ids_condition, indexes_condition, attention_mask_condition_prefix
         if input_ids_uncondition is not None:
             del input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
+        self._notify_layer_offload_phase("denoise")
 
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(batch_size, *past_key_values_condition.layers[layer_idx].keys.shape[1:])

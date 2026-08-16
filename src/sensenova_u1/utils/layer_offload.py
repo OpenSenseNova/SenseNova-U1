@@ -56,6 +56,8 @@ _GIB = 1024**3
 DEFAULT_FAST_VRAM_FRACTION = 0.90
 DEFAULT_FAST_VRAM_HEADROOM_GIB = 2.0
 DEFAULT_FAST_ACTIVATION_RESERVE_GIB = 4.0
+_PHASE_CALLBACK_ATTR = "_layer_offload_phase_callback"
+_MISSING = object()
 
 
 def _resident_memory_limit(
@@ -117,6 +119,72 @@ def _resolve_attr(module: nn.Module, dotted_path: str) -> nn.ModuleList:
     if not isinstance(obj, nn.ModuleList):
         raise TypeError(f"Expected nn.ModuleList at '{dotted_path}', got {type(obj).__name__}")
     return obj
+
+
+def _resolve_modules(module: nn.Module, dotted_paths: tuple[str, ...]) -> tuple[nn.Module, ...]:
+    """Resolve model-declared module paths used by inference phase offload."""
+    resolved: list[nn.Module] = []
+    for dotted_path in dotted_paths:
+        obj: Any = module
+        for part in dotted_path.split("."):
+            obj = getattr(obj, part)
+        if not isinstance(obj, nn.Module):
+            raise TypeError(f"Expected nn.Module at '{dotted_path}', got {type(obj).__name__}")
+        resolved.append(obj)
+    return tuple(resolved)
+
+
+def _unique_module_parameters(modules: tuple[nn.Module, ...]) -> tuple[nn.Parameter, ...]:
+    """Return parameters from ``modules`` once, preserving declaration order."""
+    parameters: list[nn.Parameter] = []
+    seen: set[int] = set()
+    for module in modules:
+        for parameter in module.parameters():
+            if id(parameter) in seen:
+                continue
+            seen.add(id(parameter))
+            parameters.append(parameter)
+    return tuple(parameters)
+
+
+class _PrefixWeightStore:
+    """Keep pinned CPU backing for weights needed only before denoising."""
+
+    def __init__(self, modules: tuple[nn.Module, ...], target_device: torch.device) -> None:
+        self._target_device = target_device
+        self._parameters = _unique_module_parameters(modules)
+        self._pinned: dict[int, torch.Tensor] = {}
+        self._on_target = False
+        # Allocate every backing tensor before rebinding any Parameter.  A
+        # pinning failure must leave the model in its original state.
+        for parameter in self._parameters:
+            pinned = parameter.data.pin_memory(device=target_device.type)
+            self._pinned[id(parameter)] = pinned
+        for parameter in self._parameters:
+            parameter.data = self._pinned[id(parameter)]
+
+    def move_to_target(self) -> None:
+        if self._on_target:
+            return
+        for parameter in self._parameters:
+            parameter.data = self._pinned[id(parameter)].to(self._target_device, non_blocking=True)
+        self._on_target = True
+
+    def evict_to_cpu(self) -> None:
+        if not self._on_target:
+            return
+        for parameter in self._parameters:
+            parameter.data = self._pinned[id(parameter)]
+        self._on_target = False
+
+    def parameter_ids(self) -> set[int]:
+        return {id(parameter) for parameter in self._parameters}
+
+    def cleanup(self) -> None:
+        # Parameter.data intentionally keeps the pinned CPU tensor.  A later
+        # wrapper can reuse it without paying the pinning copy again.
+        self._parameters = ()
+        self._pinned.clear()
 
 
 def _partition_layer_tensor_names(layer: nn.Module) -> dict[str, str]:
@@ -511,6 +579,9 @@ class LayerOffloadWrapper(nn.Module):
         self._audit_handle: torch.utils.hooks.RemovableHandle | None = None
         self._prefetcher: _AsyncPrefetcher | None = None
         self._active_groups: frozenset[str] | None = None
+        self._prefix_weight_store: _PrefixWeightStore | None = None
+        self._previous_phase_callback: Any = _MISSING
+        self._phase_callback_installed = False
 
         _log_vram("wrapper.__init__: pre-setup", target_device, reset_peak=True)
         self._setup()
@@ -528,18 +599,29 @@ class LayerOffloadWrapper(nn.Module):
         # 1. Pin all layer tensors in CPU memory.
         self._store = _LayerStore(self._layers, self._target_device)
 
+        denoise_module_paths = getattr(self._model, "_denoise_offload_module_paths", ())
+        if denoise_module_paths:
+            denoise_modules = _resolve_modules(self._model, tuple(denoise_module_paths))
+            self._prefix_weight_store = _PrefixWeightStore(denoise_modules, self._target_device)
+
         # 2. Move all NON-layer params/buffers to GPU permanently.
         layer_tensor_ids: set[int] = set()
         for layer in self._layers:
             for t in itertools.chain(layer.parameters(), layer.buffers()):
                 layer_tensor_ids.add(id(t))
 
+        denoise_parameter_ids = (
+            self._prefix_weight_store.parameter_ids() if self._prefix_weight_store is not None else set()
+        )
+
         for p in self._model.parameters():
-            if id(p) not in layer_tensor_ids:
+            if id(p) not in layer_tensor_ids and id(p) not in denoise_parameter_ids:
                 p.data = p.data.to(self._target_device)
         for b in self._model.buffers():
             if id(b) not in layer_tensor_ids:
                 b.data = b.data.to(self._target_device)
+        if self._prefix_weight_store is not None:
+            self._prefix_weight_store.move_to_target()
 
         # 3. In async mode spin up the prefetch stream. The first weights are
         #    loaded lazily because the layer kwargs tell us whether this pass
@@ -554,6 +636,10 @@ class LayerOffloadWrapper(nn.Module):
         #    first forward (RoPE caches, attention masks, etc.) that escaped
         #    the construction-time scan.
         self._audit_handle = self._model.register_forward_hook(self._audit_first_forward)
+        if self._prefix_weight_store is not None:
+            # Install last so a setup failure cannot leave the model pointing
+            # at a partially initialized wrapper.
+            self._install_phase_callback()
 
     def _switch_async_groups(self, groups: frozenset[str]) -> None:
         """Reset stale prefetch state when inference changes task branch."""
@@ -671,7 +757,10 @@ class LayerOffloadWrapper(nn.Module):
 
     def _audit_first_forward(self, _module: nn.Module, _inputs: Any, _outputs: Any) -> None:
         _log_vram("wrapper.audit: pre", self._target_device)
-        moved = _audit_lazy_state(self._model, self._target_device, self._store.managed_tensor_ids())
+        managed_tensor_ids = self._store.managed_tensor_ids()
+        if self._prefix_weight_store is not None:
+            managed_tensor_ids.update(self._prefix_weight_store.parameter_ids())
+        moved = _audit_lazy_state(self._model, self._target_device, managed_tensor_ids)
         if moved:
             logger.warning(
                 "LayerOffloadWrapper: moved %d lazy param(s)/buffer(s) onto %s after "
@@ -684,13 +773,41 @@ class LayerOffloadWrapper(nn.Module):
             self._audit_handle.remove()
             self._audit_handle = None
 
+    def set_inference_phase(self, phase: str) -> None:
+        """Move prefix-only weights for the next inference phase."""
+        if phase not in {"prefix", "denoise"}:
+            raise ValueError(f"Unsupported inference phase: {phase!r}")
+        if self._prefix_weight_store is None:
+            return
+        if phase == "prefix":
+            self._prefix_weight_store.move_to_target()
+            return
+        self._accel.synchronize(device=self._target_device)
+        self._prefix_weight_store.evict_to_cpu()
+
+    def _install_phase_callback(self) -> None:
+        self._previous_phase_callback = self._model.__dict__.get(_PHASE_CALLBACK_ATTR, _MISSING)
+        setattr(self._model, _PHASE_CALLBACK_ATTR, self.set_inference_phase)
+        self._phase_callback_installed = True
+
+    def _restore_phase_callback(self) -> None:
+        if not self._phase_callback_installed:
+            return
+        if self._previous_phase_callback is _MISSING:
+            if _PHASE_CALLBACK_ATTR in self._model.__dict__:
+                delattr(self._model, _PHASE_CALLBACK_ATTR)
+        else:
+            setattr(self._model, _PHASE_CALLBACK_ATTR, self._previous_phase_callback)
+        self._previous_phase_callback = _MISSING
+        self._phase_callback_installed = False
+
     def teardown(self) -> None:
         """Remove hooks, release pinned memory, and move parameters back to CPU.
 
         After this call the wrapper is inert: hooks are removed, the prefetch
-        stream is drained and destroyed, all parameters reside on regular
-        (non-pinned) CPU memory, and the :class:`_LayerStore` pinned-tensor
-        cache is cleared.
+        stream is drained and destroyed, all parameters reside on CPU, and
+        the stores release their references. Parameters retain pinned CPU
+        backing so a later wrapper can reuse it without another pinning copy.
         """
         _log_vram(
             f"wrapper.teardown: enter (on_gpu={len(self._store._on_gpu)}, "
@@ -705,6 +822,7 @@ class LayerOffloadWrapper(nn.Module):
         if self._audit_handle is not None:
             self._audit_handle.remove()
             self._audit_handle = None
+        self._restore_phase_callback()
 
         # Drain in-flight H2D copies before tearing down stream resources, or
         # the accelerator driver can hit use-after-free during cleanup.
@@ -712,6 +830,9 @@ class LayerOffloadWrapper(nn.Module):
         if self._prefetcher is not None:
             self._prefetcher.cleanup()
             self._prefetcher = None
+
+        if self._prefix_weight_store is not None:
+            self._prefix_weight_store.evict_to_cpu()
 
         for idx, layer in enumerate(self._layers):
             self._store.evict_to_cpu(idx, layer)
@@ -732,6 +853,9 @@ class LayerOffloadWrapper(nn.Module):
             by_group[_GROUP_GENERATION] / (1024**3),
         )
         self._store.cleanup()
+        if self._prefix_weight_store is not None:
+            self._prefix_weight_store.cleanup()
+            self._prefix_weight_store = None
         _log_vram("wrapper.teardown: exit (pre-empty_cache)", self._target_device)
 
     # ------------------------------------------------------------------
