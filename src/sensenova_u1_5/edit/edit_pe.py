@@ -31,9 +31,10 @@ import base64
 import mimetypes
 import os
 from pathlib import Path
-from typing import Sequence, Union
+from typing import TYPE_CHECKING, Sequence, Union
 
-from openai import OpenAI
+if TYPE_CHECKING:
+    from openai import OpenAI
 
 MAX_TOKENS = 8192
 EXTRA_BODY = {"reasoning_effort": "low"}
