@@ -301,12 +301,14 @@ class _LayerStore:
         self._tensor_groups: list[dict[str, str]] = []
         self._resident_groups: list[set[str]] = []
         self._on_gpu: set[int] = set()
+        self._managed_tensor_ids: set[int] = set()
         self._bytes_moved = 0
         self._bytes_moved_by_group = {group: 0 for group in _ALL_TENSOR_GROUPS}
 
         for layer in layers:
             pinned: dict[str, torch.Tensor] = {}
             for name, tensor in itertools.chain(layer.named_parameters(), layer.named_buffers()):
+                self._managed_tensor_ids.add(id(tensor))
                 pinned_tensor = tensor.data.pin_memory(device=self._pin_device)
                 tensor.data = pinned_tensor
                 pinned[name] = pinned_tensor
@@ -399,11 +401,7 @@ class _LayerStore:
         )
 
     def managed_tensor_ids(self) -> set[int]:
-        ids: set[int] = set()
-        for pinned in self._pinned:
-            for t in pinned.values():
-                ids.add(id(t))
-        return ids
+        return set(self._managed_tensor_ids)
 
     def cleanup(self) -> None:
         """Drop the pinned-tensor refs so they can be freed by the GC."""
@@ -413,6 +411,7 @@ class _LayerStore:
         self._tensor_groups.clear()
         self._resident_groups.clear()
         self._on_gpu.clear()
+        self._managed_tensor_ids.clear()
 
 
 class _AsyncPrefetcher:

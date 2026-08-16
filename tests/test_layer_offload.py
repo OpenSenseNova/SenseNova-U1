@@ -14,6 +14,7 @@ from sensenova_u1.utils.layer_offload import (
     _GROUP_SHARED,
     _GROUP_UNDERSTANDING,
     LayerOffloadWrapper,
+    _LayerStore,
     _partition_layer_tensor_names,
     _PrefixWeightStore,
     _required_tensor_groups,
@@ -43,6 +44,18 @@ class _TwoBranchLayer(nn.Module):
 
 
 class LayerOffloadPartitionTest(unittest.TestCase):
+    def test_layer_store_reports_parameter_identity_as_managed(self) -> None:
+        parameter = Mock()
+        pinned = Mock()
+        parameter.data.pin_memory.return_value = pinned
+        layer = Mock()
+        layer.named_parameters.return_value = (("weight", parameter),)
+        layer.named_buffers.return_value = ()
+
+        store = _LayerStore([layer], torch.device("cuda"))
+
+        self.assertEqual(store.managed_tensor_ids(), {id(parameter)})
+
     def test_prefix_only_modules_deduplicate_tied_parameters(self) -> None:
         embedding = nn.Embedding(8, 4)
         lm_head = nn.Linear(4, 8, bias=False)
