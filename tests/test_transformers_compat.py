@@ -24,11 +24,24 @@ class TransformersCompatibilityTest(unittest.TestCase):
                 past_key_values=prefill.past_key_values,
                 use_cache=True,
             )
+            captured = model(
+                input_ids=input_ids,
+                output_hidden_states=True,
+                output_attentions=True,
+            )
+            tuple_output = model(input_ids=input_ids, return_dict=False)
             generated = model.generate(input_ids, max_new_tokens=2, do_sample=False)
 
         self.assertEqual(prefill.logits.shape, (1, 3, 32))
         self.assertEqual(decode.logits.shape, (1, 1, 32))
         self.assertEqual(decode.past_key_values.get_seq_length(), 4)
+        self.assertIsNone(prefill.hidden_states)
+        self.assertIsNone(prefill.attentions)
+        self.assertIsNotNone(captured.hidden_states)
+        self.assertEqual(len(captured.hidden_states), model.config.num_hidden_layers + 1)
+        self.assertIsNotNone(captured.attentions)
+        self.assertEqual(len(captured.attentions), model.config.num_hidden_layers)
+        self.assertIsInstance(tuple_output, tuple)
         self.assertEqual(generated.shape[0], 1)
         self.assertGreaterEqual(generated.shape[1], input_ids.shape[1] + 1)
         self.assertLessEqual(generated.shape[1], input_ids.shape[1] + 2)

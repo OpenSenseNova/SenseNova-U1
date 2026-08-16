@@ -1271,7 +1271,7 @@ class Qwen3ForCausalLM(Qwen3PreTrainedModel, GenerationMixin):
             loss=loss,
             logits=logits,
             past_key_values=outputs.past_key_values,
-            hidden_states=hidden_states,
+            hidden_states=outputs.hidden_states,
             attentions=outputs.attentions,
         )
 
