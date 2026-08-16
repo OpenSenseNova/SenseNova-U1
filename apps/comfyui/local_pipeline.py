@@ -241,7 +241,7 @@ class SenseNovaU1LocalModel:
         prefetch_count = _VRAM_MODE_TO_PREFETCH[vram_mode]
 
         injected_path = _maybe_add_source_path(sensenova_u1_src)
-        model_path = _resolve_local_model_path(model_path)
+        model_path = model_path.strip()
         torch = _import_torch()
         sensenova_u1, load_model_and_tokenizer, _ = _import_sensenova_u1()
 
@@ -781,17 +781,6 @@ def _import_sensenova_u1():
             "(or fill the loader's `sensenova_u1_src` input)."
         ) from exc
     return sensenova_u1, load_model_and_tokenizer, smart_resize
-
-
-def _resolve_local_model_path(model_path: str) -> str:
-    if Path(model_path).exists():
-        return model_path
-    try:
-        from huggingface_hub import snapshot_download
-
-        return snapshot_download(model_path, local_files_only=True)
-    except Exception:
-        return model_path
 
 
 def _resolve_dtype(torch, dtype: str):

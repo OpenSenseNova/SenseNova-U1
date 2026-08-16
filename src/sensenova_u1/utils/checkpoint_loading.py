@@ -146,20 +146,37 @@ def infer_input_device(model: nn.Module, fallback: str | torch.device | None = N
 
 
 def _resolve_local_model_path(model_path: str) -> str:
-    """Resolve a HF id to its cached snapshot directory when offline.
+    """Resolve a HF id to a complete cached snapshot directory when offline.
 
     Mirrors transformers' fall-back behaviour but skips the up-front HEAD
-    request that times out on offline machines. Returns the input unchanged
-    if the path already exists or no cached snapshot is found.
+    request that times out on offline machines. A partially cached snapshot
+    must not shadow the Hub id, because Transformers would then treat it as a
+    local directory and lose the opportunity to fetch its missing weights.
     """
     if Path(model_path).exists():
         return model_path
     try:
         from huggingface_hub import snapshot_download
 
-        return snapshot_download(model_path, local_files_only=True)
+        snapshot = Path(snapshot_download(model_path, local_files_only=True))
     except Exception:
         return model_path
+    if _has_complete_model_weights(snapshot):
+        return str(snapshot)
+    return model_path
+
+
+def _has_complete_model_weights(snapshot: Path) -> bool:
+    for index_name in ("model.safetensors.index.json", "pytorch_model.bin.index.json"):
+        index_path = snapshot / index_name
+        if not index_path.is_file():
+            continue
+        try:
+            shard_names = set(json.loads(index_path.read_text())["weight_map"].values())
+        except (KeyError, TypeError, OSError, json.JSONDecodeError):
+            return False
+        return bool(shard_names) and all((snapshot / shard_name).is_file() for shard_name in shard_names)
+    return (snapshot / "model.safetensors").is_file() or (snapshot / "pytorch_model.bin").is_file()
 
 
 def load_model_and_tokenizer(

@@ -51,7 +51,7 @@ def _keyword(call: ast.Call, name: str) -> ast.expr | None:
 
 
 class ComfyUIWorkflowCompatibilityTest(unittest.TestCase):
-    def test_fast_settings_are_optional_widgets_appended_after_legacy_inputs(self) -> None:
+    def test_fast_settings_accept_blank_values_from_legacy_workflows(self) -> None:
         calls = _schema_input_calls(_loader_class())
         input_ids = [call.args[0].value for call in calls if call.args]
 
@@ -60,6 +60,7 @@ class ComfyUIWorkflowCompatibilityTest(unittest.TestCase):
 
         by_id = {call.args[0].value: call for call in calls if call.args}
         for input_id in FAST_LOADER_INPUTS:
+            self.assertEqual(ast.unparse(by_id[input_id].func), "io.String.Input")
             self.assertIsInstance(_keyword(by_id[input_id], "default"), ast.expr)
             self.assertIsInstance(_keyword(by_id[input_id], "optional"), ast.Constant)
             self.assertTrue(_keyword(by_id[input_id], "optional").value)

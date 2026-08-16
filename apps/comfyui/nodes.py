@@ -156,6 +156,25 @@ def _resolve_gguf_choice(value: str) -> str:
     return value
 
 
+def _normalize_fast_settings(
+    fast_vram_fraction: float | str | None,
+    fast_vram_headroom_gib: float | str | None,
+    fast_activation_reserve_gib: float | str | None,
+    fast_vram_budget_gib: float | str | None,
+) -> tuple[float, float, float, float]:
+    def value_or_default(value: float | str | None, default: float) -> float:
+        if value is None or (isinstance(value, str) and not value.strip()):
+            return default
+        return float(value)
+
+    return (
+        value_or_default(fast_vram_fraction, DEFAULT_FAST_VRAM_FRACTION),
+        value_or_default(fast_vram_headroom_gib, DEFAULT_FAST_VRAM_HEADROOM_GIB),
+        value_or_default(fast_activation_reserve_gib, DEFAULT_FAST_ACTIVATION_RESERVE_GIB),
+        value_or_default(fast_vram_budget_gib, 0.0),
+    )
+
+
 _LOCAL_MODEL_CACHE: dict[tuple, SenseNovaU1LocalModel] = {}
 
 
@@ -530,45 +549,33 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                         "ComfyUI to refresh the list after dropping new files into either folder."
                     ),
                 ),
-                io.Float.Input(
+                io.String.Input(
                     "fast_vram_fraction",
-                    default=DEFAULT_FAST_VRAM_FRACTION,
-                    min=0.1,
-                    max=1.0,
-                    step=0.01,
+                    default=str(DEFAULT_FAST_VRAM_FRACTION),
                     optional=True,
                     advanced=True,
-                    tooltip="Automatic fast-mode VRAM budget as a fraction of physical memory.",
+                    tooltip="Automatic fast-mode VRAM fraction (0 < value <= 1). Blank uses the default.",
                 ),
-                io.Float.Input(
+                io.String.Input(
                     "fast_vram_headroom_gib",
-                    default=DEFAULT_FAST_VRAM_HEADROOM_GIB,
-                    min=0.0,
-                    max=32.0,
-                    step=0.25,
+                    default=str(DEFAULT_FAST_VRAM_HEADROOM_GIB),
                     optional=True,
                     advanced=True,
-                    tooltip="Reusable VRAM headroom reserved after projected activation growth.",
+                    tooltip="Reusable VRAM headroom in GiB. Blank uses the default.",
                 ),
-                io.Float.Input(
+                io.String.Input(
                     "fast_activation_reserve_gib",
-                    default=DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
-                    min=0.0,
-                    max=32.0,
-                    step=0.25,
+                    default=str(DEFAULT_FAST_ACTIVATION_RESERVE_GIB),
                     optional=True,
                     advanced=True,
-                    tooltip="Allowance for activations allocated after decoder-layer forwards.",
+                    tooltip="Activation reserve in GiB. Blank uses the default.",
                 ),
-                io.Float.Input(
+                io.String.Input(
                     "fast_vram_budget_gib",
-                    default=0.0,
-                    min=0.0,
-                    max=128.0,
-                    step=0.25,
+                    default="0.0",
                     optional=True,
                     advanced=True,
-                    tooltip="Absolute fast-mode VRAM budget. 0 uses fast_vram_fraction.",
+                    tooltip="Absolute fast-mode VRAM budget in GiB. Blank or 0 uses fast_vram_fraction.",
                 ),
             ],
             outputs=[
@@ -589,11 +596,19 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         max_memory: str,
         vram_mode: str,
         gguf_checkpoint: str,
-        fast_vram_fraction: float = DEFAULT_FAST_VRAM_FRACTION,
-        fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
-        fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
-        fast_vram_budget_gib: float = 0.0,
+        fast_vram_fraction: float | str = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | str = 0.0,
     ) -> str:
+        fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
+            _normalize_fast_settings(
+                fast_vram_fraction,
+                fast_vram_headroom_gib,
+                fast_activation_reserve_gib,
+                fast_vram_budget_gib,
+            )
+        )
         key = (
             model_path.strip(),
             sensenova_u1_src.strip(),
@@ -623,11 +638,19 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         max_memory: str,
         vram_mode: str,
         gguf_checkpoint: str,
-        fast_vram_fraction: float = DEFAULT_FAST_VRAM_FRACTION,
-        fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
-        fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
-        fast_vram_budget_gib: float = 0.0,
+        fast_vram_fraction: float | str = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | str = 0.0,
     ) -> io.NodeOutput:
+        fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
+            _normalize_fast_settings(
+                fast_vram_fraction,
+                fast_vram_headroom_gib,
+                fast_activation_reserve_gib,
+                fast_vram_budget_gib,
+            )
+        )
         resolved_gguf = _resolve_gguf_choice(gguf_checkpoint.strip())
         cache_key = (
             model_path.strip(),
