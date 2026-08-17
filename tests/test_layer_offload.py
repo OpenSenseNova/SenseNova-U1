@@ -43,6 +43,15 @@ class _TwoBranchLayer(nn.Module):
         self.register_buffer("shared_scale", torch.ones(()))
 
 
+class _HookableTwoBranchLayer(_TwoBranchLayer):
+    def __init__(self) -> None:
+        super().__init__()
+        self.self_attn.config = SimpleNamespace(num_attention_heads=4)
+
+    def forward(self, hidden_states: torch.Tensor, **_kwargs) -> torch.Tensor:
+        return hidden_states
+
+
 class LayerOffloadPartitionTest(unittest.TestCase):
     def test_layer_store_reports_parameter_identity_as_managed(self) -> None:
         parameter = Mock()
@@ -71,13 +80,29 @@ class LayerOffloadPartitionTest(unittest.TestCase):
         wrapper._prefix_weight_store = Mock()
         wrapper._accel = Mock()
         wrapper._target_device = torch.device("cuda")
+        wrapper._async_mode = True
+        wrapper._switch_async_groups = Mock()
+        wrapper._prefix_attention_reserve_bytes = 123
+        wrapper._prefix_residency_active = True
+        wrapper._resident_understanding_layers = {1, 2}
+        wrapper._resident_understanding_bytes = 456
 
         LayerOffloadWrapper.set_inference_phase(wrapper, "prefix")
+        wrapper._switch_async_groups.assert_called_once_with(
+            frozenset({_GROUP_SHARED, _GROUP_UNDERSTANDING}),
+            force=True,
+        )
         wrapper._prefix_weight_store.move_to_target.assert_called_once_with()
+        self.assertEqual(wrapper._inference_phase, "prefix")
+        self.assertEqual(wrapper._prefix_attention_reserve_bytes, 0)
+        self.assertFalse(wrapper._prefix_residency_active)
 
         LayerOffloadWrapper.set_inference_phase(wrapper, "denoise")
-        wrapper._accel.synchronize.assert_called_once_with(device=wrapper._target_device)
+        wrapper._switch_async_groups.assert_called_with(frozenset({_GROUP_SHARED, _GROUP_GENERATION}))
         wrapper._prefix_weight_store.evict_to_cpu.assert_called_once_with()
+        self.assertEqual(wrapper._inference_phase, "denoise")
+        self.assertEqual(wrapper._resident_understanding_layers, set())
+        self.assertEqual(wrapper._resident_understanding_bytes, 0)
 
         with self.assertRaisesRegex(ValueError, "Unsupported inference phase"):
             LayerOffloadWrapper.set_inference_phase(wrapper, "decode")
@@ -85,6 +110,60 @@ class LayerOffloadPartitionTest(unittest.TestCase):
         wrapper._prefix_weight_store = None
         with self.assertRaisesRegex(ValueError, "Unsupported inference phase"):
             LayerOffloadWrapper.set_inference_phase(wrapper, "decode")
+
+    def test_sync_phase_switch_evicts_resident_understanding_weights(self) -> None:
+        wrapper = object.__new__(LayerOffloadWrapper)
+        nn.Module.__init__(wrapper)
+        layer = Mock()
+        wrapper._layers = [layer]
+        wrapper._store = Mock()
+        wrapper._prefix_weight_store = None
+        wrapper._accel = Mock()
+        wrapper._target_device = torch.device("cuda")
+        wrapper._async_mode = False
+        wrapper._resident_understanding_layers = {0}
+        wrapper._resident_understanding_bytes = 123
+
+        LayerOffloadWrapper.set_inference_phase(wrapper, "denoise")
+
+        wrapper._accel.synchronize.assert_called_once_with(device=wrapper._target_device)
+        wrapper._store.evict_to_cpu.assert_called_once_with(
+            0,
+            layer,
+            groups=frozenset({_GROUP_UNDERSTANDING}),
+        )
+        self.assertEqual(wrapper._resident_understanding_layers, set())
+        self.assertEqual(wrapper._resident_understanding_bytes, 0)
+
+    def test_reentering_prefix_drains_residency_left_by_an_interrupted_run(self) -> None:
+        wrapper = object.__new__(LayerOffloadWrapper)
+        nn.Module.__init__(wrapper)
+        layer = Mock()
+        wrapper._layers = [layer]
+        wrapper._store = Mock()
+        wrapper._prefix_weight_store = None
+        wrapper._accel = Mock()
+        wrapper._target_device = torch.device("cuda")
+        wrapper._async_mode = True
+        wrapper._cuda_malloc_async = False
+        wrapper._prefetcher = Mock()
+        wrapper._active_groups = frozenset({_GROUP_SHARED, _GROUP_UNDERSTANDING})
+        wrapper._resident_generation_layers = set()
+        wrapper._resident_generation_bytes = 0
+        wrapper._resident_understanding_layers = {0}
+        wrapper._resident_understanding_bytes = 123
+        wrapper._prefix_attention_reserve_bytes = 456
+        wrapper._prefix_residency_active = True
+
+        LayerOffloadWrapper.set_inference_phase(wrapper, "prefix")
+
+        wrapper._accel.synchronize.assert_called_once_with(device=wrapper._target_device)
+        wrapper._prefetcher.clear_events.assert_called_once_with()
+        wrapper._store.evict_to_cpu.assert_called_once_with(0, layer)
+        self.assertEqual(wrapper._resident_understanding_layers, set())
+        self.assertEqual(wrapper._resident_understanding_bytes, 0)
+        self.assertEqual(wrapper._prefix_attention_reserve_bytes, 0)
+        self.assertFalse(wrapper._prefix_residency_active)
 
     def test_prefix_weight_store_reuses_pinned_cpu_backing(self) -> None:
         source = Mock()
@@ -260,6 +339,121 @@ class LayerOffloadPartitionTest(unittest.TestCase):
             _resident_memory_limit(24 * gib, headroom_bytes=-1)
         with self.assertRaises(ValueError):
             _resident_memory_limit(24 * gib, budget_bytes=0)
+
+    def test_cuda_malloc_async_does_not_treat_cross_stream_cache_as_free(self) -> None:
+        gib = 1024**3
+        wrapper = object.__new__(LayerOffloadWrapper)
+        nn.Module.__init__(wrapper)
+        wrapper._target_device = torch.device("cuda")
+        wrapper._resident_headroom_bytes = 2 * gib
+        wrapper._resident_memory_limit_bytes = 72 * gib
+        wrapper._cuda_malloc_async = True
+        wrapper._accel = Mock()
+        wrapper._accel.memory_allocated.return_value = 30 * gib
+        wrapper._accel.memory_reserved.return_value = 60 * gib
+        wrapper._accel.mem_get_info.return_value = (1 * gib, 80 * gib)
+
+        self.assertFalse(LayerOffloadWrapper._can_keep_resident(wrapper, 4 * gib))
+
+    def test_thinking_residency_waits_for_incremental_prefix_forward(self) -> None:
+        wrapper = object.__new__(LayerOffloadWrapper)
+        nn.Module.__init__(wrapper)
+        wrapper._keep_generation_resident = True
+        wrapper._inference_phase = "prefix"
+        wrapper._prefix_attention_reserve_bytes = 0
+        wrapper._prefix_residency_active = False
+
+        LayerOffloadWrapper._observe_prefix_forward(
+            wrapper,
+            query_length=8442,
+            key_length=8442,
+            batch_size=1,
+            num_heads=32,
+        )
+
+        self.assertEqual(wrapper._prefix_attention_reserve_bytes, 27_366_667_776)
+        self.assertFalse(wrapper._prefix_residency_active)
+
+        LayerOffloadWrapper._observe_prefix_forward(
+            wrapper,
+            query_length=1,
+            key_length=9305,
+            batch_size=1,
+            num_heads=32,
+        )
+
+        self.assertEqual(wrapper._prefix_attention_reserve_bytes, 27_366_667_776)
+        self.assertTrue(wrapper._prefix_residency_active)
+
+    def test_thinking_residency_keeps_only_understanding_weights_within_budget(self) -> None:
+        gib = 1024**3
+        wrapper = object.__new__(LayerOffloadWrapper)
+        nn.Module.__init__(wrapper)
+        wrapper._keep_generation_resident = True
+        wrapper._inference_phase = "prefix"
+        wrapper._prefix_residency_active = True
+        wrapper._prefix_attention_reserve_bytes = 25 * gib
+        wrapper._activation_reserve_bytes = 4 * gib
+        wrapper._resident_headroom_bytes = 2 * gib
+        wrapper._resident_memory_limit_bytes = 72 * gib
+        wrapper._resident_understanding_layers = set()
+        wrapper._resident_understanding_bytes = 0
+        wrapper._target_device = torch.device("cuda")
+        wrapper._accel = Mock()
+        wrapper._accel.memory_allocated.return_value = 30 * gib
+        wrapper._accel.memory_reserved.return_value = 32 * gib
+        wrapper._accel.mem_get_info.return_value = (48 * gib, 80 * gib)
+        wrapper._store = Mock()
+        wrapper._store.group_nbytes.return_value = 1 * gib
+        groups = frozenset({_GROUP_SHARED, _GROUP_UNDERSTANDING})
+
+        groups_to_evict = LayerOffloadWrapper._understanding_groups_to_evict(wrapper, 3, groups)
+
+        self.assertEqual(groups_to_evict, frozenset({_GROUP_SHARED}))
+        self.assertEqual(wrapper._resident_understanding_layers, {3})
+        self.assertEqual(wrapper._resident_understanding_bytes, 1 * gib)
+
+        wrapper._accel.memory_allocated.return_value = 50 * gib
+        groups_to_evict = LayerOffloadWrapper._understanding_groups_to_evict(wrapper, 3, groups)
+
+        self.assertEqual(groups_to_evict, groups)
+        self.assertEqual(wrapper._resident_understanding_layers, set())
+        self.assertEqual(wrapper._resident_understanding_bytes, 0)
+
+    def test_layer_hooks_observe_incremental_prefix_and_apply_understanding_residency(self) -> None:
+        layer = _HookableTwoBranchLayer()
+        wrapper = object.__new__(LayerOffloadWrapper)
+        nn.Module.__init__(wrapper)
+        wrapper._layers = nn.ModuleList([layer])
+        wrapper._hooks = []
+        wrapper._async_mode = False
+        wrapper._store = Mock()
+        wrapper._observe_prefix_forward = Mock()
+        groups = frozenset({_GROUP_SHARED, _GROUP_UNDERSTANDING})
+        wrapper._understanding_groups_to_evict = Mock(return_value=frozenset({_GROUP_SHARED}))
+        wrapper._generation_groups_to_evict = Mock(return_value=frozenset({_GROUP_SHARED}))
+
+        LayerOffloadWrapper._register_hooks(wrapper)
+        layer(
+            torch.zeros(2, 1, 4),
+            exist_non_image_gen_tokens=True,
+            exist_image_gen_tokens=False,
+            attention_mask=torch.zeros(2, 1, 1, 10),
+        )
+
+        wrapper._observe_prefix_forward.assert_called_once_with(
+            query_length=1,
+            key_length=10,
+            batch_size=2,
+            num_heads=4,
+        )
+        wrapper._understanding_groups_to_evict.assert_called_once_with(0, groups)
+        wrapper._generation_groups_to_evict.assert_called_once_with(0, frozenset({_GROUP_SHARED}))
+        wrapper._store.evict_to_cpu.assert_called_once_with(
+            0,
+            layer,
+            groups=frozenset({_GROUP_SHARED}),
+        )
 
     def test_offload_cli_exposes_fast_mode_budget_controls(self) -> None:
         parser = argparse.ArgumentParser()

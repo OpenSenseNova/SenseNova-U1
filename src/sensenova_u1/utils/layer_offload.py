@@ -58,6 +58,11 @@ DEFAULT_FAST_VRAM_HEADROOM_GIB = 2.0
 DEFAULT_FAST_ACTIVATION_RESERVE_GIB = 4.0
 _PHASE_CALLBACK_ATTR = "_layer_offload_phase_callback"
 _MISSING = object()
+# The prefix understanding path uses eager attention with a float32 additive
+# mask.  At its peak, BF16 scores, promoted/masked scores, and float32 softmax
+# workspace overlap.  Twelve bytes per score is deliberately conservative and
+# matched the measured 8,442-token H100 peak with roughly 10% safety margin.
+_EAGER_ATTENTION_BYTES_PER_SCORE = 12
 
 
 def _resident_memory_limit(
@@ -526,6 +531,11 @@ class LayerOffloadWrapper(nn.Module):
         self._keep_generation_resident = keep_generation_resident
         self._resident_generation_layers: set[int] = set()
         self._resident_generation_bytes = 0
+        self._resident_understanding_layers: set[int] = set()
+        self._resident_understanding_bytes = 0
+        self._inference_phase: str | None = None
+        self._prefix_attention_reserve_bytes = 0
+        self._prefix_residency_active = False
         self._resident_memory_limit_bytes = 0
         if not math.isfinite(fast_vram_headroom_gib) or fast_vram_headroom_gib < 0:
             raise ValueError("fast_vram_headroom_gib must be finite and >= 0")
@@ -640,14 +650,22 @@ class LayerOffloadWrapper(nn.Module):
             # at a partially initialized wrapper.
             self._install_phase_callback()
 
-    def _switch_async_groups(self, groups: frozenset[str]) -> None:
+    def _switch_async_groups(self, groups: frozenset[str], *, force: bool = False) -> None:
         """Reset stale prefetch state when inference changes task branch."""
-        if self._active_groups == groups:
+        if self._active_groups == groups and not force:
             return
         if self._active_groups is not None:
             # Branch transitions are infrequent (typically prefix -> denoise).
             # A one-time drain is preferable to carrying the unused branch's
             # prefetched weights through every subsequent layer.
+            logger.info(
+                "LayerOffloadWrapper: branch transition %s -> %s "
+                "(understanding_resident=%.2f GiB, generation_resident=%.2f GiB)",
+                sorted(self._active_groups),
+                sorted(groups),
+                self._resident_understanding_bytes / _GIB,
+                self._resident_generation_bytes / _GIB,
+            )
             self._accel.synchronize(device=self._target_device)
             self._prefetcher.clear_events()  # type: ignore[union-attr]
             if self._cuda_malloc_async:
@@ -659,26 +677,35 @@ class LayerOffloadWrapper(nn.Module):
                     self._store.evict_to_cpu(idx, layer)
             self._resident_generation_layers.clear()
             self._resident_generation_bytes = 0
+            self._resident_understanding_layers.clear()
+            self._resident_understanding_bytes = 0
         self._active_groups = groups
+
+    def _can_keep_resident(self, activation_reserve_bytes: int) -> bool:
+        """Return whether current allocations plus workspace fit the fast watermark."""
+        allocated = int(self._accel.memory_allocated(self._target_device))
+        required_free_memory = self._resident_headroom_bytes + activation_reserve_bytes
+        try:
+            driver_free_memory = int(self._accel.mem_get_info(self._target_device)[0])
+            # cudaMallocAsync owns separate pools per stream in this wrapper;
+            # cached blocks from the prefetch stream cannot be assumed usable
+            # by attention work on the compute stream.
+            reclaimable_cache = 0
+            if not self._cuda_malloc_async:
+                reserved = int(self._accel.memory_reserved(self._target_device))
+                reclaimable_cache = max(reserved - allocated, 0)
+            effective_free_memory = driver_free_memory + reclaimable_cache
+        except Exception:  # pragma: no cover - backend-specific fallback
+            effective_free_memory = required_free_memory
+        projected_peak = allocated + activation_reserve_bytes
+        return projected_peak <= self._resident_memory_limit_bytes and effective_free_memory >= required_free_memory
 
     def _generation_groups_to_evict(self, idx: int, groups: frozenset[str]) -> frozenset[str]:
         """Keep generation weights resident while below the VRAM watermark."""
         if not self._keep_generation_resident or _GROUP_GENERATION not in groups:
             return groups
 
-        allocated = int(self._accel.memory_allocated(self._target_device))
-        required_free_memory = self._resident_headroom_bytes + self._activation_reserve_bytes
-        try:
-            driver_free_memory = int(self._accel.mem_get_info(self._target_device)[0])
-            reserved = int(self._accel.memory_reserved(self._target_device))
-            reclaimable_cache = max(reserved - allocated, 0)
-            effective_free_memory = driver_free_memory + reclaimable_cache
-        except Exception:  # pragma: no cover - backend-specific fallback
-            effective_free_memory = required_free_memory
-        projected_peak = allocated + self._activation_reserve_bytes
-        keep_resident = (
-            projected_peak <= self._resident_memory_limit_bytes and effective_free_memory >= required_free_memory
-        )
+        keep_resident = self._can_keep_resident(self._activation_reserve_bytes)
         group_bytes = self._store.group_nbytes(idx, _GROUP_GENERATION)
         if keep_resident:
             if idx not in self._resident_generation_layers:
@@ -690,15 +717,75 @@ class LayerOffloadWrapper(nn.Module):
             self._resident_generation_bytes -= group_bytes
         return groups
 
+    def _observe_prefix_forward(
+        self,
+        *,
+        query_length: int,
+        key_length: int,
+        batch_size: int,
+        num_heads: int,
+    ) -> None:
+        """Record the long-prefix workspace before retaining Think weights."""
+        if not self._keep_generation_resident or self._inference_phase != "prefix":
+            return
+        if min(query_length, key_length, batch_size, num_heads) <= 0:
+            return
+        if query_length > 1:
+            score_count = batch_size * num_heads * query_length * key_length
+            reserve = score_count * _EAGER_ATTENTION_BYTES_PER_SCORE
+            self._prefix_attention_reserve_bytes = max(self._prefix_attention_reserve_bytes, reserve)
+            return
+        if self._prefix_attention_reserve_bytes > 0:
+            self._prefix_residency_active = True
+
+    def _understanding_groups_to_evict(self, idx: int, groups: frozenset[str]) -> frozenset[str]:
+        """Retain Think-path weights when the measured prefix budget permits."""
+        if (
+            not self._keep_generation_resident
+            or self._inference_phase != "prefix"
+            or not self._prefix_residency_active
+            or _GROUP_UNDERSTANDING not in groups
+        ):
+            return groups
+
+        activation_reserve = max(self._activation_reserve_bytes, self._prefix_attention_reserve_bytes)
+        keep_resident = self._can_keep_resident(activation_reserve)
+        group_bytes = self._store.group_nbytes(idx, _GROUP_UNDERSTANDING)
+        if keep_resident:
+            if idx not in self._resident_understanding_layers:
+                self._resident_understanding_layers.add(idx)
+                self._resident_understanding_bytes += group_bytes
+            return groups - {_GROUP_UNDERSTANDING}
+        if idx in self._resident_understanding_layers:
+            self._resident_understanding_layers.remove(idx)
+            self._resident_understanding_bytes -= group_bytes
+        return groups
+
     def _register_hooks(self) -> None:
         idx_map: dict[int, int] = {id(layer): idx for idx, layer in enumerate(self._layers)}
         num_layers = len(self._layers)
 
         active_groups_by_layer: dict[int, frozenset[str]] = {}
 
-        def _pre_hook(module: nn.Module, _args: Any, kwargs: dict[str, Any], *, idx: int) -> None:
+        def _pre_hook(module: nn.Module, args: Any, kwargs: dict[str, Any], *, idx: int) -> None:
             groups = _required_tensor_groups(kwargs)
             active_groups_by_layer[idx] = groups
+            if idx == 0 and _GROUP_UNDERSTANDING in groups and args and isinstance(args[0], torch.Tensor):
+                hidden_states = args[0]
+                attention_mask = kwargs.get("attention_mask")
+                key_length = (
+                    int(attention_mask.shape[-1])
+                    if isinstance(attention_mask, torch.Tensor) and attention_mask.ndim >= 2
+                    else int(hidden_states.shape[-2])
+                )
+                attention_config = getattr(getattr(module, "self_attn", None), "config", None)
+                num_heads = int(getattr(attention_config, "num_attention_heads", 0))
+                self._observe_prefix_forward(
+                    query_length=int(hidden_states.shape[-2]),
+                    key_length=key_length,
+                    batch_size=int(hidden_states.shape[0]),
+                    num_heads=num_heads,
+                )
             if self._async_mode:
                 self._switch_async_groups(groups)
                 # Wait only for THIS layer's H2D transfer.
@@ -727,7 +814,8 @@ class LayerOffloadWrapper(nn.Module):
 
         def _post_hook(module: nn.Module, _args: Any, _output: Any, *, idx: int) -> None:
             groups = active_groups_by_layer.pop(idx, _ALL_TENSOR_GROUPS)
-            groups_to_evict = self._generation_groups_to_evict(idx, groups)
+            groups_to_evict = self._understanding_groups_to_evict(idx, groups)
+            groups_to_evict = self._generation_groups_to_evict(idx, groups_to_evict)
             if self._async_mode and self._cuda_malloc_async:
                 # cudaMallocAsync slow-but-safe path: per-stream pools
                 # require alloc and free on the same stream. Since
@@ -773,16 +861,46 @@ class LayerOffloadWrapper(nn.Module):
             self._audit_handle = None
 
     def set_inference_phase(self, phase: str) -> None:
-        """Move prefix-only weights for the next inference phase."""
+        """Swap branch and prefix-only weights for the next inference phase."""
         if phase not in {"prefix", "denoise"}:
             raise ValueError(f"Unsupported inference phase: {phase!r}")
-        if self._prefix_weight_store is None:
-            return
+        self._inference_phase = phase
         if phase == "prefix":
-            self._prefix_weight_store.move_to_target()
+            self._prefix_attention_reserve_bytes = 0
+            self._prefix_residency_active = False
+            if self._async_mode:
+                # A previous generation may have been cancelled during Think,
+                # before its denoise phase had a chance to release resident
+                # understanding weights. Always drain at a new run boundary.
+                self._switch_async_groups(
+                    frozenset({_GROUP_SHARED, _GROUP_UNDERSTANDING}),
+                    force=True,
+                )
+            else:
+                self._accel.synchronize(device=self._target_device)
+                for idx, layer in enumerate(self._layers):
+                    self._store.evict_to_cpu(idx, layer)
+                self._resident_generation_layers.clear()
+                self._resident_generation_bytes = 0
+                self._resident_understanding_layers.clear()
+                self._resident_understanding_bytes = 0
+            if self._prefix_weight_store is not None:
+                self._prefix_weight_store.move_to_target()
             return
-        self._accel.synchronize(device=self._target_device)
-        self._prefix_weight_store.evict_to_cpu()
+        if self._async_mode:
+            self._switch_async_groups(frozenset({_GROUP_SHARED, _GROUP_GENERATION}))
+        else:
+            self._accel.synchronize(device=self._target_device)
+            for idx, layer in enumerate(self._layers):
+                self._store.evict_to_cpu(
+                    idx,
+                    layer,
+                    groups=frozenset({_GROUP_UNDERSTANDING}),
+                )
+        self._resident_understanding_layers.clear()
+        self._resident_understanding_bytes = 0
+        if self._prefix_weight_store is not None:
+            self._prefix_weight_store.evict_to_cpu()
 
     def _install_phase_callback(self) -> None:
         self._previous_phase_callback = self._model.__dict__.get(_PHASE_CALLBACK_ATTR, _MISSING)
@@ -811,6 +929,8 @@ class LayerOffloadWrapper(nn.Module):
         _log_vram(
             f"wrapper.teardown: enter (on_gpu={len(self._store._on_gpu)}, "
             f"events={len(self._prefetcher._events) if self._prefetcher is not None else 0}, "
+            f"resident_understanding_layers={len(self._resident_understanding_layers)}, "
+            f"resident_understanding_gib={self._resident_understanding_bytes / _GIB:.2f}, "
             f"resident_generation_layers={len(self._resident_generation_layers)}, "
             f"resident_generation_gib={self._resident_generation_bytes / _GIB:.2f})",
             self._target_device,
@@ -837,6 +957,8 @@ class LayerOffloadWrapper(nn.Module):
             self._store.evict_to_cpu(idx, layer)
         self._resident_generation_layers.clear()
         self._resident_generation_bytes = 0
+        self._resident_understanding_layers.clear()
+        self._resident_understanding_bytes = 0
 
         for p in self._model.parameters():
             p.data = p.data.to("cpu")

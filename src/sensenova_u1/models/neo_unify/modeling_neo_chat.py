@@ -508,6 +508,10 @@ class NEOChatModel(PreTrainedModel):
         )
         return out.past_key_values, out.last_hidden_state
 
+    def _think_prefix_forward(self, **kwargs):
+        """Build the Think prefix cache without materialising per-token logits."""
+        return self.language_model(use_cache=True, logits_to_keep=1, **kwargs)
+
     def _append_text_tokens_to_cache(self, cache, t_idx, input_ids):
         if input_ids.shape[1] == 0:
             return t_idx
@@ -528,7 +532,7 @@ class NEOChatModel(PreTrainedModel):
         mask[:, :, :, past_len:] = causal_mask
         attention_mask_dict = {"full_attention": mask}
 
-        self.language_model(
+        self.language_model.model(
             inputs_embeds=inputs_embeds,
             indexes=indexes,
             attention_mask=attention_mask_dict,
@@ -1456,11 +1460,10 @@ class NEOChatModel(PreTrainedModel):
         )
 
         if think_mode:
-            outputs_condition = self.language_model(
+            outputs_condition = self._think_prefix_forward(
                 inputs_embeds=input_embeds_condition,
                 indexes=indexes_condition,
                 attention_mask=attention_mask_condition_prefix,
-                use_cache=True,
             )
             past_key_values_condition = outputs_condition.past_key_values
             device = outputs_condition.logits.device
@@ -1720,11 +1723,10 @@ class NEOChatModel(PreTrainedModel):
         )
 
         if think_mode:
-            outputs_condition = self.language_model(
+            outputs_condition = self._think_prefix_forward(
                 input_ids=input_ids_condition,
                 indexes=indexes_condition,
                 attention_mask=attention_mask_condition_prefix,
-                use_cache=True,
             )
             past_key_values_condition = outputs_condition.past_key_values
             device = outputs_condition.logits.device
