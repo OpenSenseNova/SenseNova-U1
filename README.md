@@ -16,7 +16,7 @@
   <img src="docs/assets/teaser.webp" alt="SenseNova-U1.5 native unified multimodal architecture" width="100%">
 </p>
 <p align="center">
-  <img src="docs/assets/teaser_2.webp" alt="SenseNova-U1.5 native unified multimodal architecture" width="100%">
+  <img src="docs/assets/teaser_u1.5_2.webp" alt="SenseNova-U1.5 native unified multimodal architecture" width="100%">
 </p>
 
 ## 📣 Updated News
@@ -110,10 +110,6 @@ The official weights are available now on [Hugging Face](https://huggingface.co/
 
 <details>
 <summary>Expand the original SenseNova U1 overview</summary>
-
-<p align="center">
-  <img src="docs/assets/teaser.webp" alt="SenseNova-U1" width="900">
-</p>
 
 <p align="center">
   <img src="docs/assets/teaser_2.webp" alt="SenseNova U1 visualization" width="900">
