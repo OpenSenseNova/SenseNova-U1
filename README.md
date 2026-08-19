@@ -75,7 +75,18 @@ The official release focuses on six user-visible improvements:
 
 #### Benchmarks
 
-`[U1.5_BENCHMARKS_TBD]`
+<p align="center">
+  <img src="docs/assets/benchmarks/u1.5_radial.webp" alt="SenseNova-U1.5 benchmark overview" width="100%">
+</p>
+
+<details>
+<summary>View detailed benchmark results</summary>
+
+<p align="center">
+  <img src="docs/assets/benchmarks/u1.5_combined.webp" alt="SenseNova-U1.5 detailed benchmark results" width="100%">
+</p>
+
+</details>
 
 #### Showcases and Best Practices
 

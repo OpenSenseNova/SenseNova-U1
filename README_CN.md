@@ -74,7 +74,18 @@ U1.5 基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify)，无�
 
 #### 基准评测
 
-`[U1.5_BENCHMARKS_TBD]`
+<p align="center">
+  <img src="docs/assets/benchmarks/u1.5_radial.webp" alt="SenseNova-U1.5 基准评测概览" width="100%">
+</p>
+
+<details>
+<summary>查看详细基准评测结果</summary>
+
+<p align="center">
+  <img src="docs/assets/benchmarks/u1.5_combined.webp" alt="SenseNova-U1.5 详细基准评测结果" width="100%">
+</p>
+
+</details>
 
 #### 效果展示与最佳实践
 
