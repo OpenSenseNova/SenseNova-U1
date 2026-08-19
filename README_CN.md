@@ -76,20 +76,9 @@ U1.5 基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify)，无�
 
 `[U1.5_BENCHMARKS_TBD]`
 
-#### 效果展示
+#### 效果展示与最佳实践
 
-`[U1.5_SHOWCASES_TBD]`
-
-#### 最佳实践
-
-对于主体明确、约束较少的任务，直接使用自然语言 Prompt 通常即可。对于更复杂的视觉设计与编辑任务，我们建议：
-
-- **简短创意需求：** 使用 [SenseNova Image PE Skill](src/sensenova_u1_5/prompt-enhancement-skill/SKILL.md) 将简报扩展为紧凑的 Render JSON Prompt，保留必需主体、可见文案、数量、版式约束与排除项。
-- **参考图驱动创作：** 当抽象风格词不足以表达目标时，先选择设计完成度较高的参考图，再使用 [Caption-to-Prompt 脚本](src/sensenova_u1_5/caption/caption.py) 将其构图、排版、色彩、材质与光照决策转换为可编辑 Prompt。
-- **图像编辑：** 同时写清需要修改的内容和必须保持不变的内容。复杂编辑可使用 `--use-edit-pe` 在推理前扩展短指令；同时建议按原始长宽比将输入预缩放至约 2048×2048 分辨率。
-- **CFG 调节：** 从参考值 `cfg_scale=4.0` 开始。如果密集高频纹理或鲜艳色彩出现细节过强或过饱和，可逐步降低 `cfg_scale`。较低的 CFG 也可能减弱对 Prompt 约束的遵循，建议按具体 Prompt 调整并对比结果。
-
-PE 与 Caption-to-Prompt 属于模型之外的可选规划工作流。所有使用 PE 的案例和评测结果都应明确标注。
+对于主体明确、约束较少的任务，直接使用自然语言 Prompt 通常即可。复杂设计或编辑任务可在确有额外规划需求时使用 PE，同时明确写出必须保持不变的内容；如果高频细节或色彩过强，可逐步降低 `cfg_scale`。工作流选择、安装方法和可视化对比请参见 **[U1.5 效果展示与最佳实践](docs/u1.5_best_practices_CN.md)**。
 
 #### 已知局限
 

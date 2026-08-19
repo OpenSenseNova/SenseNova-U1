@@ -79,20 +79,9 @@ During training, task-specialized expert models strengthen text and infographic 
 
 `[U1.5_BENCHMARKS_TBD]`
 
-#### Showcases
+#### Showcases and Best Practices
 
-`[U1.5_SHOWCASES_TBD]`
-
-#### Best Practices
-
-For tasks with a clear subject and only a few constraints, a direct natural-language prompt is usually sufficient. For more demanding visual-design and editing tasks, we recommend:
-
-- **Short creative briefs:** use the [SenseNova Image PE Skill](src/sensenova_u1_5/prompt-enhancement-skill/SKILL.md) to expand the brief into a compact Render JSON prompt that preserves required subjects, visible copy, counts, layout constraints, and exclusions.
-- **Reference-driven creation:** when abstract style terms are insufficient, first select a strong reference image, then use the [Caption-to-Prompt script](src/sensenova_u1_5/caption/caption.py) to turn its composition, typography, color, material, and lighting decisions into an editable prompt.
-- **Image editing:** state both the requested change and what must remain unchanged. For complex edits, `--use-edit-pe` can expand a short instruction before inference; pre-scaling the input near 2048×2048 while preserving its aspect ratio is also recommended.
-- **CFG tuning:** start from the reference `cfg_scale=4.0`. If dense, high-frequency textures or vivid colors produce over-emphasized detail or oversaturation, gradually lower `cfg_scale`. Lower CFG can also weaken prompt adherence, so tune it per prompt and compare results.
-
-PE and Caption-to-Prompt are optional planning workflows external to the base model. PE-assisted examples and benchmark results should be labeled explicitly.
+Direct natural-language prompts work well for clear tasks with few constraints. For complex design or editing, use PE only when additional planning is helpful, state what must remain unchanged, and lower `cfg_scale` gradually if high-frequency detail or colors become over-emphasized. See the **[U1.5 Showcases and Best Practices guide](docs/u1.5_best_practices.md)** for workflow selection, setup, and visual comparisons.
 
 #### Known Limitations
 
