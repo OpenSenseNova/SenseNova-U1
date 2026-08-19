@@ -82,7 +82,7 @@ The official release focuses on six user-visible improvements:
 </p>
 
 <details>
-<summary>View detailed benchmark results</summary>
+<summary>**View detailed benchmark results**</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/u1.5_combined.webp" alt="SenseNova-U1.5 detailed benchmark results" width="100%">
@@ -100,8 +100,8 @@ The official release improves upon the Preview, though challenges remain in:
 
 - Over-emphasized details or colors: Some prompts may produce excessive high-frequency detail or oversaturated colors, which can often be mitigated by lowering `cfg_scale`.
 - Dense text errors: Dense, lengthy, small, or mixed Chinese-English text may contain errors.
-- Constrained layout inaccuracies: Exact counts, alignment, or hierarchy may be imperfect in highly constrained layouts.
-- Unstable fine-grained details: Small faces, hands, limbs, and fine-grained object structures may remain unstable.
+- Constrained layout: Exact counts, alignment, or hierarchy may be imperfect in highly constrained layouts.
+- Unstable human details: Small faces, hands, limbs, and fine-grained object structures may remain unstable.
 - Complex editing drift: Broad, multi-turn, or multi-reference edits may drift, especially when many regions must be preserved simultaneously.
 
 
