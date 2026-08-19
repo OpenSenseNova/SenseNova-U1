@@ -24,7 +24,7 @@
 
 - `[2026.08.04]` Community contributor [smthem on Hugging Face](https://huggingface.co/smthem) (GitHub [@smthemex](https://github.com/smthemex)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) (19.9 GB). Thank you for continuing to maintain and share quantized SenseNova-U1 weights with the community.
 
-- `[2026.07.31]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview). This preview focuses on native 4K image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
+- `[2026.07.31]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) that focuses on native 4K image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
 
 <details>
 <summary>Click to expand older SenseNova-U1 updates</summary>
@@ -82,7 +82,7 @@ The official release focuses on six user-visible improvements:
 </p>
 
 <details>
-<summary>**View detailed benchmark results**</summary>
+<summary>View detailed benchmark results</summary>
 
 <p align="center">
   <img src="docs/assets/benchmarks/u1.5_combined.webp" alt="SenseNova-U1.5 detailed benchmark results" width="100%">
