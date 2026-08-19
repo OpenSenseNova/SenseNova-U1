@@ -68,9 +68,9 @@
 
 The official release focuses on six user-visible improvements:
 
-- **Higher-quality image generation:** improved composition, color harmony, material rendering, lighting, realism, and fine-grained detail.
+- **Higher-quality image generation:** improved composition and color harmony, with more realistic material rendering, natural lighting, stronger visual fidelity, and finer local details.
 - **Better text rendering and infographic generation:** more legible Chinese and English text, with clearer information hierarchy in posters, infographics, brand assets, and other text-dense designs.
-- **More efficient native 4K generation:** more coherent global structure and stable high-resolution output with improved generation efficiency.
+- **More efficient native 4K generation:** more coherent global structure, color harmony, and stable high-resolution output with improved generation efficiency.
 - **More reliable native image editing:** stronger preservation of subject identity and unedited content across local, text, multi-reference, insertion, and replacement edits.
 - **Stronger complex-instruction following:** more consistent execution of object counts, spatial relationships, layouts, styles, and multiple constraints within a single request.
 - **More precise visual control:** more accurate region- and object-level control through bounding boxes, visual markers, and single- or multi-image references.
@@ -631,7 +631,7 @@ The current flagship checkpoint is **[SenseNova-U1.5-8B-MoT](https://huggingface
 | SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
 | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
 | SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
-| SenseNova-U1-8B-MoT | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
+| **SenseNova-U1-8B-MoT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
 | SenseNova-U1-8B-MoT-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors) |
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) |
 | SenseNova-U1-A3B-MoT | A3B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT) |
