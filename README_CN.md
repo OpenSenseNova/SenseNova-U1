@@ -1,4 +1,4 @@
-# SenseNova-U1：基于 NEO-unify 架构统一多模态理解与生成
+# SenseNova-U1.5：原生统一多模态理解、生成与编辑
 
 <p align="center">
   <a href="./README.md">English</a> | <strong>简体中文</strong>
@@ -6,26 +6,26 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2605.12500"><img src="https://img.shields.io/badge/arXiv-2605.12500-b31b1b.svg" alt="arXiv"></a>
-  <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
-  <a href="https://modelscope.cn/collections/SenseNova/SenseNova-U1"><img src="https://img.shields.io/badge/%F0%9F%A4%96%20ModelScope-模型-purple" alt="ModelScope-模型"></a>
-  <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
+  <a href="https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1.5--8B--MoT-yellow" alt="Hugging Face 上的 SenseNova-U1.5-8B-MoT"></a>
+  <a href="https://huggingface.co/blog/sensenova/neo-unify"><img src="https://img.shields.io/badge/Architecture-NEO--unify-2459B8" alt="NEO-unify"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
   <a href="https://discord.gg/cxkwXWjp"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
-  <img src="docs/assets/teaser.webp" alt="SenseNova-U1" width="900">
-</p>
-
-<p align="center">
-  <img src="docs/assets/teaser_2.webp" alt="visualization" width="900">
+  <img src="docs/assets/u1.5_teaser.png" alt="SenseNova-U1.5 原生统一多模态架构" width="100%">
 </p>
 
 ## 📣 最新动态
 
+- `[RELEASE_DATE]` 正式发布 [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)。相比预览版，正式版进一步增强复杂指令遵循、文字渲染与版式组织、原生 4K 稳定生成、图像编辑可靠性与精细视觉控制。
+
 - `[2026.08.04]` 社区贡献者 Hugging Face 用户 [smthem](https://huggingface.co/smthem)（GitHub [@smthemex](https://github.com/smthemex)）发布了 [SenseNova-U1.5-8B-MoT-Preview 的 Q8 GGUF 权重](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf)（19.9 GB）。感谢作者持续维护并向社区分享 SenseNova-U1 系列量化权重。
 
 - `[2026.07.31]` 发布 [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview)。本次预览重点升级原生 4K 图像生成、局部纹理与真实质感和复杂版式生成，以及图像编辑中的主体与非编辑区域保持能力。更多细节请参阅 [U1.5 Preview 文档](docs/u1.5_preview_CN.md)。
+
+<details>
+<summary>点击展开 SenseNova U1 更早的更新记录</summary>
 
 - `[2026.07.16]` 发布 [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3)。新版本同时支持信息图的生成和编辑，在保留信息图生成能力的基础上，重点增强局部文字、局部内容、全局风格和全局布局等信息图编辑能力，可支持在密集文本中精确的修复文字。更多模型细节及基准测试结果请参阅 [✨ U1 Infographic Model Series](docs/u1_infographic_model_CN.md)。并更新了对应支持的 [ComfyUI workflow](apps/comfyui/example_workflows/infographic_series_t2i_edit.json)。
 
@@ -51,7 +51,96 @@
 
 - `[2026.04.27]` 首发 SenseNova-U1 的[推理代码](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README_CN.md)。
 
+</details>
+
 ## 🌟 概述
+
+### 🚀 SenseNova-U1.5-8B-MoT
+
+**[SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)** 是我们最新的原生统一多模态权重，面向更准确、更一致、更可靠的真实视觉创作工作流。在不增加模型规模的前提下，我们重新设计并强化了数据分布、任务定义、结构化视觉指令监督、专家能力整合和面向任务的后训练流程。
+
+U1.5 基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify)，无需独立的视觉编码器或 VAE，即可对语言与视觉信息进行端到端建模。更新的 patch 编码与解码层进一步支持连续、高分辨率的视觉重建。
+
+正式版重点提升了六项用户可感知的能力：
+
+- **更高质量的图像生成：** 提升构图、色彩和谐度、材质、纹理、光照、真实感与细节质量。
+- **更强的复杂指令遵循：** 更稳定地同时处理主体、数量、空间关系、文字、版式、风格和保留要求。
+- **更好的文字渲染与复杂版式：** 提升中英文可读性，以及海报、信息图、品牌素材等文字密集设计的信息层级可靠性。
+- **更稳定的原生 4K 生成：** 在高分辨率下更好地保持全局结构，以及纹理、材质、排版和光照的局部一致性。
+- **更可靠的原生图像编辑：** 增强主体身份、几何结构、空间关系、版式和非编辑区域的保持，并改进局部编辑、文字编辑、多参考图编辑以及对象插入与替换。
+- **更精确的视觉控制：** 更好地利用边界框、视觉标记和单图或多图参考，控制指定区域与对象。
+
+在训练过程中，我们分别构建了强化文字与信息图渲染、审美质量和图像编辑的任务专家，再将其能力整合回一个统一权重。因此，推理时无需专家路由或手动切换模型。面向任务的后训练则进一步优化指令遵循、全局视觉质量和编辑保真度。
+
+#### 基准评测
+
+`[U1.5_BENCHMARKS_TBD]`
+
+#### 效果展示
+
+`[U1.5_SHOWCASES_TBD]`
+
+#### 最佳实践
+
+对于主体明确、约束较少的任务，直接使用自然语言 Prompt 通常即可。对于更复杂的视觉设计与编辑任务，我们建议：
+
+- **简短创意需求：** 使用 [SenseNova Image PE Skill](src/sensenova_u1_5/prompt-enhancement-skill/SKILL.md) 将简报扩展为紧凑的 Render JSON Prompt，保留必需主体、可见文案、数量、版式约束与排除项。
+- **参考图驱动创作：** 当抽象风格词不足以表达目标时，先选择设计完成度较高的参考图，再使用 [Caption-to-Prompt 脚本](src/sensenova_u1_5/caption/caption.py) 将其构图、排版、色彩、材质与光照决策转换为可编辑 Prompt。
+- **图像编辑：** 同时写清需要修改的内容和必须保持不变的内容。复杂编辑可使用 `--use-edit-pe` 在推理前扩展短指令；同时建议按原始长宽比将输入预缩放至约 2048×2048 分辨率。
+- **CFG 调节：** 从参考值 `cfg_scale=4.0` 开始。如果密集高频纹理或鲜艳色彩出现细节过强或过饱和，可逐步降低 `cfg_scale`。较低的 CFG 也可能减弱对 Prompt 约束的遵循，建议按具体 Prompt 调整并对比结果。
+
+PE 与 Caption-to-Prompt 属于模型之外的可选规划工作流。所有使用 PE 的案例和评测结果都应明确标注。
+
+#### 已知局限
+
+正式版已显著改进预览版中观察到的问题，但在高难度场景中仍可能出现：
+
+- 部分 Prompt 下高频细节过强或色彩过饱和；该现象对 CFG 较敏感，通常可通过降低 `cfg_scale` 缓解。
+- 极度密集、较长、小字号或中英文混排文字仍可能出错。
+- 高约束复杂版式中的精确计数、对齐或层级可能不完全准确。
+- 小尺寸人脸、手部、肢体与精细物体细节仍有一定不稳定性。
+- 大范围、多轮或多参考图编辑仍可能发生偏移，尤其是同时需要保留多个区域时。
+
+#### 快速开始
+
+文生图：
+
+```bash
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --prompt "A cinematic mountain lake at sunrise, realistic photography." \
+  --width 2048 --height 2048 \
+  --cfg_scale 4.0 --cfg_norm none \
+  --timestep_shift 3.0 --num_steps 50 \
+  --output output.png
+```
+
+图像编辑：
+
+```bash
+python examples/editing/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --image input.png \
+  --prompt "Change the jacket to cobalt blue. Preserve the face, pose, background, lighting, and framing." \
+  --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
+  --timestep_shift 3.0 --num_steps 50 \
+  --output edited.png
+```
+
+正式版权重已在 [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) 提供。Web Demo 与其他集成将后续逐步更新。
+
+### SenseNova U1（历史版本）
+
+<details>
+<summary>展开查看原始 SenseNova U1 概述</summary>
+
+<p align="center">
+  <img src="docs/assets/teaser.webp" alt="SenseNova-U1" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/assets/teaser_2.webp" alt="SenseNova U1 可视化" width="900">
+</p>
 
 🚀 **SenseNova U1** 是全新一代原生多模态模型系列，在单一架构中统一了多模态理解、推理与生成。
 它代表着多模态 AI 的根本性范式转变：**从模态集成走向真正的统一**。SenseNova U1 不再依赖适配器在不同模态之间进行翻译，而是以原生方式跨语言与视觉进行思考与行动。
@@ -97,17 +186,21 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 - 🤖 视觉-语言-动作（VLA）
 - 🌐 世界建模（WM）
 
+</details>
+
 ## 🦁 模型库
 
-在本次发布中，我们开源了 SenseNova U1 Lite 系列，共两个规格：
+当前主力权重为 **SenseNova-U1.5-8B-MoT**。模型库同时保留原始 SenseNova U1 权重与不同任务特化版本：
 
+- SenseNova U1.5-8B-MoT — 当前 U1.5 正式版
 - SenseNova U1-8B-MoT — 密集主干网络
 - SenseNova U1-A3B-MoT — MoE 主干网络
 
 
 | 模型 | 参数量 | HF 权重 |
 | :---- | :------- | :--------- |
-| [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview_CN.md) | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
+| **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
+| [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview_CN.md) *(历史预览版)* | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |
 | SenseNova-U1-8B-MoT-Infographic-V2 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) |
@@ -126,13 +219,18 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 > 💡 `SenseNova-U1-8B-MoT` 中的 `8B-MoT` 指的是 ~8B 理解参数**与** ~8B 生成参数。可参阅 [模型参数分解](docs/parameter_breakdown_CN.md) 查看详细的分组明细。
 
 
-## 📋 后续计划
+## 📚 SenseNova U1（历史版本）
+
+<details>
+<summary>展开查看原始 U1 项目状态、效果展示、基准评测、已知局限、使用与部署资料</summary>
+
+### 📋 项目状态
 
 - [x] SenseNova-U1 训练代码
 
 - [x] SenseNova-U1 最终版权重与技术报告
 
-## 🎨 效果展示
+### 🎨 效果展示
 
 <details>
 <summary>🖼️ 文生图（通用）</summary>
@@ -352,7 +450,7 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 </details>
 
 
-## 📊 核心评测
+### 📊 核心评测
 
 <details>
 <summary>📝 视觉理解</summary>
@@ -384,7 +482,9 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 > 评测脚本与榜单复现指南已提供在 [`evaluation`](./evaluation/README_CN.md)。
 
 
-## ⚠️ 进行中的改进
+### ⚠️ 进行中的改进
+
+以下局限针对原始 SenseNova-U1 权重。SenseNova-U1.5 的已知局限与 CFG 调节说明请参见上方 U1.5 概述。
 
 尽管在各项任务上表现优异，当前版本仍有若干已知局限有待改进：
 
@@ -405,19 +505,18 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 
 我们将上述方向列为持续迭代的重点，期待在后续版本中不断改进。
 
-
-## 🛠️ 快速开始
+### 🛠️ 使用与部署
 
 > 💡 提示: 如果在配置或运行过程中遇到任何问题，请参考我们的 [常见问题](docs/FAQ_CN.md)
 
-### 🌐 使用 SenseNova-Studio
+#### 🌐 使用 SenseNova-Studio
 
 体验 SenseNova-U1 最便捷的方式是通过 **[SenseNova-Studio](https://unify.light-ai.top/)** —— 一个 🆓 免费的在线体验平台，无需安装、无需 GPU，直接在浏览器中即可试用。
 
 > **注：** 为服务更多用户，U1-Fast 经过步数蒸馏和 CFG 蒸馏，专供信息图生成使用。
 
 
-### 🦞 使用 SenseNova-Skills（OpenClaw）
+#### 🦞 使用 SenseNova-Skills（OpenClaw）
 
 将 SenseNova-U1 集成进自己的智能体或应用，最简单的方式是使用配套仓库 **[SenseNova-Skills (OpenClaw) 🦞](https://github.com/OpenSenseNova/SenseNova-Skills)**——它将 SenseNova-U1 封装为开箱即用的技能，并提供统一的工具调用接口。
 
@@ -431,7 +530,7 @@ SenseNova U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 
 </details>
 
-### 🤗 使用 transformers 运行
+#### 🤗 使用 transformers 运行
 
 > **环境准备：** 按照[安装指南](./docs/installation_CN.md)克隆仓库并用 [uv](https://github.com/astral-sh/uv) 安装依赖。
 
@@ -485,11 +584,11 @@ python examples/interleave/inference.py --model_path sensenova/SenseNova-U1-8B-M
 > 显存性能分析请参见 [`性能分析`](./docs/gpu_mem_profiler_CN.md)。
 
 
-### 💾 低显存推理（GGUF + VRAM 模式）
+#### 💾 低显存推理（GGUF + VRAM 模式）
 
 针对单张消费级显卡的部署场景，我们在 `transformers` 路径上提供两项可独立启用、也可组合使用的低显存特性。
 
-#### GGUF 量化权重
+##### GGUF 量化权重
 
 在四个推理脚本（`t2i`、`editing`、`interleave`、`vqa`）中传入 `--gguf_checkpoint`，即可使用 `diffusers` GGUF Linear 层加载量化后的 `.gguf` 权重，替代原始 bf16 safetensors 权重。`--model_path` 仍需指定（用于加载 tokenizer / config 及非语言模型权重）。
 
@@ -511,11 +610,11 @@ python examples/t2i/inference.py \
 | SenseNova-U1 8B 系列变体 | 多个文件 | Q4 / Q6 / Q8 | 依文件而定 | [🤗 仓库](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/tree/main) |
 | SenseNova-U1.5-8B-MoT-Preview | `SenseNova-U1.5-8B-MoT-Preview-Q8.gguf` | Q8 | 19.9 GB | [🤗 下载](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) |
 
-使用 U1.5 时，`--model_path` 仍指向 `sensenova/SenseNova-U1.5-8B-MoT-Preview`，并通过 `--gguf_checkpoint` 传入下载的 Q8 文件。该权重属于社区贡献，由作者独立于 SenseNova 官方模型版本进行维护。
+使用上表中社区贡献的 **U1.5 预览版** GGUF 时，`--model_path` 应指向 `sensenova/SenseNova-U1.5-8B-MoT-Preview`，并通过 `--gguf_checkpoint` 传入下载的 Q8 文件。该量化权重针对预览版，不适用于正式版 `SenseNova-U1.5-8B-MoT`，并由社区贡献者独立于 SenseNova 官方模型版本进行维护。
 
 > 🙏 特别感谢 Hugging Face 用户 [smthem](https://huggingface.co/smthem) / GitHub [@smthemex](https://github.com/smthemex) 制作并持续维护这些社区量化权重。
 
-#### `--vram_mode`：单卡分层卸载
+##### `--vram_mode`：单卡分层卸载
 
 `--vram_mode` 用于控制语言模型层的驻留方式和 CPU→GPU 流式搬运，激活值仍保留在显卡上。
 
@@ -551,7 +650,7 @@ python examples/t2i/inference.py \
 `--gguf_checkpoint` 与 `--vram_mode` 可叠加：在 ~16 GB 消费卡上推荐使用 `Q4 GGUF + balanced` 组合。
 
 
-### ⚡ 使用 LightLLM + LightX2V 运行
+#### ⚡ 使用 LightLLM + LightX2V 运行
 
 面向生产环境的部署，我们在 **[LightLLM](https://github.com/ModelTC/lightllm)**（理解）和 **[LightX2V](https://github.com/ModelTC/lightx2v)**（生成）之上协同设计了一套专用推理栈。两个引擎以解耦方式运行，可以各自使用独立的并行策略与资源配额，中间通过低开销传输通道连接。
 
@@ -567,9 +666,11 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 >
 > 📖 **完整架构设计与性能剖析：** 参见 [`docs/inference_infra_CN.md`](./docs/inference_infra_CN.md)。
 
+</details>
+
 ## 🌐 加入社区！
 
-加入我们的社区，分享反馈、获取支持，并第一时间了解 SenseNova-U1 的最新进展 — 期待与你交流！
+加入我们的社区，分享反馈、获取支持，并第一时间了解 SenseNova-U1.5 与 SenseNova U1 系列的最新进展 — 期待与你交流！
 
 <div align="center">
 <table>

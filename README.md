@@ -1,4 +1,4 @@
-# SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture
+# SenseNova-Unify: Native Unified Multimodal Understanding, Generation, and Editing
 
 <p align="center">
   <strong>English</strong> | <a href="./README_CN.md">简体中文</a>
@@ -6,26 +6,29 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2605.12500"><img src="https://img.shields.io/badge/arXiv-2605.12500-b31b1b.svg" alt="arXiv"></a>
-  <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow" alt="HuggingFace Model"></a>
-  <a href="https://modelscope.cn/collections/SenseNova/SenseNova-U1"><img src="https://img.shields.io/badge/%F0%9F%A4%96%20ModelScope-模型-purple" alt="ModelScope-模型"></a>
-  <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U1-Demo-Green" alt="SenseNova-U1 Demo"></a>
+  <a href="https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1.5--8B--MoT-yellow" alt="SenseNova-U1.5-8B-MoT on Hugging Face"></a>
+  <a href="https://huggingface.co/blog/sensenova/neo-unify"><img src="https://img.shields.io/badge/Architecture-NEO--unify-2459B8" alt="NEO-unify"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
   <a href="https://discord.com/invite/BuTXPHmQub"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
-  <img src="docs/assets/teaser.webp" alt="SenseNova-U1" width="900">
+  <img src="docs/assets/teaser.webp" alt="SenseNova-U1.5 native unified multimodal architecture" width="100%">
 </p>
-
 <p align="center">
-  <img src="docs/assets/teaser_2.webp" alt="visualization" width="900">
+  <img src="docs/assets/teaser_2.webp" alt="SenseNova-U1.5 native unified multimodal architecture" width="100%">
 </p>
 
 ## 📣 Updated News
 
+- `[RELEASE_DATE]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT), the official U1.5 checkpoint. Compared with the Preview, this release brings stronger complex-instruction following, text rendering and layout, more stable native 4K generation, more reliable image editing, and finer visual control.
+
 - `[2026.08.04]` Community contributor [smthem on Hugging Face](https://huggingface.co/smthem) (GitHub [@smthemex](https://github.com/smthemex)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) (19.9 GB). Thank you for continuing to maintain and share quantized SenseNova-U1 weights with the community.
 
 - `[2026.07.31]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview). This preview focuses on native 4K image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
+
+<details>
+<summary>Click to expand older SenseNova U1 updates</summary>
 
 - `[2026.07.16]` Release [SenseNova-U1-8B-MoT-Infographic-V3 📊](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3), designed for integrated infographic generation and editing. It retains strong text-to-image (T2I) capabilities while significantly enhancing infographic editing, supporting localized text and content editing, global style editing, and global layout editing. See [✨ U1 Infographic Model Series](docs/u1_infographic_model.md) for model details and benchmark results. A corresponding supported [ComfyUI workflow](apps/comfyui/example_workflows/infographic_series_t2i_edit.json) is also available.
 
@@ -51,7 +54,70 @@
 
 - `[2026.04.27]` Initial release of the [inference code](https://github.com/OpenSenseNova/SenseNova-U1/blob/main/examples/README.md) for SenseNova-U1.  
 
+</details>
+
 ## 🌟 Overview
+
+### 🚀 SenseNova-U1.5-8B-MoT
+
+**[SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)** is our latest native unified multimodal checkpoint, designed for more accurate, consistent, and reliable real-world visual creation. Without increasing model scale, we redesigned and strengthened the data distribution, task formulation, structured visual-instruction supervision, expert-capability consolidation, and task-oriented post-training pipeline.
+
+Built on [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify), U1.5 models language and visual information end to end without separate visual encoders or VAEs. Its updated patch encoding and decoding layers support more continuous, high-resolution visual reconstruction.
+
+The official release focuses on six user-visible improvements:
+
+- **Higher-quality image generation:** stronger composition, color harmony, materials, textures, lighting, realism, and fine detail.
+- **Stronger complex-instruction following:** more consistent handling of subjects, object counts, spatial relationships, text, layouts, styles, and preservation requirements within one request.
+- **Better text rendering and complex layouts:** more legible Chinese and English text and more reliable information hierarchy in posters, infographics, brand assets, and other text-dense designs.
+- **More stable native 4K generation:** better global structure and local consistency across textures, materials, typography, and lighting at high resolution.
+- **More reliable native image editing:** stronger preservation of subject identity, geometry, spatial relationships, layouts, and unedited regions, with better local, text, multi-reference, insertion, and replacement edits.
+- **More precise visual control:** improved use of bounding boxes, visual markers, and single- or multi-image references to control specified regions and objects.
+
+During training, task-specialized expert models strengthen text and infographic rendering, aesthetic quality, and image editing. Their capabilities are consolidated into one unified checkpoint, so inference requires no expert routing or manual model selection. Task-oriented post-training further targets instruction adherence, global visual quality, and edit fidelity.
+
+#### Benchmarks
+
+`[U1.5_BENCHMARKS_TBD]`
+
+#### Showcases
+
+`[U1.5_SHOWCASES_TBD]`
+
+#### Best Practices
+
+For tasks with a clear subject and only a few constraints, a direct natural-language prompt is usually sufficient. For more demanding visual-design and editing tasks, we recommend:
+
+- **Short creative briefs:** use the [SenseNova Image PE Skill](src/sensenova_u1_5/prompt-enhancement-skill/SKILL.md) to expand the brief into a compact Render JSON prompt that preserves required subjects, visible copy, counts, layout constraints, and exclusions.
+- **Reference-driven creation:** when abstract style terms are insufficient, first select a strong reference image, then use the [Caption-to-Prompt script](src/sensenova_u1_5/caption/caption.py) to turn its composition, typography, color, material, and lighting decisions into an editable prompt.
+- **Image editing:** state both the requested change and what must remain unchanged. For complex edits, `--use-edit-pe` can expand a short instruction before inference; pre-scaling the input near 2048×2048 while preserving its aspect ratio is also recommended.
+- **CFG tuning:** start from the reference `cfg_scale=4.0`. If dense, high-frequency textures or vivid colors produce over-emphasized detail or oversaturation, gradually lower `cfg_scale`. Lower CFG can also weaken prompt adherence, so tune it per prompt and compare results.
+
+PE and Caption-to-Prompt are optional planning workflows external to the base model. PE-assisted examples and benchmark results should be labeled explicitly.
+
+#### Known Limitations
+
+The official release substantially improves the issues observed in the Preview, but challenging cases can still include:
+
+- Over-emphasized high-frequency detail or oversaturation for some prompts; this is sensitive to CFG and can often be mitigated by lowering `cfg_scale`.
+- Errors in very dense, lengthy, small, or mixed Chinese-English text.
+- Imperfect exact counts, alignment, or hierarchy in highly constrained layouts.
+- Instability in small faces, hands, limbs, and fine-grained object details.
+- Drift in broad, multi-turn, or multi-reference edits, especially when many regions must be preserved simultaneously.
+
+The official weights are available now on [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT).
+
+### SenseNova U1 (Previous Release)
+
+<details>
+<summary>Expand the original SenseNova U1 overview</summary>
+
+<p align="center">
+  <img src="docs/assets/teaser.webp" alt="SenseNova-U1" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/assets/teaser_2.webp" alt="SenseNova U1 visualization" width="900">
+</p>
 
 🚀 **SenseNova U1** is a new series of native multimodal models that unifies multimodal understanding, reasoning, and generation within a monolithic architecture. 
 It marks a fundamental paradigm shift in multimodal AI: **from modality integration to true unification**. Rather than relying on adapters to translate between modalities, SenseNova U1 models think-and-act across language and vision natively.
@@ -98,17 +164,21 @@ Powered by this new core architecture, SenseNova U1 delivers exceptional efficie
 - 🤖 Vision–Language–Action (VLA)
 - 🌐 World Modeling (WM)
 
+</details>
+
 ## 🦁 Models
 
-In this release, we are open-sourcing the SenseNova U1 Lite series in two sizes:
+The current flagship checkpoint is **SenseNova-U1.5-8B-MoT**. The model hub also retains the original SenseNova U1 checkpoints and task-specialized variants:
 
+- SenseNova U1.5-8B-MoT — current official U1.5 checkpoint
 - SenseNova U1-8B-MoT — dense backbone
 - SenseNova U1-A3B-MoT — MoE backbone
 
 
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
-| [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview.md) | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
+| **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
+| [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview.md) *(legacy preview)* | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |
 | SenseNova-U1-8B-MoT-Infographic-V2 | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) |
@@ -127,14 +197,19 @@ Although relatively compact by today’s standards, these models already show st
 > 💡 The `8B-MoT` in `SenseNova-U1-8B-MoT` refers to ~8B understanding parameters **and** ~8B generation parameters. See [parameter breakdown](docs/parameter_breakdown.md) for details.
  
 
-## 📋 ToDo List
+## 📚 SenseNova U1 (Previous Release)
+
+<details>
+<summary>Expand the original U1 project status, showcases, benchmarks, limitations, usage, and deployment resources</summary>
+
+### 📋 Project Status
 
 - [x] Training code of SenseNova-U1 
 
 - [x] Final weights and technical report of SenseNova-U1
 
 
-## 🎨 Showcases
+### 🎨 Showcases
 
 <details>
 <summary>🖼️ Text-to-Image (General)</summary>
@@ -354,7 +429,7 @@ Although relatively compact by today’s standards, these models already show st
 </details>
 
 
-## 📊 Key Benchmarks
+### 📊 Key Benchmarks
 
 <details>
 <summary>📝 Visual Understanding</summary>
@@ -385,7 +460,9 @@ Although relatively compact by today’s standards, these models already show st
 
 > Evaluation scripts and benchmark reproduction guides are added in [`evaluation`](./evaluation/README.md).
 
-## ⚠️ Ongoing Improvements
+### ⚠️ Ongoing Improvements
+
+The limitations below refer to the original SenseNova-U1 checkpoints. SenseNova-U1.5 limitations and its CFG-tuning note are documented in the U1.5 overview above.
 
 Despite strong performance across tasks, several limitations remain for improvement:
 
@@ -406,19 +483,18 @@ Despite strong performance across tasks, several limitations remain for improvem
 
 We view these areas as active directions and expect continued improvements in future iterations.
 
-
-## 🛠️ Quick Start
+### 🛠️ Usage and Deployment
 
 > 💡 **Tip:** If you encounter any issues during setup or running, please check our [FAQ](docs/FAQ.md).
 
-### 🌐 Use with SenseNova-Studio
+#### 🌐 Use with SenseNova-Studio
 
 The fastest way to experience SenseNova-U1 is through **[SenseNova-Studio](https://unify.light-ai.top/)** — a 🆓 free online playground where you can try the model directly in your browser, no installation or GPU required.
 
 > **Note:** To serve more users, U1-Fast has undergone step and CFG distillation, and is dedicated to infographic generation.
 
 
-### 🦞 Use with SenseNova-Skills (OpenClaw)
+#### 🦞 Use with SenseNova-Skills (OpenClaw)
 
 The easiest way to integrate SenseNova-U1 into your own agent or application is through our companion repository **[SenseNova-Skills (OpenClaw) 🦞](https://github.com/OpenSenseNova/SenseNova-Skills)**, which ships SenseNova-U1 as a ready-to-use skill with a unified tool-calling interface.
 
@@ -433,7 +509,7 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 
 </details>
 
-### 🤗 Run with transformers (Default)
+#### 🤗 Run with transformers (Default)
 
 > **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with [uv](https://github.com/astral-sh/uv).
 
@@ -487,11 +563,11 @@ python examples/interleave/inference.py --model_path sensenova/SenseNova-U1-8B-M
 > See [`docs/gpu_mem_profiler.md`](./docs/gpu_mem_profiler.md) for GPU memory profiler.
 
 
-### 💾 Memory-efficient inference (GGUF + VRAM modes)
+#### 💾 Memory-efficient inference (GGUF + VRAM modes)
 
 For users running on a single consumer GPU, two complementary features lower the VRAM footprint of the `transformers` path. They can be combined freely.
 
-#### GGUF quantized checkpoints
+##### GGUF quantized checkpoints
 
 Pass `--gguf_checkpoint` to any of the four inference scripts (`t2i`, `editing`, `interleave`, `vqa`) to load a quantized `.gguf` file via the `diffusers` GGUF Linear layer instead of the bf16 safetensors weights. The base `--model_path` is still required (for tokenizer / config / non-LM weights).
 
@@ -513,11 +589,11 @@ Community-maintained GGUF weights are available at:
 | SenseNova-U1 8B variants | Multiple files | Q4 / Q6 / Q8 | Varies | [🤗 Repository](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/tree/main) |
 | SenseNova-U1.5-8B-MoT-Preview | `SenseNova-U1.5-8B-MoT-Preview-Q8.gguf` | Q8 | 19.9 GB | [🤗 Download](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) |
 
-For U1.5, keep `--model_path` pointed at `sensenova/SenseNova-U1.5-8B-MoT-Preview` and pass the downloaded Q8 file through `--gguf_checkpoint`. The checkpoint is a community contribution and is maintained independently from the official SenseNova model releases.
+For the community **U1.5 Preview** GGUF listed above, keep `--model_path` pointed at `sensenova/SenseNova-U1.5-8B-MoT-Preview` and pass the downloaded Q8 file through `--gguf_checkpoint`. This quantization targets the Preview checkpoint, not the official `SenseNova-U1.5-8B-MoT` release. It is maintained by the contributor independently from the official SenseNova model releases.
 
 > 🙏 Thanks to Hugging Face user [smthem](https://huggingface.co/smthem) / GitHub [@smthemex](https://github.com/smthemex) for creating and maintaining these quantized weights for the community.
 
-#### `--vram_mode`: single-GPU layer offload
+##### `--vram_mode`: single-GPU layer offload
 
 Pass `--vram_mode` to control language-model layer residency and CPU-to-GPU streaming while keeping activations on-device.
 
@@ -555,7 +631,7 @@ python examples/t2i/inference.py \
 `--gguf_checkpoint` and `--vram_mode` compose: a Q4 GGUF + `balanced` is the recommended setup for ~10–12 GB consumer cards.
 
 
-### ⚡ Run with LightLLM + LightX2V (Recommended)
+#### ⚡ Run with LightLLM + LightX2V (Recommended)
 
 For production serving, we co-design a dedicated inference stack on top of **[LightLLM](https://github.com/ModelTC/lightllm)** (understanding) and **[LightX2V](https://github.com/ModelTC/lightx2v)** (generation). The two engines are disaggregated so that each path can use its own parallelism and resource budget, with a low-overhead transfer channel in between.
 
@@ -571,10 +647,11 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 >
 > 📖 **Full design and performance profiling:** see [`docs/inference_infra.md`](./docs/inference_infra.md).
 
+</details>
 
 ## 🌐 Join the Community!
 
-Join our growing community to share feedback, get support, and stay updated on the latest SenseNova-U1 developments — we'd love to hear from you!
+Join our growing community to share feedback, get support, and stay updated on the latest SenseNova-U1.5 and SenseNova U1 family developments — we'd love to hear from you!
 
 <div align="center">
 <table>
