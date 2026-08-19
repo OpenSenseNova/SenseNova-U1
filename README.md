@@ -58,7 +58,7 @@
 
 ## 🌟 Overview
 
-### 🚀 SenseNova-U1.5-8B-MoT
+### 🚀 SenseNova-U1.5
 
 **[SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)** is our latest native unified multimodal checkpoint, designed for more accurate, consistent, and reliable real-world visual creation. Without increasing model scale, we redesigned and strengthened the data distribution, task formulation, structured visual-instruction supervision, expert-capability consolidation, and task-oriented post-training pipeline.
 
