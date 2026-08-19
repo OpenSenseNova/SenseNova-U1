@@ -1,4 +1,5 @@
-# SenseNova-Unify: Native Unified Multimodal Understanding, Generation, and Editing
+# SenseNova-U series: Native Unified Paradigm with NEO-unify from the First Principles
+
 
 <p align="center">
   <strong>English</strong> | <a href="./README_CN.md">简体中文</a>
@@ -6,7 +7,8 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2605.12500"><img src="https://img.shields.io/badge/arXiv-2605.12500-b31b1b.svg" alt="arXiv"></a>
-  <a href="https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1.5--8B--MoT-yellow" alt="SenseNova-U1.5-8B-MoT on Hugging Face"></a>
+  <a href="https://huggingface.co/collections/sensenova/sensenova-u15"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1.5-yellow" alt="SenseNova-U1.5 on Hugging Face"></a>
+   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1-yellow" alt="SenseNova-U1 on Hugging Face"></a>
   <a href="https://huggingface.co/blog/sensenova/neo-unify"><img src="https://img.shields.io/badge/Architecture-NEO--unify-2459B8" alt="NEO-unify"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
   <a href="https://discord.com/invite/BuTXPHmQub"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
@@ -21,7 +23,7 @@
 
 ## 📣 Updated News
 
-- `[RELEASE_DATE]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT), the official U1.5 checkpoint. Compared with the Preview, this release brings stronger complex-instruction following, text rendering and layout, more stable native 4K generation, more reliable image editing, and finer visual control.
+- `[RELEASE_DATE]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) that further improves instruction following, text and layout, native 4K generation, image editing, and visual control. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release.
 
 - `[2026.08.04]` Community contributor [smthem on Hugging Face](https://huggingface.co/smthem) (GitHub [@smthemex](https://github.com/smthemex)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) (19.9 GB). Thank you for continuing to maintain and share quantized SenseNova-U1 weights with the community.
 
@@ -60,20 +62,16 @@
 
 ### 🚀 SenseNova-U1.5
 
-**[SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)** is our latest native unified multimodal checkpoint, designed for more accurate, consistent, and reliable real-world visual creation. Without increasing model scale, we redesigned and strengthened the data distribution, task formulation, structured visual-instruction supervision, expert-capability consolidation, and task-oriented post-training pipeline.
-
-Built on [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify), U1.5 models language and visual information end to end without separate visual encoders or VAEs. Its updated patch encoding and decoding layers support more continuous, high-resolution visual reconstruction.
+**[SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)** is our latest native unified multimodal checkpoint for more accurate, consistent, reliable, and aesthetically compelling visual creation. Built on [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify), we further strengthen the patchify layers, data distribution, task formulation, structured visual-instruction supervision, expert consolidation, and post-training pipeline.
 
 The official release focuses on six user-visible improvements:
 
-- **Higher-quality image generation:** stronger composition, color harmony, materials, textures, lighting, realism, and fine detail.
-- **Stronger complex-instruction following:** more consistent handling of subjects, object counts, spatial relationships, text, layouts, styles, and preservation requirements within one request.
-- **Better text rendering and complex layouts:** more legible Chinese and English text and more reliable information hierarchy in posters, infographics, brand assets, and other text-dense designs.
-- **More stable native 4K generation:** better global structure and local consistency across textures, materials, typography, and lighting at high resolution.
-- **More reliable native image editing:** stronger preservation of subject identity, geometry, spatial relationships, layouts, and unedited regions, with better local, text, multi-reference, insertion, and replacement edits.
-- **More precise visual control:** improved use of bounding boxes, visual markers, and single- or multi-image references to control specified regions and objects.
-
-During training, task-specialized expert models strengthen text and infographic rendering, aesthetic quality, and image editing. Their capabilities are consolidated into one unified checkpoint, so inference requires no expert routing or manual model selection. Task-oriented post-training further targets instruction adherence, global visual quality, and edit fidelity.
+- **Higher-quality image generation:** improved composition, color harmony, material rendering, lighting, realism, and fine-grained detail.
+- **Better text rendering and infographic generation:** more legible Chinese and English text, with clearer information hierarchy in posters, infographics, brand assets, and other text-dense designs.
+- **More efficient native 4K generation:** more coherent global structure and stable high-resolution output with improved generation efficiency.
+- **More reliable native image editing:** stronger preservation of subject identity and unedited content across local, text, multi-reference, insertion, and replacement edits.
+- **Stronger complex-instruction following:** more consistent execution of object counts, spatial relationships, layouts, styles, and multiple constraints within a single request.
+- **More precise visual control:** more accurate region- and object-level control through bounding boxes, visual markers, and single- or multi-image references.
 
 #### Benchmarks
 
