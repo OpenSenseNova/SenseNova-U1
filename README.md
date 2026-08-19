@@ -16,7 +16,7 @@
   <img src="docs/assets/teaserU1.5.png" alt="SenseNova-U1.5 native unified multimodal architecture" width="100%">
 </p>
 <p align="center">
-  <img src="docs/assets/teaser_u1.5_2.webp" alt="SenseNova-U1.5 native unified multimodal architecture" width="100%">
+  <img src="docs/assets/u1.5_teaser2.webp" alt="SenseNova-U1.5 native unified multimodal architecture" width="100%">
 </p>
 
 ## 📣 Updated News
