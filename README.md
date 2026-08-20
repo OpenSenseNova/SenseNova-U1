@@ -20,7 +20,7 @@
 
 ## 📣 Updated News
 
-- `[RELEASE_DATE]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) that further improves instruction following, text and layout, native 4K generation, image editing, and visual control. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release.
+- `[2026.08.20]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) that further improves instruction following, text and layout, native 4K generation, image editing, and visual control. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release.
 
 - `[2026.08.04]` Community contributor [smthem on Hugging Face](https://huggingface.co/smthem) (GitHub [@smthemex](https://github.com/smthemex)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) (19.9 GB). Thank you for continuing to maintain and share quantized SenseNova-U1 weights with the community.
 
@@ -620,7 +620,6 @@ The current flagship checkpoint is **[SenseNova-U1.5-8B-MoT](https://huggingface
 - SenseNova-U1-8B-MoT — dense + MoT backbone
 - SenseNova-U1-A3B-MoT — MoE + MoT backbone
 
-
 | Model | Params | HF Weights |
 | :---- | :------- | :--------- |
 | **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
@@ -631,15 +630,11 @@ The current flagship checkpoint is **[SenseNova-U1.5-8B-MoT](https://huggingface
 | SenseNova-U1-8B-MoT-Infographic-V2 | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) |
 | SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
 | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
-| 
-SenseNova-U1-8B-MoT-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors)
-**SenseNova-U1-8B-MoT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT)
-**SenseNova-U1-8B-MoT-SFT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT)|
-|  |
-|  |
-|  |
-| SenseNova-U1-A3B-MoT | A3B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT)
-SenseNova-U1-A3B-MoT-SFT | A3B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT)|
+| SenseNova-U1-8B-MoT-LoRA-8step-V1.0 | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors) |
+| **SenseNova-U1-8B-MoT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
+| **SenseNova-U1-8B-MoT-SFT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT)|
+| SenseNova-U1-A3B-MoT | A3B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT) |
+| SenseNova-U1-A3B-MoT-SFT | A3B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT)|
 
 Here **SFT models** (*×32 downsampling ratio*) are trained via Understanding Warmup, Generation Pre-training, Unified Mid-training, and Unified SFT, with **final models** obtained after Multi-Expert RL and OPD training.
 
