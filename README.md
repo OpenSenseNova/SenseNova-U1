@@ -91,6 +91,18 @@ The official release focuses on six user-visible improvements:
 
 </details>
 
+### ⚡ Performance vs. Speed
+
+<p align="center">
+  <img src="docs/assets/u15_perform_vs_speed_6bench.webp" alt="SenseNova-U1.5 generation performance versus speed" width="80%">
+</p>
+
+<p align="center">
+  <sub>
+    Generation Latency vs. Averaging Performance on OneIG (EN, ZH), LongText (EN, ZH), BizGenEval (Easy, Hard), CVTG, IGenBench and Qwen-Image-Bench.
+  </sub>
+</p>
+
 ### 🎦 Best Practices
 
 Direct natural-language prompts work well for clear tasks with few constraints. For complex generation or editing, use PE when additional planning is needed, explicitly specify what should remain unchanged, and gradually lower `cfg_scale` if high-frequency details or colors become overemphasized. See the **[U1.5 Showcases and Best Practices guide](docs/u1.5_best_practices.md)** for workflow recommendations, setup instructions, and visual comparisons. SenseNova U1.5 will also be available on **[SenseNova-Studio](https://unify.light-ai.top/)**, where everyone can experience the model directly.

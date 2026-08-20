@@ -89,6 +89,18 @@
 
 </details>
 
+### ⚡ 性能与速度
+
+<p align="center">
+  <img src="docs/assets/u15_perform_vs_speed_6bench.webp" alt="SenseNova-U1.5 生成性能与速度对比" width="80%">
+</p>
+
+<p align="center">
+  <sub>
+    在 OneIG（EN、ZH）、LongText（EN、ZH）、BizGenEval（Easy、Hard）、CVTG、IGenBench 与 Qwen-Image-Bench 上的生成延迟与平均性能对比。
+  </sub>
+</p>
+
 ### 🎦 最佳实践
 
 对于主体明确、约束较少的任务，直接使用自然语言 Prompt 通常即可。复杂生成或编辑任务可在需要额外规划时使用 PE，同时明确写出必须保持不变的内容；如果高频细节或色彩过强，可逐步降低 `cfg_scale`。工作流建议、安装说明和可视化对比请参见 **[U1.5 效果展示与最佳实践](docs/u1.5_best_practices_CN.md)**。SenseNova U1.5 也将在 **[SenseNova-Studio](https://unify.light-ai.top/)** 上线，届时大家可以直接体验模型。
