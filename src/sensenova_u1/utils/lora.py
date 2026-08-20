@@ -23,8 +23,8 @@ def load_and_merge_lora_weight(
             key, lora_down_key, lora_up_key, is_native_weight
         )
         if lora_down_name in lora_state_dict:
-            lora_down = lora_state_dict[lora_down_name]
-            lora_up = lora_state_dict[lora_up_name]
+            lora_down = lora_state_dict[lora_down_name].to(dtype=torch.float32)
+            lora_up = lora_state_dict[lora_up_name].to(dtype=torch.float32)
             lora_alpha = float(lora_state_dict[lora_alpha_name])
             rank = lora_down.shape[0]
             scaling_factor = lora_alpha / rank

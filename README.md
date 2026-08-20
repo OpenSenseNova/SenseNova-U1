@@ -20,7 +20,7 @@
 
 ## 📣 Updated News
 
-- `[2026.08.20]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) that further improves instruction following, text and layout, native 4K generation, image editing, and visual control. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release. An 8-step DMD model for faster and more efficient inference is also coming soon.
+- `[2026.08.20]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT), which further improves instruction following, text and layout, native 4K generation, image editing, and visual control. Alongside the base checkpoint, we release [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) for faster and more efficient inference; see [example script](docs/base_vs_distill.md#sensenova-u15-recommended) for usage. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release.
 
 - `[2026.08.04]` Community contributor [smthem on Hugging Face](https://huggingface.co/smthem) (GitHub [@smthemex](https://github.com/smthemex)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) (19.9 GB). Thank you for continuing to maintain and share quantized SenseNova-U1 weights with the community.
 
@@ -624,6 +624,7 @@ The current flagship checkpoint is **[SenseNova-U1.5-8B-MoT](https://huggingface
 | :---- | :------- | :--------- |
 | **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
 | **SenseNova-U1.5-8B-MoT-SFT** | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |
+| **SenseNova-U1.5-8B-MoT-LoRA-8step** | 0.4B | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) |
 | [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview.md) | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 link](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |

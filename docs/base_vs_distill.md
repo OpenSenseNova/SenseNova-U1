@@ -1,12 +1,47 @@
-# Base (100 NFE) vs Distilled (8 NFE)
+# Base vs 8-Step Inference
 
 [← Back to README](../README.md).
 
 ## Run Base and Distilled Model
 
+The current release is [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT). For faster text-to-image inference, apply the [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) weight to this official base checkpoint.
+
+### SenseNova-U1.5 (Recommended)
+
 ```bash
-# Taking T2I for example
-# Run Base
+python examples/t2i/inference.py \
+    --model_path sensenova/SenseNova-U1.5-8B-MoT \
+    --jsonl examples/t2i/data/samples.jsonl \
+    --output_dir outputs/u1_5_base/ \
+    --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
+    --profile
+```
+
+Download and run the 8-step LoRA:
+
+```bash
+hf download sensenova/SenseNova-U1.5-8B-MoT-LoRAs \
+    SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors \
+    --local-dir ./sensenova/SenseNova-U1.5-8B-MoT-LoRAs
+
+python examples/t2i/inference.py \
+    --model_path sensenova/SenseNova-U1.5-8B-MoT \
+    --lora_path ./sensenova/SenseNova-U1.5-8B-MoT-LoRAs/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors \
+    --jsonl examples/t2i/data/samples.jsonl \
+    --output_dir outputs/u1_5_8step/ \
+    --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
+    --profile
+```
+
+> [!IMPORTANT]
+> The U1.5 8-step LoRA is intended for `sensenova/SenseNova-U1.5-8B-MoT`, not the earlier `SenseNova-U1.5-8B-MoT-Preview` checkpoint.
+
+### Original SenseNova-U1 Checkpoints
+
+The commands and comparison galleries below are retained for users of the original SenseNova-U1 release.
+
+```bash
+# Run the base checkpoint
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/t2i/data/samples.jsonl \
@@ -14,8 +49,7 @@ python examples/t2i/inference.py \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
 
-
-# Run 8-step preview model (deprecated)
+# Run the deprecated 8-step preview checkpoint
 python examples/t2i/inference.py \
     --model_path SenseNova-U1-8B-MoT-8step-preview \
     --jsonl examples/t2i/data/samples.jsonl \
@@ -23,7 +57,7 @@ python examples/t2i/inference.py \
     --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
     --profile
 
-# Run 8-step LoRA
+# Run the 8-step LoRA
 huggingface-cli download sensenova/SenseNova-U1-8B-MoT-LoRAs --include "SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors" --local-dir ./sensenova/SenseNova-U1-8B-MoT-LoRAs/ --local-dir-use-symlinks False
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT \
@@ -33,7 +67,7 @@ python examples/t2i/inference.py \
     --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
     --profile
 
-# Run Infofraphics Base
+# Run the Infographic base checkpoint
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
     --jsonl examples/t2i/data/samples_infographic.jsonl \
@@ -41,7 +75,7 @@ python examples/t2i/inference.py \
     --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
     --profile
 
-# Run 8-step Infographic LoRA
+# Run the 8-step Infographic LoRA
 huggingface-cli download sensenova/SenseNova-U1-8B-MoT-LoRAs --include "SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors" --local-dir ./sensenova/SenseNova-U1-8B-MoT-LoRAs/ --local-dir-use-symlinks False
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
@@ -55,6 +89,8 @@ python examples/t2i/inference.py \
 ---
 
 ## Infographic Text-to-Image
+
+The following galleries compare the original SenseNova-U1 checkpoints; they do not show SenseNova-U1.5 results.
 
 | SenseNova-U1-8B-MoT-Infographic (100 NFE) | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0（8 NFE） |
 |---|---|

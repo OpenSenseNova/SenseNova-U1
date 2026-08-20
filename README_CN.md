@@ -19,7 +19,7 @@
 
 ## 📣 最新动态
 
-- `[2026.08.20]` 正式发布 [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)，进一步提升指令遵循、文字与版式、原生 4K 生成、图像编辑和视觉控制能力。我们也在准备技术报告和从 SFT、RL 到 MOPD 的完整训练流程，后续将陆续开源。此外，用于实现更快速、更高效推理的 8-step DMD 模型也即将发布。
+- `[2026.08.20]` 正式发布 [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)，进一步提升指令遵循、文字与版式、原生 4K 生成、图像编辑和视觉控制能力；同时发布 [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors)，用于更快速、更高效的推理，使用方法参见[推理示例脚本](docs/base_vs_distill.md#sensenova-u15-recommended)。我们也在准备技术报告和从 SFT、RL 到 MOPD 的完整训练流程，后续将陆续开源。
 
 - `[2026.08.04]` 社区贡献者 Hugging Face 用户 [smthem](https://huggingface.co/smthem)（GitHub [@smthemex](https://github.com/smthemex)）发布了 [SenseNova-U1.5-8B-MoT-Preview 的 Q8 GGUF 权重](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf)（19.9 GB）。感谢作者持续维护并向社区分享 SenseNova-U1 系列量化权重。
 
@@ -613,6 +613,7 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 | :---- | :------- | :--------- |
 | **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
 | **SenseNova-U1.5-8B-MoT-SFT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |
+| **SenseNova-U1.5-8B-MoT-LoRA-8step** | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) |
 | [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview.md) | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |
