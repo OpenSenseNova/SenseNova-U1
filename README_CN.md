@@ -1,4 +1,4 @@
-# SenseNova-U 系列：基于 NEO-unify、从第一性原理出发的原生统一范式
+# SenseNova-U 系列：从第一性原理出发基于 NEO-unify的原生统一范式
 
 <p align="center">
   <a href="./README.md">English</a> | <strong>简体中文</strong>
@@ -627,7 +627,7 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 | **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
 | **SenseNova-U1.5-8B-MoT-SFT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |
 | **SenseNova-U1.5-8B-MoT-LoRA-8step** | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) |
-| [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview.md) | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
+| SenseNova-U1.5-8B-MoT-Preview | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |
 | SenseNova-U1-8B-MoT-Infographic-V2 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) |
