@@ -20,7 +20,7 @@
 
 ## 📣 Updated News
 
-- `[2026.08.20]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) that further improves instruction following, text and layout, native 4K generation, image editing, and visual control. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release.
+- `[2026.08.20]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) that further improves instruction following, text and layout, native 4K generation, image editing, and visual control. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release. An 8-step DMD model for faster and more efficient inference is also coming soon.
 
 - `[2026.08.04]` Community contributor [smthem on Hugging Face](https://huggingface.co/smthem) (GitHub [@smthemex](https://github.com/smthemex)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) (19.9 GB). Thank you for continuing to maintain and share quantized SenseNova-U1 weights with the community.
 

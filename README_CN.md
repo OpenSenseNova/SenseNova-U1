@@ -19,7 +19,7 @@
 
 ## 📣 最新动态
 
-- `[RELEASE_DATE]` 正式发布 [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)，进一步提升指令遵循、文字与版式、原生 4K 生成、图像编辑和视觉控制能力。我们也在准备技术报告和从 SFT、RL 到 MOPD 的完整训练流程，后续将陆续开源。
+- `[2026.08.20]` 正式发布 [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)，进一步提升指令遵循、文字与版式、原生 4K 生成、图像编辑和视觉控制能力。我们也在准备技术报告和从 SFT、RL 到 MOPD 的完整训练流程，后续将陆续开源。此外，用于实现更快速、更高效推理的 8-step DMD 模型也即将发布。
 
 - `[2026.08.04]` 社区贡献者 Hugging Face 用户 [smthem](https://huggingface.co/smthem)（GitHub [@smthemex](https://github.com/smthemex)）发布了 [SenseNova-U1.5-8B-MoT-Preview 的 Q8 GGUF 权重](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf)（19.9 GB）。感谢作者持续维护并向社区分享 SenseNova-U1 系列量化权重。
 
@@ -609,24 +609,24 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 - SenseNova-U1-8B-MoT — Dense + MoT 主干网络
 - SenseNova-U1-A3B-MoT — MoE + MoT 主干网络
 
-
-| 模型 | 参数量 | HF 权重 |
-| :---- | :----- | :------ |
+| 模型 | 参数量 | HF 权重   |
+| :---- | :------- | :--------- |
 | **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
 | **SenseNova-U1.5-8B-MoT-SFT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |
-| [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview_CN.md) | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
+| [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview.md) | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |
 | SenseNova-U1-8B-MoT-Infographic-V2 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V2) |
 | SenseNova-U1-8B-MoT-Infographic | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic) |
 | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
-| SenseNova-U1-8B-MoT-SFT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT) |
-| SenseNova-U1-8B-MoT | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
 | SenseNova-U1-8B-MoT-LoRA-8step-V1.0 | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors) |
-| SenseNova-U1-A3B-MoT-SFT | A3B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT) |
+| **SenseNova-U1-8B-MoT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT) |
+| **SenseNova-U1-8B-MoT-SFT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT)|
 | SenseNova-U1-A3B-MoT | A3B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT) |
+| SenseNova-U1-A3B-MoT-SFT | A3B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT)|
 
-其中 **SFT 模型**（*×32 下采样比例*）经过理解预热、生成预训练、统一中期训练和统一 SFT 四个阶段训练；**最终模型**则在其基础上进一步进行了一轮 T2I 强化学习（RL）训练。
+
+其中，**微调模型（SFT）**（*×32 下采样比例*）经过理解预热、生成预训练、统一中期训练和统一微调训练四个阶段；**最终模型**则在其基础上进一步进行多专家强化学习和在线蒸馏训练。
 
 > 💡 `SenseNova-U1-8B-MoT` 中的 `8B-MoT` 指的是约 8B 理解参数**与**约 8B 生成参数。详细信息请参见[模型参数分解](docs/parameter_breakdown_CN.md)。
 
