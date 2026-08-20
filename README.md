@@ -11,6 +11,7 @@
    <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1-yellow" alt="SenseNova-U1 on Hugging Face"></a>
   <a href="https://huggingface.co/blog/sensenova/neo-unify"><img src="https://img.shields.io/badge/Architecture-NEO--unify-2459B8" alt="NEO-unify"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
+  <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U-Demo-Green" alt="SenseNova-U Demo"></a>
   <a href="https://discord.com/invite/BuTXPHmQub"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
@@ -92,7 +93,7 @@ The official release focuses on six user-visible improvements:
 
 ### 🎦 Best Practices
 
-Direct natural-language prompts work well for clear tasks with few constraints. For complex generation or editing, use PE when additional planning is needed, explicitly specify what should remain unchanged, and gradually lower `cfg_scale` if high-frequency details or colors become overemphasized. See the **[U1.5 Showcases and Best Practices guide](docs/u1.5_best_practices.md)** for workflow recommendations, setup instructions, and visual comparisons. SenseNova U1.5 will also be available soon on SenseNova-Studio, where everyone can experience the model directly.
+Direct natural-language prompts work well for clear tasks with few constraints. For complex generation or editing, use PE when additional planning is needed, explicitly specify what should remain unchanged, and gradually lower `cfg_scale` if high-frequency details or colors become overemphasized. See the **[U1.5 Showcases and Best Practices guide](docs/u1.5_best_practices.md)** for workflow recommendations, setup instructions, and visual comparisons. SenseNova U1.5 will also be available on **[SenseNova-Studio](https://unify.light-ai.top/)**, where everyone can experience the model directly.
 
 ### ⚠️ Ongoing Improvements
 

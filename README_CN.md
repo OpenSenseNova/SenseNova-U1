@@ -10,6 +10,7 @@
   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1-yellow" alt="Hugging Face 上的 SenseNova-U1"></a>
   <a href="https://huggingface.co/blog/sensenova/neo-unify"><img src="https://img.shields.io/badge/Architecture-NEO--unify-2459B8" alt="NEO-unify"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
+  <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U-Demo-Green" alt="SenseNova-U Demo"></a>
   <a href="https://discord.com/invite/BuTXPHmQub"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
@@ -90,7 +91,7 @@
 
 ### 🎦 最佳实践
 
-对于主体明确、约束较少的任务，直接使用自然语言 Prompt 通常即可。复杂生成或编辑任务可在需要额外规划时使用 PE，同时明确写出必须保持不变的内容；如果高频细节或色彩过强，可逐步降低 `cfg_scale`。工作流建议、安装说明和可视化对比请参见 **[U1.5 效果展示与最佳实践](docs/u1.5_best_practices_CN.md)**。
+对于主体明确、约束较少的任务，直接使用自然语言 Prompt 通常即可。复杂生成或编辑任务可在需要额外规划时使用 PE，同时明确写出必须保持不变的内容；如果高频细节或色彩过强，可逐步降低 `cfg_scale`。工作流建议、安装说明和可视化对比请参见 **[U1.5 效果展示与最佳实践](docs/u1.5_best_practices_CN.md)**。SenseNova U1.5 也将在 **[SenseNova-Studio](https://unify.light-ai.top/)** 上线，届时大家可以直接体验模型。
 
 ### ⚠️ 进行中的改进
 
