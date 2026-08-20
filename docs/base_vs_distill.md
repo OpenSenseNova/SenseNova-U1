@@ -1,4 +1,4 @@
-# Base vs 8-Step Inference
+# Base (100 NFE) vs Distilled (8 NFE)
 
 [← Back to README](../README.md).
 
