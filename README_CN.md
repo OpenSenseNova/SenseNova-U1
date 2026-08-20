@@ -640,7 +640,7 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 | SenseNova-U1-A3B-MoT-SFT | A3B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT)|
 
 
-其中，**微调模型（SFT）**（*×32 下采样比例*）经过理解预热、生成预训练、统一中期训练和统一微调训练四个阶段；**最终模型**则在其基础上进一步进行多专家强化学习和在线蒸馏训练。
+其中，**微调模型**（*×32 下采样比例*）分别经过理解预热训练、生成预训练、统一中期训练和统一微调训练等四个阶段；**最终模型**则在此基础上进一步进行多专家强化学习和在线蒸馏训练。
 
 > 💡 `SenseNova-U1-8B-MoT` 中的 `8B-MoT` 指的是约 8B 理解参数**与**约 8B 生成参数。详细信息请参见[模型参数分解](docs/parameter_breakdown_CN.md)。
 
