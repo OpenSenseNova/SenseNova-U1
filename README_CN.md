@@ -613,6 +613,7 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 | 模型 | 参数量 | HF 权重 |
 | :---- | :----- | :------ |
 | **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
+| **SenseNova-U1.5-8B-MoT-SFT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |
 | [SenseNova-U1.5-8B-MoT-Preview](docs/u1.5_preview_CN.md) | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |
