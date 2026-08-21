@@ -5,3 +5,4 @@ history-pattern test: update U1.5 readme
 history-pattern test: modify the readme
 history-pattern test: docs/update readme
 native-marker test: fixup
+native-marker test: squash
