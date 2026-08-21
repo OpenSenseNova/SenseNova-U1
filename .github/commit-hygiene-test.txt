@@ -1,3 +1,4 @@
 commit hygiene test iteration 1
 commit hygiene test iteration 2
 commit hygiene test iteration 3
+history-pattern test: update U1.5 readme
