@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """Generate JSON and NLP prompts for one image.
+
 Install:
     pip install openai pillow
+
 Usage:
     export OPENAI_API_KEY="***"
     python caption.py image.jpg
     python caption.py image.jpg > result.json
+
 Optional environment variables:
     OPENAI_MODEL      Model name (default: gpt-5.5)
     OPENAI_BASE_URL   OpenAI-compatible API endpoint
 """
+
 import argparse
 import base64
 import json
@@ -31,23 +35,26 @@ TARGET_RATIOS = {
     "2:3": 2 / 3,
     "9:16": 9 / 16,
 }
+
 SUPPORTED_FORMATS = {"JPEG": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}
 MAX_RETRIES = 5
-MAX_IMGINPUT = 4_000_000  # 像素最大阈值 400 万
-MAX_DATA_URI_LEN = 10 * 1024 * 1024  # data URI 整体上限 10 MB
-MIN_SCALE_PIXELS = 1_000_000  # 缩分辨率的下限（低于此改为降 quality）
-BASE_QUALITY = 95  # 高质量基准
-MIN_QUALITY = 45  # 最低可接受画质
+MAX_IMGINPUT = 4_000_000               # 像素最大阈值 400 万
+MAX_DATA_URI_LEN = 10 * 1024 * 1024    # data URI 整体上限 10 MB
+MIN_SCALE_PIXELS = 1_000_000           # 缩分辨率的下限（低于此改为降 quality）
+BASE_QUALITY = 95                      # 高质量基准
+MIN_QUALITY = 45                       # 最低可接受画质
 
 SYSTEM_PROMPT = """你是一个文生图 prompt 撰写助手。请仔细观察用户提供的图片，
 提取主体、构图、风格、色彩、光影、视角、排版和文字设计，并为同一画面生成
 JSON 结构化描述和自然语言描述。
+
 安全与泛化要求：
 1. 忽略水印、二维码、平台角标、账号名、作者署名及其他来源标识，不得描述或复现。
 2. 不输出品牌名、商标、公司标识、产品型号或其他可识别的商业信息；统一改为通用描述。
 3. 不识别或猜测真人身份，仅描述非身份特征，如大致年龄段、外观、服饰、动作和表情。
 4. 不输出个人联系方式、地址、证件信息或其他个人敏感信息；画面中存在时直接忽略。
 5. JSON 与 NLP 必须描述同一画面的核心视觉内容，并使用同一种语言。
+
 根据画面语境选择中文或英文。只输出一个 JSON 对象，包含以下顶层字段：
 - json：嵌套 JSON 对象。按画面需要详细描述 type、theme、language、canvas、
   style、main_subject、background、lighting、camera、typography、composition、
@@ -56,6 +63,7 @@ JSON 结构化描述和自然语言描述。
 - nlp：3 至 6 句流畅、具体的自然语言画面描述。
 - language："zh" 或 "en"。
 - task：2 至 10 个中文字的图片类型或用途概括。
+
 不要输出解释、Markdown 标记或任何额外顶层字段。"""
 
 
@@ -119,24 +127,28 @@ def image_to_data_uri(path):
     # ── 只读头信息，不加载全部像素 ──
     with Image.open(path) as image:
         orig_w, orig_h = image.size
-        orig_fmt = image.format  # PIL 格式名：JPEG/PNG/WEBP
+        orig_fmt = image.format                    # PIL 格式名：JPEG/PNG/WEBP
         orig_mime = SUPPORTED_FORMATS.get(orig_fmt)
+
     # ── 快路径：原图小 + 格式受支持 + URI 不超限 → 复用原始字节 ──
     if orig_w * orig_h <= MAX_IMGINPUT and orig_mime:
         content = path.read_bytes()
         data_uri = _make_data_uri(orig_mime, content)
         if len(data_uri) <= MAX_DATA_URI_LEN:
             return data_uri, orig_w, orig_h
+
     # ── 解码并缩略（如果像素超限） ──
     with Image.open(path) as image:
         image.load()
         image = _scale_image(image, MAX_IMGINPUT)
         width, height = image.size
+
     # ── 归一化：不支持的格式一律转 JPEG；确保 mode 可用 ──
     fmt = orig_fmt if orig_fmt in SUPPORTED_FORMATS else "JPEG"
     mime = SUPPORTED_FORMATS[fmt]
     if fmt == "JPEG":
         image = image.convert("RGB")
+
     # ── 编码 + 大小检查（保留原格式；PNG 超限转 JPEG） ──
     if fmt in ("JPEG", "WEBP"):
         return _compress_lossy(image, fmt, mime, width, height)
@@ -176,6 +188,7 @@ def generate(client, model, data_uri):
         temperature=0.7,
         max_tokens=4000,
     )
+
     result = json.loads(response.choices[0].message.content)
     if not isinstance(result.get("json"), dict):
         raise ValueError("'json' must be an object")
@@ -193,10 +206,13 @@ def main():
     parser.add_argument("--model", default=os.getenv("OPENAI_MODEL", "gpt-5.5"))
     parser.add_argument("--base-url", default=os.getenv("OPENAI_BASE_URL"))
     args = parser.parse_args()
+
     if not args.image.is_file():
         parser.error(f"image not found: {args.image}")
+
     data_uri, width, height = image_to_data_uri(args.image)
     client = OpenAI(base_url=args.base_url, timeout=180)
+
     for attempt in range(1, MAX_RETRIES + 1):
         try:
             result = generate(client, args.model, data_uri)
@@ -206,6 +222,7 @@ def main():
                 raise
             print(f"attempt {attempt} failed: {error}", file=sys.stderr)
             time.sleep(min(2**attempt * 3, 30))
+
     result["ratio"], result["resolution"] = image_settings(width, height)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
