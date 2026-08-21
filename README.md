@@ -8,7 +8,8 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2605.12500"><img src="https://img.shields.io/badge/arXiv-2605.12500-b31b1b.svg" alt="arXiv"></a>
   <a href="https://huggingface.co/collections/sensenova/sensenova-u15"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1.5-yellow" alt="SenseNova-U1.5 on Hugging Face"></a>
-   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1-yellow" alt="SenseNova-U1 on Hugging Face"></a>
+  <a href="https://modelscope.cn/models/SenseNova/SenseNova-U1.5-8B-MoT"><img src="https://img.shields.io/badge/%F0%9F%A4%96%20ModelScope-%E6%A8%A1%E5%9E%8B-purple" alt="SenseNova-U1.5 on ModelScope"></a>
+  <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1-yellow" alt="SenseNova-U1 on Hugging Face"></a>
   <a href="https://huggingface.co/blog/sensenova/neo-unify"><img src="https://img.shields.io/badge/Architecture-NEO--unify-2459B8" alt="NEO-unify"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
   <a href="https://unify.light-ai.top/"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20SenseNova_U-Demo-Green" alt="SenseNova-U Demo"></a>
@@ -117,6 +118,62 @@ The official release improves upon the Preview, though challenges remain in:
 - Unstable human details: Small faces, hands, limbs, and fine-grained object structures may remain unstable.
 - Complex editing drift: Broad, multi-turn, or multi-reference edits may drift, especially when many regions must be preserved simultaneously.
 
+### ⚙️ Deployment Guidance
+
+- **Quick start with Transformers**
+
+```bash
+# Text-to-Image
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --prompt "A formal portrait depicts a man in 18th-century attire seated with a scroll, wearing a red cloak and ornate medals, against a classical landscape with ancient ruins and inscriptions." \
+  --output output.png
+
+# Image Editing
+python examples/editing/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --image examples/editing/data/images/1.webp \
+  --prompt "Change the jacket of the person on the left to bright yellow." \
+  --output edited.png
+
+# Interleaved Generation
+python examples/interleave/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
+  --resolution "16:9" \
+  --output_dir outputs/interleave/ \
+  --stem demo \
+  --profile
+
+# Visual Understanding
+python examples/vqa/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --image examples/vqa/data/images/menu.jpg \
+  --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." \
+  --output outputs/answer.txt \
+  --max_new_tokens 8192 \
+  --do_sample \
+  --temperature 0.6 \
+  --top_p 0.95 \
+  --top_k 20 \
+  --repetition_penalty 1.05 \
+  --profile
+```
+
+- **Production serving:** For deployment with LightLLM + LightX2V, see the [deployment guide](docs/deployment.md).
+
+- **GGUF quantized inference:** SenseNova-U1.5-Lite GGUF weights are coming soon. Their inference workflow will be similar to that of the community [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf). Keep `--model_path` pointed to the matching base checkpoint.
+
+```bash
+# Install the optional dependencies once
+uv pip install -e ".[gguf]"  # or: pip install "gguf>=0.10.0" "diffusers>=0.30.0"
+
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT-Preview \
+  --gguf_checkpoint /path/to/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf \
+  --prompt "A male peacock trying to attract a female" \
+  --output output_gguf.png
+```
 
 ## 🚀 SenseNova-U1
 

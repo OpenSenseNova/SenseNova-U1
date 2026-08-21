@@ -7,6 +7,7 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2605.12500"><img src="https://img.shields.io/badge/arXiv-2605.12500-b31b1b.svg" alt="arXiv"></a>
   <a href="https://huggingface.co/collections/sensenova/sensenova-u15"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1.5-yellow" alt="Hugging Face 上的 SenseNova-U1.5"></a>
+  <a href="https://modelscope.cn/models/SenseNova/SenseNova-U1.5-8B-MoT"><img src="https://img.shields.io/badge/%F0%9F%A4%96%20ModelScope-%E6%A8%A1%E5%9E%8B-purple" alt="ModelScope 上的 SenseNova-U1.5"></a>
   <a href="https://huggingface.co/collections/sensenova/sensenova-u1"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1-yellow" alt="Hugging Face 上的 SenseNova-U1"></a>
   <a href="https://huggingface.co/blog/sensenova/neo-unify"><img src="https://img.shields.io/badge/Architecture-NEO--unify-2459B8" alt="NEO-unify"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
@@ -115,10 +116,67 @@
 - 细粒度细节不稳定：小尺寸人脸、手部、肢体与细粒度物体结构仍可能不稳定。
 - 复杂编辑偏移：大范围、多轮或多参考图编辑仍可能发生偏移，尤其是同时需要保留多个区域时。
 
+### ⚙️ 部署指南
+
+- **使用 Transformers 快速开始**
+
+```bash
+# 文生图
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --prompt "A formal portrait depicts a man in 18th-century attire seated with a scroll, wearing a red cloak and ornate medals, against a classical landscape with ancient ruins and inscriptions." \
+  --output output.png
+
+# 图像编辑
+python examples/editing/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --image examples/editing/data/images/1.webp \
+  --prompt "Change the jacket of the person on the left to bright yellow." \
+  --output edited.png
+
+# 图文交错生成
+python examples/interleave/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
+  --resolution "16:9" \
+  --output_dir outputs/interleave/ \
+  --stem demo \
+  --profile
+
+# 视觉理解
+python examples/vqa/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT \
+  --image examples/vqa/data/images/menu.jpg \
+  --question "My friend and I are dining together tonight. Looking at this menu, can you recommend a good combination of dishes for 2 people? We want a balanced meal — a mix of mains and maybe a starter or dessert. Budget-conscious but want to try the highlights." \
+  --output outputs/answer.txt \
+  --max_new_tokens 8192 \
+  --do_sample \
+  --temperature 0.6 \
+  --top_p 0.95 \
+  --top_k 20 \
+  --repetition_penalty 1.05 \
+  --profile
+```
+
+- **生产部署：** 使用 LightLLM + LightX2V 进行生产部署，请参见[部署指南](docs/deployment_CN.md)。
+
+- **GGUF 量化推理：** SenseNova-U1.5-Lite GGUF 权重即将发布，其推理流程将与社区提供的 [SenseNova-U1.5-8B-MoT-Preview Q8 GGUF 权重](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf)类似。请确保 `--model_path` 指向与 GGUF 权重匹配的基础模型。
+
+```bash
+# 首次使用时安装可选依赖
+uv pip install -e ".[gguf]"  # 或：pip install "gguf>=0.10.0" "diffusers>=0.30.0"
+
+python examples/t2i/inference.py \
+  --model_path sensenova/SenseNova-U1.5-8B-MoT-Preview \
+  --gguf_checkpoint /path/to/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf \
+  --prompt "A male peacock trying to attract a female" \
+  --output output_gguf.png
+```
+
 ## 🚀 SenseNova-U1
 
 <details>
-<summary>展开查看原始 SenseNova-U1 的概述、案例与部署方式</summary>
+<summary>展开查看 SenseNova-U1 的概述、案例与部署方式</summary>
 
 <p align="center">
   <img src="docs/assets/teaser_2.webp" alt="SenseNova-U1 可视化" width="900">
@@ -139,9 +197,9 @@
 
 SenseNova-U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/neo-unify)** —— 一个为多模态 AI 而设计、从第一性原理出发的全新架构：*它彻底摒弃了视觉编码器（VE）与变分自编码器（VAE），因为像素与文字信息在本质上是深度相关的。* 其主要特性如下：
 
-- 🔗 端到端地将语言与视觉信息建模为统一整体。
-- 🖼️ 在保留语义丰富度的同时，维持像素级的视觉保真度。
-- 🧠 通过原生 MoT 实现跨模态推理，效率高、冲突少。
+- 🔗 端到端统一建模语言与视觉信息。
+- 🖼️ 兼顾丰富的语义表达与像素级视觉保真度。
+- 🧠 借助原生 MoT 高效完成跨模态推理，并减少模态冲突。
 
 #### ✨ *能力突破：*
 
