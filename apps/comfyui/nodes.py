@@ -176,6 +176,7 @@ def _normalize_fast_settings(
 
 
 _LOCAL_MODEL_CACHE: dict[tuple, SenseNovaU1LocalModel] = {}
+_LOCAL_MODEL_CACHE_KEY_ATTR = "_sensenova_u1_cache_key"
 
 
 def _evict_model_cache(keep_key: tuple | None = None) -> None:
@@ -668,34 +669,93 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             resolved_gguf,
         )
         if cache_key not in _LOCAL_MODEL_CACHE:
-            _evict_model_cache()
-            if resolved_gguf:
-                LOGGER.info(
-                    "SenseNova U1 loader: loading %s with GGUF checkpoint %s",
-                    model_path,
-                    resolved_gguf,
-                )
-            else:
-                LOGGER.info("SenseNova U1 loader: loading model from %s", model_path)
-            _LOCAL_MODEL_CACHE[cache_key] = SenseNovaU1LocalModel(
-                model_path=model_path,
-                sensenova_u1_src=sensenova_u1_src,
-                device=device,
-                dtype=dtype,
-                attn_backend=attn_backend,
-                device_map=device_map,
-                max_memory=max_memory,
-                gguf_checkpoint=resolved_gguf,
-                vram_mode=vram_mode,
-                fast_vram_fraction=fast_vram_fraction,
-                fast_vram_headroom_gib=fast_vram_headroom_gib,
-                fast_activation_reserve_gib=fast_activation_reserve_gib,
-                fast_vram_budget_gib=fast_vram_budget_gib,
-            )
+            model = _load_local_model(cache_key)
         else:
-            LOGGER.info("SenseNova U1 loader: reusing cached model for %s", model_path)
-        model = _LOCAL_MODEL_CACHE[cache_key]
+            model = _get_or_load_local_model(cache_key)
         return io.NodeOutput(model, json.dumps(model.info, ensure_ascii=False))
+
+
+def _load_local_model(cache_key: tuple) -> SenseNovaU1LocalModel:
+    (
+        model_path,
+        sensenova_u1_src,
+        device,
+        dtype,
+        attn_backend,
+        device_map,
+        max_memory,
+        vram_mode,
+        fast_vram_fraction,
+        fast_vram_headroom_gib,
+        fast_activation_reserve_gib,
+        fast_vram_budget_gib,
+        resolved_gguf,
+    ) = cache_key
+
+    _evict_model_cache()
+    if resolved_gguf:
+        LOGGER.info(
+            "SenseNova U1 loader: loading %s with GGUF checkpoint %s",
+            model_path,
+            resolved_gguf,
+        )
+    else:
+        LOGGER.info("SenseNova U1 loader: loading model from %s", model_path)
+
+    model = SenseNovaU1LocalModel(
+        model_path=model_path,
+        sensenova_u1_src=sensenova_u1_src,
+        device=device,
+        dtype=dtype,
+        attn_backend=attn_backend,
+        device_map=device_map,
+        max_memory=max_memory,
+        gguf_checkpoint=resolved_gguf,
+        vram_mode=vram_mode,
+        fast_vram_fraction=fast_vram_fraction,
+        fast_vram_headroom_gib=fast_vram_headroom_gib,
+        fast_activation_reserve_gib=fast_activation_reserve_gib,
+        fast_vram_budget_gib=fast_vram_budget_gib,
+    )
+    setattr(model, _LOCAL_MODEL_CACHE_KEY_ATTR, cache_key)
+    _LOCAL_MODEL_CACHE[cache_key] = model
+    return model
+
+
+def _get_or_load_local_model(cache_key: tuple) -> SenseNovaU1LocalModel:
+    cached = _LOCAL_MODEL_CACHE.get(cache_key)
+    if cached is not None and hasattr(cached, "model") and hasattr(cached, "tokenizer"):
+        LOGGER.info("SenseNova U1 loader: reusing cached model for %s", cache_key[0])
+        return cached
+    return _load_local_model(cache_key)
+
+
+def _ensure_local_model_loaded(model: SenseNovaU1LocalModel) -> SenseNovaU1LocalModel:
+    """Resolve a possibly stale ComfyUI output to the live local model.
+
+    ComfyUI can retain a loader output after this module's single-entry cache
+    has evicted its weights. The lightweight object still carries its cache
+    key, allowing inference nodes to reacquire the correct model instead of
+    dereferencing the deleted ``model``/``tokenizer`` attributes.
+    """
+    cache_key = getattr(model, _LOCAL_MODEL_CACHE_KEY_ATTR, None)
+    if cache_key is None:
+        if hasattr(model, "model") and hasattr(model, "tokenizer"):
+            return model
+        raise RuntimeError(
+            "SenseNova U1 received an evicted legacy model handle. "
+            "Run the Local Loader node again so it can attach cache metadata."
+        )
+
+    cached = _LOCAL_MODEL_CACHE.get(cache_key)
+    if cached is not None and hasattr(cached, "model") and hasattr(cached, "tokenizer"):
+        return cached
+
+    LOGGER.info(
+        "SenseNova U1 loader: restoring model %s referenced by a stale ComfyUI cache entry.",
+        cache_key[0],
+    )
+    return _load_local_model(cache_key)
 
 
 class SenseNovaU1LocalTextToImage(io.ComfyNode):
@@ -747,6 +807,7 @@ class SenseNovaU1LocalTextToImage(io.ComfyNode):
         seed: int,
         think_mode: bool,
     ) -> io.NodeOutput:
+        u1_model = _ensure_local_model_loaded(u1_model)
         width, height = parse_resolution_option(resolution)
         result = u1_model.text_to_image(
             prompt=prompt,
@@ -826,6 +887,7 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
         seed: int,
         think_mode: bool = False,
     ) -> io.NodeOutput:
+        u1_model = _ensure_local_model_loaded(u1_model)
         result = u1_model.edit_image(
             prompt=prompt,
             input_image=image,
@@ -902,6 +964,7 @@ class SenseNovaU1LocalInterleave(io.ComfyNode):
         think_mode: bool,
         image=None,
     ) -> io.NodeOutput:
+        u1_model = _ensure_local_model_loaded(u1_model)
         width, height = parse_resolution_option(resolution)
         result = u1_model.interleave(
             prompt=prompt,

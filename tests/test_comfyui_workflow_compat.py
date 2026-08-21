@@ -51,6 +51,24 @@ def _keyword(call: ast.Call, name: str) -> ast.expr | None:
 
 
 class ComfyUIWorkflowCompatibilityTest(unittest.TestCase):
+    def test_local_inference_nodes_reacquire_evicted_loader_outputs(self) -> None:
+        tree = ast.parse(NODES_PATH.read_text())
+        class_names = (
+            "SenseNovaU1LocalTextToImage",
+            "SenseNovaU1LocalImageEdit",
+            "SenseNovaU1LocalInterleave",
+        )
+
+        for class_name in class_names:
+            node_class = next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == class_name)
+            execute = _method(node_class, "execute")
+            calls = [
+                node
+                for node in ast.walk(execute)
+                if isinstance(node, ast.Call) and ast.unparse(node.func) == "_ensure_local_model_loaded"
+            ]
+            self.assertEqual(len(calls), 1, class_name)
+
     def test_fast_settings_accept_blank_values_from_legacy_workflows(self) -> None:
         calls = _schema_input_calls(_loader_class())
         input_ids = [call.args[0].value for call in calls if call.args]
