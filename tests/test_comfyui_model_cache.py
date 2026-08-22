@@ -147,6 +147,8 @@ def _cache_key(model_path: str) -> tuple:
         4.0,
         0.0,
         "",
+        ("", 0, 0),
+        1.0,
     )
 
 
@@ -222,6 +224,8 @@ class ComfyUILocalModelCacheTest(unittest.TestCase):
             (incomplete_model / "model.safetensors.index.json").write_text(
                 '{"weight_map":{"layer":"missing.safetensors"}}'
             )
+            (model_root / "community.safetensors").touch()
+            (model_root / "quantized.gguf").touch()
 
             fake_folder_paths = types.SimpleNamespace(
                 get_filename_list=lambda _name: [],
@@ -241,7 +245,25 @@ class ComfyUILocalModelCacheTest(unittest.TestCase):
                 schema = NODES.SenseNovaU1LocalLoader.define_schema()
 
         local_model_input = next(item for item in schema.inputs if item.id == "local_model")
-        self.assertEqual(local_model_input.options, ["", "release/SenseNova-U1.5-8B-MoT"])
+        self.assertEqual(
+            local_model_input.options,
+            ["", "community.safetensors", "quantized.gguf", "release/SenseNova-U1.5-8B-MoT"],
+        )
+
+    def test_loader_resolves_a_registered_single_file_artifact(self) -> None:
+        with TemporaryDirectory() as directory:
+            model_root = Path(directory) / "sensenova"
+            model_root.mkdir()
+            checkpoint = model_root / "community.safetensors"
+            checkpoint.touch()
+            fake_folder_paths = types.SimpleNamespace(
+                get_folder_paths=lambda name: [str(model_root)] if name == "sensenova" else [],
+            )
+
+            with mock.patch.dict(sys.modules, {"folder_paths": fake_folder_paths}):
+                resolved = NODES._resolve_sensenova_model_choice("community.safetensors")
+
+        self.assertEqual(resolved, str(checkpoint.resolve()))
 
     def test_loader_resolves_a_registered_sensenova_model_before_loading(self) -> None:
         with TemporaryDirectory() as directory:
@@ -298,6 +320,42 @@ class ComfyUILocalModelCacheTest(unittest.TestCase):
         loaded_model = output.values[0]
         self.assertEqual(first_fingerprint, second_fingerprint)
         self.assertEqual(loaded_model.kwargs["model_path"], str(model_directory.resolve()))
+
+    def test_loader_passes_lora_and_fingerprints_the_file_contents(self) -> None:
+        with TemporaryDirectory() as directory:
+            lora_path = Path(directory) / "adapter.safetensors"
+            lora_path.write_bytes(b"v1")
+            fake_folder_paths = types.SimpleNamespace(
+                get_full_path=lambda name, value: (
+                    str(lora_path) if (name, value) == ("loras", lora_path.name) else None
+                ),
+            )
+            inputs = {
+                "model_path": "sensenova/SenseNova-U1.5-8B-MoT",
+                "sensenova_u1_src": "",
+                "device": "cpu",
+                "dtype": "bfloat16",
+                "attn_backend": "auto",
+                "device_map": "none",
+                "max_memory": "",
+                "vram_mode": "full",
+                "gguf_checkpoint": "",
+                "lora_name": lora_path.name,
+                "lora_strength": 0.75,
+            }
+            with (
+                mock.patch.object(NODES, "SenseNovaU1LocalModel", _FakeLocalModel),
+                mock.patch.dict(sys.modules, {"folder_paths": fake_folder_paths}),
+            ):
+                first_fingerprint = NODES.SenseNovaU1LocalLoader.fingerprint_inputs(**inputs)
+                output = NODES.SenseNovaU1LocalLoader.execute(**inputs)
+                lora_path.write_bytes(b"version-two")
+                second_fingerprint = NODES.SenseNovaU1LocalLoader.fingerprint_inputs(**inputs)
+
+        loaded_model = output.values[0]
+        self.assertEqual(loaded_model.kwargs["lora_path"], str(lora_path))
+        self.assertEqual(loaded_model.kwargs["lora_strength"], 0.75)
+        self.assertNotEqual(first_fingerprint, second_fingerprint)
 
 
 if __name__ == "__main__":

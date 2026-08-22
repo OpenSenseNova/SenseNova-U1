@@ -103,6 +103,7 @@ InterleaveResultIO = io.Custom(INTERLEAVE_RESULT_TYPE)
 
 _GGUF_FOLDER_CANDIDATES: tuple[str, ...] = ("gguf", "diffusion_models")
 _SENSENOVA_MODEL_FOLDER = "sensenova"
+_SENSENOVA_ARTIFACT_SUFFIXES = {".safetensors", ".sft", ".gguf"}
 
 
 def _sensenova_model_roots() -> tuple[Path, ...]:
@@ -152,6 +153,15 @@ def _list_sensenova_model_options() -> list[str]:
                     continue
                 if _is_complete_sensenova_model(model_directory):
                     found.add(relative.as_posix())
+            for artifact_path in root.rglob("*"):
+                if not artifact_path.is_file() or artifact_path.suffix.lower() not in _SENSENOVA_ARTIFACT_SUFFIXES:
+                    continue
+                if _is_complete_sensenova_model(artifact_path.parent):
+                    continue
+                relative = artifact_path.relative_to(root)
+                if any(part.startswith(".") for part in relative.parts):
+                    continue
+                found.add(relative.as_posix())
         except OSError:
             continue
     return ["", *sorted(found)]
@@ -172,11 +182,12 @@ def _resolve_sensenova_model_choice(value: str) -> str:
             candidate.relative_to(resolved_root)
         except ValueError:
             continue
-        if _is_complete_sensenova_model(candidate):
+        if _is_complete_sensenova_model(candidate) or (
+            candidate.is_file() and candidate.suffix.lower() in _SENSENOVA_ARTIFACT_SUFFIXES
+        ):
             return str(candidate)
     raise RuntimeError(
-        f"SenseNova model {value!r} was not found under any registered "
-        f"ComfyUI models/{_SENSENOVA_MODEL_FOLDER} folder."
+        f"SenseNova model {value!r} was not found under any registered ComfyUI models/{_SENSENOVA_MODEL_FOLDER} folder."
     )
 
 
@@ -184,6 +195,44 @@ def _resolve_model_path(model_path: str, local_model: str) -> str:
     if local_model.strip():
         return _resolve_sensenova_model_choice(local_model)
     return model_path.strip()
+
+
+def _list_lora_options() -> list[str]:
+    try:
+        import folder_paths
+
+        return [
+            "",
+            *sorted(name for name in folder_paths.get_filename_list("loras") if name.lower().endswith(".safetensors")),
+        ]
+    except Exception:
+        return [""]
+
+
+def _resolve_lora_choice(value: str) -> str:
+    value = value.strip()
+    if not value:
+        return ""
+    try:
+        import folder_paths
+
+        resolved = folder_paths.get_full_path("loras", value)
+        if resolved:
+            return resolved
+    except Exception:
+        pass
+    return value
+
+
+def _lora_signature(value: str) -> tuple[str, int, int]:
+    resolved = _resolve_lora_choice(value)
+    if not resolved:
+        return ("", 0, 0)
+    try:
+        stat = Path(resolved).stat()
+        return (resolved, stat.st_size, stat.st_mtime_ns)
+    except OSError:
+        return (resolved, 0, 0)
 
 
 def _list_gguf_options() -> list[str]:
@@ -569,7 +618,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                 io.String.Input(
                     "model_path",
                     default="sensenova/SenseNova-U1-8B-MoT",
-                    tooltip="HuggingFace model id or local checkpoint directory.",
+                    tooltip="HuggingFace model id, checkpoint directory, or standalone Safetensors/GGUF file.",
                 ),
                 io.String.Input(
                     "sensenova_u1_src",
@@ -666,9 +715,26 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                     default="",
                     optional=True,
                     tooltip=(
-                        "Optional local checkpoint from `<comfyui>/models/sensenova/`. "
+                        "Optional model directory, .safetensors/.sft, or .gguf from "
+                        "`<comfyui>/models/sensenova/`. "
                         "When selected, it overrides model_path. Restart ComfyUI to refresh this list."
                     ),
+                ),
+                io.Combo.Input(
+                    "lora_name",
+                    options=_list_lora_options(),
+                    default="",
+                    optional=True,
+                    tooltip="Optional SenseNova LoRA from `<comfyui>/models/loras/`.",
+                ),
+                io.Float.Input(
+                    "lora_strength",
+                    default=1.0,
+                    min=-4.0,
+                    max=4.0,
+                    step=0.05,
+                    optional=True,
+                    tooltip="LoRA merge strength. 1.0 uses the adapter's authored scale.",
                 ),
             ],
             outputs=[
@@ -694,6 +760,8 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
         fast_vram_budget_gib: float | str = 0.0,
         local_model: str = "",
+        lora_name: str = "",
+        lora_strength: float = 1.0,
     ) -> str:
         fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
             _normalize_fast_settings(
@@ -718,6 +786,8 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             fast_activation_reserve_gib,
             fast_vram_budget_gib,
             _resolve_gguf_choice(gguf_checkpoint.strip()),
+            _lora_signature(lora_name),
+            float(lora_strength),
         )
         return hashlib.sha256(str(key).encode()).hexdigest()
 
@@ -738,6 +808,8 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
         fast_vram_budget_gib: float | str = 0.0,
         local_model: str = "",
+        lora_name: str = "",
+        lora_strength: float = 1.0,
     ) -> io.NodeOutput:
         fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
             _normalize_fast_settings(
@@ -763,6 +835,8 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             fast_activation_reserve_gib,
             fast_vram_budget_gib,
             resolved_gguf,
+            _lora_signature(lora_name),
+            float(lora_strength),
         )
         if cache_key not in _LOCAL_MODEL_CACHE:
             model = _load_local_model(cache_key)
@@ -786,6 +860,8 @@ def _load_local_model(cache_key: tuple) -> SenseNovaU1LocalModel:
         fast_activation_reserve_gib,
         fast_vram_budget_gib,
         resolved_gguf,
+        lora_signature,
+        lora_strength,
     ) = cache_key
 
     _evict_model_cache()
@@ -812,6 +888,8 @@ def _load_local_model(cache_key: tuple) -> SenseNovaU1LocalModel:
         fast_vram_headroom_gib=fast_vram_headroom_gib,
         fast_activation_reserve_gib=fast_activation_reserve_gib,
         fast_vram_budget_gib=fast_vram_budget_gib,
+        lora_path=lora_signature[0],
+        lora_strength=lora_strength,
     )
     setattr(model, _LOCAL_MODEL_CACHE_KEY_ATTR, cache_key)
     _LOCAL_MODEL_CACHE[cache_key] = model
