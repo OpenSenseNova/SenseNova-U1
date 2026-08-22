@@ -102,6 +102,88 @@ InterleaveResultIO = io.Custom(INTERLEAVE_RESULT_TYPE)
 
 
 _GGUF_FOLDER_CANDIDATES: tuple[str, ...] = ("gguf", "diffusion_models")
+_SENSENOVA_MODEL_FOLDER = "sensenova"
+
+
+def _sensenova_model_roots() -> tuple[Path, ...]:
+    try:
+        import folder_paths
+
+        return tuple(Path(path).expanduser() for path in folder_paths.get_folder_paths(_SENSENOVA_MODEL_FOLDER))
+    except Exception:
+        return ()
+
+
+def _is_complete_sensenova_model(path: Path) -> bool:
+    if not (path / "config.json").is_file():
+        return False
+    if (path / "model.safetensors").is_file():
+        return True
+
+    index_path = path / "model.safetensors.index.json"
+    if not index_path.is_file():
+        return False
+    try:
+        weight_map = json.loads(index_path.read_text()).get("weight_map")
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if not isinstance(weight_map, dict) or not weight_map:
+        return False
+    for filename in set(weight_map.values()):
+        if not isinstance(filename, str):
+            return False
+        relative = Path(filename)
+        if relative.is_absolute() or ".." in relative.parts or not (path / relative).is_file():
+            return False
+    return True
+
+
+def _list_sensenova_model_options() -> list[str]:
+    found: set[str] = set()
+    for root in _sensenova_model_roots():
+        if not root.is_dir():
+            continue
+        try:
+            config_paths = root.rglob("config.json")
+            for config_path in config_paths:
+                model_directory = config_path.parent
+                relative = model_directory.relative_to(root)
+                if relative == Path(".") or any(part.startswith(".") for part in relative.parts):
+                    continue
+                if _is_complete_sensenova_model(model_directory):
+                    found.add(relative.as_posix())
+        except OSError:
+            continue
+    return ["", *sorted(found)]
+
+
+def _resolve_sensenova_model_choice(value: str) -> str:
+    value = value.strip()
+    if not value:
+        return ""
+    relative = Path(value)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise RuntimeError(f"Invalid SenseNova model selection: {value!r}")
+
+    for root in _sensenova_model_roots():
+        resolved_root = root.resolve()
+        candidate = (resolved_root / relative).resolve()
+        try:
+            candidate.relative_to(resolved_root)
+        except ValueError:
+            continue
+        if _is_complete_sensenova_model(candidate):
+            return str(candidate)
+    raise RuntimeError(
+        f"SenseNova model {value!r} was not found under any registered "
+        f"ComfyUI models/{_SENSENOVA_MODEL_FOLDER} folder."
+    )
+
+
+def _resolve_model_path(model_path: str, local_model: str) -> str:
+    if local_model.strip():
+        return _resolve_sensenova_model_choice(local_model)
+    return model_path.strip()
 
 
 def _list_gguf_options() -> list[str]:
@@ -578,6 +660,16 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                     advanced=True,
                     tooltip="Absolute fast-mode VRAM budget in GiB. Blank or 0 uses fast_vram_fraction.",
                 ),
+                io.Combo.Input(
+                    "local_model",
+                    options=_list_sensenova_model_options(),
+                    default="",
+                    optional=True,
+                    tooltip=(
+                        "Optional local checkpoint from `<comfyui>/models/sensenova/`. "
+                        "When selected, it overrides model_path. Restart ComfyUI to refresh this list."
+                    ),
+                ),
             ],
             outputs=[
                 LocalModelIO.Output(display_name="u1_model"),
@@ -601,6 +693,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
         fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
         fast_vram_budget_gib: float | str = 0.0,
+        local_model: str = "",
     ) -> str:
         fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
             _normalize_fast_settings(
@@ -610,8 +703,9 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                 fast_vram_budget_gib,
             )
         )
+        resolved_model_path = _resolve_model_path(model_path, local_model)
         key = (
-            model_path.strip(),
+            resolved_model_path,
             sensenova_u1_src.strip(),
             device.strip(),
             dtype,
@@ -643,6 +737,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
         fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
         fast_vram_budget_gib: float | str = 0.0,
+        local_model: str = "",
     ) -> io.NodeOutput:
         fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
             _normalize_fast_settings(
@@ -653,8 +748,9 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             )
         )
         resolved_gguf = _resolve_gguf_choice(gguf_checkpoint.strip())
+        resolved_model_path = _resolve_model_path(model_path, local_model)
         cache_key = (
-            model_path.strip(),
+            resolved_model_path,
             sensenova_u1_src.strip(),
             device.strip(),
             dtype,
