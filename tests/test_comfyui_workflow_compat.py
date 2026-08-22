@@ -24,11 +24,18 @@ FAST_LOADER_INPUTS = [
     "fast_activation_reserve_gib",
     "fast_vram_budget_gib",
 ]
+LOCAL_MODEL_INPUT = "local_model"
+APPENDED_LOADER_INPUTS = [LOCAL_MODEL_INPUT, "lora_name", "lora_strength"]
 
 
 def _loader_class() -> ast.ClassDef:
     tree = ast.parse(NODES_PATH.read_text())
     return next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == "SenseNovaU1LocalLoader")
+
+
+def _new_loader_class() -> ast.ClassDef:
+    tree = ast.parse(NODES_PATH.read_text())
+    return next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == "SenseNovaU1ModelLoader")
 
 
 def _method(loader: ast.ClassDef, name: str) -> ast.FunctionDef:
@@ -51,12 +58,41 @@ def _keyword(call: ast.Call, name: str) -> ast.expr | None:
 
 
 class ComfyUIWorkflowCompatibilityTest(unittest.TestCase):
+    def test_new_loader_exposes_weights_resources_and_lora_without_legacy_model_inputs(self) -> None:
+        calls = _schema_input_calls(_new_loader_class())
+        input_ids = [call.args[0].value for call in calls if call.args]
+
+        self.assertEqual(input_ids[:4], ["model_weights", "model_resources", "lora_name", "lora_strength"])
+        self.assertNotIn("model_path", input_ids)
+        self.assertNotIn("local_model", input_ids)
+        self.assertNotIn("gguf_checkpoint", input_ids)
+
+    def test_local_inference_nodes_reacquire_evicted_loader_outputs(self) -> None:
+        tree = ast.parse(NODES_PATH.read_text())
+        class_names = (
+            "SenseNovaU1LocalTextToImage",
+            "SenseNovaU1LocalImageEdit",
+            "SenseNovaU1LocalInterleave",
+        )
+
+        for class_name in class_names:
+            node_class = next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == class_name)
+            execute = _method(node_class, "execute")
+            calls = [
+                node
+                for node in ast.walk(execute)
+                if isinstance(node, ast.Call) and ast.unparse(node.func) == "_ensure_local_model_loaded"
+            ]
+            self.assertEqual(len(calls), 1, class_name)
+
     def test_fast_settings_accept_blank_values_from_legacy_workflows(self) -> None:
         calls = _schema_input_calls(_loader_class())
         input_ids = [call.args[0].value for call in calls if call.args]
 
         self.assertEqual(input_ids[: len(LEGACY_LOADER_INPUTS)], LEGACY_LOADER_INPUTS)
-        self.assertEqual(input_ids[-len(FAST_LOADER_INPUTS) :], FAST_LOADER_INPUTS)
+        fast_start = len(LEGACY_LOADER_INPUTS)
+        self.assertEqual(input_ids[fast_start : fast_start + len(FAST_LOADER_INPUTS)], FAST_LOADER_INPUTS)
+        self.assertEqual(input_ids[-len(APPENDED_LOADER_INPUTS) :], APPENDED_LOADER_INPUTS)
 
         by_id = {call.args[0].value: call for call in calls if call.args}
         for input_id in FAST_LOADER_INPUTS:

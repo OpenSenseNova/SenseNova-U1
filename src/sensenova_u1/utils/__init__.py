@@ -5,10 +5,12 @@ from .accel import (
     manual_seed_all as seed_all_accelerators,
 )
 from .checkpoint_loading import (
+    ModelArtifact,
     add_offload_args,
     infer_input_device,
     load_model_and_tokenizer,
     parse_max_memory,
+    resolve_model_artifact,
 )
 from .comparison import save_compare
 from .gguf_loader import load_gguf_checkpoint, match_state_dict, set_gguf2meta_model
@@ -43,6 +45,7 @@ __all__ = [
     "DEFAULT_VRAM_MODE",
     "InferenceProfiler",
     "ModelParamInspector",
+    "ModelArtifact",
     "VRAM_MODE_OPTIONS",
     "add_offload_args",
     "best_available_device",
@@ -58,6 +61,7 @@ __all__ = [
     "offload_layers_async",
     "offload_layers_sync",
     "parse_max_memory",
+    "resolve_model_artifact",
     "save_compare",
     "seed_all_accelerators",
     "set_gguf2meta_model",

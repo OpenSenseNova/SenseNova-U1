@@ -93,9 +93,50 @@ export SN_BASE_URL="https://token.sensenova.cn/v1"
 
 Tokens are not exposed as node inputs, so they are not saved into ComfyUI workflows.
 
+## Unified Local Model And LoRA Loading
+
+Use the primary `SenseNova U1 Model Loader`. Its model inputs have separate
+responsibilities:
+
+- `model_weights` chooses where the weights come from. It lists the official
+  models, matching repositories already present in the Hugging Face cache, and
+  registered artifacts under `<comfyui>/models/sensenova/`.
+- `model_resources` chooses the config and tokenizer source.
+  `Auto` uses the weight directory or embedded `source_repo`; an explicit HF
+  profile or local config directory can be selected for third-party files.
+- `lora_name` and `lora_strength` optionally apply an adapter from
+  `<comfyui>/models/loras/` after the base weights are loaded.
+
+The weight dropdown accepts:
+
+- an official Hugging Face model directory with complete weight shards;
+- a community single-file `.safetensors` or `.sft` checkpoint;
+- a single-file `.gguf` checkpoint.
+
+Standalone weights still need the matching config and tokenizer. The loader
+first looks for a colocated model directory (including the basename from the
+Safetensors `source_repo` metadata), then uses that metadata or a known
+SenseNova filename profile as the Hugging Face/cache fallback. Community `.sft`
+files and custom Safetensors metadata are read directly and streamed tensor by
+tensor into a meta-initialized model, so loading does not create a second full
+state-dict copy in host memory.
+
+The resources choice and LoRA identity, size, mtime, and strength are included
+in the model cache key. This first implementation supports LoRA merging on
+Hugging Face and standalone Safetensors base weights; GGUF + LoRA is rejected
+explicitly because the current Diffusers GGUF parameter type needs a
+patch-aware runtime adapter rather than an in-place BF16 merge.
+
+The former `SenseNova U1 Local Loader` remains available under
+`SenseNova/Local/Legacy` so existing workflows keep their original
+`model_path`, `local_model`, and `gguf_checkpoint` contract. New workflows
+should use `SenseNova U1 Model Loader`.
+
 ## GGUF Quantized Checkpoints
 
-The `SenseNova U1 Local Loader` exposes an optional `gguf_checkpoint` dropdown
+The primary Model Loader lists GGUF directly in `model_weights`; select the
+matching profile in `model_resources` when `Auto` cannot identify it. The
+Legacy Local Loader also retains its optional `gguf_checkpoint` dropdown,
 populated from `<comfyui>/models/gguf/` and the stock ComfyUI
 `<comfyui>/models/diffusion_models/` folder (the default location used by
 ComfyUI-GGUF style distributions). When a file is selected, weights are loaded
