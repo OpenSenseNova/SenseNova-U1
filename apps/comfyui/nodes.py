@@ -104,6 +104,15 @@ InterleaveResultIO = io.Custom(INTERLEAVE_RESULT_TYPE)
 _GGUF_FOLDER_CANDIDATES: tuple[str, ...] = ("gguf", "diffusion_models")
 _SENSENOVA_MODEL_FOLDER = "sensenova"
 _SENSENOVA_ARTIFACT_SUFFIXES = {".safetensors", ".sft", ".gguf"}
+_HF_OPTION_PREFIX = "HF | "
+_LOCAL_OPTION_PREFIX = "Local | "
+_AUTO_RESOURCES = "Auto"
+_OFFICIAL_MODEL_IDS = (
+    "sensenova/SenseNova-U1.5-8B-MoT",
+    "sensenova/SenseNova-U1.5-8B-MoT-SFT",
+    "sensenova/SenseNova-U1.5-8B-MoT-Preview",
+    "sensenova/SenseNova-U1-8B-MoT",
+)
 
 
 def _sensenova_model_roots() -> tuple[Path, ...]:
@@ -195,6 +204,78 @@ def _resolve_model_path(model_path: str, local_model: str) -> str:
     if local_model.strip():
         return _resolve_sensenova_model_choice(local_model)
     return model_path.strip()
+
+
+def _cached_sensenova_repo_ids() -> set[str]:
+    try:
+        from huggingface_hub import scan_cache_dir
+
+        return {
+            repo.repo_id
+            for repo in scan_cache_dir().repos
+            if repo.repo_type == "model" and "sensenova" in repo.repo_id.lower()
+        }
+    except Exception:
+        return set()
+
+
+def _list_model_weight_options() -> list[str]:
+    hf_ids = set(_OFFICIAL_MODEL_IDS) | _cached_sensenova_repo_ids()
+    hf_options = [f"{_HF_OPTION_PREFIX}{repo_id}" for repo_id in sorted(hf_ids)]
+    local_options = [f"{_LOCAL_OPTION_PREFIX}{relative}" for relative in _list_sensenova_model_options() if relative]
+    preferred = f"{_HF_OPTION_PREFIX}{_OFFICIAL_MODEL_IDS[0]}"
+    return [preferred, *[option for option in hf_options if option != preferred], *local_options]
+
+
+def _list_model_resource_options() -> list[str]:
+    hf_ids = set(_OFFICIAL_MODEL_IDS) | _cached_sensenova_repo_ids()
+    local_resources: set[str] = set()
+    for root in _sensenova_model_roots():
+        if not root.is_dir():
+            continue
+        try:
+            for config_path in root.rglob("config.json"):
+                relative = config_path.parent.relative_to(root)
+                if relative != Path(".") and not any(part.startswith(".") for part in relative.parts):
+                    local_resources.add(f"{_LOCAL_OPTION_PREFIX}{relative.as_posix()}")
+        except OSError:
+            continue
+    return [
+        _AUTO_RESOURCES,
+        *[f"{_HF_OPTION_PREFIX}{repo_id}" for repo_id in sorted(hf_ids)],
+        *sorted(local_resources),
+    ]
+
+
+def _resolve_model_weight_choice(value: str) -> str:
+    if value.startswith(_HF_OPTION_PREFIX):
+        return value.removeprefix(_HF_OPTION_PREFIX).strip()
+    if value.startswith(_LOCAL_OPTION_PREFIX):
+        return _resolve_sensenova_model_choice(value.removeprefix(_LOCAL_OPTION_PREFIX))
+    raise RuntimeError(f"Invalid model_weights selection: {value!r}.")
+
+
+def _resolve_model_resource_choice(value: str) -> str:
+    if value == _AUTO_RESOURCES:
+        return ""
+    if value.startswith(_HF_OPTION_PREFIX):
+        return value.removeprefix(_HF_OPTION_PREFIX).strip()
+    if not value.startswith(_LOCAL_OPTION_PREFIX):
+        raise RuntimeError(f"Invalid model_resources selection: {value!r}.")
+
+    relative = Path(value.removeprefix(_LOCAL_OPTION_PREFIX).strip())
+    if relative.is_absolute() or ".." in relative.parts:
+        raise RuntimeError(f"Invalid local model_resources selection: {value!r}.")
+    for root in _sensenova_model_roots():
+        resolved_root = root.resolve()
+        candidate = (resolved_root / relative).resolve()
+        try:
+            candidate.relative_to(resolved_root)
+        except ValueError:
+            continue
+        if (candidate / "config.json").is_file():
+            return str(candidate)
+    raise RuntimeError(f"Model resources {value!r} were not found under models/sensenova.")
 
 
 def _list_lora_options() -> list[str]:
@@ -308,6 +389,45 @@ def _normalize_fast_settings(
 
 _LOCAL_MODEL_CACHE: dict[tuple, SenseNovaU1LocalModel] = {}
 _LOCAL_MODEL_CACHE_KEY_ATTR = "_sensenova_u1_cache_key"
+
+
+def _make_local_model_cache_key(
+    *,
+    model_path: str,
+    model_resources: str,
+    sensenova_u1_src: str,
+    device: str,
+    dtype: str,
+    attn_backend: str,
+    device_map: str,
+    max_memory: str,
+    vram_mode: str,
+    fast_vram_fraction: float,
+    fast_vram_headroom_gib: float,
+    fast_activation_reserve_gib: float,
+    fast_vram_budget_gib: float,
+    resolved_gguf: str,
+    lora_signature: tuple[str, int, int],
+    lora_strength: float,
+) -> tuple:
+    return (
+        model_path,
+        model_resources,
+        sensenova_u1_src,
+        device,
+        dtype,
+        attn_backend,
+        device_map,
+        max_memory,
+        vram_mode,
+        fast_vram_fraction,
+        fast_vram_headroom_gib,
+        fast_activation_reserve_gib,
+        fast_vram_budget_gib,
+        resolved_gguf,
+        lora_signature,
+        lora_strength,
+    )
 
 
 def _evict_model_cache(keep_key: tuple | None = None) -> None:
@@ -607,13 +727,246 @@ class SenseNovaVisionImage(io.ComfyNode):
         )
 
 
+def _new_model_loader_cache_key(
+    *,
+    model_weights: str,
+    model_resources: str,
+    lora_name: str,
+    lora_strength: float,
+    sensenova_u1_src: str,
+    device: str,
+    dtype: str,
+    attn_backend: str,
+    device_map: str,
+    max_memory: str,
+    vram_mode: str,
+    fast_vram_fraction: float | str,
+    fast_vram_headroom_gib: float | str,
+    fast_activation_reserve_gib: float | str,
+    fast_vram_budget_gib: float | str,
+) -> tuple:
+    fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
+        _normalize_fast_settings(
+            fast_vram_fraction,
+            fast_vram_headroom_gib,
+            fast_activation_reserve_gib,
+            fast_vram_budget_gib,
+        )
+    )
+    return _make_local_model_cache_key(
+        model_path=_resolve_model_weight_choice(model_weights),
+        model_resources=_resolve_model_resource_choice(model_resources),
+        sensenova_u1_src=sensenova_u1_src.strip(),
+        device=device.strip(),
+        dtype=dtype,
+        attn_backend=attn_backend,
+        device_map=device_map,
+        max_memory=max_memory.strip(),
+        vram_mode=vram_mode,
+        fast_vram_fraction=fast_vram_fraction,
+        fast_vram_headroom_gib=fast_vram_headroom_gib,
+        fast_activation_reserve_gib=fast_activation_reserve_gib,
+        fast_vram_budget_gib=fast_vram_budget_gib,
+        resolved_gguf="",
+        lora_signature=_lora_signature(lora_name),
+        lora_strength=float(lora_strength),
+    )
+
+
+class SenseNovaU1ModelLoader(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        weight_options = _list_model_weight_options()
+        resource_options = _list_model_resource_options()
+        return io.Schema(
+            node_id="SenseNovaU1ModelLoader",
+            display_name="SenseNova U1 Model Loader",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                io.Combo.Input(
+                    "model_weights",
+                    options=weight_options,
+                    default=weight_options[0],
+                    tooltip="Base weights from Hugging Face/cache or ComfyUI models/sensenova.",
+                ),
+                io.Combo.Input(
+                    "model_resources",
+                    options=resource_options,
+                    default=_AUTO_RESOURCES,
+                    tooltip="Config and tokenizer source. Auto uses the weight artifact metadata/location.",
+                ),
+                io.Combo.Input(
+                    "lora_name",
+                    options=_list_lora_options(),
+                    default="",
+                    optional=True,
+                    tooltip="Optional SenseNova LoRA from ComfyUI models/loras.",
+                ),
+                io.Float.Input(
+                    "lora_strength",
+                    default=1.0,
+                    min=-4.0,
+                    max=4.0,
+                    step=0.05,
+                    optional=True,
+                ),
+                io.String.Input(
+                    "device",
+                    default=default_device(),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.Combo.Input(
+                    "dtype",
+                    options=list(DTYPE_OPTIONS),
+                    default="bfloat16",
+                    optional=True,
+                    advanced=True,
+                ),
+                io.Combo.Input(
+                    "attn_backend",
+                    options=list(ATTN_BACKEND_OPTIONS),
+                    default="auto",
+                    optional=True,
+                    advanced=True,
+                ),
+                io.Combo.Input(
+                    "vram_mode",
+                    options=list(VRAM_MODE_OPTIONS),
+                    default=DEFAULT_VRAM_MODE,
+                    optional=True,
+                    advanced=True,
+                ),
+                io.Combo.Input(
+                    "device_map",
+                    options=list(DEVICE_MAP_OPTIONS),
+                    default="none",
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input("max_memory", default="", optional=True, advanced=True),
+                io.String.Input(
+                    "sensenova_u1_src",
+                    default=default_source_path(),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input(
+                    "fast_vram_fraction",
+                    default=str(DEFAULT_FAST_VRAM_FRACTION),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input(
+                    "fast_vram_headroom_gib",
+                    default=str(DEFAULT_FAST_VRAM_HEADROOM_GIB),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input(
+                    "fast_activation_reserve_gib",
+                    default=str(DEFAULT_FAST_ACTIVATION_RESERVE_GIB),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input(
+                    "fast_vram_budget_gib",
+                    default="0.0",
+                    optional=True,
+                    advanced=True,
+                ),
+            ],
+            outputs=[
+                LocalModelIO.Output(display_name="u1_model"),
+                io.String.Output(display_name="model_info_json"),
+            ],
+        )
+
+    @classmethod
+    def fingerprint_inputs(
+        cls,
+        model_weights: str,
+        model_resources: str = _AUTO_RESOURCES,
+        lora_name: str = "",
+        lora_strength: float = 1.0,
+        device: str = "cuda",
+        dtype: str = "bfloat16",
+        attn_backend: str = "auto",
+        vram_mode: str = DEFAULT_VRAM_MODE,
+        device_map: str = "none",
+        max_memory: str = "",
+        sensenova_u1_src: str = "",
+        fast_vram_fraction: float | str = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | str = 0.0,
+    ) -> str:
+        key = _new_model_loader_cache_key(
+            model_weights=model_weights,
+            model_resources=model_resources,
+            lora_name=lora_name,
+            lora_strength=lora_strength,
+            sensenova_u1_src=sensenova_u1_src,
+            device=device,
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory,
+            vram_mode=vram_mode,
+            fast_vram_fraction=fast_vram_fraction,
+            fast_vram_headroom_gib=fast_vram_headroom_gib,
+            fast_activation_reserve_gib=fast_activation_reserve_gib,
+            fast_vram_budget_gib=fast_vram_budget_gib,
+        )
+        return hashlib.sha256(str(key).encode()).hexdigest()
+
+    @classmethod
+    def execute(
+        cls,
+        model_weights: str,
+        model_resources: str = _AUTO_RESOURCES,
+        lora_name: str = "",
+        lora_strength: float = 1.0,
+        device: str = "cuda",
+        dtype: str = "bfloat16",
+        attn_backend: str = "auto",
+        vram_mode: str = DEFAULT_VRAM_MODE,
+        device_map: str = "none",
+        max_memory: str = "",
+        sensenova_u1_src: str = "",
+        fast_vram_fraction: float | str = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | str = 0.0,
+    ) -> io.NodeOutput:
+        cache_key = _new_model_loader_cache_key(
+            model_weights=model_weights,
+            model_resources=model_resources,
+            lora_name=lora_name,
+            lora_strength=lora_strength,
+            sensenova_u1_src=sensenova_u1_src,
+            device=device,
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory,
+            vram_mode=vram_mode,
+            fast_vram_fraction=fast_vram_fraction,
+            fast_vram_headroom_gib=fast_vram_headroom_gib,
+            fast_activation_reserve_gib=fast_activation_reserve_gib,
+            fast_vram_budget_gib=fast_vram_budget_gib,
+        )
+        model = _get_or_load_local_model(cache_key)
+        return io.NodeOutput(model, json.dumps(model.info, ensure_ascii=False))
+
+
 class SenseNovaU1LocalLoader(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
         return io.Schema(
             node_id="SenseNovaU1LocalLoader",
-            display_name="SenseNova U1 Local Loader",
-            category=LOCAL_CATEGORY,
+            display_name="SenseNova U1 Local Loader (Legacy)",
+            category=f"{LOCAL_CATEGORY}/Legacy",
             inputs=[
                 io.String.Input(
                     "model_path",
@@ -772,22 +1125,23 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
             )
         )
         resolved_model_path = _resolve_model_path(model_path, local_model)
-        key = (
-            resolved_model_path,
-            sensenova_u1_src.strip(),
-            device.strip(),
-            dtype,
-            attn_backend,
-            device_map,
-            max_memory.strip(),
-            vram_mode,
-            fast_vram_fraction,
-            fast_vram_headroom_gib,
-            fast_activation_reserve_gib,
-            fast_vram_budget_gib,
-            _resolve_gguf_choice(gguf_checkpoint.strip()),
-            _lora_signature(lora_name),
-            float(lora_strength),
+        key = _make_local_model_cache_key(
+            model_path=resolved_model_path,
+            model_resources="",
+            sensenova_u1_src=sensenova_u1_src.strip(),
+            device=device.strip(),
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory.strip(),
+            vram_mode=vram_mode,
+            fast_vram_fraction=fast_vram_fraction,
+            fast_vram_headroom_gib=fast_vram_headroom_gib,
+            fast_activation_reserve_gib=fast_activation_reserve_gib,
+            fast_vram_budget_gib=fast_vram_budget_gib,
+            resolved_gguf=_resolve_gguf_choice(gguf_checkpoint.strip()),
+            lora_signature=_lora_signature(lora_name),
+            lora_strength=float(lora_strength),
         )
         return hashlib.sha256(str(key).encode()).hexdigest()
 
@@ -821,22 +1175,23 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         )
         resolved_gguf = _resolve_gguf_choice(gguf_checkpoint.strip())
         resolved_model_path = _resolve_model_path(model_path, local_model)
-        cache_key = (
-            resolved_model_path,
-            sensenova_u1_src.strip(),
-            device.strip(),
-            dtype,
-            attn_backend,
-            device_map,
-            max_memory.strip(),
-            vram_mode,
-            fast_vram_fraction,
-            fast_vram_headroom_gib,
-            fast_activation_reserve_gib,
-            fast_vram_budget_gib,
-            resolved_gguf,
-            _lora_signature(lora_name),
-            float(lora_strength),
+        cache_key = _make_local_model_cache_key(
+            model_path=resolved_model_path,
+            model_resources="",
+            sensenova_u1_src=sensenova_u1_src.strip(),
+            device=device.strip(),
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory.strip(),
+            vram_mode=vram_mode,
+            fast_vram_fraction=fast_vram_fraction,
+            fast_vram_headroom_gib=fast_vram_headroom_gib,
+            fast_activation_reserve_gib=fast_activation_reserve_gib,
+            fast_vram_budget_gib=fast_vram_budget_gib,
+            resolved_gguf=resolved_gguf,
+            lora_signature=_lora_signature(lora_name),
+            lora_strength=float(lora_strength),
         )
         if cache_key not in _LOCAL_MODEL_CACHE:
             model = _load_local_model(cache_key)
@@ -848,6 +1203,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
 def _load_local_model(cache_key: tuple) -> SenseNovaU1LocalModel:
     (
         model_path,
+        model_resources,
         sensenova_u1_src,
         device,
         dtype,
@@ -876,6 +1232,7 @@ def _load_local_model(cache_key: tuple) -> SenseNovaU1LocalModel:
 
     model = SenseNovaU1LocalModel(
         model_path=model_path,
+        model_resources=model_resources,
         sensenova_u1_src=sensenova_u1_src,
         device=device,
         dtype=dtype,
@@ -1256,6 +1613,7 @@ class SenseNovaExtension(ComfyExtension):
             SenseNovaPromptBuilder,
             SenseNovaVisionURL,
             SenseNovaVisionImage,
+            SenseNovaU1ModelLoader,
             SenseNovaU1LocalLoader,
             SenseNovaU1LocalTextToImage,
             SenseNovaU1LocalImageEdit,

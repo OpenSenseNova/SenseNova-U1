@@ -136,6 +136,7 @@ def _cache_key(model_path: str) -> tuple:
     return (
         model_path,
         "",
+        "",
         "cuda",
         "bfloat16",
         "auto",
@@ -249,6 +250,92 @@ class ComfyUILocalModelCacheTest(unittest.TestCase):
             local_model_input.options,
             ["", "community.safetensors", "quantized.gguf", "release/SenseNova-U1.5-8B-MoT"],
         )
+
+    def test_new_loader_separates_weights_from_resources(self) -> None:
+        recording_io = types.SimpleNamespace(
+            Schema=_RecordingSchema,
+            String=_RecordingWidgetType,
+            Combo=_RecordingWidgetType,
+            Float=_RecordingWidgetType,
+            Int=_RecordingWidgetType,
+        )
+        with (
+            mock.patch.object(
+                NODES,
+                "_list_model_weight_options",
+                return_value=["HF | sensenova/SenseNova-U1.5-8B-MoT", "Local | community.sft"],
+            ),
+            mock.patch.object(
+                NODES,
+                "_list_model_resource_options",
+                return_value=["Auto", "HF | sensenova/SenseNova-U1.5-8B-MoT"],
+            ),
+            mock.patch.object(NODES, "io", recording_io),
+        ):
+            schema = NODES.SenseNovaU1ModelLoader.define_schema()
+
+        inputs = {item.id: item for item in schema.inputs}
+        self.assertEqual(
+            inputs["model_weights"].options,
+            ["HF | sensenova/SenseNova-U1.5-8B-MoT", "Local | community.sft"],
+        )
+        self.assertEqual(
+            inputs["model_resources"].options,
+            ["Auto", "HF | sensenova/SenseNova-U1.5-8B-MoT"],
+        )
+        self.assertIn("lora_name", inputs)
+        self.assertIn("lora_strength", inputs)
+
+    def test_new_loader_passes_explicit_resources_to_the_core_model(self) -> None:
+        inputs = {
+            "model_weights": "HF | community/repacked-u1",
+            "model_resources": "HF | sensenova/SenseNova-U1.5-8B-MoT",
+            "lora_name": "",
+            "lora_strength": 1.0,
+            "sensenova_u1_src": "",
+            "device": "cpu",
+            "dtype": "bfloat16",
+            "attn_backend": "auto",
+            "device_map": "none",
+            "max_memory": "",
+            "vram_mode": "full",
+        }
+        with mock.patch.object(NODES, "SenseNovaU1LocalModel", _FakeLocalModel):
+            output = NODES.SenseNovaU1ModelLoader.execute(**inputs)
+
+        loaded_model = output.values[0]
+        self.assertEqual(loaded_model.kwargs["model_path"], "community/repacked-u1")
+        self.assertEqual(
+            loaded_model.kwargs["model_resources"],
+            "sensenova/SenseNova-U1.5-8B-MoT",
+        )
+
+    def test_new_loader_lists_cached_hf_and_registered_local_artifacts(self) -> None:
+        with TemporaryDirectory() as directory:
+            model_root = Path(directory) / "sensenova"
+            model_root.mkdir()
+            checkpoint = model_root / "community.sft"
+            checkpoint.touch()
+            resources = model_root / "resources"
+            resources.mkdir()
+            (resources / "config.json").write_text("{}")
+            fake_folder_paths = types.SimpleNamespace(
+                get_folder_paths=lambda name: [str(model_root)] if name == "sensenova" else [],
+            )
+            with (
+                mock.patch.dict(sys.modules, {"folder_paths": fake_folder_paths}),
+                mock.patch.object(NODES, "_cached_sensenova_repo_ids", return_value={"community/cached-sensenova"}),
+            ):
+                weight_options = NODES._list_model_weight_options()
+                resource_options = NODES._list_model_resource_options()
+                resolved_weight = NODES._resolve_model_weight_choice("Local | community.sft")
+                resolved_resources = NODES._resolve_model_resource_choice("Local | resources")
+
+        self.assertIn("HF | community/cached-sensenova", weight_options)
+        self.assertIn("Local | community.sft", weight_options)
+        self.assertIn("Local | resources", resource_options)
+        self.assertEqual(resolved_weight, str(checkpoint.resolve()))
+        self.assertEqual(resolved_resources, str(resources.resolve()))
 
     def test_loader_resolves_a_registered_single_file_artifact(self) -> None:
         with TemporaryDirectory() as directory:

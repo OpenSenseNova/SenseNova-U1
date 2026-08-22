@@ -6,7 +6,7 @@
   "nodes": [
     {
       "id": 1,
-      "type": "SenseNovaU1LocalLoader",
+      "type": "SenseNovaU1ModelLoader",
       "pos": [
         -535.8793125610355,
         146.00520475769034
@@ -34,18 +34,13 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaU1LocalLoader"
+        "Node name for S&R": "SenseNovaU1ModelLoader"
       },
       "widgets_values": [
-        "sensenova/SenseNova-U1-8B-MoT",
+        "HF | sensenova/SenseNova-U1.5-8B-MoT",
+        "Auto",
         "",
-        "cuda",
-        "bfloat16",
-        "auto",
-        "none",
-        "",
-        "full",
-        ""
+        1.0
       ]
     },
     {

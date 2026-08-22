@@ -213,6 +213,7 @@ class SenseNovaU1LocalModel:
         self,
         *,
         model_path: str,
+        model_resources: str = "",
         sensenova_u1_src: str = "",
         device: str = "cuda",
         dtype: str = "bfloat16",
@@ -277,6 +278,7 @@ class SenseNovaU1LocalModel:
         self.device = device
         self.dtype = dtype
         self.model_path = model_path
+        self.model_resources = model_resources.strip()
         self.attn_backend = attn_backend
         self.gguf_checkpoint = normalized_gguf or ""
         self.vram_mode = vram_mode
@@ -296,6 +298,7 @@ class SenseNovaU1LocalModel:
             device_map=normalized_device_map,
             max_memory=max_memory or None,
             gguf_checkpoint=normalized_gguf,
+            model_resources=self.model_resources or None,
             for_offload=offloading,
         )
         if normalized_lora and lora_strength != 0:
@@ -313,6 +316,7 @@ class SenseNovaU1LocalModel:
     def info(self) -> dict[str, Any]:
         return {
             "model_path": self.model_path,
+            "model_resources": self.model_resources or "Auto",
             "device": self.device,
             "dtype": self.dtype,
             "attn_backend": self.attn_backend,

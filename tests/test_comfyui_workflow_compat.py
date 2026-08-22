@@ -33,6 +33,11 @@ def _loader_class() -> ast.ClassDef:
     return next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == "SenseNovaU1LocalLoader")
 
 
+def _new_loader_class() -> ast.ClassDef:
+    tree = ast.parse(NODES_PATH.read_text())
+    return next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == "SenseNovaU1ModelLoader")
+
+
 def _method(loader: ast.ClassDef, name: str) -> ast.FunctionDef:
     return next(node for node in loader.body if isinstance(node, ast.FunctionDef) and node.name == name)
 
@@ -53,6 +58,15 @@ def _keyword(call: ast.Call, name: str) -> ast.expr | None:
 
 
 class ComfyUIWorkflowCompatibilityTest(unittest.TestCase):
+    def test_new_loader_exposes_weights_resources_and_lora_without_legacy_model_inputs(self) -> None:
+        calls = _schema_input_calls(_new_loader_class())
+        input_ids = [call.args[0].value for call in calls if call.args]
+
+        self.assertEqual(input_ids[:4], ["model_weights", "model_resources", "lora_name", "lora_strength"])
+        self.assertNotIn("model_path", input_ids)
+        self.assertNotIn("local_model", input_ids)
+        self.assertNotIn("gguf_checkpoint", input_ids)
+
     def test_local_inference_nodes_reacquire_evicted_loader_outputs(self) -> None:
         tree = ast.parse(NODES_PATH.read_text())
         class_names = (
