@@ -30,8 +30,9 @@ import gc
 import json
 import logging
 import math
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import torch
 from torch import nn
@@ -39,6 +40,99 @@ from torch import nn
 from . import accel
 
 LOGGER = logging.getLogger(__name__)
+
+ModelArtifactFormat = Literal["pretrained", "safetensors", "gguf"]
+
+
+@dataclass(frozen=True)
+class ModelArtifact:
+    """Resolved model weights plus the config/tokenizer resources they require."""
+
+    weights_path: str
+    resources_path: str
+    format: ModelArtifactFormat
+    metadata: dict[str, str] = field(default_factory=dict)
+
+
+def resolve_model_artifact(
+    model_path: str,
+    *,
+    gguf_checkpoint: str | None = None,
+    model_resources: str | None = None,
+) -> ModelArtifact:
+    """Normalize a HF directory/id, standalone Safetensors, or GGUF into one artifact.
+
+    Standalone weight files do not contain a tokenizer. Their resource location is
+    selected from ``model_resources``, a sibling config directory, embedded
+    Safetensors ``source_repo`` metadata, or a known SenseNova filename profile.
+    ``gguf_checkpoint`` preserves the former two-input API.
+    """
+    if gguf_checkpoint is not None:
+        return ModelArtifact(
+            weights_path=gguf_checkpoint,
+            resources_path=model_resources or model_path,
+            format="gguf",
+        )
+
+    suffix = Path(model_path).suffix.lower()
+    if suffix not in {".safetensors", ".sft", ".gguf"}:
+        resolved_path = _resolve_local_model_path(model_path)
+        return ModelArtifact(
+            weights_path=resolved_path,
+            resources_path=model_resources or resolved_path,
+            format="pretrained",
+        )
+
+    artifact_format: ModelArtifactFormat = "gguf" if suffix == ".gguf" else "safetensors"
+    metadata = _read_safetensors_metadata(model_path) if artifact_format == "safetensors" else {}
+    resources_path = model_resources or _find_sibling_resources(model_path, metadata.get("source_repo"))
+    if resources_path is None:
+        resources_path = metadata.get("source_repo") or _infer_sensenova_resources(model_path)
+    if resources_path is None:
+        raise RuntimeError(
+            f"Cannot determine config/tokenizer resources for standalone model {model_path!r}. "
+            "Pass model_resources or place it beside a directory containing config.json."
+        )
+    return ModelArtifact(
+        weights_path=model_path,
+        resources_path=resources_path,
+        format=artifact_format,
+        metadata=metadata,
+    )
+
+
+def _read_safetensors_metadata(checkpoint: str) -> dict[str, str]:
+    from safetensors import safe_open
+
+    try:
+        with safe_open(checkpoint, framework="pt", device="cpu") as weights:
+            return dict(weights.metadata() or {})
+    except Exception as exc:
+        raise RuntimeError(f"Could not read Safetensors metadata from {checkpoint!r}: {exc}") from exc
+
+
+def _find_sibling_resources(model_path: str, source_repo: str | None = None) -> str | None:
+    checkpoint = Path(model_path)
+    candidates = [checkpoint.parent, checkpoint.parent / checkpoint.stem]
+    if source_repo:
+        candidates.append(checkpoint.parent / source_repo.rsplit("/", 1)[-1])
+    for candidate in candidates:
+        if (candidate / "config.json").is_file():
+            return str(candidate)
+    return None
+
+
+def _infer_sensenova_resources(model_path: str) -> str | None:
+    filename = Path(model_path).name.lower()
+    if "u1.5" in filename:
+        if "preview" in filename:
+            suffix = "-Preview"
+        else:
+            suffix = "-SFT" if "sft" in filename else ""
+        return f"sensenova/SenseNova-U1.5-8B-MoT{suffix}"
+    if "sensenova-u1" in filename:
+        return "sensenova/SenseNova-U1-8B-MoT"
+    return None
 
 
 def _default_device() -> torch.device:
@@ -185,24 +279,30 @@ def load_model_and_tokenizer(
     dtype: torch.dtype,
     device: str | torch.device | None = None,
     gguf_checkpoint: str | None = None,
+    model_resources: str | None = None,
     device_map: str | None = None,
     max_memory: str | dict[int | str, str] | None = None,
     for_offload: bool = False,
 ) -> tuple[nn.Module, Any]:
     """Build a SenseNova-U1 model + tokenizer pair.
 
-    ``model_path`` always provides the config and tokenizer (HF id or local
-    directory containing ``config.json``).
+    ``model_path`` may be a HF id/directory, a standalone Safetensors file,
+    or a GGUF file. Standalone files obtain their config/tokenizer resources
+    from ``model_resources``, colocated files, checkpoint metadata, or a
+    known SenseNova filename profile.
 
-    Weight loading branches on ``gguf_checkpoint``:
+    Weight loading branches on the resolved artifact:
 
     - ``None``: standard ``AutoModel.from_pretrained(model_path, ...)``.
       The ``device_map`` / ``max_memory`` accelerate kwargs apply on this
       path; when ``device_map`` is ``None`` the model is ``.to(device)``
       after loading.
+    - ``"*.safetensors"`` / ``"*.sft"``: build a meta-init model and
+      stream the single checkpoint into its final placement with Accelerate.
     - ``"*.gguf"``: build a meta-init model from the config and inject
       dequantizing weights from the GGUF file via the diffusers quantizer.
-      The accelerate kwargs are ignored on this path.
+      The former ``gguf_checkpoint`` argument remains as a compatibility
+      alias while callers migrate to the unified ``model_path`` input.
 
     When ``for_offload=True`` the loaded model stays on CPU (no ``.to(device)``)
     so a downstream layer-offload wrapper can manage CPU<->GPU movement
@@ -224,14 +324,29 @@ def load_model_and_tokenizer(
     if device is None and not device_map and not for_offload:
         device = _default_device()
 
-    model_path = _resolve_local_model_path(model_path)
-    config = AutoConfig.from_pretrained(model_path)
+    artifact = resolve_model_artifact(
+        model_path,
+        gguf_checkpoint=gguf_checkpoint,
+        model_resources=model_resources,
+    )
+    resources_path = _resolve_local_model_path(artifact.resources_path)
+    config = AutoConfig.from_pretrained(resources_path)
     check_checkpoint_compatibility(config)
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(resources_path)
 
-    if gguf_checkpoint is not None:
+    if artifact.format == "gguf":
         gguf_device = torch.device("cpu") if for_offload else device
-        model = _load_from_gguf(config, gguf_checkpoint, dtype=dtype, device=gguf_device)
+        model = _load_from_gguf(config, artifact.weights_path, dtype=dtype, device=gguf_device)
+    elif artifact.format == "safetensors":
+        model = _load_from_safetensors(
+            config,
+            artifact.weights_path,
+            dtype=dtype,
+            device=device,
+            device_map=device_map,
+            max_memory=max_memory,
+            for_offload=for_offload,
+        )
     else:
         model_kwargs: dict[str, Any] = {"config": config, **pretrained_dtype_kwargs(dtype)}
         if device_map:
@@ -245,6 +360,106 @@ def load_model_and_tokenizer(
             model = model.to(device)
 
     return model, tokenizer
+
+
+def _load_from_safetensors(
+    config,
+    checkpoint: str,
+    *,
+    dtype: torch.dtype,
+    device: str | torch.device | None,
+    device_map: str | None,
+    max_memory: str | dict[int | str, str] | None,
+    for_offload: bool,
+) -> nn.Module:
+    """Stream one large Safetensors checkpoint into a meta-initialized model."""
+    try:
+        from accelerate import dispatch_model, init_empty_weights
+        from accelerate.utils import get_balanced_memory, infer_auto_device_map, set_module_tensor_to_device
+    except ImportError as exc:
+        raise RuntimeError("Standalone Safetensors loading requires `accelerate`.") from exc
+
+    from safetensors import safe_open
+    from transformers import AutoModel
+
+    with init_empty_weights():
+        model = AutoModel.from_config(config)
+
+    parsed_max_memory = _normalize_max_memory(max_memory)
+    if device_map:
+        if device_map not in {"auto", "balanced", "balanced_low_0", "sequential"}:
+            raise RuntimeError(f"Unsupported device_map for standalone Safetensors: {device_map!r}.")
+        no_split = getattr(model, "_no_split_modules", None)
+        inferred_memory = parsed_max_memory or None
+        if device_map in {"balanced", "balanced_low_0"}:
+            inferred_memory = get_balanced_memory(
+                model,
+                max_memory=inferred_memory,
+                no_split_module_classes=no_split,
+                dtype=dtype,
+                low_zero=device_map == "balanced_low_0",
+            )
+        target_map = infer_auto_device_map(
+            model,
+            max_memory=inferred_memory,
+            no_split_module_classes=no_split,
+            dtype=dtype,
+        )
+    elif for_offload:
+        target_map = {"": "cpu"}
+    else:
+        target_map = {"": str(device or _default_device())}
+
+    if "disk" in target_map.values():
+        raise RuntimeError(
+            "Standalone Safetensors device_map resolved to disk offload, which needs an explicit offload directory. "
+            "Increase max_memory or use a SenseNova vram_mode."
+        )
+
+    expected = set(model.state_dict())
+    loaded: set[str] = set()
+    unexpected: list[str] = []
+    with safe_open(checkpoint, framework="pt", device="cpu") as weights:
+        for name in weights.keys():
+            if name not in expected:
+                unexpected.append(name)
+                continue
+            tensor = weights.get_tensor(name)
+            set_module_tensor_to_device(
+                model,
+                name,
+                _device_for_tensor(name, target_map),
+                value=tensor,
+                dtype=dtype,
+            )
+            loaded.add(name)
+
+    if hasattr(model, "tie_weights"):
+        model.tie_weights()
+    missing_meta = [name for name, tensor in (*model.named_parameters(), *model.named_buffers()) if tensor.is_meta]
+    if missing_meta:
+        preview = ", ".join(missing_meta[:5])
+        raise RuntimeError(
+            f"Standalone Safetensors is missing {len(missing_meta)} model tensor(s), including: {preview}."
+        )
+    missing = expected - loaded
+    if missing:
+        LOGGER.warning("Standalone Safetensors did not provide %d initialized model tensor(s).", len(missing))
+    if unexpected:
+        LOGGER.warning("Standalone Safetensors contains %d unused tensor(s).", len(unexpected))
+
+    if len(set(target_map.values())) > 1:
+        model = dispatch_model(model, device_map=target_map)
+    return model.eval()
+
+
+def _device_for_tensor(name: str, device_map: dict[str, Any]) -> Any:
+    module_name = name
+    while module_name not in device_map and module_name:
+        module_name = module_name.rsplit(".", 1)[0] if "." in module_name else ""
+    if module_name not in device_map:
+        raise RuntimeError(f"device_map has no destination for tensor {name!r}.")
+    return device_map[module_name]
 
 
 def _normalize_max_memory(value: str | dict | None) -> dict[int | str, str]:

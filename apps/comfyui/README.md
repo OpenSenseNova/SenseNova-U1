@@ -93,6 +93,31 @@ export SN_BASE_URL="https://token.sensenova.cn/v1"
 
 Tokens are not exposed as node inputs, so they are not saved into ComfyUI workflows.
 
+## Unified Local Model And LoRA Loading
+
+Register `<comfyui>/models/sensenova/` as a ComfyUI model folder, then select
+any of these artifacts through the Local Loader's `local_model` dropdown:
+
+- an official Hugging Face model directory with complete weight shards;
+- a community single-file `.safetensors` or `.sft` checkpoint;
+- a single-file `.gguf` checkpoint.
+
+Standalone weights still need the matching config and tokenizer. The loader
+first looks for a colocated model directory (including the basename from the
+Safetensors `source_repo` metadata), then uses that metadata or a known
+SenseNova filename profile as the Hugging Face/cache fallback. Community `.sft`
+files and custom Safetensors metadata are read directly and streamed tensor by
+tensor into a meta-initialized model, so loading does not create a second full
+state-dict copy in host memory.
+
+Put an optional `.safetensors` LoRA under `<comfyui>/models/loras/`, then select
+it with `lora_name` and set `lora_strength`. The LoRA identity, size, mtime, and
+strength are included in the model cache key so replacing or switching an
+adapter cannot silently reuse stale merged weights. This first implementation
+supports LoRA merging on Hugging Face and standalone Safetensors base weights;
+GGUF + LoRA is rejected explicitly because the current Diffusers GGUF parameter
+type needs a patch-aware runtime adapter rather than an in-place BF16 merge.
+
 ## GGUF Quantized Checkpoints
 
 The `SenseNova U1 Local Loader` exposes an optional `gguf_checkpoint` dropdown

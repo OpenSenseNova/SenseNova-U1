@@ -24,6 +24,8 @@ FAST_LOADER_INPUTS = [
     "fast_activation_reserve_gib",
     "fast_vram_budget_gib",
 ]
+LOCAL_MODEL_INPUT = "local_model"
+APPENDED_LOADER_INPUTS = [LOCAL_MODEL_INPUT, "lora_name", "lora_strength"]
 
 
 def _loader_class() -> ast.ClassDef:
@@ -74,7 +76,9 @@ class ComfyUIWorkflowCompatibilityTest(unittest.TestCase):
         input_ids = [call.args[0].value for call in calls if call.args]
 
         self.assertEqual(input_ids[: len(LEGACY_LOADER_INPUTS)], LEGACY_LOADER_INPUTS)
-        self.assertEqual(input_ids[-len(FAST_LOADER_INPUTS) :], FAST_LOADER_INPUTS)
+        fast_start = len(LEGACY_LOADER_INPUTS)
+        self.assertEqual(input_ids[fast_start : fast_start + len(FAST_LOADER_INPUTS)], FAST_LOADER_INPUTS)
+        self.assertEqual(input_ids[-len(APPENDED_LOADER_INPUTS) :], APPENDED_LOADER_INPUTS)
 
         by_id = {call.args[0].value: call for call in calls if call.args}
         for input_id in FAST_LOADER_INPUTS:

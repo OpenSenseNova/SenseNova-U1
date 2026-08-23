@@ -225,6 +225,8 @@ class SenseNovaU1LocalModel:
         fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
         fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
         fast_vram_budget_gib: float = 0.0,
+        lora_path: str = "",
+        lora_strength: float = 1.0,
     ) -> None:
         if not model_path.strip():
             raise RuntimeError("Local model_path cannot be empty.")
@@ -238,6 +240,8 @@ class SenseNovaU1LocalModel:
             raise RuntimeError("fast_activation_reserve_gib must be >= 0.")
         if not math.isfinite(fast_vram_budget_gib) or fast_vram_budget_gib < 0:
             raise RuntimeError("fast_vram_budget_gib must be >= 0; use 0 for automatic.")
+        if not math.isfinite(lora_strength):
+            raise RuntimeError("lora_strength must be finite.")
         prefetch_count = _VRAM_MODE_TO_PREFETCH[vram_mode]
 
         injected_path = _maybe_add_source_path(sensenova_u1_src)
@@ -252,6 +256,8 @@ class SenseNovaU1LocalModel:
         torch_dtype = _resolve_dtype(torch, dtype)
         normalized_device_map = None if device_map == "none" else device_map
         normalized_gguf = gguf_checkpoint.strip() or None
+        normalized_lora = lora_path.strip()
+        artifact_is_gguf = bool(normalized_gguf or Path(model_path).suffix.lower() == ".gguf")
         offloading = prefetch_count > 0
         if offloading and normalized_device_map:
             LOGGER.warning(
@@ -261,9 +267,13 @@ class SenseNovaU1LocalModel:
                 normalized_device_map,
             )
             normalized_device_map = None
-        if normalized_gguf and normalized_device_map:
+        if artifact_is_gguf and normalized_device_map:
             # diffusers' GGUF quantizer skips accelerate sharding — let the user know.
-            raise RuntimeError("gguf_checkpoint cannot be combined with a device_map; pick one.")
+            raise RuntimeError("GGUF cannot be combined with a device_map; pick one.")
+        if artifact_is_gguf and normalized_lora:
+            raise RuntimeError(
+                "LoRA merge is not supported for GGUF weights yet; use the BF16 directory or standalone Safetensors."
+            )
         self.device = device
         self.dtype = dtype
         self.model_path = model_path
@@ -275,6 +285,8 @@ class SenseNovaU1LocalModel:
         self.fast_vram_headroom_gib = float(fast_vram_headroom_gib)
         self.fast_activation_reserve_gib = float(fast_activation_reserve_gib)
         self.fast_vram_budget_gib = float(fast_vram_budget_gib) or None
+        self.lora_path = normalized_lora
+        self.lora_strength = float(lora_strength)
         self.effective_attn_backend = sensenova_u1.effective_attn_backend()
         _vram_snapshot(f"loader: pre-load (vram_mode={vram_mode})", device=device, reset_peak=True)
         self.model, self.tokenizer = load_model_and_tokenizer(
@@ -286,6 +298,14 @@ class SenseNovaU1LocalModel:
             gguf_checkpoint=normalized_gguf,
             for_offload=offloading,
         )
+        if normalized_lora and lora_strength != 0:
+            from sensenova_u1.utils import load_and_merge_lora_weight_from_safetensors
+
+            self.model = load_and_merge_lora_weight_from_safetensors(
+                self.model,
+                normalized_lora,
+                strength=lora_strength,
+            )
         _vram_snapshot(f"loader: post-load (for_offload={offloading})", device=device)
         _maybe_remove_source_path(injected_path)
 
@@ -304,6 +324,8 @@ class SenseNovaU1LocalModel:
             "fast_vram_headroom_gib": self.fast_vram_headroom_gib,
             "fast_activation_reserve_gib": self.fast_activation_reserve_gib,
             "fast_vram_budget_gib": self.fast_vram_budget_gib,
+            "lora_path": self.lora_path,
+            "lora_strength": self.lora_strength,
         }
 
     def _offload_ctx(self):
