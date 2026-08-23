@@ -213,6 +213,7 @@ class SenseNovaU1LocalModel:
         self,
         *,
         model_path: str,
+        model_resources: str = "",
         sensenova_u1_src: str = "",
         device: str = "cuda",
         dtype: str = "bfloat16",
@@ -277,6 +278,7 @@ class SenseNovaU1LocalModel:
         self.device = device
         self.dtype = dtype
         self.model_path = model_path
+        self.model_resources = model_resources.strip()
         self.attn_backend = attn_backend
         self.gguf_checkpoint = normalized_gguf or ""
         self.vram_mode = vram_mode
@@ -296,6 +298,7 @@ class SenseNovaU1LocalModel:
             device_map=normalized_device_map,
             max_memory=max_memory or None,
             gguf_checkpoint=normalized_gguf,
+            model_resources=self.model_resources or None,
             for_offload=offloading,
         )
         if normalized_lora and lora_strength != 0:
@@ -313,6 +316,7 @@ class SenseNovaU1LocalModel:
     def info(self) -> dict[str, Any]:
         return {
             "model_path": self.model_path,
+            "model_resources": self.model_resources or "Auto",
             "device": self.device,
             "dtype": self.dtype,
             "attn_backend": self.attn_backend,
@@ -620,30 +624,13 @@ def default_device() -> str:
 
 
 def default_source_path() -> str:
-    """Resolve a `sensenova_u1` source path for the loader's default input.
+    """Return the explicit development source override, if configured.
 
-    Precedence:
-      1. ``SENSENOVA_U1_SRC`` env var (manual override; wins everywhere).
-      2. Monorepo symlink auto-discovery — *location-bound*: only fires when
-         this file resolves to ``<repo>/apps/comfyui/local_pipeline.py``,
-         which happens when ``install.py`` (default mode) symlinks the
-         directory into ``<ComfyUI>/custom_nodes/ComfyUI-SenseNova-U1``.
-         ``--copy`` mode and Registry / Manager installs land somewhere
-         else, so this branch is skipped for them.
-      3. ``DEFAULT_SOURCE_PATH`` (empty) — falls back to the installed
-         ``sensenova_u1`` wheel in the ComfyUI Python environment.
+    Normal installations import the ``sensenova_u1`` package from the
+    ComfyUI Python environment. Developers who cannot use an editable install
+    may opt into a source checkout with ``SENSENOVA_U1_SRC``.
     """
-    env = os.environ.get("SENSENOVA_U1_SRC", "").strip()
-    if env:
-        return env
-    # Path.resolve() follows symlinks, so the install.py-created link
-    # leads back to the monorepo checkout.
-    here = Path(__file__).resolve()
-    if here.parent.name == "comfyui" and here.parents[1].name == "apps":
-        repo_src = here.parents[2] / "src"
-        if repo_src.is_dir():
-            return str(repo_src)
-    return DEFAULT_SOURCE_PATH
+    return os.environ.get("SENSENOVA_U1_SRC", DEFAULT_SOURCE_PATH).strip()
 
 
 def parse_resolution_option(value: str) -> tuple[int, int]:
@@ -799,8 +786,8 @@ def _import_sensenova_u1():
             "Local SenseNova-U1 inference requires the `sensenova_u1` package. "
             "Install it into the ComfyUI Python environment, e.g.:\n"
             "  pip install 'sensenova-u1 @ git+https://github.com/OpenSenseNova/SenseNova-U1'\n"
-            "Or, for monorepo development, set SENSENOVA_U1_SRC=/path/to/SenseNova-U1/src "
-            "(or fill the loader's `sensenova_u1_src` input)."
+            "For monorepo development, prefer `pip install -e /path/to/SenseNova-U1`; "
+            "SENSENOVA_U1_SRC remains available as an explicit legacy override."
         ) from exc
     return sensenova_u1, load_model_and_tokenizer, smart_resize
 
