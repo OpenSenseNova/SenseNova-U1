@@ -53,6 +53,7 @@ class ComfyUIPromptBuilderImagesTest(unittest.TestCase):
         client.chat.return_value = SimpleNamespace(text="expanded", usage={}, raw={})
         client_type = mock.MagicMock()
         client_type.from_env.return_value = client
+        jpeg_encoder = mock.Mock(side_effect=lambda image, **_kwargs: f"data:{id(image)}")
 
         with (
             mock.patch.object(NODES, "SenseNovaClient", client_type),
@@ -61,11 +62,7 @@ class ComfyUIPromptBuilderImagesTest(unittest.TestCase):
                 "comfy_batch_to_pil_images",
                 side_effect=[[first_image], [second_image, third_image]],
             ),
-            mock.patch.object(
-                NODES,
-                "pil_to_png_data_url",
-                side_effect=lambda image: f"data:{id(image)}",
-            ),
+            mock.patch.object(NODES, "pil_to_jpeg_data_url", jpeg_encoder),
             mock.patch.object(
                 NODES,
                 "_list_multimodal_chat_model_options",
@@ -87,6 +84,14 @@ class ComfyUIPromptBuilderImagesTest(unittest.TestCase):
             client.chat.call_args.kwargs["image_urls"],
             [f"data:{id(first_image)}", f"data:{id(second_image)}", f"data:{id(third_image)}"],
         )
+        self.assertEqual(
+            jpeg_encoder.call_args_list,
+            [
+                mock.call(first_image, quality=95, max_pixels=4_000_000),
+                mock.call(second_image, quality=95, max_pixels=4_000_000),
+                mock.call(third_image, quality=95, max_pixels=4_000_000),
+            ],
+        )
 
     def test_execute_rejects_more_than_ten_images_after_batch_expansion(self) -> None:
         with (
@@ -107,7 +112,7 @@ class ComfyUIPromptBuilderImagesTest(unittest.TestCase):
     def test_execute_rejects_a_text_only_model_when_images_are_connected(self) -> None:
         with (
             mock.patch.object(NODES, "comfy_batch_to_pil_images", return_value=[object()]),
-            mock.patch.object(NODES, "pil_to_png_data_url", return_value="data:image/png;base64,aW1hZ2U="),
+            mock.patch.object(NODES, "pil_to_jpeg_data_url", return_value="data:image/jpeg;base64,aW1hZ2U="),
             mock.patch.object(
                 NODES,
                 "_list_multimodal_chat_model_options",

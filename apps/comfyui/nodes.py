@@ -25,7 +25,7 @@ try:
         comfy_image_info,
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
-        pil_to_png_data_url,
+        pil_to_jpeg_data_url,
     )
     from .local_pipeline import (
         ATTN_BACKEND_OPTIONS,
@@ -66,7 +66,7 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         comfy_image_info,
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
-        pil_to_png_data_url,
+        pil_to_jpeg_data_url,
     )
     from local_pipeline import (
         ATTN_BACKEND_OPTIONS,
@@ -137,6 +137,8 @@ _OFFICIAL_MODEL_IDS = (
     "sensenova/SenseNova-U1-8B-MoT",
 )
 _MAX_PROMPT_BUILDER_IMAGES = 10
+_PROMPT_BUILDER_IMAGE_MAX_PIXELS = 4_000_000
+_PROMPT_BUILDER_JPEG_QUALITY = 95
 
 
 @lru_cache(maxsize=1)
@@ -176,7 +178,14 @@ def _prompt_builder_image_urls(images: io.Autogrow.Type | None) -> list[str]:
         pil_images.extend(comfy_batch_to_pil_images(image_batch))
         if len(pil_images) > _MAX_PROMPT_BUILDER_IMAGES:
             raise RuntimeError(f"SenseNova Prompt Builder accepts at most {_MAX_PROMPT_BUILDER_IMAGES} images.")
-    return [pil_to_png_data_url(image) for image in pil_images]
+    return [
+        pil_to_jpeg_data_url(
+            image,
+            quality=_PROMPT_BUILDER_JPEG_QUALITY,
+            max_pixels=_PROMPT_BUILDER_IMAGE_MAX_PIXELS,
+        )
+        for image in pil_images
+    ]
 
 
 def _sensenova_model_roots() -> tuple[Path, ...]:

@@ -88,7 +88,7 @@ def _load_nodes_module():
         "comfy_image_info",
         "comfy_image_to_png_data_url",
         "image_bytes_to_comfy_image",
-        "pil_to_png_data_url",
+        "pil_to_jpeg_data_url",
     ):
         setattr(fake_image_utils, name, lambda *args, **kwargs: None)
 

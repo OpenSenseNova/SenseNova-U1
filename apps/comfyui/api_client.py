@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+import tempfile
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -52,6 +56,12 @@ IMAGE_SIZE_OPTIONS = (
     "3072x1376|21:9",
     "1344x3136|9:21",
 )
+
+_API_REQUEST_WORKER_PATH = Path(__file__).with_name("api_request_worker.py")
+_API_REQUEST_POLL_INTERVAL = 0.1
+_API_WORKER_TERMINATE_TIMEOUT = 5.0
+_RETRYABLE_POST_STATUS_CODES = {429, 500, 502, 503, 504}
+_RETRYABLE_POST_TRANSPORT_ERRORS = {"ConnectError", "ConnectTimeout"}
 
 
 @dataclass(frozen=True)
@@ -246,33 +256,38 @@ class SenseNovaClient:
             "Content-Type": "application/json",
         }
 
-        last_error: Exception | None = None
         for attempt in range(3):
-            try:
-                with httpx.Client(timeout=timeout) as client:
-                    response = client.post(url, headers=headers, json=payload)
-                if response.status_code in {429, 500, 502, 503, 504} and attempt < 2:
-                    time.sleep(2**attempt)
+            result = _post_json_interruptibly(url, headers, payload, timeout=timeout)
+            result_kind = result.get("kind")
+            if result_kind == "transport_error":
+                error_type = str(result.get("error_type") or "HTTPError")
+                if error_type in _RETRYABLE_POST_TRANSPORT_ERRORS and attempt < 2:
+                    _sleep_interruptibly(2**attempt)
                     continue
-                response.raise_for_status()
-                return response.json()
-            except httpx.HTTPStatusError as exc:
-                status_code = exc.response.status_code
-                if status_code in {429, 500, 502, 503, 504} and attempt < 2:
-                    time.sleep(2**attempt)
-                    last_error = exc
-                    continue
-                raise RuntimeError(_format_api_error(exc.response, self.config.api_key)) from exc
-            except httpx.HTTPError as exc:
-                if attempt < 2:
-                    time.sleep(2**attempt)
-                    last_error = exc
-                    continue
-                raise RuntimeError(f"SenseNova request failed: {exc.__class__.__name__}.") from exc
-            except json.JSONDecodeError as exc:
-                raise RuntimeError("SenseNova response was not valid JSON.") from exc
+                raise RuntimeError(f"SenseNova request failed: {error_type}.")
+            if result_kind != "response":
+                error_type = str(result.get("error_type") or "WorkerError")
+                raise RuntimeError(f"SenseNova API request worker failed: {error_type}.")
 
-        raise RuntimeError(f"SenseNova request failed: {last_error.__class__.__name__}.")
+            status_code = result.get("status_code")
+            if not isinstance(status_code, int):
+                raise RuntimeError("SenseNova request worker returned an invalid HTTP status.")
+            if status_code in _RETRYABLE_POST_STATUS_CODES and attempt < 2:
+                _sleep_interruptibly(2**attempt)
+                continue
+
+            response_body = result.get("body")
+            if result.get("json_valid"):
+                response = httpx.Response(status_code, json=response_body)
+            else:
+                response = httpx.Response(status_code, text=str(result.get("body_text") or ""))
+            if not 200 <= status_code < 300:
+                raise RuntimeError(_format_api_error(response, self.config.api_key))
+            if not result.get("json_valid"):
+                raise RuntimeError("SenseNova response was not valid JSON.")
+            return response_body
+
+        raise RuntimeError("SenseNova request failed after retries.")
 
     def _get_json(self, path: str, *, timeout: int) -> dict[str, Any]:
         url = f"{self.config.base_url}{path}"
@@ -367,3 +382,84 @@ def _redact(value: str, api_key: str = "") -> str:
     if api_key:
         redacted = redacted.replace(api_key, "[REDACTED]")
     return redacted
+
+
+def _throw_if_comfyui_interrupted() -> None:
+    try:
+        import comfy.model_management as model_management
+    except ImportError:
+        return
+    model_management.throw_exception_if_processing_interrupted()
+
+
+def _terminate_api_worker(process: subprocess.Popen) -> None:
+    if process.poll() is not None:
+        return
+    try:
+        process.terminate()
+    except ProcessLookupError:
+        return
+    try:
+        process.wait(timeout=_API_WORKER_TERMINATE_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
+
+
+def _sleep_interruptibly(seconds: float) -> None:
+    deadline = time.monotonic() + seconds
+    while True:
+        _throw_if_comfyui_interrupted()
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return
+        time.sleep(min(_API_REQUEST_POLL_INTERVAL, remaining))
+
+
+def _post_json_interruptibly(
+    url: str,
+    headers: dict[str, str],
+    payload: dict[str, Any],
+    *,
+    timeout: int,
+) -> dict[str, Any]:
+    _throw_if_comfyui_interrupted()
+    with tempfile.TemporaryDirectory(prefix="sensenova-api-request-") as temp_dir:
+        request_path = Path(temp_dir) / "request.json"
+        result_path = Path(temp_dir) / "result.json"
+        request_path.write_text(
+            json.dumps(
+                {
+                    "url": url,
+                    "headers": headers,
+                    "payload": payload,
+                    "timeout": {
+                        "connect": 10.0,
+                        "read": float(timeout),
+                        "write": 30.0,
+                        "pool": 10.0,
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        _throw_if_comfyui_interrupted()
+        process = subprocess.Popen([sys.executable, str(_API_REQUEST_WORKER_PATH), str(request_path), str(result_path)])
+        try:
+            while process.poll() is None:
+                _throw_if_comfyui_interrupted()
+                time.sleep(_API_REQUEST_POLL_INTERVAL)
+            _throw_if_comfyui_interrupted()
+        except BaseException:
+            _terminate_api_worker(process)
+            raise
+
+        try:
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError(
+                f"SenseNova API request worker exited with code {process.returncode} without a valid result."
+            ) from exc
+        if not isinstance(result, dict):
+            raise RuntimeError("SenseNova API request worker returned an invalid result.")
+        return result
