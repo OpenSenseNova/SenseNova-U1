@@ -19,6 +19,11 @@ try:
 except ImportError:  # pragma: no cover - supports direct imports during tests
     from image_utils import comfy_batch_to_pil_images, comfy_image_to_pil, pil_to_comfy_image
 
+try:
+    from .hf_download import resolve_hf_model_snapshot_interruptibly
+except ImportError:  # pragma: no cover - supports direct imports during tests
+    from hf_download import resolve_hf_model_snapshot_interruptibly
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -292,15 +297,21 @@ class SenseNovaU1LocalModel:
         self.lora_path = normalized_lora
         self.lora_strength = float(lora_strength)
         self.effective_attn_backend = sensenova_u1.effective_attn_backend()
+        resolved_model_path = (
+            model_path if artifact_is_gguf else resolve_hf_model_snapshot_interruptibly(model_path)
+        )
+        resolved_model_resources = self.model_resources
+        if resolved_model_resources == model_path:
+            resolved_model_resources = resolved_model_path
         _vram_snapshot(f"loader: pre-load (vram_mode={vram_mode})", device=device, reset_peak=True)
         self.model, self.tokenizer = load_model_and_tokenizer(
-            model_path,
+            resolved_model_path,
             dtype=torch_dtype,
             device=device,
             device_map=normalized_device_map,
             max_memory=max_memory or None,
             gguf_checkpoint=normalized_gguf,
-            model_resources=self.model_resources or None,
+            model_resources=resolved_model_resources or None,
             for_offload=offloading,
         )
         if normalized_lora and lora_strength != 0:
