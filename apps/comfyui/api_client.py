@@ -20,6 +20,10 @@ CHAT_MODELS = (
     "glm-5.2",
     "sensenova-6.8-flash-lite",
 )
+MULTIMODAL_CHAT_MODELS = (
+    "sensenova-6.7-flash-lite",
+    "sensenova-6.8-flash-lite",
+)
 VISION_MODELS = ("sensenova-6.7-flash-lite",)
 IMAGE_MODELS = ("sensenova-u1-fast",)
 IMAGE_SIZES = (
@@ -68,6 +72,7 @@ class ImageGenerationResult:
 @dataclass(frozen=True)
 class ModelCatalog:
     chat_models: tuple[str, ...]
+    multimodal_chat_models: tuple[str, ...]
     image_models: tuple[str, ...]
 
 
@@ -89,17 +94,28 @@ class SenseNovaClient:
         top_p: float,
         max_tokens: int,
         timeout: int,
+        image_urls: list[str] | None = None,
     ) -> ChatResult:
         if not model.strip():
             raise RuntimeError("Chat model cannot be empty.")
         if not text.strip():
             raise RuntimeError("Chat text cannot be empty.")
 
+        user_content: str | list[dict[str, Any]] = text
+        if image_urls:
+            for image_url in image_urls:
+                if not is_supported_vision_image_url(image_url):
+                    raise RuntimeError("Chat image URLs must use http(s) or base64 image data URLs.")
+            user_content = [
+                {"type": "text", "text": text},
+                *({"type": "image_url", "image_url": {"url": image_url}} for image_url in image_urls),
+            ]
+
         payload: dict[str, Any] = {
             "model": model,
             "messages": [
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": text},
+                {"role": "user", "content": user_content},
             ],
             "stream": False,
             "temperature": temperature,
@@ -288,6 +304,7 @@ def _extract_model_catalog(raw: dict[str, Any]) -> ModelCatalog:
         raise RuntimeError("Model response did not contain a data list.")
 
     chat_models: list[str] = []
+    multimodal_chat_models: list[str] = []
     image_models: list[str] = []
     for item in data:
         if not isinstance(item, dict):
@@ -305,8 +322,11 @@ def _extract_model_catalog(raw: dict[str, Any]) -> ModelCatalog:
             continue
         if "text" in input_modalities and "text" in output_modalities and model_id not in chat_models:
             chat_models.append(model_id)
+        if "image" in input_modalities and "text" in output_modalities and model_id not in multimodal_chat_models:
+            multimodal_chat_models.append(model_id)
     return ModelCatalog(
         chat_models=tuple(chat_models),
+        multimodal_chat_models=tuple(multimodal_chat_models),
         image_models=tuple(image_models),
     )
 

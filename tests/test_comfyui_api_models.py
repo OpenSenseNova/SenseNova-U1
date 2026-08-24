@@ -74,6 +74,7 @@ class SenseNovaApiModelsTest(unittest.TestCase):
         catalog = API_CLIENT._extract_model_catalog(raw)
 
         self.assertEqual(catalog.chat_models, ("vision-chat", "text-chat"))
+        self.assertEqual(catalog.multimodal_chat_models, ("vision-chat",))
         self.assertEqual(catalog.image_models, ("image-a", "image-output-only"))
 
     def test_list_models_uses_shared_config_key_and_models_endpoint(self) -> None:
@@ -118,6 +119,36 @@ class SenseNovaApiModelsTest(unittest.TestCase):
 
         self.assertEqual(result.text, "expanded prompt")
         self.assertEqual(post_json.call_args.args[1]["model"], "deepseek-v4-flash")
+        self.assertEqual(post_json.call_args.args[1]["messages"][1]["content"], "draw a cat")
+
+    def test_chat_builds_ordered_multimodal_content_for_multiple_images(self) -> None:
+        client = API_CLIENT.SenseNovaClient(_FakeConfig(api_key="shared-key", base_url="https://token.sensenova.cn/v1"))
+        raw = {"choices": [{"message": {"content": "expanded prompt"}}]}
+        image_urls = [
+            "data:image/png;base64,Zmlyc3Q=",
+            "data:image/png;base64,c2Vjb25k",
+        ]
+
+        with mock.patch.object(client, "_post_json", return_value=raw) as post_json:
+            client.chat(
+                text="Use both references.",
+                system_prompt="expand prompts",
+                model="sensenova-6.7-flash-lite",
+                temperature=0.3,
+                top_p=1.0,
+                max_tokens=100,
+                timeout=30,
+                image_urls=image_urls,
+            )
+
+        self.assertEqual(
+            post_json.call_args.args[1]["messages"][1]["content"],
+            [
+                {"type": "text", "text": "Use both references."},
+                {"type": "image_url", "image_url": {"url": image_urls[0]}},
+                {"type": "image_url", "image_url": {"url": image_urls[1]}},
+            ],
+        )
 
     def test_generate_image_accepts_a_model_discovered_at_runtime(self) -> None:
         client = API_CLIENT.SenseNovaClient(_FakeConfig(api_key="shared-key", base_url="https://token.sensenova.cn/v1"))

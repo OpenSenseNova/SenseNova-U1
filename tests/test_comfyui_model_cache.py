@@ -78,6 +78,7 @@ def _load_nodes_module():
     fake_api_client.CHAT_MODELS = ("chat",)
     fake_api_client.IMAGE_MODELS = ("image",)
     fake_api_client.IMAGE_SIZE_OPTIONS = ("1024x1024",)
+    fake_api_client.MULTIMODAL_CHAT_MODELS = ("vision",)
     fake_api_client.VISION_MODELS = ("vision",)
     fake_api_client.SenseNovaClient = object
 
@@ -87,6 +88,7 @@ def _load_nodes_module():
         "comfy_image_info",
         "comfy_image_to_png_data_url",
         "image_bytes_to_comfy_image",
+        "pil_to_png_data_url",
     ):
         setattr(fake_image_utils, name, lambda *args, **kwargs: None)
 
@@ -300,6 +302,11 @@ class ComfyUILocalModelCacheTest(unittest.TestCase):
             Combo=_RecordingWidgetType,
             Float=_RecordingWidgetType,
             Int=_RecordingWidgetType,
+            Image=_RecordingWidgetType,
+            Autogrow=types.SimpleNamespace(
+                Input=_RecordingWidgetType.Input,
+                TemplateNames=lambda *args, **kwargs: None,
+            ),
         )
         with (
             mock.patch.object(
@@ -327,6 +334,7 @@ class ComfyUILocalModelCacheTest(unittest.TestCase):
     def test_remote_model_catalog_is_shared_by_all_api_node_schemas(self) -> None:
         catalog = types.SimpleNamespace(
             chat_models=("text-chat",),
+            multimodal_chat_models=("vision-chat",),
             image_models=("image-generate",),
         )
         client = mock.MagicMock()
@@ -336,6 +344,7 @@ class ComfyUILocalModelCacheTest(unittest.TestCase):
 
         with mock.patch.object(NODES, "SenseNovaClient", client_type):
             self.assertEqual(NODES._list_chat_model_options(), ("text-chat",))
+            self.assertEqual(NODES._list_multimodal_chat_model_options(), ("vision-chat",))
             self.assertEqual(NODES._list_image_model_options(), ("image-generate",))
 
         client.list_models.assert_called_once_with(timeout=5)

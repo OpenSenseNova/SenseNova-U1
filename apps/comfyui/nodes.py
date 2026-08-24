@@ -16,6 +16,7 @@ try:
         CHAT_MODELS,
         IMAGE_MODELS,
         IMAGE_SIZE_OPTIONS,
+        MULTIMODAL_CHAT_MODELS,
         VISION_MODELS,
         SenseNovaClient,
     )
@@ -24,6 +25,7 @@ try:
         comfy_image_info,
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
+        pil_to_png_data_url,
     )
     from .local_pipeline import (
         ATTN_BACKEND_OPTIONS,
@@ -55,6 +57,7 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         CHAT_MODELS,
         IMAGE_MODELS,
         IMAGE_SIZE_OPTIONS,
+        MULTIMODAL_CHAT_MODELS,
         VISION_MODELS,
         SenseNovaClient,
     )
@@ -63,6 +66,7 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         comfy_image_info,
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
+        pil_to_png_data_url,
     )
     from local_pipeline import (
         ATTN_BACKEND_OPTIONS,
@@ -132,10 +136,11 @@ _OFFICIAL_MODEL_IDS = (
     "sensenova/SenseNova-U1.5-8B-MoT-Preview",
     "sensenova/SenseNova-U1-8B-MoT",
 )
+_MAX_PROMPT_BUILDER_IMAGES = 10
 
 
 @lru_cache(maxsize=1)
-def _list_remote_model_options() -> tuple[tuple[str, ...], tuple[str, ...]]:
+def _list_remote_model_options() -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     try:
         catalog = SenseNovaClient.from_env().list_models(timeout=5)
     except Exception as exc:
@@ -143,13 +148,14 @@ def _list_remote_model_options() -> tuple[tuple[str, ...], tuple[str, ...]]:
             "Unable to load SenseNova models from the API (%s); using built-in options.",
             exc.__class__.__name__,
         )
-        return CHAT_MODELS, IMAGE_MODELS
+        return CHAT_MODELS, MULTIMODAL_CHAT_MODELS, IMAGE_MODELS
 
     chat_models = catalog.chat_models or CHAT_MODELS
+    multimodal_chat_models = catalog.multimodal_chat_models or MULTIMODAL_CHAT_MODELS
     image_models = catalog.image_models or IMAGE_MODELS
-    if not catalog.chat_models or not catalog.image_models:
+    if not catalog.chat_models or not catalog.multimodal_chat_models or not catalog.image_models:
         LOGGER.warning("SenseNova API returned an incomplete model catalog; using built-in options where needed.")
-    return chat_models, image_models
+    return chat_models, multimodal_chat_models, image_models
 
 
 def _list_chat_model_options() -> tuple[str, ...]:
@@ -157,7 +163,20 @@ def _list_chat_model_options() -> tuple[str, ...]:
 
 
 def _list_image_model_options() -> tuple[str, ...]:
+    return _list_remote_model_options()[2]
+
+
+def _list_multimodal_chat_model_options() -> tuple[str, ...]:
     return _list_remote_model_options()[1]
+
+
+def _prompt_builder_image_urls(images: io.Autogrow.Type | None) -> list[str]:
+    pil_images = []
+    for image_batch in (images or {}).values():
+        pil_images.extend(comfy_batch_to_pil_images(image_batch))
+        if len(pil_images) > _MAX_PROMPT_BUILDER_IMAGES:
+            raise RuntimeError(f"SenseNova Prompt Builder accepts at most {_MAX_PROMPT_BUILDER_IMAGES} images.")
+    return [pil_to_png_data_url(image) for image in pil_images]
 
 
 def _sensenova_model_roots() -> tuple[Path, ...]:
@@ -647,6 +666,28 @@ class SenseNovaPromptBuilder(io.ComfyNode):
             category=CATEGORY,
             inputs=[
                 io.String.Input("prompt", multiline=True, default=""),
+                io.Autogrow.Input(
+                    "images",
+                    template=io.Autogrow.TemplateNames(
+                        io.Image.Input("image"),
+                        names=[
+                            "image1",
+                            "image2",
+                            "image3",
+                            "image4",
+                            "image5",
+                            "image6",
+                            "image7",
+                            "image8",
+                            "image9",
+                            "image10",
+                        ],
+                        min=0,
+                    ),
+                    tooltip=(
+                        "Optional ordered reference images. Select a model whose input_modalities includes image."
+                    ),
+                ),
                 io.String.Input(
                     "system_prompt",
                     multiline=True,
@@ -675,7 +716,16 @@ class SenseNovaPromptBuilder(io.ComfyNode):
         top_p: float,
         max_tokens: int,
         timeout: int,
+        images: io.Autogrow.Type | None = None,
     ) -> io.NodeOutput:
+        image_urls = _prompt_builder_image_urls(images)
+        if image_urls:
+            multimodal_models = _list_multimodal_chat_model_options()
+            if model not in multimodal_models:
+                supported_models = ", ".join(multimodal_models)
+                raise RuntimeError(
+                    f"SenseNova model {model!r} does not support image input. Choose one of: {supported_models}."
+                )
         client = SenseNovaClient.from_env()
         result = client.chat(
             text=prompt,
@@ -685,6 +735,7 @@ class SenseNovaPromptBuilder(io.ComfyNode):
             top_p=top_p,
             max_tokens=max_tokens,
             timeout=timeout,
+            image_urls=image_urls,
         )
         return io.NodeOutput(
             result.text,
