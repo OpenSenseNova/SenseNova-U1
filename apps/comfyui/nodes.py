@@ -1382,6 +1382,25 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
             inputs=[
                 LocalModelIO.Input("u1_model"),
                 io.Image.Input("image"),
+                io.Autogrow.Input(
+                    "reference_images",
+                    template=io.Autogrow.TemplateNames(
+                        io.Image.Input("image"),
+                        names=[
+                            "image2",
+                            "image3",
+                            "image4",
+                            "image5",
+                            "image6",
+                            "image7",
+                            "image8",
+                            "image9",
+                            "image10",
+                        ],
+                        min=0,
+                    ),
+                    tooltip="Optional ordered reference images for editing.",
+                ),
                 io.String.Input("prompt", multiline=True, default=""),
                 io.Boolean.Input("auto_size", default=True),
                 io.Int.Input("width", default=2048, min=32, max=8192, step=32),
@@ -1417,6 +1436,7 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
         cls,
         u1_model: SenseNovaU1LocalModel,
         image,
+        reference_images: io.Autogrow.Type,
         prompt: str,
         auto_size: bool,
         width: int,
@@ -1436,7 +1456,7 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
         u1_model = _ensure_local_model_loaded(u1_model)
         result = u1_model.edit_image(
             prompt=prompt,
-            input_image=image,
+            input_images=[image, *reference_images.values()],
             width=None if auto_size else width,
             height=None if auto_size else height,
             target_pixels=target_pixels_from_megapixels(target_megapixels),

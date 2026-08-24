@@ -17,7 +17,7 @@ ComfyUI custom nodes for SenseNova-U1 API and local inference.
 - `SenseNova Prompt Builder`: rewrites raw ideas into image-generation prompts.
 - `SenseNova U1 Local Loader`: loads a local or HuggingFace SenseNova-U1 checkpoint.
 - `SenseNova U1 Local Text to Image`: runs local `t2i_generate`.
-- `SenseNova U1 Local Image Edit`: runs local `it2i_generate`.
+- `SenseNova U1 Local Image Edit`: runs local `it2i_generate` with one or more ordered input images.
 - `SenseNova U1 Local Interleave`: runs local `interleave_gen`.
 - `SenseNova Interleave Preview`: renders ordered interleaved text / image results.
 
@@ -79,6 +79,11 @@ Example workflows live in `example_workflows/`. Each links to a screenshot of th
 Drag a workflow JSON into ComfyUI, then update `model_path`, `device`, `device_map`, and prompt
 settings as needed. For a smoke test, set `num_steps` to `1` or `2` before returning to the
 recommended `50`.
+
+`SenseNova U1 Local Image Edit` uses a v3 autogrow input. Connect the base image to `image`,
+then use the node's add-input control to attach up to nine additional references (`image2`
+through `image10`). Input order is preserved; when `auto_size` is enabled, the first image
+determines the output aspect ratio. A connected IMAGE batch is expanded in batch order.
 
 ## API Environment
 

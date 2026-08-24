@@ -15,9 +15,9 @@ import numpy as np
 from PIL import Image
 
 try:
-    from .image_utils import comfy_image_to_pil, pil_to_comfy_image
+    from .image_utils import comfy_batch_to_pil_images, comfy_image_to_pil, pil_to_comfy_image
 except ImportError:  # pragma: no cover - supports direct imports during tests
-    from image_utils import comfy_image_to_pil, pil_to_comfy_image
+    from image_utils import comfy_batch_to_pil_images, comfy_image_to_pil, pil_to_comfy_image
 
 LOGGER = logging.getLogger(__name__)
 
@@ -124,6 +124,8 @@ INTERLEAVE_RESULT_TYPE = "SENSENOVA_INTERLEAVE_RESULT"
 DEFAULT_SEED = 42
 DEFAULT_SOURCE_PATH = ""
 DEFAULT_TARGET_PIXELS = 2048 * 2048
+DEFAULT_INPUT_MAX_PIXELS = 2048 * 2048
+MIN_INPUT_MAX_PIXELS = 512 * 512
 DEFAULT_IMAGE_PATCH_SIZE = 32
 DEFAULT_INTERLEAVE_SYSTEM_MESSAGE = (
     "You are a multimodal assistant capable of reasoning with both text and images. "
@@ -452,7 +454,7 @@ class SenseNovaU1LocalModel:
         self,
         *,
         prompt: str,
-        input_image: Any,
+        input_images: list[Any],
         width: int | None,
         height: int | None,
         target_pixels: int,
@@ -471,13 +473,17 @@ class SenseNovaU1LocalModel:
         if cfg_norm == "cfg_zero_star":
             raise RuntimeError("cfg_zero_star is only supported for local text-to-image.")
 
-        pil_image = comfy_image_to_pil(input_image)
-        # Match the Terminal pipeline by upsampling small inputs to the same
-        # pixel budget before they hit the model; otherwise edits on sub-2K
-        # images come out noticeably softer than `examples/editing/inference.py`.
-        pil_image = _resize_input_to_budget(pil_image, target_pixels)
+        pil_images = [pil_image for image_batch in input_images for pil_image in comfy_batch_to_pil_images(image_batch)]
+        if not pil_images:
+            raise RuntimeError("Image editing requires at least one input image.")
+        # Keep source/reference resolution independent from the requested
+        # output resolution. Matching Terminal's shared multi-image budget
+        # prevents N references at a large output target from multiplying the
+        # prefix length until eager attention exhausts VRAM.
+        input_max_pixels = _auto_input_max_pixels(len(pil_images))
+        pil_images = [_resize_input_to_budget(image, input_max_pixels) for image in pil_images]
         out_width, out_height = _resolve_edit_size(
-            pil_image,
+            pil_images[0],
             width=width,
             height=height,
             target_pixels=target_pixels,
@@ -493,7 +499,7 @@ class SenseNovaU1LocalModel:
             out = offloaded.it2i_generate(
                 self.tokenizer,
                 prompt,
-                [pil_image],
+                pil_images,
                 image_size=(out_width, out_height),
                 cfg_scale=cfg_scale,
                 img_cfg_scale=img_cfg_scale,
@@ -523,6 +529,8 @@ class SenseNovaU1LocalModel:
                 "batch_size": batch_size,
                 "num_steps": num_steps,
                 "target_pixels": target_pixels,
+                "input_image_count": len(pil_images),
+                "input_max_pixels": input_max_pixels,
                 "think_mode": think_mode,
             },
         )
@@ -833,9 +841,9 @@ def _pil_images_to_comfy_batch(images: list[Image.Image]):
     return torch.cat(tensors, dim=0)
 
 
-def _resize_input_to_budget(image: Image.Image, target_pixels: int) -> Image.Image:
+def _resize_input_to_budget(image: Image.Image, input_max_pixels: int) -> Image.Image:
     """Match the Terminal pipeline (`examples/editing/inference.py`):
-    rescale the source image so its total pixels equal ``target_pixels``,
+    rescale the source image so its total pixels equal ``input_max_pixels``,
     keeping aspect ratio, snapping H/W to the model's grid factor, and using
     LANCZOS resampling. Without this step a small input (e.g. 1024x1024)
     would be passed through to the model as-is, costing visible detail.
@@ -845,12 +853,23 @@ def _resize_input_to_budget(image: Image.Image, target_pixels: int) -> Image.Ima
         height=image.height,
         width=image.width,
         factor=DEFAULT_IMAGE_PATCH_SIZE,
-        min_pixels=target_pixels,
-        max_pixels=target_pixels,
+        min_pixels=input_max_pixels,
+        max_pixels=input_max_pixels,
     )
     if (resized_width, resized_height) == image.size:
         return image
     return image.resize((resized_width, resized_height), Image.LANCZOS)
+
+
+def _auto_input_max_pixels(num_images: int) -> int:
+    """Match Terminal's shared vision-prefix budget for multi-image edits."""
+    if num_images <= 0:
+        raise ValueError("num_images must be positive.")
+    full_resolution_image_budget = 2
+    if num_images <= full_resolution_image_budget:
+        return DEFAULT_INPUT_MAX_PIXELS
+    total_budget = full_resolution_image_budget * DEFAULT_INPUT_MAX_PIXELS
+    return max(MIN_INPUT_MAX_PIXELS, total_budget // num_images)
 
 
 def _resolve_edit_size(
