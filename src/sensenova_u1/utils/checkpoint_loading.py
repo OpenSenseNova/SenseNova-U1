@@ -355,7 +355,7 @@ def load_model_and_tokenizer(
             if parsed_max_memory:
                 model_kwargs["max_memory"] = parsed_max_memory
 
-        model = AutoModel.from_pretrained(model_path, **model_kwargs).eval()
+        model = AutoModel.from_pretrained(artifact.weights_path, **model_kwargs).eval()
         if not device_map and device is not None and not for_offload:
             model = model.to(device)
 

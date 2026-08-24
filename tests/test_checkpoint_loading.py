@@ -181,7 +181,7 @@ class CheckpointLoadingTest(unittest.TestCase):
 
     def test_complete_cached_snapshot_remains_available_offline(self) -> None:
         model_id = "example/complete-cache"
-        calls: list[str] = []
+        calls: list[tuple[str, str]] = []
 
         with TemporaryDirectory() as directory:
             snapshot = Path(directory)
@@ -189,15 +189,29 @@ class CheckpointLoadingTest(unittest.TestCase):
             with (
                 mock.patch("huggingface_hub.snapshot_download", return_value=str(snapshot)),
                 mock.patch(
-                    "transformers.AutoConfig.from_pretrained", side_effect=lambda path: calls.append(path) or object()
+                    "transformers.AutoConfig.from_pretrained",
+                    side_effect=lambda path: calls.append(("config", path)) or object(),
                 ),
-                mock.patch("transformers.AutoTokenizer.from_pretrained", return_value=object()),
-                mock.patch("transformers.AutoModel.from_pretrained", return_value=_FakeModel()),
+                mock.patch(
+                    "transformers.AutoTokenizer.from_pretrained",
+                    side_effect=lambda path: calls.append(("tokenizer", path)) or object(),
+                ),
+                mock.patch(
+                    "transformers.AutoModel.from_pretrained",
+                    side_effect=lambda path, **_kwargs: calls.append(("model", path)) or _FakeModel(),
+                ),
                 mock.patch("sensenova_u1.check_checkpoint_compatibility"),
             ):
                 load_model_and_tokenizer(model_id, dtype=torch.bfloat16, for_offload=True)
 
-        self.assertEqual(calls, [str(snapshot)])
+        self.assertEqual(
+            calls,
+            [
+                ("config", str(snapshot)),
+                ("tokenizer", str(snapshot)),
+                ("model", str(snapshot)),
+            ],
+        )
 
 
 if __name__ == "__main__":
