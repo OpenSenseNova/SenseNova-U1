@@ -47,7 +47,6 @@ try:
         interleave_result_to_markdown,
         output_to_tuple,
         parse_resolution_option,
-        target_pixels_from_megapixels,
     )
     from .prompt_utils import load_prompt_template
 except ImportError:  # pragma: no cover - supports direct imports during tests
@@ -87,7 +86,6 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         interleave_result_to_markdown,
         output_to_tuple,
         parse_resolution_option,
-        target_pixels_from_megapixels,
     )
     from prompt_utils import load_prompt_template
 
@@ -99,6 +97,26 @@ LOGGER = logging.getLogger(__name__)
 
 LocalModelIO = io.Custom(LOCAL_MODEL_TYPE)
 InterleaveResultIO = io.Custom(INTERLEAVE_RESULT_TYPE)
+EDIT_OUTPUT_SIZE_TYPE = "SENSENOVA_U1_EDIT_OUTPUT_SIZE"
+EditOutputSizeIO = io.Custom(EDIT_OUTPUT_SIZE_TYPE)
+
+EDIT_SIZE_AUTO_4MP = "Auto · 4MP (Recommended)"
+EDIT_SIZE_AUTO_2MP = "Auto · 2MP"
+EDIT_SIZE_AUTO_1MP = "Auto · 1MP"
+EDIT_SIZE_MATCH_INPUT = "Match First Input"
+EDIT_SIZE_CUSTOM = "Custom"
+EDIT_OUTPUT_SIZE_OPTIONS = (
+    EDIT_SIZE_AUTO_4MP,
+    EDIT_SIZE_AUTO_2MP,
+    EDIT_SIZE_AUTO_1MP,
+    EDIT_SIZE_MATCH_INPUT,
+    EDIT_SIZE_CUSTOM,
+)
+_EDIT_SIZE_PRESET_PIXELS = {
+    EDIT_SIZE_AUTO_4MP: 2048 * 2048,
+    EDIT_SIZE_AUTO_2MP: 2048 * 2048 // 2,
+    EDIT_SIZE_AUTO_1MP: 1024 * 1024,
+}
 
 
 _GGUF_FOLDER_CANDIDATES: tuple[str, ...] = ("gguf", "diffusion_models")
@@ -385,6 +403,32 @@ def _normalize_fast_settings(
         value_or_default(fast_activation_reserve_gib, DEFAULT_FAST_ACTIVATION_RESERVE_GIB),
         value_or_default(fast_vram_budget_gib, 0.0),
     )
+
+
+def _resolve_edit_output_size(
+    output_size: dict[str, Any] | None,
+) -> tuple[int | None, int | None, int | None]:
+    """Normalize the typed size config; disconnected means Auto 4MP."""
+    if output_size is None:
+        return None, None, _EDIT_SIZE_PRESET_PIXELS[EDIT_SIZE_AUTO_4MP]
+
+    if not isinstance(output_size, dict):
+        raise RuntimeError("output_size must come from a SenseNova U1 Edit Output Size node.")
+    mode = output_size.get("mode")
+    if mode == "auto":
+        target_pixels = output_size.get("target_pixels")
+        if not isinstance(target_pixels, int) or target_pixels <= 0:
+            raise RuntimeError("Auto output_size requires a positive target_pixels value.")
+        return None, None, target_pixels
+    if mode == "match_input":
+        return None, None, None
+    if mode == "custom":
+        custom_width = output_size.get("width")
+        custom_height = output_size.get("height")
+        if not isinstance(custom_width, int) or not isinstance(custom_height, int):
+            raise RuntimeError("Custom output_size requires integer width and height values.")
+        return custom_width, custom_height, None
+    raise RuntimeError(f"Unsupported output_size mode: {mode!r}.")
 
 
 _LOCAL_MODEL_CACHE: dict[tuple, SenseNovaU1LocalModel] = {}
@@ -794,6 +838,58 @@ class SenseNovaU1LoraSelector(io.ComfyNode):
     @classmethod
     def execute(cls, lora_name: str) -> io.NodeOutput:
         return io.NodeOutput(lora_name)
+
+
+class SenseNovaU1EditOutputSize(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaU1EditOutputSize",
+            display_name="SenseNova U1 Edit Output Size",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                io.Combo.Input(
+                    "preset",
+                    options=list(EDIT_OUTPUT_SIZE_OPTIONS),
+                    default=EDIT_SIZE_AUTO_4MP,
+                    tooltip=(
+                        "Auto presets preserve the first input image's aspect ratio. "
+                        "Match First Input uses its native pixel count; Custom uses width and height."
+                    ),
+                ),
+                io.Int.Input(
+                    "width",
+                    default=2048,
+                    min=32,
+                    max=8192,
+                    step=32,
+                    advanced=True,
+                    tooltip="Used only by the Custom preset.",
+                ),
+                io.Int.Input(
+                    "height",
+                    default=2048,
+                    min=32,
+                    max=8192,
+                    step=32,
+                    advanced=True,
+                    tooltip="Used only by the Custom preset.",
+                ),
+            ],
+            outputs=[EditOutputSizeIO.Output(display_name="output_size")],
+        )
+
+    @classmethod
+    def execute(cls, preset: str, width: int, height: int) -> io.NodeOutput:
+        if preset in _EDIT_SIZE_PRESET_PIXELS:
+            config = {"mode": "auto", "target_pixels": _EDIT_SIZE_PRESET_PIXELS[preset]}
+        elif preset == EDIT_SIZE_MATCH_INPUT:
+            config = {"mode": "match_input"}
+        elif preset == EDIT_SIZE_CUSTOM:
+            config = {"mode": "custom", "width": width, "height": height}
+        else:
+            raise RuntimeError(f"Unsupported edit output size preset: {preset!r}.")
+        return io.NodeOutput(config)
 
 
 class SenseNovaU1ModelLoader(io.ComfyNode):
@@ -1402,15 +1498,13 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
                     tooltip="Optional ordered reference images for editing.",
                 ),
                 io.String.Input("prompt", multiline=True, default=""),
-                io.Boolean.Input("auto_size", default=True),
-                io.Int.Input("width", default=2048, min=32, max=8192, step=32),
-                io.Int.Input("height", default=2048, min=32, max=8192, step=32),
-                io.Float.Input(
-                    "target_megapixels",
-                    default=4.194304,
-                    min=0.25,
-                    max=32.0,
-                    step=0.25,
+                EditOutputSizeIO.Input(
+                    "output_size",
+                    optional=True,
+                    tooltip=(
+                        "Optional size policy. When disconnected, defaults to Auto · 4MP. "
+                        "Connect SenseNova U1 Edit Output Size to select another policy."
+                    ),
                 ),
                 io.Float.Input("cfg_scale", default=4.0, min=0.0, max=20.0, step=0.1),
                 io.Float.Input("img_cfg_scale", default=1.0, min=0.0, max=20.0, step=0.1),
@@ -1438,10 +1532,6 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
         image,
         reference_images: io.Autogrow.Type,
         prompt: str,
-        auto_size: bool,
-        width: int,
-        height: int,
-        target_megapixels: float,
         cfg_scale: float,
         img_cfg_scale: float,
         cfg_norm: str,
@@ -1452,14 +1542,16 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
         batch_size: int,
         seed: int,
         think_mode: bool = False,
+        output_size: dict[str, Any] | None = None,
     ) -> io.NodeOutput:
         u1_model = _ensure_local_model_loaded(u1_model)
+        output_width, output_height, target_pixels = _resolve_edit_output_size(output_size)
         result = u1_model.edit_image(
             prompt=prompt,
             input_images=[image, *reference_images.values()],
-            width=None if auto_size else width,
-            height=None if auto_size else height,
-            target_pixels=target_pixels_from_megapixels(target_megapixels),
+            width=output_width,
+            height=output_height,
+            target_pixels=target_pixels,
             cfg_scale=cfg_scale,
             img_cfg_scale=img_cfg_scale,
             cfg_norm=cfg_norm,
@@ -1649,6 +1741,7 @@ class SenseNovaExtension(ComfyExtension):
             SenseNovaVisionURL,
             SenseNovaVisionImage,
             SenseNovaU1LoraSelector,
+            SenseNovaU1EditOutputSize,
             SenseNovaU1ModelLoader,
             SenseNovaU1LocalLoader,
             SenseNovaU1LocalTextToImage,

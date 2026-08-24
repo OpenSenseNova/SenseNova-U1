@@ -118,7 +118,6 @@ def _load_nodes_module():
         "interleave_result_to_markdown",
         "output_to_tuple",
         "parse_resolution_option",
-        "target_pixels_from_megapixels",
     ):
         setattr(fake_local_pipeline, name, lambda *args, **kwargs: None)
 

@@ -468,7 +468,7 @@ class SenseNovaU1LocalModel:
         input_images: list[Any],
         width: int | None,
         height: int | None,
-        target_pixels: int,
+        target_pixels: int | None,
         cfg_scale: float,
         img_cfg_scale: float,
         cfg_norm: str,
@@ -487,18 +487,18 @@ class SenseNovaU1LocalModel:
         pil_images = [pil_image for image_batch in input_images for pil_image in comfy_batch_to_pil_images(image_batch)]
         if not pil_images:
             raise RuntimeError("Image editing requires at least one input image.")
-        # Keep source/reference resolution independent from the requested
-        # output resolution. Matching Terminal's shared multi-image budget
-        # prevents N references at a large output target from multiplying the
-        # prefix length until eager attention exhausts VRAM.
-        input_max_pixels = _auto_input_max_pixels(len(pil_images))
-        pil_images = [_resize_input_to_budget(image, input_max_pixels) for image in pil_images]
         out_width, out_height = _resolve_edit_size(
             pil_images[0],
             width=width,
             height=height,
             target_pixels=target_pixels,
         )
+        # Keep source/reference resolution independent from the requested
+        # output resolution. Matching Terminal's shared multi-image budget
+        # prevents N references at a large output target from multiplying the
+        # prefix length until eager attention exhausts VRAM.
+        input_max_pixels = _auto_input_max_pixels(len(pil_images))
+        pil_images = [_resize_input_to_budget(image, input_max_pixels) for image in pil_images]
         _check_cfg_interval(cfg_interval)
         torch = _import_torch()
 
@@ -539,7 +539,7 @@ class SenseNovaU1LocalModel:
                 "seed": seed,
                 "batch_size": batch_size,
                 "num_steps": num_steps,
-                "target_pixels": target_pixels,
+                "target_pixels": target_pixels if target_pixels is not None else out_width * out_height,
                 "input_image_count": len(pil_images),
                 "input_max_pixels": input_max_pixels,
                 "think_mode": think_mode,
@@ -888,14 +888,17 @@ def _resolve_edit_size(
     *,
     width: int | None,
     height: int | None,
-    target_pixels: int,
+    target_pixels: int | None,
 ) -> tuple[int, int]:
+    """Resolve the output canvas; ``None`` target matches the source pixel count."""
     if width is not None or height is not None:
         if width is None or height is None:
             raise RuntimeError("width and height must be provided together.")
         _check_grid_divisible(width, height)
         return width, height
 
+    if target_pixels is None:
+        target_pixels = image.width * image.height
     _, _, smart_resize = _import_sensenova_u1()
     resized_height, resized_width = smart_resize(
         height=image.height,
@@ -918,8 +921,3 @@ def _check_cfg_interval(cfg_interval: tuple[float, float]) -> None:
     lo, hi = cfg_interval
     if not 0.0 <= lo <= hi <= 1.0:
         raise RuntimeError("cfg_interval must satisfy 0.0 <= start <= end <= 1.0.")
-
-
-def target_pixels_from_megapixels(megapixels: float) -> int:
-    minimum = DEFAULT_IMAGE_PATCH_SIZE * DEFAULT_IMAGE_PATCH_SIZE
-    return max(minimum, math.floor(megapixels * 1_000_000))
