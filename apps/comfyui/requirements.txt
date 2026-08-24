@@ -9,4 +9,4 @@ python-dotenv
 # Monorepo developers can install the four packages above directly, followed
 # by `pip install -e .` from the repo root. Registry releases use the matching
 # monorepo tag so installs do not drift with main.
-sensenova-u1 @ https://github.com/OpenSenseNova/SenseNova-U1/archive/refs/tags/comfyui-v0.2.0.tar.gz
+sensenova-u1 @ https://github.com/OpenSenseNova/SenseNova-U1/archive/refs/tags/comfyui-v0.3.0.tar.gz

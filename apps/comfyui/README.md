@@ -40,10 +40,15 @@ Before upgrading, remove or disable any manually copied legacy node directory
 such as `ComfyUI_SenseNova_U1`. Keeping both copies makes ComfyUI import the
 same node IDs twice, so the active implementation depends on scan order.
 
-Release 0.2.0 supports the `transformers>=4.57.1,<6` runtime range. Core
+Release 0.3.0 supports the `transformers>=4.57.1,<6` runtime range. Core
 compatibility is continuously checked against the minimum/final v4 releases
 and the latest v5 release; local U1.5 text-to-image and image-edit inference
-has also been verified through ComfyUI with Transformers 5.x.
+has also been verified through ComfyUI with Transformers 5.x. This release adds
+accelerated LoRA adapters for local loading, extends local image editing from a
+single input image to ordered multi-image editing with up to 10 images, discovers
+API image models from TokenPlan instead of using a hard-coded model list, and
+ships refreshed ComfyUI workflows for the new loader, text-to-image, image
+editing, and API generation paths.
 
 ### Developer install (from the SenseNova-U1 monorepo)
 
