@@ -185,10 +185,12 @@ class _FakeLocalModel:
 class ComfyUILocalModelCacheTest(unittest.TestCase):
     def setUp(self) -> None:
         NODES._LOCAL_MODEL_CACHE.clear()
+        NODES._list_remote_model_options.cache_clear()
         _FakeLocalModel.instances.clear()
 
     def tearDown(self) -> None:
         NODES._LOCAL_MODEL_CACHE.clear()
+        NODES._list_remote_model_options.cache_clear()
 
     def test_stale_comfyui_output_reloads_its_original_model(self) -> None:
         fake_torch = types.SimpleNamespace(cuda=types.SimpleNamespace(is_available=lambda: False))
@@ -268,6 +270,75 @@ class ComfyUILocalModelCacheTest(unittest.TestCase):
             local_model_input.options,
             ["", "community.safetensors", "quantized.gguf", "release/SenseNova-U1.5-8B-MoT"],
         )
+
+    def test_image_generate_schema_lists_models_discovered_from_api(self) -> None:
+        recording_io = types.SimpleNamespace(
+            Schema=_RecordingSchema,
+            String=_RecordingWidgetType,
+            Combo=_RecordingWidgetType,
+            Int=_RecordingWidgetType,
+            Image=_RecordingWidgetType,
+        )
+        with (
+            mock.patch.object(
+                NODES,
+                "_list_image_model_options",
+                return_value=("image-a", "image-b"),
+            ),
+            mock.patch.object(NODES, "io", recording_io),
+        ):
+            schema = NODES.SenseNovaImageGenerate.define_schema()
+
+        model_input = next(item for item in schema.inputs if item.id == "model")
+        self.assertEqual(model_input.options, ["image-a", "image-b"])
+        self.assertEqual(model_input.default, "image-a")
+
+    def test_prompt_builder_schema_lists_chat_models_discovered_from_api(self) -> None:
+        recording_io = types.SimpleNamespace(
+            Schema=_RecordingSchema,
+            String=_RecordingWidgetType,
+            Combo=_RecordingWidgetType,
+            Float=_RecordingWidgetType,
+            Int=_RecordingWidgetType,
+        )
+        with (
+            mock.patch.object(
+                NODES,
+                "_list_chat_model_options",
+                return_value=("sensenova-6.7-flash-lite", "deepseek-v4-flash"),
+            ),
+            mock.patch.object(NODES, "io", recording_io),
+        ):
+            schema = NODES.SenseNovaPromptBuilder.define_schema()
+
+        model_input = next(item for item in schema.inputs if item.id == "model")
+        self.assertEqual(
+            model_input.options,
+            ["sensenova-6.7-flash-lite", "deepseek-v4-flash"],
+        )
+        self.assertEqual(model_input.default, "sensenova-6.7-flash-lite")
+
+    def test_image_model_options_fall_back_when_discovery_fails(self) -> None:
+        fake_client_type = mock.MagicMock()
+        fake_client_type.from_env.side_effect = RuntimeError("unavailable")
+        with mock.patch.object(NODES, "SenseNovaClient", fake_client_type):
+            self.assertEqual(NODES._list_image_model_options(), NODES.IMAGE_MODELS)
+
+    def test_remote_model_catalog_is_shared_by_all_api_node_schemas(self) -> None:
+        catalog = types.SimpleNamespace(
+            chat_models=("text-chat",),
+            image_models=("image-generate",),
+        )
+        client = mock.MagicMock()
+        client.list_models.return_value = catalog
+        client_type = mock.MagicMock()
+        client_type.from_env.return_value = client
+
+        with mock.patch.object(NODES, "SenseNovaClient", client_type):
+            self.assertEqual(NODES._list_chat_model_options(), ("text-chat",))
+            self.assertEqual(NODES._list_image_model_options(), ("image-generate",))
+
+        client.list_models.assert_called_once_with(timeout=5)
 
     def test_new_loader_separates_weights_from_resources(self) -> None:
         recording_io = types.SimpleNamespace(

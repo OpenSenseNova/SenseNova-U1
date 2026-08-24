@@ -14,7 +14,12 @@ except ImportError:  # pragma: no cover - supports direct test imports
     from config import SenseNovaConfig, load_config
     from image_utils import MAX_IMAGE_BYTES, is_http_url, is_supported_vision_image_url
 
-CHAT_MODELS = ("sensenova-6.7-flash-lite", "deepseek-v4")
+CHAT_MODELS = (
+    "sensenova-6.7-flash-lite",
+    "deepseek-v4-flash",
+    "glm-5.2",
+    "sensenova-6.8-flash-lite",
+)
 VISION_MODELS = ("sensenova-6.7-flash-lite",)
 IMAGE_MODELS = ("sensenova-u1-fast",)
 IMAGE_SIZES = (
@@ -60,6 +65,12 @@ class ImageGenerationResult:
     raw: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class ModelCatalog:
+    chat_models: tuple[str, ...]
+    image_models: tuple[str, ...]
+
+
 class SenseNovaClient:
     def __init__(self, config: SenseNovaConfig):
         self.config = config
@@ -79,8 +90,8 @@ class SenseNovaClient:
         max_tokens: int,
         timeout: int,
     ) -> ChatResult:
-        if model not in CHAT_MODELS:
-            raise RuntimeError(f"Unsupported chat model: {model}")
+        if not model.strip():
+            raise RuntimeError("Chat model cannot be empty.")
         if not text.strip():
             raise RuntimeError("Chat text cannot be empty.")
 
@@ -145,8 +156,8 @@ class SenseNovaClient:
         size: str,
         timeout: int,
     ) -> ImageGenerationResult:
-        if model not in IMAGE_MODELS:
-            raise RuntimeError(f"Unsupported image model: {model}")
+        if not model.strip():
+            raise RuntimeError("Image model cannot be empty.")
         normalized_size = normalize_image_size(size)
         if normalized_size not in IMAGE_SIZES:
             raise RuntimeError(f"Unsupported image size: {size}")
@@ -183,6 +194,10 @@ class SenseNovaClient:
             image_bytes=image_bytes,
             raw=raw,
         )
+
+    def list_models(self, *, timeout: int = 5) -> ModelCatalog:
+        raw = self._get_json("/models", timeout=timeout)
+        return _extract_model_catalog(raw)
 
     def download_image(self, url: str, *, timeout: int) -> bytes:
         if not is_http_url(url):
@@ -243,12 +258,57 @@ class SenseNovaClient:
 
         raise RuntimeError(f"SenseNova request failed: {last_error.__class__.__name__}.")
 
+    def _get_json(self, path: str, *, timeout: int) -> dict[str, Any]:
+        url = f"{self.config.base_url}{path}"
+        headers = {"Authorization": f"Bearer {self.config.api_key}"}
+
+        try:
+            with httpx.Client(timeout=timeout) as client:
+                response = client.get(url, headers=headers)
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPStatusError as exc:
+            raise RuntimeError(_format_api_error(exc.response, self.config.api_key)) from exc
+        except httpx.HTTPError as exc:
+            raise RuntimeError(f"SenseNova request failed: {exc.__class__.__name__}.") from exc
+        except json.JSONDecodeError as exc:
+            raise RuntimeError("SenseNova response was not valid JSON.") from exc
+
 
 def _extract_chat_text(raw: dict[str, Any]) -> str:
     try:
         return raw["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError) as exc:
         raise RuntimeError("Chat response did not contain choices[0].message.content.") from exc
+
+
+def _extract_model_catalog(raw: dict[str, Any]) -> ModelCatalog:
+    data = raw.get("data")
+    if not isinstance(data, list):
+        raise RuntimeError("Model response did not contain a data list.")
+
+    chat_models: list[str] = []
+    image_models: list[str] = []
+    for item in data:
+        if not isinstance(item, dict):
+            continue
+        model_id = item.get("id")
+        if not isinstance(model_id, str) or not (model_id := model_id.strip()):
+            continue
+        input_modalities = item.get("input_modalities")
+        output_modalities = item.get("output_modalities")
+        if not isinstance(output_modalities, list):
+            continue
+        if "image" in output_modalities and model_id not in image_models:
+            image_models.append(model_id)
+        if not isinstance(input_modalities, list):
+            continue
+        if "text" in input_modalities and "text" in output_modalities and model_id not in chat_models:
+            chat_models.append(model_id)
+    return ModelCatalog(
+        chat_models=tuple(chat_models),
+        image_models=tuple(image_models),
+    )
 
 
 def normalize_image_size(size: str) -> str:

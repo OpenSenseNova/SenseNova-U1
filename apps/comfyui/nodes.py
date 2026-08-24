@@ -5,6 +5,7 @@ import json
 import logging
 import tempfile
 import uuid
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -131,6 +132,32 @@ _OFFICIAL_MODEL_IDS = (
     "sensenova/SenseNova-U1.5-8B-MoT-Preview",
     "sensenova/SenseNova-U1-8B-MoT",
 )
+
+
+@lru_cache(maxsize=1)
+def _list_remote_model_options() -> tuple[tuple[str, ...], tuple[str, ...]]:
+    try:
+        catalog = SenseNovaClient.from_env().list_models(timeout=5)
+    except Exception as exc:
+        LOGGER.warning(
+            "Unable to load SenseNova models from the API (%s); using built-in options.",
+            exc.__class__.__name__,
+        )
+        return CHAT_MODELS, IMAGE_MODELS
+
+    chat_models = catalog.chat_models or CHAT_MODELS
+    image_models = catalog.image_models or IMAGE_MODELS
+    if not catalog.chat_models or not catalog.image_models:
+        LOGGER.warning("SenseNova API returned an incomplete model catalog; using built-in options where needed.")
+    return chat_models, image_models
+
+
+def _list_chat_model_options() -> tuple[str, ...]:
+    return _list_remote_model_options()[0]
+
+
+def _list_image_model_options() -> tuple[str, ...]:
+    return _list_remote_model_options()[1]
 
 
 def _sensenova_model_roots() -> tuple[Path, ...]:
@@ -513,6 +540,7 @@ def _evict_model_cache(keep_key: tuple | None = None) -> None:
 class SenseNovaChat(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
+        chat_models = _list_chat_model_options()
         return io.Schema(
             node_id="SenseNovaChat",
             display_name="SenseNova Chat",
@@ -524,7 +552,7 @@ class SenseNovaChat(io.ComfyNode):
                     multiline=True,
                     default="You are a helpful assistant. Answer clearly and concisely.",
                 ),
-                io.Combo.Input("model", options=list(CHAT_MODELS), default=CHAT_MODELS[0]),
+                io.Combo.Input("model", options=list(chat_models), default=chat_models[0]),
                 io.Float.Input("temperature", default=0.7, min=0.0, max=2.0, step=0.1),
                 io.Float.Input("top_p", default=1.0, min=0.0, max=1.0, step=0.05),
                 io.Int.Input("max_tokens", default=2048, min=1, max=65536),
@@ -568,13 +596,14 @@ class SenseNovaChat(io.ComfyNode):
 class SenseNovaImageGenerate(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
+        image_models = _list_image_model_options()
         return io.Schema(
             node_id="SenseNovaImageGenerate",
             display_name="SenseNova Image Generate",
             category=CATEGORY,
             inputs=[
                 io.String.Input("prompt", multiline=True, default=""),
-                io.Combo.Input("model", options=list(IMAGE_MODELS), default=IMAGE_MODELS[0]),
+                io.Combo.Input("model", options=list(image_models), default=image_models[0]),
                 io.Combo.Input("size", options=list(IMAGE_SIZE_OPTIONS), default=IMAGE_SIZE_OPTIONS[0]),
                 io.Int.Input("timeout", default=300, min=30, max=900),
             ],
@@ -611,6 +640,7 @@ class SenseNovaImageGenerate(io.ComfyNode):
 class SenseNovaPromptBuilder(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
+        chat_models = _list_chat_model_options()
         return io.Schema(
             node_id="SenseNovaPromptBuilder",
             display_name="SenseNova Prompt Builder",
@@ -622,7 +652,7 @@ class SenseNovaPromptBuilder(io.ComfyNode):
                     multiline=True,
                     default=load_prompt_template(BUILDER_PROMPT_TEMPLATE),
                 ),
-                io.Combo.Input("model", options=list(CHAT_MODELS), default=CHAT_MODELS[0]),
+                io.Combo.Input("model", options=list(chat_models), default=chat_models[0]),
                 io.Float.Input("temperature", default=0.3, min=0.0, max=2.0, step=0.1),
                 io.Float.Input("top_p", default=1.0, min=0.0, max=1.0, step=0.05),
                 io.Int.Input("max_tokens", default=2048, min=1, max=65536),
