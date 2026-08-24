@@ -71,9 +71,9 @@ Example workflows live in `example_workflows/`. Each links to a screenshot of th
 
 | Workflow | Description | Preview |
 | --- | --- | --- |
-| `api_u1_fast_t2i.json` | API U1-Fast text-to-image | ![api_u1_fast_t2i](docs/api_u1_fast_t2i.jpg) |
-| `t2i.json` | Local SenseNova-U1 text-to-image | ![t2i](docs/t2i.jpg) |
-| `editing.json` | Local SenseNova-U1 image editing | ![editing](docs/editing.jpg) |
+| `sensenova_api_gen_t2i.json` | SenseNova API prompt building and text-to-image | ![api_u1_fast_t2i](docs/api_u1_fast_t2i.jpg) |
+| `sensenova_text_to_image.json` | Local SenseNova-U1 text-to-image | ![t2i](docs/t2i.jpg) |
+| `sensenova_image_editing.json` | Local SenseNova-U1 image editing | ![editing](docs/editing.jpg) |
 | `interleave.json` | Local SenseNova-U1 interleaved generation | ![interleave](docs/interleave.jpg) |
 
 Drag a workflow JSON into ComfyUI, then update `model_path`, `device`, `device_map`, and prompt

@@ -1,0 +1,1008 @@
+{
+  "id": "a92af27a-0106-4c6f-9d1c-f9783b652f44",
+  "revision": 0,
+  "last_node_id": 86,
+  "last_link_id": 92,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "SenseNovaU1LocalTextToImage",
+      "pos": [
+        -734.4481668603603,
+        -205.00612520628144
+      ],
+      "size": [
+        471.625,
+        739.328125
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "u1_model",
+          "type": "SENSENOVA_U1_LOCAL_MODEL",
+          "link": 29
+        },
+        {
+          "name": "cfg_scale",
+          "type": "FLOAT",
+          "widget": {
+            "name": "cfg_scale"
+          },
+          "link": 90
+        },
+        {
+          "name": "num_steps",
+          "type": "INT",
+          "widget": {
+            "name": "num_steps"
+          },
+          "link": 89
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "think_text",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "metadata_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaU1LocalTextToImage"
+      },
+      "widgets_values": [
+        "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\\n\\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\\n\\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\\n\\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\\n\\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\\n\\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\\n\\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，性价比出色”。",
+        "2720x1536|16:9",
+        4,
+        "none",
+        3,
+        0,
+        1,
+        8,
+        1,
+        42,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [
+        -219.14735414403287,
+        -210.34948427608072
+      ],
+      "size": [
+        512.15625,
+        328
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "PreviewAny",
+      "pos": [
+        -219.25103107718212,
+        160.160655202861
+      ],
+      "size": [
+        513.578125,
+        200.828125
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": 28,
+      "type": "SenseNovaU1ModelLoader",
+      "pos": [
+        -1328.0326179086308,
+        -431.2654881756154
+      ],
+      "size": [
+        545.890625,
+        600
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [
+        {
+          "name": "lora_name",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "lora_name"
+          },
+          "link": 88
+        }
+      ],
+      "outputs": [
+        {
+          "name": "u1_model",
+          "type": "SENSENOVA_U1_LOCAL_MODEL",
+          "links": [
+            29
+          ]
+        },
+        {
+          "name": "model_info_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaU1ModelLoader"
+      },
+      "widgets_values": [
+        "Local | SenseNova-U1.5-8B-MoT",
+        "Auto",
+        "",
+        1,
+        "cuda",
+        "bfloat16",
+        "auto",
+        "fast",
+        "none",
+        "",
+        "0.9",
+        "2.0",
+        "4.0",
+        "0.0"
+      ]
+    },
+    {
+      "id": 83,
+      "type": "f36dfaff-203f-4593-be5a-9af1ad5594bc",
+      "pos": [
+        -1859.8998984058944,
+        172.33032419370568
+      ],
+      "size": [
+        501.59375,
+        242.65625
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "enable",
+          "name": "value",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "value"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "lora_name",
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            88
+          ]
+        },
+        {
+          "label": "steps",
+          "name": "output_1",
+          "type": "INT",
+          "links": [
+            89
+          ]
+        },
+        {
+          "label": "cfg",
+          "name": "output_2",
+          "type": "FLOAT",
+          "links": [
+            90
+          ]
+        }
+      ],
+      "properties": {
+        "proxyWidgets": [
+          [
+            "21",
+            "value"
+          ],
+          [
+            "74",
+            "lora_name"
+          ]
+        ]
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 84,
+      "type": "MarkdownNote",
+      "pos": [
+        -2677.4893689380824,
+        -553.3234913582043
+      ],
+      "size": [
+        788.578125,
+        1258.640625
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# 🦁 SenseNova U1.5 模型下载\n\n> **推荐使用正式版 `SenseNova-U1.5-8B-MoT`。**  \n> Preview 为早期预览版；SFT 主要用于研究和后续训练。\n\n| 模型 | 说明 | 下载地址 |\n|---|---|---|\n| **SenseNova-U1.5-8B-MoT** | 正式版，推荐用于图像生成与编辑 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) · [ModelScope](https://modelscope.cn/models/SenseNova/SenseNova-U1.5-8B-MoT) |\n| SenseNova-U1.5-8B-MoT-SFT | 监督微调版，适合研究与继续训练 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |\n| **SenseNova-U1.5-8B-MoT-LoRA-8step** | 8 步加速 LoRA，需搭配正式版基础模型 | [下载 LoRA](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) |\n| SenseNova-U1.5-8B-MoT-Preview | 早期预览版，不建议新工作流使用 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |\n| U1.5 Preview Q8 GGUF | 社区量化版，约 19.9 GB，仅匹配 Preview 模型 | [下载 GGUF](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) |\n\n完整模型合集：[SenseNova U1.5 · Hugging Face](https://huggingface.co/collections/sensenova/sensenova-u15)\n\n---\n\n## 📦 ComfyUI 支持的模型格式\n\n`SenseNova U1 Model Loader` 支持：\n\n- **完整 Hugging Face 模型目录**  \n  包含 `config.json`、Tokenizer、Safetensors 分片及索引文件。\n- **单文件 Safetensors**：`.safetensors`\n- **GGUF 量化权重**：`.gguf`\n- **LoRA 适配器**：`.safetensors`\n\n推荐存放位置：\n\n```text\nComfyUI/\n└── models/\n    ├── sensenova/        # 完整模型目录、.safetensors、.sft、.gguf\n    ├── loras/            # 8-step LoRA 等 LoRA 文件\n    ├── gguf/             # 旧版 Local Loader 的 GGUF\n    └── diffusion_models/ # 旧版 Local Loader 也会搜索此处的 GGUF\n```\n\n## 💾 `vram_mode` 显存模式\n\n`vram_mode` 控制模型权重在 GPU 与 CPU 之间的驻留和搬运方式，用于降低**单卡显存占用**。\n\n| 模式 | 工作方式 | 推荐场景 |\n|---|---|---|\n| `full` | 整个模型常驻 GPU，不进行卸载，速度最快 | 显存充足，BF16 通常需要 36 GB 以上显存 |\n| `fast` | 异步预取模型层，并尽量让生成层常驻显存 | 兼顾速度与显存,接近 full 的速度 |\n| `balanced` | 异步预取，将 CPU→GPU 搬运与计算重叠 | 推荐的低显存模式 |\n| `low` | 每层计算时同步在 CPU 与 GPU 之间交换 | 显存非常紧张，速度最慢 |"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      2,
+      2,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      3,
+      2,
+      2,
+      4,
+      0,
+      "STRING"
+    ],
+    [
+      29,
+      28,
+      0,
+      2,
+      0,
+      "SENSENOVA_U1_LOCAL_MODEL"
+    ],
+    [
+      88,
+      83,
+      0,
+      28,
+      0,
+      "STRING"
+    ],
+    [
+      89,
+      83,
+      1,
+      2,
+      2,
+      "INT"
+    ],
+    [
+      90,
+      83,
+      2,
+      2,
+      1,
+      "FLOAT"
+    ]
+  ],
+  "groups": [],
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "f36dfaff-203f-4593-be5a-9af1ad5594bc",
+        "version": 1,
+        "state": {
+          "lastGroupId": 4,
+          "lastNodeId": 86,
+          "lastLinkId": 92,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "SenseNova UI LoRA Toggle",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -2506.550025511109,
+            343.18932917715046,
+            128,
+            88
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            -1243.9749895929065,
+            313.18932917715046,
+            128,
+            108
+          ]
+        },
+        "inputs": [
+          {
+            "id": "771c2194-4c33-49c2-897a-b469a034dc1f",
+            "name": "value",
+            "type": "BOOLEAN",
+            "linkIds": [
+              91
+            ],
+            "label": "enable",
+            "pos": [
+              -2402.550025511109,
+              367.18932917715046
+            ]
+          },
+          {
+            "id": "1c18849a-2598-4384-97bf-79442a1bd521",
+            "name": "lora_name",
+            "type": "COMBO",
+            "linkIds": [
+              92
+            ],
+            "pos": [
+              -2402.550025511109,
+              387.18932917715046
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "f1e14386-9b26-4354-accf-f175b01038ae",
+            "name": "output",
+            "type": "STRING",
+            "linkIds": [
+              85
+            ],
+            "localized_name": "output",
+            "label": "lora_name",
+            "pos": [
+              -1219.9749895929065,
+              337.18932917715046
+            ]
+          },
+          {
+            "id": "a681678b-03a9-46b9-9183-7fa737d56d42",
+            "name": "output_1",
+            "type": "INT",
+            "linkIds": [
+              86
+            ],
+            "localized_name": "output_1",
+            "label": "steps",
+            "pos": [
+              -1219.9749895929065,
+              357.18932917715046
+            ]
+          },
+          {
+            "id": "2c8288b8-5844-4564-8aba-d8eba1f33291",
+            "name": "output_2",
+            "type": "FLOAT",
+            "linkIds": [
+              87
+            ],
+            "localized_name": "output_2",
+            "label": "cfg",
+            "pos": [
+              -1219.9749895929065,
+              377.18932917715046
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 74,
+            "type": "SenseNovaU1LoraSelector",
+            "pos": [
+              -1947.884841725809,
+              -102.86061228848297
+            ],
+            "size": [
+              292.890625,
+              104
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "lora_name",
+                "name": "lora_name",
+                "type": "COMBO",
+                "widget": {
+                  "name": "lora_name"
+                },
+                "link": 92
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "lora_name",
+                "name": "lora_name",
+                "type": "STRING",
+                "links": [
+                  77
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SenseNovaU1LoraSelector"
+            },
+            "widgets_values": [
+              "SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors"
+            ]
+          },
+          {
+            "id": 21,
+            "type": "PrimitiveBoolean",
+            "pos": [
+              -2318.550025511109,
+              218.70438967555393
+            ],
+            "size": [
+              270,
+              100
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "value",
+                "name": "value",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "value"
+                },
+                "link": 91
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "BOOLEAN",
+                "name": "BOOLEAN",
+                "type": "BOOLEAN",
+                "links": [
+                  82,
+                  83,
+                  84
+                ]
+              }
+            ],
+            "title": "EnableTurbo",
+            "properties": {
+              "Node name for S&R": "PrimitiveBoolean"
+            },
+            "widgets_values": [
+              true
+            ],
+            "color": "#232",
+            "bgcolor": "#353"
+          },
+          {
+            "id": 75,
+            "type": "ComfySwitchNode",
+            "pos": [
+              -1573.9749895929065,
+              -11.16221455802804
+            ],
+            "size": [
+              270,
+              124
+            ],
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "type": "STRING",
+                "link": 76
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "type": "STRING",
+                "link": 77
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 82
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "STRING",
+                "links": [
+                  85
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 76,
+            "type": "PrimitiveString",
+            "pos": [
+              -1950.7940286851026,
+              78.0985160894316
+            ],
+            "size": [
+              270,
+              108
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "localized_name": "STRING",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  76
+                ]
+              }
+            ],
+            "title": "EmptyString",
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              ""
+            ]
+          },
+          {
+            "id": 77,
+            "type": "ComfySwitchNode",
+            "pos": [
+              -1601.7559762223907,
+              401.5281105224513
+            ],
+            "size": [
+              270,
+              124
+            ],
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "type": "INT",
+                "link": 78
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "type": "INT",
+                "link": 79
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 83
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "INT",
+                "links": [
+                  86
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 78,
+            "type": "PrimitiveInt",
+            "pos": [
+              -1956.0700280152137,
+              262.30019153573426
+            ],
+            "size": [
+              270,
+              104
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": [
+                  78
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveInt"
+            },
+            "widgets_values": [
+              50,
+              "fixed"
+            ]
+          },
+          {
+            "id": 79,
+            "type": "PrimitiveInt",
+            "pos": [
+              -1957.1435937032052,
+              435.9805364095163
+            ],
+            "size": [
+              270,
+              104
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": [
+                  79
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveInt"
+            },
+            "widgets_values": [
+              8,
+              "fixed"
+            ]
+          },
+          {
+            "id": 80,
+            "type": "ComfySwitchNode",
+            "pos": [
+              -1578.579855134225,
+              698.4725461396195
+            ],
+            "size": [
+              270,
+              124
+            ],
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "type": "FLOAT",
+                "link": 80
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "type": "FLOAT",
+                "link": 81
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 84
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "FLOAT",
+                "links": [
+                  87
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 81,
+            "type": "PrimitiveFloat",
+            "pos": [
+              -1958.4312274683734,
+              608.9496645272
+            ],
+            "size": [
+              270,
+              104
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": [
+                  80
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveFloat"
+            },
+            "widgets_values": [
+              4
+            ]
+          },
+          {
+            "id": 82,
+            "type": "PrimitiveFloat",
+            "pos": [
+              -1961.2504978719012,
+              763.2392706427839
+            ],
+            "size": [
+              270,
+              104
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": [
+                  81
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveFloat"
+            },
+            "widgets_values": [
+              1
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 76,
+            "origin_id": 76,
+            "origin_slot": 0,
+            "target_id": 75,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 77,
+            "origin_id": 74,
+            "origin_slot": 0,
+            "target_id": 75,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 82,
+            "origin_id": 21,
+            "origin_slot": 0,
+            "target_id": 75,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 78,
+            "origin_id": 78,
+            "origin_slot": 0,
+            "target_id": 77,
+            "target_slot": 0,
+            "type": "INT"
+          },
+          {
+            "id": 79,
+            "origin_id": 79,
+            "origin_slot": 0,
+            "target_id": 77,
+            "target_slot": 1,
+            "type": "INT"
+          },
+          {
+            "id": 83,
+            "origin_id": 21,
+            "origin_slot": 0,
+            "target_id": 77,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 80,
+            "origin_id": 81,
+            "origin_slot": 0,
+            "target_id": 80,
+            "target_slot": 0,
+            "type": "FLOAT"
+          },
+          {
+            "id": 81,
+            "origin_id": 82,
+            "origin_slot": 0,
+            "target_id": 80,
+            "target_slot": 1,
+            "type": "FLOAT"
+          },
+          {
+            "id": 84,
+            "origin_id": 21,
+            "origin_slot": 0,
+            "target_id": 80,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 85,
+            "origin_id": 75,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 86,
+            "origin_id": 77,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "INT"
+          },
+          {
+            "id": 87,
+            "origin_id": 80,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 2,
+            "type": "FLOAT"
+          },
+          {
+            "id": 91,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 21,
+            "target_slot": 0,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 92,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 74,
+            "target_slot": 0,
+            "type": "COMBO"
+          }
+        ],
+        "extra": {}
+      }
+    ]
+  },
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "Vue-corrected",
+    "ds": {
+      "scale": 0.43763520018773716,
+      "offset": [
+        3022.2185488590144,
+        920.7629680112652
+      ]
+    },
+    "frontendVersion": "1.45.15",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

@@ -297,9 +297,7 @@ class SenseNovaU1LocalModel:
         self.lora_path = normalized_lora
         self.lora_strength = float(lora_strength)
         self.effective_attn_backend = sensenova_u1.effective_attn_backend()
-        resolved_model_path = (
-            model_path if artifact_is_gguf else resolve_hf_model_snapshot_interruptibly(model_path)
-        )
+        resolved_model_path = model_path if artifact_is_gguf else resolve_hf_model_snapshot_interruptibly(model_path)
         resolved_model_resources = self.model_resources
         if resolved_model_resources == model_path:
             resolved_model_resources = resolved_model_path

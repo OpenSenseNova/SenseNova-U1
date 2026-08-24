@@ -1,22 +1,22 @@
 {
   "id": "03c13bce-fb68-4284-bd5a-88aed2db6cec",
   "revision": 0,
-  "last_node_id": 8,
-  "last_link_id": 7,
+  "last_node_id": 9,
+  "last_link_id": 8,
   "nodes": [
     {
       "id": 3,
       "type": "SenseNovaImageGenerate",
       "pos": [
-        224.37622016118027,
-        254.75802785642676
+        29.84065013540041,
+        253.6152242959164
       ],
       "size": [
         400,
-        240
+        332
       ],
       "flags": {},
-      "order": 1,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
@@ -25,7 +25,7 @@
           "widget": {
             "name": "prompt"
           },
-          "link": 6
+          "link": 8
         }
       ],
       "outputs": [
@@ -68,53 +68,34 @@
       ]
     },
     {
-      "id": 8,
-      "type": "PreviewImage",
-      "pos": [
-        663.0133442095159,
-        255.6695527433532
-      ],
-      "size": [
-        140,
-        246
-      ],
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 7
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      },
-      "widgets_values": []
-    },
-    {
       "id": 7,
       "type": "SenseNovaPromptBuilder",
       "pos": [
-        -201.9358334262903,
-        356.0050478984727
+        -529.3395832004946,
+        256.4074075249955
       ],
       "size": [
-        400,
-        302
+        432.59375,
+        443.65625
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
-      "inputs": [],
+      "inputs": [
+        {
+          "label": "image1",
+          "name": "images.image1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
       "outputs": [
         {
           "name": "prompt",
           "type": "STRING",
           "links": [
-            6
+            8
           ]
         },
         {
@@ -134,23 +115,65 @@
       "widgets_values": [
         "如何养猫咪",
         "You are a world-renowned \"Senior Visual Information Architect\" and \"AI Image Prompt Engineering Expert.\" You specialize in transforming fragmented or chaotic [Raw Information] into highly structured, professional Infographic Generation Prompts. Your work is defined by rigorous visual logic, precise spatial organization, and a dense amount of useful information.\n\n# Task\nReconstruct the user's [Raw Information] into a comprehensive visual synthesis prompt. Your objective is to guide an image generation model to render an information-dense infographic with advanced typography, vivid visual style, and clear structure based only on the user's text.\n\n# Step-by-Step Methodology\n1. Content Expansion and Textualization: Analyze the [Raw Information] to extract its core intent.\n    - Detailing: Extract every entity, number, color, date, and phrase from the [Raw Information]. Do not omit provided facts.\n    - Categorization: Define sub-categories with distinct visual markers.\n    - Density Enrichment: If the input is brief, add professional annotations, sub-headings, body text, key insights, or practical notes that fit the topic.\n2. Adaptive Structural Analysis:\n    - User-Defined Priority: If the user provides layout instructions, strictly follow them.\n    - Logic-Driven Inference: If no layout is specified, infer whether the content is chronological, hierarchical, process-oriented, comparative, or modular, then choose the best spatial architecture.\n3. Style Tonal Setting: If no style is provided, assign an aesthetic that complements the topic, such as modern editorial infographic, technical blueprint, clean SaaS dashboard, or hand-drawn knowledge poster.\n4. Data Preservation and Encoding: Preserve all numbers, dates, colors, and proper nouns exactly. Convert them into explicit visual labels, charts, or callouts within the prompt.\n5. Language Parity: Detect the language of the [Raw Information] and use that language for the entire output. If the input is Chinese, output Chinese. If the input is English, output English. Do not mix languages.\n\n# Strict Constraints\n1. Do not include introductory, summary, or meta-commentary text. Start directly with the final visual prompt.\n2. Every piece of text intended to appear in the image must be enclosed in quotation marks.\n3. Do not use quotation marks for style descriptions, layout descriptions, colors, or non-textual elements.\n4. Describe the layout, reading order, background texture, visual hierarchy, typography, color palette, icons, charts, and callouts explicitly.\n5. Describe every icon semantically. Do not write generic phrases like \"an icon\" without specifying its visual content.\n6. Minimize arrows unless the user asks for them. Prefer alignment, grouping, proximity, and numbered steps to show relationships.\n7. Do not use hexadecimal color codes. Use descriptive color names.\n8. Do not invent factual numbers, dates, names, or claims that conflict with the user's input.\n\n# Output\nReturn only the final image generation prompt. The prompt should be directly usable as input to an image generation node.",
-        "sensenova-6.7-flash-lite",
+        "sensenova-6.8-flash-lite",
         0.3,
         1,
         2048,
         120
       ]
+    },
+    {
+      "id": 8,
+      "type": "PreviewImage",
+      "pos": [
+        514.910332274905,
+        252.76903418317437
+      ],
+      "size": [
+        225,
+        304
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 7
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 9,
+      "type": "MarkdownNote",
+      "pos": [
+        -565.1675716952716,
+        -273.03805110231605
+      ],
+      "size": [
+        1567.109375,
+        455.671875
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "## SenseNova API models and credentials\n\n**Where the model choices come from**\n\nThe model dropdowns contain hosted SenseNova API model IDs fetched from `GET ${SN_BASE_URL}/models` (default: `https://token.sensenova.cn/v1/models`). They are not local checkpoints from `ComfyUI/models/` or the Hugging Face cache.\n\n- **SenseNova Prompt Builder** lists models whose API metadata accepts text input and returns text. When one or more images are connected, select a model whose `input_modalities` also includes `image`.\n- **SenseNova Image Generate** lists models whose API metadata includes `image` in `output_modalities`.\n- If model discovery is unavailable during ComfyUI startup, the nodes show their built-in fallback model choices.\n\n**Set the API key**\n\nCreate a `.env` file in the SenseNova custom-node directory (the folder containing `nodes.py`), or export the variables before starting ComfyUI:\n\n```bash\nSN_API_KEY=your-api-token\nSN_BASE_URL=https://token.sensenova.cn/v1\n```\n\nBoth nodes use the same `SN_API_KEY`. Restart ComfyUI after changing these values so the model dropdowns are refreshed. Never paste the API key into a node widget or save it in a workflow."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
     }
   ],
   "links": [
-    [
-      6,
-      7,
-      0,
-      3,
-      0,
-      "STRING"
-    ],
     [
       7,
       3,
@@ -158,6 +181,14 @@
       8,
       0,
       "IMAGE"
+    ],
+    [
+      8,
+      7,
+      0,
+      3,
+      0,
+      "STRING"
     ]
   ],
   "groups": [],
@@ -165,13 +196,17 @@
   "extra": {
     "workflowRendererVersion": "LG",
     "ds": {
-      "scale": 1.8954988944389861,
+      "scale": 0.8983018540353767,
       "offset": [
-        329.6590232185344,
-        -134.93740305896515
+        1128.8544788917266,
+        522.1215024316024
       ]
     },
-    "frontendVersion": "1.39.19"
+    "frontendVersion": "1.45.15",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
   },
   "version": 0.4
 }
