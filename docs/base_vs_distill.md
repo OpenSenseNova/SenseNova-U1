@@ -34,7 +34,7 @@ python examples/t2i/inference.py \
 ```
 
 > [!IMPORTANT]
-> The U1.5 8-step LoRA is intended for `sensenova/SenseNova-U1.5-8B-MoT`, not the earlier `SenseNova-U1.5-8B-MoT-Preview` checkpoint.
+> The U1.5 8-step LoRA was trained on `sensenova/SenseNova-U1.5-8B-MoT-SFT`. Although LoRA adapters are typically used with the checkpoint on which they were trained, we have also validated this adapter with the official `sensenova/SenseNova-U1.5-8B-MoT` checkpoint and recommend this combination for 8-step inference. The LoRA is not compatible with the earlier `SenseNova-U1.5-8B-MoT-Preview` checkpoint.
 
 ### Original SenseNova-U1 Checkpoints
 
