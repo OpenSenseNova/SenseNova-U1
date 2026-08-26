@@ -896,7 +896,7 @@ class NEOChatModel(PreTrainedModel):
                         from tqdm import tqdm as _tqdm
                         step_iter = _tqdm(
                             step_iter,
-                            desc=f"image {img_count + 1} ({image_size[0]}x{image_size[1]})",
+                            desc=f"image {img_count + 1} ({cur_image_size[0]}x{cur_image_size[1]})",
                             total=num_steps,
                             leave=False,
                         )
