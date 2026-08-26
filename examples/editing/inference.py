@@ -35,6 +35,14 @@ NORM_STD = (0.5, 0.5, 0.5)
 
 DEFAULT_SEED = 42
 
+SUGGESTED_RESOLUTIONS: dict[str, tuple[int, int]] = {
+    "1:1": (2048, 2048),
+    "16:9": (2720, 1536),
+    "9:16": (1536, 2720),
+    "2:3": (1664, 2496),
+    "3:2": (2496, 1664),
+}
+
 # Output H / W must be divisible by this (= patch_size * merge_size).
 _IMAGE_GRID_FACTOR = DEFAULT_IMAGE_PATCH_SIZE
 
