@@ -21,6 +21,8 @@
 
 ## 📣 最新动态
 
+- `[2026.09.11]` 发布 [🔥SenseNova-U1.5 技术报告🔥](docs/pdf/SenseNOVA_U1_5.pdf)，介绍原生统一架构、训练方法与评测结果。
+
 - `[2026.09.01]` 社区贡献者 Hugging Face 用户 [realrebelai](https://huggingface.co/realrebelai)（GitHub [@RealRebelAI](https://github.com/RealRebelAI)）发布了 [SenseNova-U1.5-8B-MoT 的 Q8 GGUF 权重](https://huggingface.co/realrebelai/SenseNova-U1.5-8B_GGUFs/blob/main/SenseNova-U1.5-8B-MoT-Q8_0.gguf)（21.2 GB）。感谢作者持续维护并向社区分享 SenseNova-U 系列量化权重。
 
 - `[2026.08.20]` 正式发布 [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)，进一步提升指令遵循、文字与版式、原生 4K 生成、图像编辑和视觉控制能力；同时发布 [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors)，用于更快速、更高效的推理，使用方法参见[推理示例脚本](docs/base_vs_distill.md#sensenova-u15-recommended)。我们也在准备技术报告和从 SFT、RL 到 MOPD 的完整训练流程，后续将陆续开源。
