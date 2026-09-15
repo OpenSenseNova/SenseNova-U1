@@ -751,6 +751,12 @@ If this project is helpful for your research, please consider **star** ⭐ and *
   journal      = {arXiv preprint arXiv:2605.12500},
   year         = {2026}
 }
+@article{sensenova2026sensenovau1.5,
+  title        = {SenseNova-U1. 5: Towards Native Unified Visual Intelligence},
+  author       = {Diao, Haiwen and Wang, Jiahao and Ding, Chenjing and Deng, Hanming and Chen, Jiangnan and Zhang, Ruixi and Wang, Ruohui and Tong, Wenwen and Fan, Xiangyu and Wang, Yubo and others},
+  journal      = {arXiv preprint arXiv:2609.11929},
+  year         = {2026}
+}
 ```
 
 ## ⚖️ License
