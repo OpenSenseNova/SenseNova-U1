@@ -5,7 +5,7 @@ Install:
     pip install openai pillow
 
 Usage:
-    export OPENAI_API_KEY="your-api-key"
+    export OPENAI_API_KEY="***"
     python caption.py image.jpg
     python caption.py image.jpg > result.json
 
@@ -35,8 +35,14 @@ TARGET_RATIOS = {
     "2:3": 2 / 3,
     "9:16": 9 / 16,
 }
+
 SUPPORTED_FORMATS = {"JPEG": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}
 MAX_RETRIES = 5
+MAX_IMGINPUT = 4_000_000               # 像素最大阈值 400 万
+MAX_DATA_URI_LEN = 10 * 1024 * 1024    # data URI 整体上限 10 MB
+MIN_SCALE_PIXELS = 1_000_000           # 缩分辨率的下限（低于此改为降 quality）
+BASE_QUALITY = 95                      # 高质量基准
+MIN_QUALITY = 45                       # 最低可接受画质
 
 SYSTEM_PROMPT = """你是一个文生图 prompt 撰写助手。请仔细观察用户提供的图片，
 提取主体、构图、风格、色彩、光影、视角、排版和文字设计，并为同一画面生成
@@ -61,23 +67,99 @@ JSON 结构化描述和自然语言描述。
 不要输出解释、Markdown 标记或任何额外顶层字段。"""
 
 
+def _scale_image(image: Image.Image, max_pixels: int) -> Image.Image:
+    """等比例缩小到 max_pixels 以内，不放大。"""
+    w, h = image.size
+    if w * h <= max_pixels:
+        return image
+    ratio = (max_pixels / (w * h)) ** 0.5
+    new_w = round(w * ratio)
+    new_h = round(h * ratio)
+    while new_w * new_h > max_pixels:
+        new_w -= 1
+        new_h = round(h * (new_w / w))
+    new_w = max(new_w, 1)
+    new_h = max(new_h, 1)
+    return image.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+
+def _save_lossy(image: Image.Image, fmt: str, quality: int) -> bytes:
+    """以有损格式编码，返回字节。JPEG 与 WEBP 都支持 quality。"""
+    buffer = BytesIO()
+    img_out = image.convert("RGB") if (fmt == "JPEG" and image.mode != "RGB") else image
+    img_out.save(buffer, fmt, quality=quality)
+    return buffer.getvalue()
+
+
+def _encode_lossless(image: Image.Image, fmt: str) -> bytes:
+    buffer = BytesIO()
+    image.save(buffer, fmt)
+    return buffer.getvalue()
+
+
+def _make_data_uri(mime: str, content: bytes) -> str:
+    return f"data:{mime};base64,{base64.b64encode(content).decode('ascii')}"
+
+
+def _compress_lossy(image, fmt, mime, width, height):
+    """有损格式（JPEG/WEBP）：优先缩分辨率，后降 quality，直到满足上限。"""
+    quality = BASE_QUALITY
+    content = _save_lossy(image, fmt, quality)
+    for _ in range(20):
+        if len(_make_data_uri(mime, content)) <= MAX_DATA_URI_LEN:
+            return _make_data_uri(mime, content), width, height
+        if width * height > MIN_SCALE_PIXELS:
+            w, h = image.size
+            image = image.resize(
+                (max(w // 2, 1), max(h // 2, 1)), Image.Resampling.LANCZOS
+            )
+            width, height = image.size
+            content = _save_lossy(image, fmt, quality)
+        elif quality > MIN_QUALITY:
+            quality -= 10
+            content = _save_lossy(image, fmt, quality)
+        else:
+            raise ValueError("图片无法压缩到限制以内")
+
+
 def image_to_data_uri(path):
-    """Read an image and return its data URI and dimensions."""
+    """Read an image, auto‑scale and compress, return (data_uri, width, height)."""
+    # ── 只读头信息，不加载全部像素 ──
+    with Image.open(path) as image:
+        orig_w, orig_h = image.size
+        orig_fmt = image.format                    # PIL 格式名：JPEG/PNG/WEBP
+        orig_mime = SUPPORTED_FORMATS.get(orig_fmt)
+
+    # ── 快路径：原图小 + 格式受支持 + URI 不超限 → 复用原始字节 ──
+    if orig_w * orig_h <= MAX_IMGINPUT and orig_mime:
+        content = path.read_bytes()
+        data_uri = _make_data_uri(orig_mime, content)
+        if len(data_uri) <= MAX_DATA_URI_LEN:
+            return data_uri, orig_w, orig_h
+
+    # ── 解码并缩略（如果像素超限） ──
     with Image.open(path) as image:
         image.load()
+        image = _scale_image(image, MAX_IMGINPUT)
         width, height = image.size
-        mime = SUPPORTED_FORMATS.get(image.format)
 
-        if mime:
-            content = path.read_bytes()
-        else:
-            buffer = BytesIO()
-            image.convert("RGB").save(buffer, "PNG")
-            content = buffer.getvalue()
-            mime = "image/png"
+    # ── 归一化：不支持的格式一律转 JPEG；确保 mode 可用 ──
+    fmt = orig_fmt if orig_fmt in SUPPORTED_FORMATS else "JPEG"
+    mime = SUPPORTED_FORMATS[fmt]
+    if fmt == "JPEG":
+        image = image.convert("RGB")
 
-    encoded = base64.b64encode(content).decode("ascii")
-    return f"data:{mime};base64,{encoded}", width, height
+    # ── 编码 + 大小检查（保留原格式；PNG 超限转 JPEG） ──
+    if fmt in ("JPEG", "WEBP"):
+        return _compress_lossy(image, fmt, mime, width, height)
+    else:  # PNG 无损
+        content = _encode_lossless(image, "PNG")
+        data_uri = _make_data_uri(mime, content)
+        if len(data_uri) <= MAX_DATA_URI_LEN:
+            return data_uri, width, height
+        # PNG 超限 → 转 JPEG 重新走有损流程
+        image = image.convert("RGB")
+        return _compress_lossy(image, "JPEG", "image/jpeg", width, height)
 
 
 def image_settings(width, height):
