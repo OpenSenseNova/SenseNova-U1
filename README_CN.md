@@ -21,6 +21,8 @@
 
 ## 📣 最新动态
 
+- `[2026.09.24]` 发布 [SenseNova-U1.5-8B-MoT-LoRA-8step-V2](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors)。相较此前的 [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors), 整体视觉质量进一步提升，色彩更均衡、对比度更自然，并有效减轻过度锐化。
+
 - `[2026.09.11]` 发布 [🔥SenseNova-U1.5 技术报告🔥](docs/pdf/SenseNOVA_U1_5.pdf)，介绍原生统一架构、训练方法与评测结果。
 
 - `[2026.09.01]` 社区贡献者 Hugging Face 用户 [realrebelai](https://huggingface.co/realrebelai)（GitHub [@RealRebelAI](https://github.com/RealRebelAI)）发布了 [SenseNova-U1.5-8B-MoT 的 Q8 GGUF 权重](https://huggingface.co/realrebelai/SenseNova-U1.5-8B_GGUFs/blob/main/SenseNova-U1.5-8B-MoT-Q8_0.gguf)（21.2 GB）。感谢作者持续维护并向社区分享 SenseNova-U 系列量化权重。
@@ -688,7 +690,8 @@ docker pull lightx2v/lightllm_lightx2v:20260407
 | :---- | :------- | :--------- |
 | **SenseNova-U1.5-8B-MoT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
 | **SenseNova-U1.5-8B-MoT-SFT** | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |
-| **SenseNova-U1.5-8B-MoT-LoRA-8step** | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) |
+| **SenseNova-U1.5-8B-MoT-LoRA-8step-V2** | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors) |
+| SenseNova-U1.5-8B-MoT-LoRA-8step | 0.4B | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) |
 | SenseNova-U1.5-8B-MoT-Preview | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) |
 | SenseNova-U1-8B-MoT-Interleaved | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Interleaved) |
 | SenseNova-U1-8B-MoT-Infographic-V3 | 8B MoT | [🤗 链接](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-Infographic-V3) |
