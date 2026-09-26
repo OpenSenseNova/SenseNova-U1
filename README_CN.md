@@ -544,6 +544,21 @@ SenseNova-U1 的核心是 **[NEO-unify](https://huggingface.co/blog/sensenova/ne
 
 > **环境准备：** 按照[安装指南](./docs/installation_CN.md)克隆仓库并用 [uv](https://github.com/astral-sh/uv) 安装依赖。
 
+**可选 MoE 优化：** A3B 权重支持用 grouped GEMM 计算 expert，默认为 `"eager"`。
+加载时设置 `"grouped_mm"` 即可开启：
+
+```python
+import torch
+from sensenova_u1.utils.checkpoint_loading import load_model_and_tokenizer
+
+model, tokenizer = load_model_and_tokenizer(
+    "sensenova/SenseNova-U1-A3B-MoT",
+    dtype=torch.bfloat16,
+    device="cuda",
+    experts_implementation="grouped_mm",
+)
+```
+
 <details open>
 <summary>📝 视觉理解</summary>
 

@@ -222,7 +222,40 @@ class TransformersCompatibilityTest(unittest.TestCase):
             pad_token_id=0,
         )
         config._attn_implementation = "eager"
-        self.assert_inference_paths(Qwen3MoeForCausalLM(config))
+        model = Qwen3MoeForCausalLM(config)
+        self.assertEqual(model.config.experts_implementation, "eager")
+        self.assert_inference_paths(model)
+        self.assertFalse(any("packed" in key for key in model.state_dict()))
+
+        from sensenova_u1.models.neo_unify.modeling_qwen3_moe import prepare_moe_experts_for_inference
+
+        config.experts_implementation = "grouped_mm"
+        self.assertGreater(prepare_moe_experts_for_inference(model), 0)
+
+        # Saving after inference exercises the packed, shared expert storages;
+        # the serialized checkpoint must retain the legacy per-expert layout.
+        with tempfile.TemporaryDirectory() as checkpoint_dir:
+            model.save_pretrained(checkpoint_dir)
+            reloaded = Qwen3MoeForCausalLM.from_pretrained(
+                checkpoint_dir,
+                experts_implementation="eager",
+                **pretrained_dtype_kwargs(torch.float32),
+            )
+            grouped_reload = Qwen3MoeForCausalLM.from_pretrained(
+                checkpoint_dir,
+                experts_implementation="grouped_mm",
+                **pretrained_dtype_kwargs(torch.float32),
+            )
+        self.assertEqual(grouped_reload.config.experts_implementation, "grouped_mm")
+        grouped_reload.config.experts_implementation = "eager"
+        self.assertEqual(grouped_reload.config._experts_implementation, "eager")
+
+        self.assertEqual(reloaded.dtype, torch.float32)
+        self.assertFalse(any("packed" in key for key in reloaded.state_dict()))
+        effective_experts = getattr(reloaded.config, "_experts_implementation", None)
+        if effective_experts is None:
+            effective_experts = reloaded.config.experts_implementation
+        self.assertEqual(effective_experts, "eager")
 
     def test_moe_base_model_captures_outputs_and_honors_tuple_return(self) -> None:
         from sensenova_u1.models.neo_unify.configuration_neo_chat import NEOMoELLMConfig

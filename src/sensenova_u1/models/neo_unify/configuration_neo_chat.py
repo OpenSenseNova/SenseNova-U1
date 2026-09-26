@@ -1,11 +1,10 @@
 import copy
 
 from transformers import Qwen3Config, Qwen3MoeConfig
-from transformers.utils import logging
 from transformers.configuration_utils import PretrainedConfig
+from transformers.utils import logging
 
 from .configuration_neo_vit import NEOVisionConfig
-
 
 logger = logging.get_logger(__name__)
 
@@ -59,9 +58,16 @@ class NEOMoELLMConfig(Qwen3MoeConfig):
         gen_num_experts=None,
         gen_num_experts_per_tok=None,
         gen_moe_intermediate_size=None,
+        experts_implementation="eager",
         **kwargs,
     ):
-        super().__init__(**kwargs)
+        # The public property below also lets Transformers 4.57 consume this
+        # from_pretrained keyword without forwarding it to the model ctor.
+        experts_implementation = experts_implementation or "eager"
+        if experts_implementation not in {"eager", "grouped_mm"}:
+            raise ValueError("experts_implementation must be 'eager' or 'grouped_mm'")
+        super().__init__(experts_implementation=experts_implementation, **kwargs)
+        self.experts_implementation = experts_implementation
         _restore_legacy_rope_theta(self)
         self.rope_theta_hw = rope_theta_hw
         self.max_position_embeddings_hw = max_position_embeddings_hw
@@ -99,6 +105,18 @@ class NEOMoELLMConfig(Qwen3MoeConfig):
                 "sliding_attention" if (use_swa and i >= max_window_layers) else "full_attention"
                 for i in range(self.num_hidden_layers)
             ]
+
+    @property
+    def experts_implementation(self):
+        # One source of truth on Transformers 4 and 5, including runtime changes.
+        return getattr(self, "_experts_implementation", None) or "eager"
+
+    @experts_implementation.setter
+    def experts_implementation(self, value):
+        value = value or "eager"
+        if value not in {"eager", "grouped_mm"}:
+            raise ValueError("experts_implementation must be 'eager' or 'grouped_mm'")
+        self._experts_implementation = value
 
 
 def _is_moe_llm_config(llm_config) -> bool:

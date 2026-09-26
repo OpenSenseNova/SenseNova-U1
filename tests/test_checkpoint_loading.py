@@ -213,6 +213,57 @@ class CheckpointLoadingTest(unittest.TestCase):
             ],
         )
 
+    def test_standard_model_packs_experts_before_device_move(self) -> None:
+        events: list[object] = []
+
+        class MovableFakeModel:
+            def eval(self):
+                return self
+
+            def to(self, device):
+                events.append(("move", torch.device(device)))
+                return self
+
+        model = MovableFakeModel()
+        with TemporaryDirectory() as directory:
+            with (
+                mock.patch("transformers.AutoConfig.from_pretrained", return_value=object()),
+                mock.patch("transformers.AutoTokenizer.from_pretrained", return_value=object()),
+                mock.patch("transformers.AutoModel.from_pretrained", return_value=model),
+                mock.patch("sensenova_u1.check_checkpoint_compatibility"),
+                mock.patch(
+                    "sensenova_u1.models.neo_unify.modeling_qwen3_moe.prepare_moe_experts_for_inference",
+                    side_effect=lambda loaded, device: events.append(("pack", loaded, device)),
+                ),
+            ):
+                loaded, _ = load_model_and_tokenizer(
+                    directory,
+                    dtype=torch.bfloat16,
+                    device="cpu",
+                )
+
+        self.assertIs(loaded, model)
+        self.assertEqual(events, [("pack", model, "cpu"), ("move", torch.device("cpu"))])
+
+    def test_loader_sets_nested_moe_implementation(self) -> None:
+        from types import SimpleNamespace
+
+        from sensenova_u1.models.neo_unify.configuration_neo_chat import NEOMoELLMConfig
+
+        config = SimpleNamespace(llm_config=NEOMoELLMConfig())
+        with (
+            TemporaryDirectory() as directory,
+            mock.patch("transformers.AutoConfig.from_pretrained", return_value=config),
+            mock.patch("transformers.AutoTokenizer.from_pretrained", return_value=object()),
+            mock.patch("transformers.AutoModel.from_pretrained", return_value=_FakeModel()) as load,
+            mock.patch("sensenova_u1.check_checkpoint_compatibility"),
+        ):
+            load_model_and_tokenizer(
+                directory, dtype=torch.bfloat16, for_offload=True, experts_implementation="grouped_mm"
+            )
+        self.assertEqual(load.call_args.kwargs["config"].llm_config.experts_implementation, "grouped_mm")
+        self.assertEqual(config.llm_config._experts_implementation, "grouped_mm")
+
 
 if __name__ == "__main__":
     unittest.main()

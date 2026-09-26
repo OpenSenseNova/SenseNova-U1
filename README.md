@@ -550,6 +550,21 @@ The easiest way to integrate SenseNova-U1 into your own agent or application is 
 
 > **Setup:** Follow the [Installation Guide](./docs/installation.md) to clone the repo and install dependencies with [uv](https://github.com/astral-sh/uv).
 
+**Optional MoE inference optimization:** A3B checkpoints support grouped GEMM for expert
+computation. The default is `"eager"`; enable `"grouped_mm"` when loading:
+
+```python
+import torch
+from sensenova_u1.utils.checkpoint_loading import load_model_and_tokenizer
+
+model, tokenizer = load_model_and_tokenizer(
+    "sensenova/SenseNova-U1-A3B-MoT",
+    dtype=torch.bfloat16,
+    device="cuda",
+    experts_implementation="grouped_mm",
+)
+```
+
 <details open>
 <summary>📝 Visual Understanding</summary>
 
