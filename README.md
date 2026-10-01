@@ -1,5 +1,7 @@
 # SenseNova-U series: Native Unified Paradigm with NEO-unify from the First Principles
 
+See [resolution terminology and custom inference](docs/resolution.md): final U1.5 training extends to 4096 × 4096, while reference T2I presets remain approximately 4 MP with no UHD or 4096-class bucket. The final report does not independently establish Preview coverage.
+
 
 <p align="center">
   <strong>English</strong> | <a href="./README_CN.md">简体中文</a>
@@ -28,11 +30,11 @@
 
 - `[2026.09.01]` Community contributor [realrebelai on Hugging Face](https://huggingface.co/realrebelai) (GitHub [@RealRebelAI](https://github.com/RealRebelAI)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT](https://huggingface.co/realrebelai/SenseNova-U1.5-8B_GGUFs/blob/main/SenseNova-U1.5-8B-MoT-Q8_0.gguf) (21.2 GB). Thank you for continuing to maintain and share quantized SenseNova-U1.5 weights with the community.
 
-- `[2026.08.20]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT), which further improves instruction following, text and layout, native 4K generation, image editing, and visual control. Alongside the base checkpoint, we release [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) for faster and more efficient inference; see [example script](docs/base_vs_distill.md#sensenova-u15-recommended) for usage. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release.
+- `[2026.08.20]` Release [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT), which further improves instruction following, text and layout, native high-resolution generation, image editing, and visual control. Alongside the base checkpoint, we release [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) for faster and more efficient inference; see [example script](docs/base_vs_distill.md#sensenova-u15-recommended) for usage. We are also preparing the technical report and the full training pipeline, from SFT and RL to MOPD, for open-source release.
 
 - `[2026.08.04]` Community contributor [smthem on Hugging Face](https://huggingface.co/smthem) (GitHub [@smthemex](https://github.com/smthemex)) released a [Q8 GGUF checkpoint for SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf) (19.9 GB). Thank you for continuing to maintain and share quantized SenseNova-U1 weights with the community.
 
-- `[2026.07.31]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) that focuses on native 4K image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
+- `[2026.07.31]` Release [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview) that focuses on native high-resolution image generation, finer local textures and realistic materials, more complex layout generation, and stronger preservation of subjects and unedited regions during image editing. See the [U1.5 Preview documentation](docs/u1.5_preview.md) for details.
 
 <details>
 <summary>Click to expand older SenseNova-U1 updates</summary>
@@ -78,7 +80,7 @@ The official release focuses on six user-visible improvements:
 
 - **Higher-quality image generation:** improved composition and color harmony, with more realistic material rendering, natural lighting, stronger visual fidelity, and finer local details.
 - **Better text rendering and infographic generation:** more legible Chinese and English text, with clearer information hierarchy in posters, infographics, brand assets, and other text-dense designs.
-- **More efficient native 4K generation:** more coherent global structure, color harmony, and stable high-resolution output with improved generation efficiency.
+- **More efficient native high-resolution generation:** more coherent global structure, color harmony, and stable high-resolution output with improved generation efficiency.
 - **More reliable native image editing:** stronger preservation of subject identity and unedited content across local, text, multi-reference, insertion, and replacement edits.
 - **Stronger complex-instruction following:** more consistent execution of object counts, spatial relationships, layouts, styles, and multiple constraints within a single request.
 - **More precise visual control:** more accurate region- and object-level control through bounding boxes, visual markers, and single- or multi-image references.

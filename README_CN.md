@@ -1,5 +1,7 @@
 # SenseNova-U 系列：从第一性原理出发基于 NEO-unify的原生统一范式
 
+分辨率定义参见[分辨率术语与自定义推理](docs/resolution_CN.md)：正式版训练覆盖至 4096×4096，参考 T2I 默认档位为约 4MP，表中没有 UHD 或 4096 级 bucket。正式版报告不能单独证明 Preview 的训练覆盖。
+
 <p align="center">
   <a href="./README.md">English</a> | <strong>简体中文</strong>
 </p>
@@ -27,11 +29,11 @@
 
 - `[2026.09.01]` 社区贡献者 Hugging Face 用户 [realrebelai](https://huggingface.co/realrebelai)（GitHub [@RealRebelAI](https://github.com/RealRebelAI)）发布了 [SenseNova-U1.5-8B-MoT 的 Q8 GGUF 权重](https://huggingface.co/realrebelai/SenseNova-U1.5-8B_GGUFs/blob/main/SenseNova-U1.5-8B-MoT-Q8_0.gguf)（21.2 GB）。感谢作者持续维护并向社区分享 SenseNova-U 系列量化权重。
 
-- `[2026.08.20]` 正式发布 [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)，进一步提升指令遵循、文字与版式、原生 4K 生成、图像编辑和视觉控制能力；同时发布 [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors)，用于更快速、更高效的推理，使用方法参见[推理示例脚本](docs/base_vs_distill.md#sensenova-u15-recommended)。我们也在准备技术报告和从 SFT、RL 到 MOPD 的完整训练流程，后续将陆续开源。
+- `[2026.08.20]` 正式发布 [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)，进一步提升指令遵循、文字与版式、原生高分辨率 生成、图像编辑和视觉控制能力；同时发布 [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors)，用于更快速、更高效的推理，使用方法参见[推理示例脚本](docs/base_vs_distill.md#sensenova-u15-recommended)。我们也在准备技术报告和从 SFT、RL 到 MOPD 的完整训练流程，后续将陆续开源。
 
 - `[2026.08.04]` 社区贡献者 Hugging Face 用户 [smthem](https://huggingface.co/smthem)（GitHub [@smthemex](https://github.com/smthemex)）发布了 [SenseNova-U1.5-8B-MoT-Preview 的 Q8 GGUF 权重](https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf/blob/main/SenseNova-U1.5-8B-MoT-Preview-Q8.gguf)（19.9 GB）。感谢作者持续维护并向社区分享 SenseNova-U1 系列量化权重。
 
-- `[2026.07.31]` 发布 [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview)。本次预览重点升级原生 4K 图像生成、局部纹理与真实质感和复杂版式生成，以及图像编辑中的主体与非编辑区域保持能力。更多细节请参阅 [U1.5 Preview 文档](docs/u1.5_preview_CN.md)。
+- `[2026.07.31]` 发布 [SenseNova-U1.5-8B-MoT-Preview](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-Preview)。本次预览重点升级原生高分辨率 图像生成、局部纹理与真实质感和复杂版式生成，以及图像编辑中的主体与非编辑区域保持能力。更多细节请参阅 [U1.5 Preview 文档](docs/u1.5_preview_CN.md)。
 
 <details>
 <summary>点击展开 SenseNova-U1 更早的更新记录</summary>
@@ -76,7 +78,7 @@
 
 - **更高质量的图像生成：** 提升构图、色彩和谐度、材质渲染、光照、真实感与细粒度细节。
 - **更好的文字渲染与信息图生成：** 提升中英文文字可读性，并在海报、信息图、品牌素材及其他文字密集设计中呈现更清晰的信息层级。
-- **更高效的原生 4K 生成：** 提升全局结构连贯性、高分辨率输出稳定性与生成效率。
+- **更高效的原生高分辨率 生成：** 提升全局结构连贯性、高分辨率输出稳定性与生成效率。
 - **更可靠的原生图像编辑：** 在局部编辑、文字编辑、多参考图编辑、插入与替换等任务中，更好地保持主体身份与非编辑内容。
 - **更强的复杂指令遵循：** 更稳定地执行对象数量、空间关系、版式、风格及单个请求中的多项约束。
 - **更精确的视觉控制：** 通过边界框、视觉标记以及单图或多图参考，实现更准确的区域级与对象级控制。

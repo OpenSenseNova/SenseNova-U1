@@ -32,6 +32,8 @@ NORM_STD = (0.5, 0.5, 0.5)
 DEFAULT_SEED = 42
 
 
+# Recommended approximately 4 MP presets, not the full training distribution.
+# See docs/resolution.md for final U1.5 training coverage and custom dimensions.
 SUPPORTED_RESOLUTIONS: dict[str, tuple[int, int]] = {
     "1:1": (2048, 2048),
     "16:9": (2720, 1536),
@@ -54,8 +56,8 @@ def _warn_if_unsupported(width: int, height: int) -> None:
         return
     buckets = ", ".join(f"{r}->{w}x{h}" for r, (w, h) in SUPPORTED_RESOLUTIONS.items())
     print(
-        f"[warn] ({width}x{height}) is outside the trained resolution set; "
-        f"quality may degrade. Supported buckets: {buckets}"
+        f"[warn] ({width}x{height}) is outside the recommended approximately 4 MP presets; "
+        f"quality and memory use depend on the checkpoint and size. See docs/resolution.md. Recommended buckets: {buckets}"
     )
 
 
@@ -224,8 +226,8 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_WIDTH,
         help=(
             f"Output image width (default: {DEFAULT_WIDTH}). For --jsonl, this is the "
-            "fallback when a sample does not specify its own width/height. "
-            f"Trained buckets: {sorted(set(SUPPORTED_RESOLUTIONS.values()))}."
+            "fallback when a sample does not specify its own width/height. Custom dimensions must be positive multiples of 32. "
+            f"Recommended approximately 4 MP buckets: {sorted(set(SUPPORTED_RESOLUTIONS.values()))}."
         ),
     )
     p.add_argument(

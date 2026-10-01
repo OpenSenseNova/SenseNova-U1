@@ -58,6 +58,8 @@ export max_num_frame=128
 export dynamic_image_version="native_resolution"
 export CONV_STYLE="sensenovalm2-chat-v3"
 export down_sample_ratio=0.5
+# Initial low-resolution PT example, not the full U1.5 high-resolution recipe.
+# The report describes subsequent 512^2-4096^2 training; see docs/resolution.md.
 export max_pixels=$((1024 * 1024))
 export min_pixels=$((256 * 256))
 export max_pixels_gen=$((1024 * 1024))

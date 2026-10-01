@@ -192,9 +192,9 @@ python examples/t2i/inference.py \
 
 JSONL: set `"think": true` per sample, or pass `--think` for all samples.
 
-### Supported resolution buckets
+### Recommended resolution buckets (approximately 4 MP)
 
-SenseNova-U1 is trained on ~2K-pixel resolution buckets. Passing arbitrary `--width` / `--height` is allowed but quality may degrade for untrained shapes.
+These presets target approximately 4 MP total area, not standard 4K/UHD or an exhaustive training-resolution set. Custom dimensions must be positive multiples of 32. For final U1.5 training coverage up to 4096 × 4096, custom commands, and memory limitations, see [resolution terminology](../docs/resolution.md).
 
 | Aspect ratio | Width × Height |
 | :----------- | :------------- |
