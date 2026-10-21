@@ -22,6 +22,8 @@
 
 ## 📣 Updated News
 
+- `[2026.10.22]` SenseNova-U1.5 has been officially supported by [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp/blob/master/docs/sensenova_u1.md) for text-to-image generation, and [llama.cpp](https://github.com/ggml-org/llama.cpp/pull/28919) for text-to-text, image-to-text, and image-text-to-text generation.
+
 - `[2026.09.24]` Release [SenseNova-U1.5-8B-MoT-LoRA-8step-V2](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors), which delivers improved visual quality with better color balance, more natural contrast, and reduced oversharpening across the board, compared with the previous [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors).
 
 - `[2026.09.11]` Release the [🔥SenseNova-U1.5 Technical Report🔥](docs/pdf/SenseNOVA_U1_5.pdf), covering the native unified architecture, training recipe, and evaluation results.
