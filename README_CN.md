@@ -21,6 +21,8 @@
 
 ## 📣 最新动态
 
+- `[2026.10.26]` SenseNova-U1.5 模型支持已合入 [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp/blob/master/docs/sensenova_u1.md) 项目，可用于文生图；同时也已合入 [llama.cpp](https://github.com/ggml-org/llama.cpp/pull/28919) 项目，可用于文生文、图生文和图文生文。
+
 - `[2026.09.24]` 发布 [SenseNova-U1.5-8B-MoT-LoRA-8step-V2](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors)。相较此前的 [SenseNova-U1.5-8B-MoT-LoRA-8step](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors), 整体视觉质量进一步提升，色彩更均衡、对比度更自然，并有效减轻过度锐化。
 
 - `[2026.09.11]` 发布 [🔥SenseNova-U1.5 技术报告🔥](docs/pdf/SenseNOVA_U1_5.pdf)，介绍原生统一架构、训练方法与评测结果。
