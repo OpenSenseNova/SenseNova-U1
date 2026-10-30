@@ -6,6 +6,7 @@
 </p>
 
 <p align="center">
+  <a href="https://arxiv.org/abs/2609.11929"><img src="https://img.shields.io/badge/arXiv-2609.11929-b31b1b.svg" alt="SenseNova-U1.5 arXiv"></a>
   <a href="https://arxiv.org/abs/2605.12500"><img src="https://img.shields.io/badge/arXiv-2605.12500-b31b1b.svg" alt="arXiv"></a>
   <a href="https://huggingface.co/collections/sensenova/sensenova-u15"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-U1.5-yellow" alt="SenseNova-U1.5 on Hugging Face"></a>
   <a href="https://modelscope.cn/models/SenseNova/SenseNova-U1.5-8B-MoT"><img src="https://img.shields.io/badge/%F0%9F%A4%96%20ModelScope-%E6%A8%A1%E5%9E%8B-purple" alt="SenseNova-U1.5 on ModelScope"></a>
