@@ -152,10 +152,28 @@ def _unique_module_parameters(modules: tuple[nn.Module, ...]) -> tuple[nn.Parame
     return tuple(parameters)
 
 
+def _release_stale_runtime_weight_caches(module: nn.Module) -> None:
+    """Let optimized modules release caches invalidated by ``Parameter.data``.
+
+    Layer offload intentionally rebinds parameter storage instead of calling
+    ``Module.to``.  Runtime-packed MoE expert tensors are not registered
+    buffers (to preserve checkpoint keys), so without this hook an evicted
+    layer could retain its former GPU storage and defeat VRAM offload.
+    """
+
+    if not isinstance(module, nn.Module):
+        return
+    for submodule in module.modules():
+        release = getattr(submodule, "release_stale_packed_weights", None)
+        if callable(release):
+            release()
+
+
 class _PrefixWeightStore:
     """Keep pinned CPU backing for weights needed only before denoising."""
 
     def __init__(self, modules: tuple[nn.Module, ...], target_device: torch.device) -> None:
+        self._modules = modules
         self._target_device = target_device
         self._parameters = _unique_module_parameters(modules)
         self._pinned: dict[int, torch.Tensor] = {}
@@ -167,12 +185,16 @@ class _PrefixWeightStore:
             self._pinned[id(parameter)] = pinned
         for parameter in self._parameters:
             parameter.data = self._pinned[id(parameter)]
+        for module in self._modules:
+            _release_stale_runtime_weight_caches(module)
 
     def move_to_target(self) -> None:
         if self._on_target:
             return
         for parameter in self._parameters:
             parameter.data = self._pinned[id(parameter)].to(self._target_device, non_blocking=True)
+        for module in self._modules:
+            _release_stale_runtime_weight_caches(module)
         self._on_target = True
 
     def evict_to_cpu(self) -> None:
@@ -180,6 +202,8 @@ class _PrefixWeightStore:
             return
         for parameter in self._parameters:
             parameter.data = self._pinned[id(parameter)]
+        for module in self._modules:
+            _release_stale_runtime_weight_caches(module)
         self._on_target = False
 
     def parameter_ids(self) -> set[int]:
@@ -317,6 +341,7 @@ class _LayerStore:
                 pinned_tensor = tensor.data.pin_memory(device=self._pin_device)
                 tensor.data = pinned_tensor
                 pinned[name] = pinned_tensor
+            _release_stale_runtime_weight_caches(layer)
             self._pinned.append(pinned)
             self._tensor_groups.append(_partition_layer_tensor_names(layer))
             self._resident_groups.append(set())
@@ -354,6 +379,7 @@ class _LayerStore:
                 moved = source.numel() * source.element_size()
                 self._bytes_moved += moved
                 self._bytes_moved_by_group[group] += moved
+        _release_stale_runtime_weight_caches(layer)
         self._resident_groups[idx].update(missing_groups)
         self._on_gpu.add(idx)
 
@@ -373,6 +399,7 @@ class _LayerStore:
         for name, param in itertools.chain(layer.named_parameters(), layer.named_buffers()):
             if name in pinned and tensor_groups.get(name, _GROUP_SHARED) in groups:
                 param.data = pinned[name]
+        _release_stale_runtime_weight_caches(layer)
         self._resident_groups[idx].difference_update(groups)
         if not self._resident_groups[idx]:
             self._on_gpu.discard(idx)

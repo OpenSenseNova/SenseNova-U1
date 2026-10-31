@@ -283,6 +283,7 @@ def load_model_and_tokenizer(
     device_map: str | None = None,
     max_memory: str | dict[int | str, str] | None = None,
     for_offload: bool = False,
+    experts_implementation: str | None = None,
 ) -> tuple[nn.Module, Any]:
     """Build a SenseNova-U1 model + tokenizer pair.
 
@@ -308,6 +309,10 @@ def load_model_and_tokenizer(
     so a downstream layer-offload wrapper can manage CPU<->GPU movement
     itself. ``device_map`` is forced to ``None`` in this mode (with a warning)
     because accelerate's static placement is incompatible with dynamic offload.
+
+    ``experts_implementation="grouped_mm"`` opts MoE backbones into grouped
+    GEMM inference; ``"eager"`` selects the reference implementation (default
+    for configs without an explicit choice). Unsupported operands use eager.
     """
     from transformers import AutoConfig, AutoModel, AutoTokenizer
 
@@ -331,6 +336,14 @@ def load_model_and_tokenizer(
     )
     resources_path = _resolve_local_model_path(artifact.resources_path)
     config = AutoConfig.from_pretrained(resources_path)
+    if experts_implementation is not None:
+        if experts_implementation not in {"eager", "grouped_mm"}:
+            raise ValueError("experts_implementation must be 'eager' or 'grouped_mm'")
+        from ..models.neo_unify.configuration_neo_chat import NEOMoELLMConfig
+
+        llm_config = getattr(config, "llm_config", config)
+        if isinstance(llm_config, NEOMoELLMConfig):
+            llm_config.experts_implementation = experts_implementation
     check_checkpoint_compatibility(config)
     tokenizer = AutoTokenizer.from_pretrained(resources_path)
 
@@ -357,6 +370,12 @@ def load_model_and_tokenizer(
 
         model = AutoModel.from_pretrained(artifact.weights_path, **model_kwargs).eval()
         if not device_map and device is not None and not for_offload:
+            # Coalesce dense MoE expert weights while they are still on CPU.
+            # Their custom _apply then transfers two packed tensors per expert
+            # collection and avoids a first-forward GPU packing peak.
+            from ..models.neo_unify.modeling_qwen3_moe import prepare_moe_experts_for_inference
+
+            prepare_moe_experts_for_inference(model, device=device)
             model = model.to(device)
 
     return model, tokenizer
