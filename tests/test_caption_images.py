@@ -44,29 +44,26 @@ class CaptionImageTests(unittest.TestCase):
         self.assertEqual((width, height), (4096, 3072))
         self.assertEqual(caption.image_settings(width, height), ("4:3", "4096"))
 
-    def test_compressed_image_is_base64_encoded_once(self):
+    def test_oversized_png_converts_without_resizing_or_repeated_base64(self):
         path = self.directory / "noise.png"
         self.noise_image().save(path)
-        with (
-            patch.object(caption, "MAX_DATA_URI_LEN", 30_000),
-            patch.object(caption.base64, "b64encode", wraps=base64.b64encode) as encode,
-        ):
-            data_uri, _, _ = caption.image_to_data_uri(path)
-        self.assertEqual(encode.call_count, 1)
-        self.assertLessEqual(len(data_uri), 30_000)
-        with decode_image(data_uri) as uploaded:
-            self.assertEqual(uploaded.format, "JPEG")
-            self.assertEqual(uploaded.size, (128, 128))
-
-    def test_narrow_images_keep_valid_dimensions(self):
-        for size in ((20, 1), (1, 20)):
-            with self.subTest(size=size):
-                path = self.directory / "narrow.bmp"
-                Image.new("RGB", size).save(path)
+        original = path.read_bytes()
+        for limit in (25_000, 30_000):
+            with (
+                self.subTest(limit=limit),
+                patch.object(caption, "MAX_DATA_URI_LEN", limit),
+                patch.object(caption.base64, "b64encode", wraps=base64.b64encode) as encode,
+            ):
+                self.assertGreater(len(original), limit)
                 data_uri, width, height = caption.image_to_data_uri(path)
-                self.assertEqual((width, height), size)
+                self.assertEqual(encode.call_count, 1)
+                self.assertLessEqual(len(data_uri), limit)
+                self.assertTrue(data_uri.startswith("data:image/jpeg;base64,"))
+                self.assertEqual((width, height), (128, 128))
                 with decode_image(data_uri) as uploaded:
-                    self.assertEqual(uploaded.size, size)
+                    self.assertEqual(uploaded.format, "JPEG")
+                    self.assertEqual(uploaded.size, (width, height))
+                self.assertEqual(path.read_bytes(), original)
 
     def noise_image(self, size=(128, 128)):
         return Image.frombytes("RGB", size, random.Random(0).randbytes(size[0] * size[1] * 3))
@@ -108,22 +105,6 @@ class CaptionImageTests(unittest.TestCase):
             self.assertEqual(uploaded.format, "JPEG")
             self.assertEqual(uploaded.size, (32, 24))
         self.assertEqual(path.read_bytes(), original)
-
-    def test_oversized_png_falls_back_to_jpeg(self):
-        path = self.directory / "noise.png"
-        self.noise_image().save(path)
-        limit = 25_000
-        self.assertGreater(len(path.read_bytes()), limit)
-
-        with patch.object(caption, "MAX_DATA_URI_LEN", limit):
-            data_uri, width, height = caption.image_to_data_uri(path)
-
-        self.assertLessEqual(len(data_uri), limit)
-        self.assertTrue(data_uri.startswith("data:image/jpeg;base64,"))
-        self.assertEqual((width, height), (128, 128))
-        with decode_image(data_uri) as uploaded:
-            self.assertEqual(uploaded.format, "JPEG")
-            self.assertEqual(uploaded.size, (128, 128))
 
     def test_jpeg_fallback_composites_transparency_on_white(self):
         path = self.directory / "transparent.png"
@@ -167,14 +148,17 @@ class CaptionImageTests(unittest.TestCase):
 
     def test_unsupported_format_converts_to_jpeg_without_resizing(self):
         path = self.directory / "input.bmp"
-        Image.new("RGB", (32, 24), "red").save(path)
+        for mode, size in (("RGB", (32, 24)), ("L", (32, 24)), ("RGB", (20, 1)), ("RGB", (1, 20))):
+            with self.subTest(mode=mode, size=size):
+                Image.new(mode, size).save(path)
 
-        data_uri, width, height = caption.image_to_data_uri(path)
+                data_uri, width, height = caption.image_to_data_uri(path)
 
-        self.assertEqual((width, height), (32, 24))
-        self.assertTrue(data_uri.startswith("data:image/jpeg;base64,"))
-        with decode_image(data_uri) as uploaded:
-            self.assertEqual(uploaded.size, (32, 24))
+                self.assertEqual((width, height), size)
+                self.assertTrue(data_uri.startswith("data:image/jpeg;base64,"))
+                with decode_image(data_uri) as uploaded:
+                    self.assertEqual(uploaded.mode, "RGB")
+                    self.assertEqual(uploaded.size, size)
 
     def test_exif_orientation_is_preserved_when_converting(self):
         path = self.directory / "rotated.jpg"
@@ -184,16 +168,18 @@ class CaptionImageTests(unittest.TestCase):
         exif[274] = 6  # Rotate 90 degrees clockwise for display.
         exif[270] = "x" * 5000
         image.save(path, exif=exif)
+        original = path.read_bytes()
 
         original_uri, width, height = caption.image_to_data_uri(path)
         self.assertEqual((width, height), (32, 48))
-        self.assertEqual(base64.b64decode(original_uri.split(",", 1)[1]), path.read_bytes())
+        self.assertEqual(base64.b64decode(original_uri.split(",", 1)[1]), original)
 
         with patch.object(caption, "MAX_DATA_URI_LEN", 4000):
             data_uri, width, height = caption.image_to_data_uri(path)
 
         self.assertLessEqual(len(data_uri), 4000)
         self.assertEqual((width, height), (32, 48))
+        self.assertEqual(path.read_bytes(), original)
         with decode_image(data_uri) as uploaded:
             self.assertEqual(uploaded.size, (32, 48))
             self.assertGreater(uploaded.getpixel((16, 8))[0], 200)
