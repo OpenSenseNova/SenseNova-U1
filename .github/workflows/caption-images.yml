@@ -1,0 +1,28 @@
+name: Caption image preprocessing
+
+on:
+  pull_request:
+    paths:
+      - "src/sensenova_u1_5/caption/**"
+      - "tests/test_caption_images.py"
+      - ".github/workflows/caption-images.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/sensenova_u1_5/caption/**"
+      - "tests/test_caption_images.py"
+      - ".github/workflows/caption-images.yml"
+  workflow_dispatch:
+
+jobs:
+  caption-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install caption dependencies
+        run: python -m pip install pillow==12.0.0 openai
+      - name: Test image preprocessing without API calls
+        run: python -m unittest discover -s tests -p test_caption_images.py -v
