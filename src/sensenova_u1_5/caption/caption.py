@@ -112,12 +112,13 @@ def image_to_data_uri(path):
             if _fits_data_uri(mime, len(content)):
                 return _make_data_uri(mime, content), width, height
 
-        image = ImageOps.exif_transpose(source)
+        ImageOps.exif_transpose(source, in_place=True)
+        image = source
         if "A" in image.getbands() or "transparency" in image.info:
-            rgba = image.convert("RGBA")
+            rgba = image if image.mode == "RGBA" else image.convert("RGBA")
             image = Image.new("RGB", rgba.size, "white")
             image.paste(rgba, mask=rgba.getchannel("A"))
-        else:
+        elif image.mode != "RGB":
             image = image.convert("RGB")
         return _compress_jpeg(image), width, height
 
