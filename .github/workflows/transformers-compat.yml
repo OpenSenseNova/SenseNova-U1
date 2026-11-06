@@ -18,6 +18,8 @@ jobs:
         include:
           - label: "4.57.1 (minimum)"
             specifier: "==4.57.1"
+          - label: "4.57.3 (decorator factory)"
+            specifier: "==4.57.3"
           - label: "4.57.6 (final v4)"
             specifier: "==4.57.6"
           - label: "latest v5"
