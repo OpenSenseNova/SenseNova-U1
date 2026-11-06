@@ -1,0 +1,503 @@
+name: Commit Hygiene
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+# pull_request_target runs the workflow from the trusted base branch. Keep this
+# workflow API-only: never check out or execute code from the pull request.
+# To enforce the result, require the "Commit Hygiene Gate" status in the main
+# branch ruleset after this workflow has run at least once.
+permissions:
+  contents: read
+  pull-requests: write
+  statuses: write
+
+concurrency:
+  group: commit-hygiene-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  commit-hygiene:
+    name: commit-hygiene-report
+    # Draft PRs can be iterated freely. ready_for_review triggers the first check.
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Analyze commit history
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pr = context.payload.pull_request;
+            const pullNumber = pr.number;
+            const statusContext = 'Commit Hygiene Gate';
+            const statusTargetUrl =
+              `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+
+            async function setGateStatus(state, description) {
+              await github.rest.repos.createCommitStatus({
+                owner,
+                repo,
+                sha: pr.head.sha,
+                state,
+                context: statusContext,
+                description,
+                target_url: statusTargetUrl
+              });
+            }
+
+            // Fail closed: an interrupted run leaves a pending status on this
+            // exact PR head SHA instead of accidentally approving it.
+            await setGateStatus('pending', 'Analyzing pull request commit history');
+
+            /*
+             * Blocking rules are intentionally simple and auditable. Heuristic
+             * scores below provide review guidance, but are only blocking when
+             * there is strong, repeated evidence of fragmented history.
+             */
+            const MAX_COMMITS_ALLOWED = 25;
+            const MAX_REPEATED_TITLE_COUNT = 3;
+            const MAX_SQUASH_CANDIDATES = 5;
+            const SQUASH_THRESHOLD = 60;
+            const MAX_COMMITS_TO_ANALYZE = 80;
+
+            const garbagePatterns = [
+              /^wip\b/i,
+              /^fix\b/i,
+              /^fixes\b/i,
+              /^fixed\b/i,
+              /^typo\b/i,
+              /^update\b/i,
+              /^modify\b/i,
+              /^modified\b/i,
+              /^change\b/i,
+              /^changes\b/i,
+              /^tmp\b/i,
+              /^temp\b/i,
+              /^test\b/i,
+              /^try\b/i,
+              /^oops\b/i,
+              /^lint\b/i,
+              /^format\b/i,
+              /^formatting\b/i,
+              /^review\b/i,
+              /^address(?:ing)?\s+review/i,
+              /^fix(?:ing)?\s+review/i,
+              /^minor\b/i,
+              /^small\s+fix/i,
+              /^docs[:/]\s*update\b/i,
+              /^docs[:/]\s*modify\b/i,
+              /^fix[:/]\s*update\b/i
+            ];
+
+            const stopWords = new Set([
+              'fix', 'fixed', 'fixes', 'fixing',
+              'update', 'updated', 'updates',
+              'modify', 'modified', 'modifies',
+              'change', 'changed', 'changes',
+              'add', 'added', 'adds',
+              'remove', 'removed',
+              'docs', 'doc', 'feat', 'feature', 'chore', 'refactor',
+              'style', 'test', 'tests', 'wip', 'minor', 'small',
+              'the', 'a', 'an', 'and', 'for', 'to', 'of', 'in'
+            ]);
+
+            function firstLine(message) {
+              return (message || '').split('\n')[0].trim().slice(0, 200);
+            }
+
+            function shortSha(sha) {
+              return sha.substring(0, 7);
+            }
+
+            function escapeMarkdown(text) {
+              return String(text)
+                .replace(/@/g, '@\u200b')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/([\\`*_{}\[\]()#+.!|\-])/g, '\\$1')
+                .replace(/\r?\n/g, ' ');
+            }
+
+            function inlineCode(text) {
+              const value = String(text).replace(/@/g, '@\u200b').replace(/\r?\n/g, ' ');
+              const runs = value.match(/`+/g) || [];
+              const fenceLength = Math.max(1, ...runs.map(run => run.length + 1));
+              const fence = '`'.repeat(fenceLength);
+              return `${fence} ${value} ${fence}`;
+            }
+
+            function normalizeTitle(title) {
+              return title
+                .toLowerCase()
+                .replace(/^(fixup!|squash!)\s+/, '')
+                .replace(
+                  /^(feat|fix|docs|chore|refactor|test|style|build|ci|perf)(\([^)]+\))?[:/]\s*/,
+                  ''
+                )
+                .replace(/[_/\\-]+/g, ' ')
+                .replace(/[^\p{L}\p{N}.]+/gu, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+            }
+
+            function meaningfulTokens(title) {
+              return new Set(
+                normalizeTitle(title)
+                  .split(/\s+/)
+                  .map(token => token.trim())
+                  .filter(Boolean)
+                  .filter(token => !stopWords.has(token))
+              );
+            }
+
+            function jaccard(setA, setB) {
+              if (!setA.size && !setB.size) {
+                return 0;
+              }
+
+              let intersection = 0;
+              for (const item of setA) {
+                if (setB.has(item)) {
+                  intersection += 1;
+                }
+              }
+
+              const union = new Set([...setA, ...setB]).size;
+              return union === 0 ? 0 : intersection / union;
+            }
+
+            function fileOverlap(filesA, filesB) {
+              return jaccard(new Set(filesA), new Set(filesB));
+            }
+
+            function directorySet(files) {
+              const directories = new Set();
+              for (const file of files) {
+                const parts = file.split('/');
+                directories.add(parts.length === 1 ? '.' : parts.slice(0, -1).join('/'));
+              }
+              return directories;
+            }
+
+            function directoryOverlap(filesA, filesB) {
+              return jaccard(directorySet(filesA), directorySet(filesB));
+            }
+
+            function isGarbageLike(title) {
+              const normalized = normalizeTitle(title);
+              return (
+                garbagePatterns.some(pattern => pattern.test(title)) ||
+                garbagePatterns.some(pattern => pattern.test(normalized)) ||
+                normalized.length < 8
+              );
+            }
+
+            const allCommits = await github.paginate(
+              github.rest.pulls.listCommits,
+              { owner, repo, pull_number: pullNumber, per_page: 100 }
+            );
+
+            const truncated = allCommits.length > MAX_COMMITS_TO_ANALYZE;
+            const commits = allCommits.slice(0, MAX_COMMITS_TO_ANALYZE);
+
+            /*
+             * This event has a write-capable token, so deliberately do not
+             * check out the PR. Read commit metadata through the GitHub API.
+             * GitHub returns at most 100 changed files for one commit here;
+             * that cap can only reduce heuristic confidence, never create a
+             * blocking result by itself.
+             */
+            const details = [];
+            for (const commit of commits) {
+              const result = await github.rest.repos.getCommit({
+                owner,
+                repo,
+                ref: commit.sha,
+                per_page: 100
+              });
+
+              details.push({
+                sha: commit.sha,
+                title: firstLine(commit.commit.message),
+                files: (result.data.files || []).map(file => file.filename)
+              });
+            }
+
+            const repeatedMap = new Map();
+            for (const commit of details) {
+              const normalized = normalizeTitle(commit.title);
+              if (!normalized) {
+                continue;
+              }
+              if (!repeatedMap.has(normalized)) {
+                repeatedMap.set(normalized, []);
+              }
+              repeatedMap.get(normalized).push(commit);
+            }
+
+            const repeatedGroups = [...repeatedMap.entries()]
+              .filter(([, list]) => list.length >= 2)
+              .sort((a, b) => b[1].length - a[1].length);
+
+            const suggestions = [];
+            for (let i = 0; i < details.length; i += 1) {
+              const current = details[i];
+              const currentTitle = normalizeTitle(current.title);
+              const fixupMatch = current.title.match(/^(fixup!|squash!)\s+(.+)$/i);
+
+              if (fixupMatch) {
+                const wantedTitle = normalizeTitle(fixupMatch[2]);
+                let target = null;
+                for (let j = i - 1; j >= 0; j -= 1) {
+                  if (normalizeTitle(details[j].title) === wantedTitle) {
+                    target = details[j];
+                    break;
+                  }
+                }
+
+                if (target) {
+                  suggestions.push({
+                    current,
+                    target,
+                    score: 100,
+                    reasons: ['uses a native fixup!/squash! marker']
+                  });
+                  continue;
+                }
+              }
+
+              let best = null;
+              for (let j = 0; j < i; j += 1) {
+                const candidate = details[j];
+                const candidateTitle = normalizeTitle(candidate.title);
+                const exactTitle = Boolean(
+                  currentTitle && candidateTitle && currentTitle === candidateTitle
+                );
+                const messageSimilarity = jaccard(
+                  meaningfulTokens(current.title),
+                  meaningfulTokens(candidate.title)
+                );
+                const filesSimilarity = fileOverlap(current.files, candidate.files);
+                const directoriesSimilarity = directoryOverlap(current.files, candidate.files);
+                const distance = i - j;
+
+                let score = filesSimilarity * 45 + messageSimilarity * 25;
+                const reasons = [];
+
+                if (filesSimilarity >= 0.8) {
+                  reasons.push(`changed files overlap heavily (${Math.round(filesSimilarity * 100)}%)`);
+                } else if (filesSimilarity >= 0.4) {
+                  reasons.push(`changed files overlap (${Math.round(filesSimilarity * 100)}%)`);
+                }
+
+                if (messageSimilarity >= 0.7) {
+                  reasons.push(`commit topics are highly similar (${Math.round(messageSimilarity * 100)}%)`);
+                } else if (messageSimilarity >= 0.4) {
+                  reasons.push(`commit topics are similar (${Math.round(messageSimilarity * 100)}%)`);
+                }
+
+                if (exactTitle) {
+                  score += 20;
+                  reasons.push('commit message is repeated');
+                }
+
+                score += directoriesSimilarity * 10;
+                if (directoriesSimilarity >= 0.8 && filesSimilarity < 0.8) {
+                  reasons.push('changes are concentrated in the same directories');
+                }
+
+                if (isGarbageLike(current.title)) {
+                  score += 10;
+                  reasons.push('current message looks like iterative cleanup');
+                }
+
+                if (distance === 1) {
+                  score += 10;
+                } else if (distance === 2) {
+                  score += 7;
+                } else if (distance <= 4) {
+                  score += 4;
+                }
+
+                score = Math.min(100, Math.round(score));
+                const hasEvidence =
+                  filesSimilarity > 0 ||
+                  exactTitle ||
+                  (messageSimilarity >= 0.5 && directoriesSimilarity >= 0.5);
+
+                if (hasEvidence && score >= SQUASH_THRESHOLD && (!best || score > best.score)) {
+                  best = { current, target: candidate, score, reasons };
+                }
+              }
+
+              if (best) {
+                suggestions.push(best);
+              }
+            }
+
+            const nativeFixups = details.filter(commit => /^(fixup!|squash!)\s+/i.test(commit.title));
+            const largestRepeatedGroup = repeatedGroups.reduce(
+              (largest, [, group]) => Math.max(largest, group.length),
+              0
+            );
+            const blockingReasons = [];
+
+            if (allCommits.length > MAX_COMMITS_ALLOWED) {
+              blockingReasons.push(
+                `${allCommits.length} commits exceeds the limit of ${MAX_COMMITS_ALLOWED}`
+              );
+            }
+            if (largestRepeatedGroup >= MAX_REPEATED_TITLE_COUNT) {
+              blockingReasons.push(
+                `one normalized commit title is repeated ${largestRepeatedGroup} times ` +
+                `(limit: ${MAX_REPEATED_TITLE_COUNT - 1})`
+              );
+            }
+            if (suggestions.length > MAX_SQUASH_CANDIDATES) {
+              blockingReasons.push(
+                `${suggestions.length} likely squash candidates exceeds the limit of ` +
+                `${MAX_SQUASH_CANDIDATES}`
+              );
+            }
+            if (nativeFixups.length > 0) {
+              blockingReasons.push(
+                `${nativeFixups.length} fixup!/squash! commit(s) remain in the branch`
+              );
+            }
+
+            let severity = '🟢';
+            let severityText = 'Clean';
+            if (blockingReasons.length > 0) {
+              severity = '🔴';
+              severityText = 'Cleanup required';
+            } else if (suggestions.length <= 2 && repeatedGroups.length <= 1) {
+              if (suggestions.length > 0 || repeatedGroups.length > 0) {
+                severity = '🟡';
+                severityText = 'Minor cleanup suggested';
+              }
+            } else if (suggestions.length > 0 || repeatedGroups.length > 0) {
+              severity = '🟠';
+              severityText = 'Cleanup recommended';
+            }
+
+            let body = '<!-- commit-hygiene-bot -->\n';
+            body += `## ${severity} Commit Hygiene\n\n`;
+            body += `**${severityText}**\n\n`;
+            body += `This PR contains **${allCommits.length} commits**.`;
+            if (truncated) {
+              body += ` Only the first **${MAX_COMMITS_TO_ANALYZE}** commits were analyzed in detail.`;
+            }
+            body += '\n\n';
+
+            if (blockingReasons.length > 0) {
+              body += '### ⛔ Blocking findings\n\n';
+              for (const reason of blockingReasons) {
+                body += `- ${escapeMarkdown(reason)}\n`;
+              }
+              body += '\nPlease squash/fixup locally and force-push the cleaned branch.\n\n';
+            }
+
+            if (repeatedGroups.length > 0) {
+              body += '### 🔁 Repeated commit messages\n\n';
+              for (const [title, group] of repeatedGroups.slice(0, 8)) {
+                body += `- ${inlineCode(title)} appears **${group.length} times**\n`;
+                for (const commit of group.slice(0, 8)) {
+                  body += `  - ${inlineCode(shortSha(commit.sha))} ${escapeMarkdown(commit.title)}\n`;
+                }
+                if (group.length > 8) {
+                  body += `  - … and ${group.length - 8} more\n`;
+                }
+              }
+              body += '\n';
+            }
+
+            if (suggestions.length > 0) {
+              body += '### 🧹 Possible squash candidates\n\n';
+              for (const item of suggestions.sort((a, b) => b.score - a.score).slice(0, 15)) {
+                const icon = item.score >= 90 ? '⚠️' : item.score >= 75 ? '🟠' : '💡';
+                body += `${icon} ${inlineCode(shortSha(item.current.sha))} `;
+                body += `**${escapeMarkdown(item.current.title)}**\n\n`;
+                body += '↳ Consider squashing into:\n\n';
+                body += `> ${inlineCode(shortSha(item.target.sha))} `;
+                body += `**${escapeMarkdown(item.target.title)}**\n\n`;
+                body += `Confidence score: **${item.score}/100**\n\n`;
+
+                if (item.reasons.length > 0) {
+                  body += 'Reasons:\n';
+                  for (const reason of [...new Set(item.reasons)].slice(0, 4)) {
+                    body += `- ${escapeMarkdown(reason)}\n`;
+                  }
+                  body += '\n';
+                }
+              }
+
+              if (suggestions.length > 15) {
+                body += `_…and ${suggestions.length - 15} additional candidates._\n\n`;
+              }
+            }
+
+            if (suggestions.length === 0 && repeatedGroups.length === 0) {
+              body += '✅ No obvious commit-history cleanup opportunities were detected.\n\n';
+            }
+
+            body += '---\n';
+            if (blockingReasons.length > 0) {
+              body += 'ℹ️ **This check fails until the blocking findings are resolved.**\n';
+            } else {
+              body += 'ℹ️ **Non-blocking suggestions are advisory and never modify the PR branch.**\n';
+            }
+
+            const comments = await github.paginate(
+              github.rest.issues.listComments,
+              { owner, repo, issue_number: pullNumber, per_page: 100 }
+            );
+            const existing = comments.find(
+              comment =>
+                comment.user?.type === 'Bot' &&
+                comment.body?.includes('<!-- commit-hygiene-bot -->')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body
+              });
+              core.info(`Updated existing Commit Hygiene comment: ${existing.id}`);
+            } else {
+              const created = await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pullNumber,
+                body
+              });
+              core.info(`Created Commit Hygiene comment: ${created.data.id}`);
+            }
+
+            await core.summary
+              .addHeading(`${severity} Commit Hygiene`)
+              .addRaw(`PR #${pullNumber}: ${allCommits.length} commits\n\n`)
+              .addRaw(`Repeated message groups: ${repeatedGroups.length}\n\n`)
+              .addRaw(`Squash candidates: ${suggestions.length}\n\n`)
+              .addRaw(`Blocking findings: ${blockingReasons.length}\n`)
+              .write();
+
+            if (blockingReasons.length > 0) {
+              await setGateStatus(
+                'failure',
+                `${blockingReasons.length} blocking commit-hygiene finding(s)`
+              );
+              core.setFailed(`Commit hygiene failed: ${blockingReasons.join('; ')}`);
+            } else {
+              await setGateStatus('success', 'Commit history meets the hygiene policy');
+            }

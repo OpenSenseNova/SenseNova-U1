@@ -121,5 +121,30 @@ def pil_to_png_data_url(image: Image.Image) -> str:
     return f"data:image/png;base64,{encoded}"
 
 
+def pil_to_jpeg_data_url(
+    image: Image.Image,
+    *,
+    quality: int,
+    max_pixels: int,
+) -> str:
+    if not 1 <= quality <= 100:
+        raise ValueError("JPEG quality must be between 1 and 100.")
+    if max_pixels <= 0:
+        raise ValueError("max_pixels must be positive.")
+
+    rgb_image = image.convert("RGB")
+    pixel_count = rgb_image.width * rgb_image.height
+    if pixel_count > max_pixels:
+        scale = (max_pixels / pixel_count) ** 0.5
+        resized_width = max(1, int(rgb_image.width * scale))
+        resized_height = max(1, int(rgb_image.height * scale))
+        rgb_image = rgb_image.resize((resized_width, resized_height), Image.Resampling.LANCZOS)
+
+    buffer = BytesIO()
+    rgb_image.save(buffer, format="JPEG", quality=quality, optimize=True)
+    encoded = base64.b64encode(buffer.getvalue()).decode("ascii")
+    return f"data:image/jpeg;base64,{encoded}"
+
+
 def comfy_image_to_png_data_url(image) -> str:
     return pil_to_png_data_url(comfy_image_to_pil(image))

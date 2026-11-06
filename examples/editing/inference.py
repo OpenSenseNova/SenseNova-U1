@@ -13,6 +13,9 @@ from PIL import Image
 import sensenova_u1
 from sensenova_u1.models.neo_unify.utils import smart_resize
 from sensenova_u1.utils import (
+    DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+    DEFAULT_FAST_VRAM_FRACTION,
+    DEFAULT_FAST_VRAM_HEADROOM_GIB,
     DEFAULT_IMAGE_PATCH_SIZE,
     DEFAULT_VRAM_MODE,
     InferenceProfiler,
@@ -22,6 +25,7 @@ from sensenova_u1.utils import (
     load_model_and_tokenizer,
     make_offload_ctx,
     save_compare,
+    vram_mode_keeps_generation_resident,
     vram_mode_to_prefetch_count,
 )
 from sensenova_u1_5.edit.edit_pe import enhance_edit_prompt
@@ -30,6 +34,14 @@ NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
 
 DEFAULT_SEED = 42
+
+SUGGESTED_RESOLUTIONS: dict[str, tuple[int, int]] = {
+    "1:1": (2048, 2048),
+    "16:9": (2720, 1536),
+    "9:16": (1536, 2720),
+    "2:3": (1664, 2496),
+    "3:2": (2496, 1664),
+}
 
 # Output H / W must be divisible by this (= patch_size * merge_size).
 _IMAGE_GRID_FACTOR = DEFAULT_IMAGE_PATCH_SIZE
@@ -209,10 +221,18 @@ class SenseNovaU1Editing:
         device_map: str | None = None,
         max_memory: str | None = None,
         vram_mode: str = DEFAULT_VRAM_MODE,
+        fast_vram_fraction: float = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | None = None,
     ) -> None:
         self.device = device
         self.vram_mode = vram_mode
         self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
+        self.fast_vram_fraction = fast_vram_fraction
+        self.fast_vram_headroom_gib = fast_vram_headroom_gib
+        self.fast_activation_reserve_gib = fast_activation_reserve_gib
+        self.fast_vram_budget_gib = fast_vram_budget_gib
         self.model, self.tokenizer = load_model_and_tokenizer(
             model_path,
             dtype=dtype,
@@ -239,7 +259,16 @@ class SenseNovaU1Editing:
         think_mode: bool = False,
         seed: int = 0,
     ) -> tuple[list[Image.Image], str]:
-        with make_offload_ctx(self.model, self.prefetch_count, self.device) as offloaded:
+        with make_offload_ctx(
+            self.model,
+            self.prefetch_count,
+            self.device,
+            keep_generation_resident=vram_mode_keeps_generation_resident(self.vram_mode),
+            fast_vram_fraction=self.fast_vram_fraction,
+            fast_vram_headroom_gib=self.fast_vram_headroom_gib,
+            fast_activation_reserve_gib=self.fast_activation_reserve_gib,
+            fast_vram_budget_gib=self.fast_vram_budget_gib,
+        ) as offloaded:
             output = offloaded.it2i_generate(
                 self.tokenizer,
                 prompt,
@@ -526,6 +555,10 @@ def main() -> None:
         device=args.device,
         config={
             "vram_mode": args.vram_mode,
+            "fast_vram_fraction": args.fast_vram_fraction,
+            "fast_vram_headroom_gib": args.fast_vram_headroom_gib,
+            "fast_activation_reserve_gib": args.fast_activation_reserve_gib,
+            "fast_vram_budget_gib": args.fast_vram_budget_gib,
             "attn_backend": sensenova_u1.effective_attn_backend(),
             "dtype": args.dtype,
             "gguf": args.gguf_checkpoint,
@@ -541,6 +574,10 @@ def main() -> None:
             device_map=args.device_map,
             max_memory=args.max_memory,
             vram_mode=args.vram_mode,
+            fast_vram_fraction=args.fast_vram_fraction,
+            fast_vram_headroom_gib=args.fast_vram_headroom_gib,
+            fast_activation_reserve_gib=args.fast_activation_reserve_gib,
+            fast_vram_budget_gib=args.fast_vram_budget_gib,
         )
 
     if args.lora_path is not None:

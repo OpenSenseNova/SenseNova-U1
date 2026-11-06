@@ -15,9 +15,8 @@ def _link_or_junction(source: Path, target: Path) -> str:
 
     Windows blocks `os.symlink` unless the user is an administrator or
     Developer Mode is enabled (WinError 1314). A directory junction
-    (`mklink /J`) provides the same `Path.resolve()`-followable semantics
-    without any privilege; ComfyUI loads through it and the loader's
-    auto-discovery still finds the monorepo source.
+    (`mklink /J`) provides equivalent directory-link semantics without any
+    privilege, so ComfyUI can load the node files through it.
     """
     try:
         os.symlink(source, target, target_is_directory=True)
@@ -100,23 +99,8 @@ def main() -> None:
     print(f"{action} SenseNova-U1 ComfyUI app:")
     print(f"  {target} -> {app_dir}")
 
-    if not args.copy:
-        # Default symlink (or Windows junction) mode: local_pipeline.py's
-        # default_source_path() resolves __file__ through the link back to
-        # this monorepo and discovers <repo>/src automatically. No env var
-        # needed for local inference.
-        print(f"\n{action} mode: SENSENOVA_U1_SRC auto-resolves to")
-        print(f"  {repo_dir / 'src'}")
-        print("via local_pipeline.default_source_path(), because the loader")
-        print("file is linked back into this checkout. Moving or renaming")
-        print("the monorepo breaks that link — re-run install.py afterwards.")
-    else:
-        # --copy mode: files live under <ComfyUI>/custom_nodes/, no symlink
-        # to follow, so the user must point SENSENOVA_U1_SRC explicitly.
-        print("\nCopy mode: auto-discovery is disabled (no symlink to follow).")
-        print(f"Set SENSENOVA_U1_SRC={repo_dir / 'src'}")
-        print("in the ComfyUI launch environment, or fill the loader node's")
-        print("`sensenova_u1_src` input.")
+    print("\nThe node imports `sensenova_u1` from the ComfyUI Python environment.")
+    print("The link/copy mode only controls how ComfyUI discovers the node files.")
 
     if args.install_deps:
         requirements = app_dir / "requirements.txt"

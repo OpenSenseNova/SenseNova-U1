@@ -5,6 +5,7 @@ import json
 import logging
 import tempfile
 import uuid
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,7 @@ try:
         CHAT_MODELS,
         IMAGE_MODELS,
         IMAGE_SIZE_OPTIONS,
+        MULTIMODAL_CHAT_MODELS,
         VISION_MODELS,
         SenseNovaClient,
     )
@@ -23,10 +25,14 @@ try:
         comfy_image_info,
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
+        pil_to_jpeg_data_url,
     )
     from .local_pipeline import (
         ATTN_BACKEND_OPTIONS,
         CFG_NORM_OPTIONS,
+        DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        DEFAULT_FAST_VRAM_FRACTION,
+        DEFAULT_FAST_VRAM_HEADROOM_GIB,
         DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
         DEFAULT_SEED,
         DEFAULT_VRAM_MODE,
@@ -44,7 +50,6 @@ try:
         interleave_result_to_markdown,
         output_to_tuple,
         parse_resolution_option,
-        target_pixels_from_megapixels,
     )
     from .prompt_utils import load_prompt_template
 except ImportError:  # pragma: no cover - supports direct imports during tests
@@ -52,6 +57,7 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         CHAT_MODELS,
         IMAGE_MODELS,
         IMAGE_SIZE_OPTIONS,
+        MULTIMODAL_CHAT_MODELS,
         VISION_MODELS,
         SenseNovaClient,
     )
@@ -60,10 +66,14 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         comfy_image_info,
         comfy_image_to_png_data_url,
         image_bytes_to_comfy_image,
+        pil_to_jpeg_data_url,
     )
     from local_pipeline import (
         ATTN_BACKEND_OPTIONS,
         CFG_NORM_OPTIONS,
+        DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        DEFAULT_FAST_VRAM_FRACTION,
+        DEFAULT_FAST_VRAM_HEADROOM_GIB,
         DEFAULT_INTERLEAVE_SYSTEM_MESSAGE,
         DEFAULT_SEED,
         DEFAULT_VRAM_MODE,
@@ -81,7 +91,6 @@ except ImportError:  # pragma: no cover - supports direct imports during tests
         interleave_result_to_markdown,
         output_to_tuple,
         parse_resolution_option,
-        target_pixels_from_megapixels,
     )
     from prompt_utils import load_prompt_template
 
@@ -93,9 +102,291 @@ LOGGER = logging.getLogger(__name__)
 
 LocalModelIO = io.Custom(LOCAL_MODEL_TYPE)
 InterleaveResultIO = io.Custom(INTERLEAVE_RESULT_TYPE)
+EDIT_OUTPUT_SIZE_TYPE = "SENSENOVA_U1_EDIT_OUTPUT_SIZE"
+EditOutputSizeIO = io.Custom(EDIT_OUTPUT_SIZE_TYPE)
+
+EDIT_SIZE_AUTO_4MP = "Auto · 4MP (Recommended)"
+EDIT_SIZE_AUTO_2MP = "Auto · 2MP"
+EDIT_SIZE_AUTO_1MP = "Auto · 1MP"
+EDIT_SIZE_MATCH_INPUT = "Match First Input"
+EDIT_SIZE_CUSTOM = "Custom"
+EDIT_OUTPUT_SIZE_OPTIONS = (
+    EDIT_SIZE_AUTO_4MP,
+    EDIT_SIZE_AUTO_2MP,
+    EDIT_SIZE_AUTO_1MP,
+    EDIT_SIZE_MATCH_INPUT,
+    EDIT_SIZE_CUSTOM,
+)
+_EDIT_SIZE_PRESET_PIXELS = {
+    EDIT_SIZE_AUTO_4MP: 2048 * 2048,
+    EDIT_SIZE_AUTO_2MP: 2048 * 2048 // 2,
+    EDIT_SIZE_AUTO_1MP: 1024 * 1024,
+}
 
 
 _GGUF_FOLDER_CANDIDATES: tuple[str, ...] = ("gguf", "diffusion_models")
+_SENSENOVA_MODEL_FOLDER = "sensenova"
+_SENSENOVA_ARTIFACT_SUFFIXES = {".safetensors", ".sft", ".gguf"}
+_HF_OPTION_PREFIX = "HF | "
+_LOCAL_OPTION_PREFIX = "Local | "
+_AUTO_RESOURCES = "Auto"
+_OFFICIAL_MODEL_IDS = (
+    "sensenova/SenseNova-U1.5-8B-MoT",
+    "sensenova/SenseNova-U1.5-8B-MoT-SFT",
+    "sensenova/SenseNova-U1.5-8B-MoT-Preview",
+    "sensenova/SenseNova-U1-8B-MoT",
+)
+_MAX_PROMPT_BUILDER_IMAGES = 10
+_PROMPT_BUILDER_IMAGE_MAX_PIXELS = 4_000_000
+_PROMPT_BUILDER_JPEG_QUALITY = 95
+
+
+@lru_cache(maxsize=1)
+def _list_remote_model_options() -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    try:
+        catalog = SenseNovaClient.from_env().list_models(timeout=5)
+    except Exception as exc:
+        LOGGER.warning(
+            "Unable to load SenseNova models from the API (%s); using built-in options.",
+            exc.__class__.__name__,
+        )
+        return CHAT_MODELS, MULTIMODAL_CHAT_MODELS, IMAGE_MODELS
+
+    chat_models = catalog.chat_models or CHAT_MODELS
+    multimodal_chat_models = catalog.multimodal_chat_models or MULTIMODAL_CHAT_MODELS
+    image_models = catalog.image_models or IMAGE_MODELS
+    if not catalog.chat_models or not catalog.multimodal_chat_models or not catalog.image_models:
+        LOGGER.warning("SenseNova API returned an incomplete model catalog; using built-in options where needed.")
+    return chat_models, multimodal_chat_models, image_models
+
+
+def _list_chat_model_options() -> tuple[str, ...]:
+    return _list_remote_model_options()[0]
+
+
+def _list_image_model_options() -> tuple[str, ...]:
+    return _list_remote_model_options()[2]
+
+
+def _list_multimodal_chat_model_options() -> tuple[str, ...]:
+    return _list_remote_model_options()[1]
+
+
+def _prompt_builder_image_urls(images: io.Autogrow.Type | None) -> list[str]:
+    pil_images = []
+    for image_batch in (images or {}).values():
+        pil_images.extend(comfy_batch_to_pil_images(image_batch))
+        if len(pil_images) > _MAX_PROMPT_BUILDER_IMAGES:
+            raise RuntimeError(f"SenseNova Prompt Builder accepts at most {_MAX_PROMPT_BUILDER_IMAGES} images.")
+    return [
+        pil_to_jpeg_data_url(
+            image,
+            quality=_PROMPT_BUILDER_JPEG_QUALITY,
+            max_pixels=_PROMPT_BUILDER_IMAGE_MAX_PIXELS,
+        )
+        for image in pil_images
+    ]
+
+
+def _sensenova_model_roots() -> tuple[Path, ...]:
+    try:
+        import folder_paths
+
+        return tuple(Path(path).expanduser() for path in folder_paths.get_folder_paths(_SENSENOVA_MODEL_FOLDER))
+    except Exception:
+        return ()
+
+
+def _is_complete_sensenova_model(path: Path) -> bool:
+    if not (path / "config.json").is_file():
+        return False
+    if (path / "model.safetensors").is_file():
+        return True
+
+    index_path = path / "model.safetensors.index.json"
+    if not index_path.is_file():
+        return False
+    try:
+        weight_map = json.loads(index_path.read_text()).get("weight_map")
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if not isinstance(weight_map, dict) or not weight_map:
+        return False
+    for filename in set(weight_map.values()):
+        if not isinstance(filename, str):
+            return False
+        relative = Path(filename)
+        if relative.is_absolute() or ".." in relative.parts or not (path / relative).is_file():
+            return False
+    return True
+
+
+def _list_sensenova_model_options() -> list[str]:
+    found: set[str] = set()
+    for root in _sensenova_model_roots():
+        if not root.is_dir():
+            continue
+        try:
+            config_paths = root.rglob("config.json")
+            for config_path in config_paths:
+                model_directory = config_path.parent
+                relative = model_directory.relative_to(root)
+                if relative == Path(".") or any(part.startswith(".") for part in relative.parts):
+                    continue
+                if _is_complete_sensenova_model(model_directory):
+                    found.add(relative.as_posix())
+            for artifact_path in root.rglob("*"):
+                if not artifact_path.is_file() or artifact_path.suffix.lower() not in _SENSENOVA_ARTIFACT_SUFFIXES:
+                    continue
+                if _is_complete_sensenova_model(artifact_path.parent):
+                    continue
+                relative = artifact_path.relative_to(root)
+                if any(part.startswith(".") for part in relative.parts):
+                    continue
+                found.add(relative.as_posix())
+        except OSError:
+            continue
+    return ["", *sorted(found)]
+
+
+def _resolve_sensenova_model_choice(value: str) -> str:
+    value = value.strip()
+    if not value:
+        return ""
+    relative = Path(value)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise RuntimeError(f"Invalid SenseNova model selection: {value!r}")
+
+    for root in _sensenova_model_roots():
+        resolved_root = root.resolve()
+        candidate = (resolved_root / relative).resolve()
+        try:
+            candidate.relative_to(resolved_root)
+        except ValueError:
+            continue
+        if _is_complete_sensenova_model(candidate) or (
+            candidate.is_file() and candidate.suffix.lower() in _SENSENOVA_ARTIFACT_SUFFIXES
+        ):
+            return str(candidate)
+    raise RuntimeError(
+        f"SenseNova model {value!r} was not found under any registered ComfyUI models/{_SENSENOVA_MODEL_FOLDER} folder."
+    )
+
+
+def _resolve_model_path(model_path: str, local_model: str) -> str:
+    if local_model.strip():
+        return _resolve_sensenova_model_choice(local_model)
+    return model_path.strip()
+
+
+def _cached_sensenova_repo_ids() -> set[str]:
+    try:
+        from huggingface_hub import scan_cache_dir
+
+        return {
+            repo.repo_id
+            for repo in scan_cache_dir().repos
+            if repo.repo_type == "model" and "sensenova" in repo.repo_id.lower()
+        }
+    except Exception:
+        return set()
+
+
+def _list_model_weight_options() -> list[str]:
+    hf_ids = set(_OFFICIAL_MODEL_IDS) | _cached_sensenova_repo_ids()
+    hf_options = [f"{_HF_OPTION_PREFIX}{repo_id}" for repo_id in sorted(hf_ids)]
+    local_options = [f"{_LOCAL_OPTION_PREFIX}{relative}" for relative in _list_sensenova_model_options() if relative]
+    preferred = f"{_HF_OPTION_PREFIX}{_OFFICIAL_MODEL_IDS[0]}"
+    return [preferred, *[option for option in hf_options if option != preferred], *local_options]
+
+
+def _list_model_resource_options() -> list[str]:
+    hf_ids = set(_OFFICIAL_MODEL_IDS) | _cached_sensenova_repo_ids()
+    local_resources: set[str] = set()
+    for root in _sensenova_model_roots():
+        if not root.is_dir():
+            continue
+        try:
+            for config_path in root.rglob("config.json"):
+                relative = config_path.parent.relative_to(root)
+                if relative != Path(".") and not any(part.startswith(".") for part in relative.parts):
+                    local_resources.add(f"{_LOCAL_OPTION_PREFIX}{relative.as_posix()}")
+        except OSError:
+            continue
+    return [
+        _AUTO_RESOURCES,
+        *[f"{_HF_OPTION_PREFIX}{repo_id}" for repo_id in sorted(hf_ids)],
+        *sorted(local_resources),
+    ]
+
+
+def _resolve_model_weight_choice(value: str) -> str:
+    if value.startswith(_HF_OPTION_PREFIX):
+        return value.removeprefix(_HF_OPTION_PREFIX).strip()
+    if value.startswith(_LOCAL_OPTION_PREFIX):
+        return _resolve_sensenova_model_choice(value.removeprefix(_LOCAL_OPTION_PREFIX))
+    raise RuntimeError(f"Invalid model_weights selection: {value!r}.")
+
+
+def _resolve_model_resource_choice(value: str) -> str:
+    if value == _AUTO_RESOURCES:
+        return ""
+    if value.startswith(_HF_OPTION_PREFIX):
+        return value.removeprefix(_HF_OPTION_PREFIX).strip()
+    if not value.startswith(_LOCAL_OPTION_PREFIX):
+        raise RuntimeError(f"Invalid model_resources selection: {value!r}.")
+
+    relative = Path(value.removeprefix(_LOCAL_OPTION_PREFIX).strip())
+    if relative.is_absolute() or ".." in relative.parts:
+        raise RuntimeError(f"Invalid local model_resources selection: {value!r}.")
+    for root in _sensenova_model_roots():
+        resolved_root = root.resolve()
+        candidate = (resolved_root / relative).resolve()
+        try:
+            candidate.relative_to(resolved_root)
+        except ValueError:
+            continue
+        if (candidate / "config.json").is_file():
+            return str(candidate)
+    raise RuntimeError(f"Model resources {value!r} were not found under models/sensenova.")
+
+
+def _list_lora_options() -> list[str]:
+    try:
+        import folder_paths
+
+        return [
+            "",
+            *sorted(name for name in folder_paths.get_filename_list("loras") if name.lower().endswith(".safetensors")),
+        ]
+    except Exception:
+        return [""]
+
+
+def _resolve_lora_choice(value: str) -> str:
+    value = value.strip()
+    if not value:
+        return ""
+    try:
+        import folder_paths
+
+        resolved = folder_paths.get_full_path("loras", value)
+        if resolved:
+            return resolved
+    except Exception:
+        pass
+    return value
+
+
+def _lora_signature(value: str) -> tuple[str, int, int]:
+    resolved = _resolve_lora_choice(value)
+    if not resolved:
+        return ("", 0, 0)
+    try:
+        stat = Path(resolved).stat()
+        return (resolved, stat.st_size, stat.st_mtime_ns)
+    except OSError:
+        return (resolved, 0, 0)
 
 
 def _list_gguf_options() -> list[str]:
@@ -150,7 +441,92 @@ def _resolve_gguf_choice(value: str) -> str:
     return value
 
 
+def _normalize_fast_settings(
+    fast_vram_fraction: float | str | None,
+    fast_vram_headroom_gib: float | str | None,
+    fast_activation_reserve_gib: float | str | None,
+    fast_vram_budget_gib: float | str | None,
+) -> tuple[float, float, float, float]:
+    def value_or_default(value: float | str | None, default: float) -> float:
+        if value is None or (isinstance(value, str) and not value.strip()):
+            return default
+        return float(value)
+
+    return (
+        value_or_default(fast_vram_fraction, DEFAULT_FAST_VRAM_FRACTION),
+        value_or_default(fast_vram_headroom_gib, DEFAULT_FAST_VRAM_HEADROOM_GIB),
+        value_or_default(fast_activation_reserve_gib, DEFAULT_FAST_ACTIVATION_RESERVE_GIB),
+        value_or_default(fast_vram_budget_gib, 0.0),
+    )
+
+
+def _resolve_edit_output_size(
+    output_size: dict[str, Any] | None,
+) -> tuple[int | None, int | None, int | None]:
+    """Normalize the typed size config; disconnected means Auto 4MP."""
+    if output_size is None:
+        return None, None, _EDIT_SIZE_PRESET_PIXELS[EDIT_SIZE_AUTO_4MP]
+
+    if not isinstance(output_size, dict):
+        raise RuntimeError("output_size must come from a SenseNova U1 Edit Output Size node.")
+    mode = output_size.get("mode")
+    if mode == "auto":
+        target_pixels = output_size.get("target_pixels")
+        if not isinstance(target_pixels, int) or target_pixels <= 0:
+            raise RuntimeError("Auto output_size requires a positive target_pixels value.")
+        return None, None, target_pixels
+    if mode == "match_input":
+        return None, None, None
+    if mode == "custom":
+        custom_width = output_size.get("width")
+        custom_height = output_size.get("height")
+        if not isinstance(custom_width, int) or not isinstance(custom_height, int):
+            raise RuntimeError("Custom output_size requires integer width and height values.")
+        return custom_width, custom_height, None
+    raise RuntimeError(f"Unsupported output_size mode: {mode!r}.")
+
+
 _LOCAL_MODEL_CACHE: dict[tuple, SenseNovaU1LocalModel] = {}
+_LOCAL_MODEL_CACHE_KEY_ATTR = "_sensenova_u1_cache_key"
+
+
+def _make_local_model_cache_key(
+    *,
+    model_path: str,
+    model_resources: str,
+    sensenova_u1_src: str,
+    device: str,
+    dtype: str,
+    attn_backend: str,
+    device_map: str,
+    max_memory: str,
+    vram_mode: str,
+    fast_vram_fraction: float,
+    fast_vram_headroom_gib: float,
+    fast_activation_reserve_gib: float,
+    fast_vram_budget_gib: float,
+    resolved_gguf: str,
+    lora_signature: tuple[str, int, int],
+    lora_strength: float,
+) -> tuple:
+    return (
+        model_path,
+        model_resources,
+        sensenova_u1_src,
+        device,
+        dtype,
+        attn_backend,
+        device_map,
+        max_memory,
+        vram_mode,
+        fast_vram_fraction,
+        fast_vram_headroom_gib,
+        fast_activation_reserve_gib,
+        fast_vram_budget_gib,
+        resolved_gguf,
+        lora_signature,
+        lora_strength,
+    )
 
 
 def _evict_model_cache(keep_key: tuple | None = None) -> None:
@@ -192,6 +568,7 @@ def _evict_model_cache(keep_key: tuple | None = None) -> None:
 class SenseNovaChat(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
+        chat_models = _list_chat_model_options()
         return io.Schema(
             node_id="SenseNovaChat",
             display_name="SenseNova Chat",
@@ -203,7 +580,7 @@ class SenseNovaChat(io.ComfyNode):
                     multiline=True,
                     default="You are a helpful assistant. Answer clearly and concisely.",
                 ),
-                io.Combo.Input("model", options=list(CHAT_MODELS), default=CHAT_MODELS[0]),
+                io.Combo.Input("model", options=list(chat_models), default=chat_models[0]),
                 io.Float.Input("temperature", default=0.7, min=0.0, max=2.0, step=0.1),
                 io.Float.Input("top_p", default=1.0, min=0.0, max=1.0, step=0.05),
                 io.Int.Input("max_tokens", default=2048, min=1, max=65536),
@@ -247,13 +624,14 @@ class SenseNovaChat(io.ComfyNode):
 class SenseNovaImageGenerate(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
+        image_models = _list_image_model_options()
         return io.Schema(
             node_id="SenseNovaImageGenerate",
             display_name="SenseNova Image Generate",
             category=CATEGORY,
             inputs=[
                 io.String.Input("prompt", multiline=True, default=""),
-                io.Combo.Input("model", options=list(IMAGE_MODELS), default=IMAGE_MODELS[0]),
+                io.Combo.Input("model", options=list(image_models), default=image_models[0]),
                 io.Combo.Input("size", options=list(IMAGE_SIZE_OPTIONS), default=IMAGE_SIZE_OPTIONS[0]),
                 io.Int.Input("timeout", default=300, min=30, max=900),
             ],
@@ -290,18 +668,41 @@ class SenseNovaImageGenerate(io.ComfyNode):
 class SenseNovaPromptBuilder(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
+        chat_models = _list_chat_model_options()
         return io.Schema(
             node_id="SenseNovaPromptBuilder",
             display_name="SenseNova Prompt Builder",
             category=CATEGORY,
             inputs=[
                 io.String.Input("prompt", multiline=True, default=""),
+                io.Autogrow.Input(
+                    "images",
+                    template=io.Autogrow.TemplateNames(
+                        io.Image.Input("image"),
+                        names=[
+                            "image1",
+                            "image2",
+                            "image3",
+                            "image4",
+                            "image5",
+                            "image6",
+                            "image7",
+                            "image8",
+                            "image9",
+                            "image10",
+                        ],
+                        min=0,
+                    ),
+                    tooltip=(
+                        "Optional ordered reference images. Select a model whose input_modalities includes image."
+                    ),
+                ),
                 io.String.Input(
                     "system_prompt",
                     multiline=True,
                     default=load_prompt_template(BUILDER_PROMPT_TEMPLATE),
                 ),
-                io.Combo.Input("model", options=list(CHAT_MODELS), default=CHAT_MODELS[0]),
+                io.Combo.Input("model", options=list(chat_models), default=chat_models[0]),
                 io.Float.Input("temperature", default=0.3, min=0.0, max=2.0, step=0.1),
                 io.Float.Input("top_p", default=1.0, min=0.0, max=1.0, step=0.05),
                 io.Int.Input("max_tokens", default=2048, min=1, max=65536),
@@ -324,7 +725,16 @@ class SenseNovaPromptBuilder(io.ComfyNode):
         top_p: float,
         max_tokens: int,
         timeout: int,
+        images: io.Autogrow.Type | None = None,
     ) -> io.NodeOutput:
+        image_urls = _prompt_builder_image_urls(images)
+        if image_urls:
+            multimodal_models = _list_multimodal_chat_model_options()
+            if model not in multimodal_models:
+                supported_models = ", ".join(multimodal_models)
+                raise RuntimeError(
+                    f"SenseNova model {model!r} does not support image input. Choose one of: {supported_models}."
+                )
         client = SenseNovaClient.from_env()
         result = client.chat(
             text=prompt,
@@ -334,6 +744,7 @@ class SenseNovaPromptBuilder(io.ComfyNode):
             top_p=top_p,
             max_tokens=max_tokens,
             timeout=timeout,
+            image_urls=image_urls,
         )
         return io.NodeOutput(
             result.text,
@@ -450,18 +861,318 @@ class SenseNovaVisionImage(io.ComfyNode):
         )
 
 
+def _new_model_loader_cache_key(
+    *,
+    model_weights: str,
+    model_resources: str,
+    lora_name: str,
+    lora_strength: float,
+    device: str,
+    dtype: str,
+    attn_backend: str,
+    device_map: str,
+    max_memory: str,
+    vram_mode: str,
+    fast_vram_fraction: float | str,
+    fast_vram_headroom_gib: float | str,
+    fast_activation_reserve_gib: float | str,
+    fast_vram_budget_gib: float | str,
+) -> tuple:
+    fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
+        _normalize_fast_settings(
+            fast_vram_fraction,
+            fast_vram_headroom_gib,
+            fast_activation_reserve_gib,
+            fast_vram_budget_gib,
+        )
+    )
+    return _make_local_model_cache_key(
+        model_path=_resolve_model_weight_choice(model_weights),
+        model_resources=_resolve_model_resource_choice(model_resources),
+        sensenova_u1_src="",
+        device=device.strip(),
+        dtype=dtype,
+        attn_backend=attn_backend,
+        device_map=device_map,
+        max_memory=max_memory.strip(),
+        vram_mode=vram_mode,
+        fast_vram_fraction=fast_vram_fraction,
+        fast_vram_headroom_gib=fast_vram_headroom_gib,
+        fast_activation_reserve_gib=fast_activation_reserve_gib,
+        fast_vram_budget_gib=fast_vram_budget_gib,
+        resolved_gguf="",
+        lora_signature=_lora_signature(lora_name),
+        lora_strength=float(lora_strength),
+    )
+
+
+class SenseNovaU1LoraSelector(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        lora_options = _list_lora_options()
+        return io.Schema(
+            node_id="SenseNovaU1LoraSelector",
+            display_name="SenseNova U1 LoRA Selector",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                io.Combo.Input(
+                    "lora_name",
+                    options=lora_options,
+                    default=lora_options[0],
+                    tooltip="Select a SenseNova LoRA from ComfyUI models/loras.",
+                ),
+            ],
+            outputs=[io.String.Output(display_name="lora_name")],
+        )
+
+    @classmethod
+    def execute(cls, lora_name: str) -> io.NodeOutput:
+        return io.NodeOutput(lora_name)
+
+
+class SenseNovaU1EditOutputSize(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="SenseNovaU1EditOutputSize",
+            display_name="SenseNova U1 Edit Output Size",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                io.Combo.Input(
+                    "preset",
+                    options=list(EDIT_OUTPUT_SIZE_OPTIONS),
+                    default=EDIT_SIZE_AUTO_4MP,
+                    tooltip=(
+                        "Auto presets preserve the first input image's aspect ratio. "
+                        "Match First Input uses its native pixel count; Custom uses width and height."
+                    ),
+                ),
+                io.Int.Input(
+                    "width",
+                    default=2048,
+                    min=32,
+                    max=8192,
+                    step=32,
+                    advanced=True,
+                    tooltip="Used only by the Custom preset.",
+                ),
+                io.Int.Input(
+                    "height",
+                    default=2048,
+                    min=32,
+                    max=8192,
+                    step=32,
+                    advanced=True,
+                    tooltip="Used only by the Custom preset.",
+                ),
+            ],
+            outputs=[EditOutputSizeIO.Output(display_name="output_size")],
+        )
+
+    @classmethod
+    def execute(cls, preset: str, width: int, height: int) -> io.NodeOutput:
+        if preset in _EDIT_SIZE_PRESET_PIXELS:
+            config = {"mode": "auto", "target_pixels": _EDIT_SIZE_PRESET_PIXELS[preset]}
+        elif preset == EDIT_SIZE_MATCH_INPUT:
+            config = {"mode": "match_input"}
+        elif preset == EDIT_SIZE_CUSTOM:
+            config = {"mode": "custom", "width": width, "height": height}
+        else:
+            raise RuntimeError(f"Unsupported edit output size preset: {preset!r}.")
+        return io.NodeOutput(config)
+
+
+class SenseNovaU1ModelLoader(io.ComfyNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        weight_options = _list_model_weight_options()
+        resource_options = _list_model_resource_options()
+        return io.Schema(
+            node_id="SenseNovaU1ModelLoader",
+            display_name="SenseNova U1 Model Loader",
+            category=LOCAL_CATEGORY,
+            inputs=[
+                io.Combo.Input(
+                    "model_weights",
+                    options=weight_options,
+                    default=weight_options[0],
+                    tooltip="Base weights from Hugging Face/cache or ComfyUI models/sensenova.",
+                ),
+                io.Combo.Input(
+                    "model_resources",
+                    options=resource_options,
+                    default=_AUTO_RESOURCES,
+                    tooltip="Config and tokenizer source. Auto uses the weight artifact metadata/location.",
+                ),
+                io.String.Input(
+                    "lora_name",
+                    default="",
+                    optional=True,
+                    tooltip=(
+                        "Optional SenseNova LoRA filename from ComfyUI models/loras, "
+                        "or a path supplied by another STRING node."
+                    ),
+                ),
+                io.Float.Input(
+                    "lora_strength",
+                    default=1.0,
+                    min=-4.0,
+                    max=4.0,
+                    step=0.05,
+                    optional=True,
+                ),
+                io.String.Input(
+                    "device",
+                    default=default_device(),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.Combo.Input(
+                    "dtype",
+                    options=list(DTYPE_OPTIONS),
+                    default="bfloat16",
+                    optional=True,
+                    advanced=True,
+                ),
+                io.Combo.Input(
+                    "attn_backend",
+                    options=list(ATTN_BACKEND_OPTIONS),
+                    default="auto",
+                    optional=True,
+                    advanced=True,
+                ),
+                io.Combo.Input(
+                    "vram_mode",
+                    options=list(VRAM_MODE_OPTIONS),
+                    default=DEFAULT_VRAM_MODE,
+                    optional=True,
+                    advanced=True,
+                ),
+                io.Combo.Input(
+                    "device_map",
+                    options=list(DEVICE_MAP_OPTIONS),
+                    default="none",
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input("max_memory", default="", optional=True, advanced=True),
+                io.String.Input(
+                    "fast_vram_fraction",
+                    default=str(DEFAULT_FAST_VRAM_FRACTION),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input(
+                    "fast_vram_headroom_gib",
+                    default=str(DEFAULT_FAST_VRAM_HEADROOM_GIB),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input(
+                    "fast_activation_reserve_gib",
+                    default=str(DEFAULT_FAST_ACTIVATION_RESERVE_GIB),
+                    optional=True,
+                    advanced=True,
+                ),
+                io.String.Input(
+                    "fast_vram_budget_gib",
+                    default="0.0",
+                    optional=True,
+                    advanced=True,
+                ),
+            ],
+            outputs=[
+                LocalModelIO.Output(display_name="u1_model"),
+                io.String.Output(display_name="model_info_json"),
+            ],
+        )
+
+    @classmethod
+    def fingerprint_inputs(
+        cls,
+        model_weights: str,
+        model_resources: str = _AUTO_RESOURCES,
+        lora_name: str = "",
+        lora_strength: float = 1.0,
+        device: str = "cuda",
+        dtype: str = "bfloat16",
+        attn_backend: str = "auto",
+        vram_mode: str = DEFAULT_VRAM_MODE,
+        device_map: str = "none",
+        max_memory: str = "",
+        fast_vram_fraction: float | str = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | str = 0.0,
+    ) -> str:
+        key = _new_model_loader_cache_key(
+            model_weights=model_weights,
+            model_resources=model_resources,
+            lora_name=lora_name,
+            lora_strength=lora_strength,
+            device=device,
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory,
+            vram_mode=vram_mode,
+            fast_vram_fraction=fast_vram_fraction,
+            fast_vram_headroom_gib=fast_vram_headroom_gib,
+            fast_activation_reserve_gib=fast_activation_reserve_gib,
+            fast_vram_budget_gib=fast_vram_budget_gib,
+        )
+        return hashlib.sha256(str(key).encode()).hexdigest()
+
+    @classmethod
+    def execute(
+        cls,
+        model_weights: str,
+        model_resources: str = _AUTO_RESOURCES,
+        lora_name: str = "",
+        lora_strength: float = 1.0,
+        device: str = "cuda",
+        dtype: str = "bfloat16",
+        attn_backend: str = "auto",
+        vram_mode: str = DEFAULT_VRAM_MODE,
+        device_map: str = "none",
+        max_memory: str = "",
+        fast_vram_fraction: float | str = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | str = 0.0,
+    ) -> io.NodeOutput:
+        cache_key = _new_model_loader_cache_key(
+            model_weights=model_weights,
+            model_resources=model_resources,
+            lora_name=lora_name,
+            lora_strength=lora_strength,
+            device=device,
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory,
+            vram_mode=vram_mode,
+            fast_vram_fraction=fast_vram_fraction,
+            fast_vram_headroom_gib=fast_vram_headroom_gib,
+            fast_activation_reserve_gib=fast_activation_reserve_gib,
+            fast_vram_budget_gib=fast_vram_budget_gib,
+        )
+        model = _get_or_load_local_model(cache_key)
+        return io.NodeOutput(model, json.dumps(model.info, ensure_ascii=False))
+
+
 class SenseNovaU1LocalLoader(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
         return io.Schema(
             node_id="SenseNovaU1LocalLoader",
-            display_name="SenseNova U1 Local Loader",
-            category=LOCAL_CATEGORY,
+            display_name="SenseNova U1 Local Loader (Legacy)",
+            category=f"{LOCAL_CATEGORY}/Legacy",
             inputs=[
                 io.String.Input(
                     "model_path",
                     default="sensenova/SenseNova-U1-8B-MoT",
-                    tooltip="HuggingFace model id or local checkpoint directory.",
+                    tooltip="HuggingFace model id, checkpoint directory, or standalone Safetensors/GGUF file.",
                 ),
                 io.String.Input(
                     "sensenova_u1_src",
@@ -503,6 +1214,7 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                         "activations / KV cache grow with workload — especially in interleave "
                         "mode where each generated image enlarges the cache).\n"
                         "  full     — no offload, whole model on GPU, fastest (default)\n"
+                        "  fast     — async prefetch, then retain generation weights within budget\n"
                         "  low      — synchronous per-layer CPU<->GPU swap, smallest weight\n"
                         "             footprint, slowest\n"
                         "  balanced — async prefetch, overlaps H2D with compute, faster than low\n"
@@ -523,6 +1235,61 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
                         "ComfyUI to refresh the list after dropping new files into either folder."
                     ),
                 ),
+                io.String.Input(
+                    "fast_vram_fraction",
+                    default=str(DEFAULT_FAST_VRAM_FRACTION),
+                    optional=True,
+                    advanced=True,
+                    tooltip="Automatic fast-mode VRAM fraction (0 < value <= 1). Blank uses the default.",
+                ),
+                io.String.Input(
+                    "fast_vram_headroom_gib",
+                    default=str(DEFAULT_FAST_VRAM_HEADROOM_GIB),
+                    optional=True,
+                    advanced=True,
+                    tooltip="Reusable VRAM headroom in GiB. Blank uses the default.",
+                ),
+                io.String.Input(
+                    "fast_activation_reserve_gib",
+                    default=str(DEFAULT_FAST_ACTIVATION_RESERVE_GIB),
+                    optional=True,
+                    advanced=True,
+                    tooltip="Activation reserve in GiB. Blank uses the default.",
+                ),
+                io.String.Input(
+                    "fast_vram_budget_gib",
+                    default="0.0",
+                    optional=True,
+                    advanced=True,
+                    tooltip="Absolute fast-mode VRAM budget in GiB. Blank or 0 uses fast_vram_fraction.",
+                ),
+                io.Combo.Input(
+                    "local_model",
+                    options=_list_sensenova_model_options(),
+                    default="",
+                    optional=True,
+                    tooltip=(
+                        "Optional model directory, .safetensors/.sft, or .gguf from "
+                        "`<comfyui>/models/sensenova/`. "
+                        "When selected, it overrides model_path. Restart ComfyUI to refresh this list."
+                    ),
+                ),
+                io.Combo.Input(
+                    "lora_name",
+                    options=_list_lora_options(),
+                    default="",
+                    optional=True,
+                    tooltip="Optional SenseNova LoRA from `<comfyui>/models/loras/`.",
+                ),
+                io.Float.Input(
+                    "lora_strength",
+                    default=1.0,
+                    min=-4.0,
+                    max=4.0,
+                    step=0.05,
+                    optional=True,
+                    tooltip="LoRA merge strength. 1.0 uses the adapter's authored scale.",
+                ),
             ],
             outputs=[
                 LocalModelIO.Output(display_name="u1_model"),
@@ -542,17 +1309,40 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         max_memory: str,
         vram_mode: str,
         gguf_checkpoint: str,
+        fast_vram_fraction: float | str = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | str = 0.0,
+        local_model: str = "",
+        lora_name: str = "",
+        lora_strength: float = 1.0,
     ) -> str:
-        key = (
-            model_path.strip(),
-            sensenova_u1_src.strip(),
-            device.strip(),
-            dtype,
-            attn_backend,
-            device_map,
-            max_memory.strip(),
-            vram_mode,
-            _resolve_gguf_choice(gguf_checkpoint.strip()),
+        fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
+            _normalize_fast_settings(
+                fast_vram_fraction,
+                fast_vram_headroom_gib,
+                fast_activation_reserve_gib,
+                fast_vram_budget_gib,
+            )
+        )
+        resolved_model_path = _resolve_model_path(model_path, local_model)
+        key = _make_local_model_cache_key(
+            model_path=resolved_model_path,
+            model_resources="",
+            sensenova_u1_src=sensenova_u1_src.strip(),
+            device=device.strip(),
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory.strip(),
+            vram_mode=vram_mode,
+            fast_vram_fraction=fast_vram_fraction,
+            fast_vram_headroom_gib=fast_vram_headroom_gib,
+            fast_activation_reserve_gib=fast_activation_reserve_gib,
+            fast_vram_budget_gib=fast_vram_budget_gib,
+            resolved_gguf=_resolve_gguf_choice(gguf_checkpoint.strip()),
+            lora_signature=_lora_signature(lora_name),
+            lora_strength=float(lora_strength),
         )
         return hashlib.sha256(str(key).encode()).hexdigest()
 
@@ -568,44 +1358,136 @@ class SenseNovaU1LocalLoader(io.ComfyNode):
         max_memory: str,
         vram_mode: str,
         gguf_checkpoint: str,
+        fast_vram_fraction: float | str = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float | str = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float | str = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | str = 0.0,
+        local_model: str = "",
+        lora_name: str = "",
+        lora_strength: float = 1.0,
     ) -> io.NodeOutput:
+        fast_vram_fraction, fast_vram_headroom_gib, fast_activation_reserve_gib, fast_vram_budget_gib = (
+            _normalize_fast_settings(
+                fast_vram_fraction,
+                fast_vram_headroom_gib,
+                fast_activation_reserve_gib,
+                fast_vram_budget_gib,
+            )
+        )
         resolved_gguf = _resolve_gguf_choice(gguf_checkpoint.strip())
-        cache_key = (
-            model_path.strip(),
-            sensenova_u1_src.strip(),
-            device.strip(),
-            dtype,
-            attn_backend,
-            device_map,
-            max_memory.strip(),
-            vram_mode,
-            resolved_gguf,
+        resolved_model_path = _resolve_model_path(model_path, local_model)
+        cache_key = _make_local_model_cache_key(
+            model_path=resolved_model_path,
+            model_resources="",
+            sensenova_u1_src=sensenova_u1_src.strip(),
+            device=device.strip(),
+            dtype=dtype,
+            attn_backend=attn_backend,
+            device_map=device_map,
+            max_memory=max_memory.strip(),
+            vram_mode=vram_mode,
+            fast_vram_fraction=fast_vram_fraction,
+            fast_vram_headroom_gib=fast_vram_headroom_gib,
+            fast_activation_reserve_gib=fast_activation_reserve_gib,
+            fast_vram_budget_gib=fast_vram_budget_gib,
+            resolved_gguf=resolved_gguf,
+            lora_signature=_lora_signature(lora_name),
+            lora_strength=float(lora_strength),
         )
         if cache_key not in _LOCAL_MODEL_CACHE:
-            _evict_model_cache()
-            if resolved_gguf:
-                LOGGER.info(
-                    "SenseNova U1 loader: loading %s with GGUF checkpoint %s",
-                    model_path,
-                    resolved_gguf,
-                )
-            else:
-                LOGGER.info("SenseNova U1 loader: loading model from %s", model_path)
-            _LOCAL_MODEL_CACHE[cache_key] = SenseNovaU1LocalModel(
-                model_path=model_path,
-                sensenova_u1_src=sensenova_u1_src,
-                device=device,
-                dtype=dtype,
-                attn_backend=attn_backend,
-                device_map=device_map,
-                max_memory=max_memory,
-                gguf_checkpoint=resolved_gguf,
-                vram_mode=vram_mode,
-            )
+            model = _load_local_model(cache_key)
         else:
-            LOGGER.info("SenseNova U1 loader: reusing cached model for %s", model_path)
-        model = _LOCAL_MODEL_CACHE[cache_key]
+            model = _get_or_load_local_model(cache_key)
         return io.NodeOutput(model, json.dumps(model.info, ensure_ascii=False))
+
+
+def _load_local_model(cache_key: tuple) -> SenseNovaU1LocalModel:
+    (
+        model_path,
+        model_resources,
+        sensenova_u1_src,
+        device,
+        dtype,
+        attn_backend,
+        device_map,
+        max_memory,
+        vram_mode,
+        fast_vram_fraction,
+        fast_vram_headroom_gib,
+        fast_activation_reserve_gib,
+        fast_vram_budget_gib,
+        resolved_gguf,
+        lora_signature,
+        lora_strength,
+    ) = cache_key
+
+    _evict_model_cache()
+    if resolved_gguf:
+        LOGGER.info(
+            "SenseNova U1 loader: loading %s with GGUF checkpoint %s",
+            model_path,
+            resolved_gguf,
+        )
+    else:
+        LOGGER.info("SenseNova U1 loader: loading model from %s", model_path)
+
+    model = SenseNovaU1LocalModel(
+        model_path=model_path,
+        model_resources=model_resources,
+        sensenova_u1_src=sensenova_u1_src,
+        device=device,
+        dtype=dtype,
+        attn_backend=attn_backend,
+        device_map=device_map,
+        max_memory=max_memory,
+        gguf_checkpoint=resolved_gguf,
+        vram_mode=vram_mode,
+        fast_vram_fraction=fast_vram_fraction,
+        fast_vram_headroom_gib=fast_vram_headroom_gib,
+        fast_activation_reserve_gib=fast_activation_reserve_gib,
+        fast_vram_budget_gib=fast_vram_budget_gib,
+        lora_path=lora_signature[0],
+        lora_strength=lora_strength,
+    )
+    setattr(model, _LOCAL_MODEL_CACHE_KEY_ATTR, cache_key)
+    _LOCAL_MODEL_CACHE[cache_key] = model
+    return model
+
+
+def _get_or_load_local_model(cache_key: tuple) -> SenseNovaU1LocalModel:
+    cached = _LOCAL_MODEL_CACHE.get(cache_key)
+    if cached is not None and hasattr(cached, "model") and hasattr(cached, "tokenizer"):
+        LOGGER.info("SenseNova U1 loader: reusing cached model for %s", cache_key[0])
+        return cached
+    return _load_local_model(cache_key)
+
+
+def _ensure_local_model_loaded(model: SenseNovaU1LocalModel) -> SenseNovaU1LocalModel:
+    """Resolve a possibly stale ComfyUI output to the live local model.
+
+    ComfyUI can retain a loader output after this module's single-entry cache
+    has evicted its weights. The lightweight object still carries its cache
+    key, allowing inference nodes to reacquire the correct model instead of
+    dereferencing the deleted ``model``/``tokenizer`` attributes.
+    """
+    cache_key = getattr(model, _LOCAL_MODEL_CACHE_KEY_ATTR, None)
+    if cache_key is None:
+        if hasattr(model, "model") and hasattr(model, "tokenizer"):
+            return model
+        raise RuntimeError(
+            "SenseNova U1 received an evicted legacy model handle. "
+            "Run the Local Loader node again so it can attach cache metadata."
+        )
+
+    cached = _LOCAL_MODEL_CACHE.get(cache_key)
+    if cached is not None and hasattr(cached, "model") and hasattr(cached, "tokenizer"):
+        return cached
+
+    LOGGER.info(
+        "SenseNova U1 loader: restoring model %s referenced by a stale ComfyUI cache entry.",
+        cache_key[0],
+    )
+    return _load_local_model(cache_key)
 
 
 class SenseNovaU1LocalTextToImage(io.ComfyNode):
@@ -657,6 +1539,7 @@ class SenseNovaU1LocalTextToImage(io.ComfyNode):
         seed: int,
         think_mode: bool,
     ) -> io.NodeOutput:
+        u1_model = _ensure_local_model_loaded(u1_model)
         width, height = parse_resolution_option(resolution)
         result = u1_model.text_to_image(
             prompt=prompt,
@@ -685,16 +1568,33 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
             inputs=[
                 LocalModelIO.Input("u1_model"),
                 io.Image.Input("image"),
+                io.Autogrow.Input(
+                    "reference_images",
+                    template=io.Autogrow.TemplateNames(
+                        io.Image.Input("image"),
+                        names=[
+                            "image2",
+                            "image3",
+                            "image4",
+                            "image5",
+                            "image6",
+                            "image7",
+                            "image8",
+                            "image9",
+                            "image10",
+                        ],
+                        min=0,
+                    ),
+                    tooltip="Optional ordered reference images for editing.",
+                ),
                 io.String.Input("prompt", multiline=True, default=""),
-                io.Boolean.Input("auto_size", default=True),
-                io.Int.Input("width", default=2048, min=32, max=8192, step=32),
-                io.Int.Input("height", default=2048, min=32, max=8192, step=32),
-                io.Float.Input(
-                    "target_megapixels",
-                    default=4.194304,
-                    min=0.25,
-                    max=32.0,
-                    step=0.25,
+                EditOutputSizeIO.Input(
+                    "output_size",
+                    optional=True,
+                    tooltip=(
+                        "Optional size policy. When disconnected, defaults to Auto · 4MP. "
+                        "Connect SenseNova U1 Edit Output Size to select another policy."
+                    ),
                 ),
                 io.Float.Input("cfg_scale", default=4.0, min=0.0, max=20.0, step=0.1),
                 io.Float.Input("img_cfg_scale", default=1.0, min=0.0, max=20.0, step=0.1),
@@ -720,11 +1620,8 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
         cls,
         u1_model: SenseNovaU1LocalModel,
         image,
+        reference_images: io.Autogrow.Type,
         prompt: str,
-        auto_size: bool,
-        width: int,
-        height: int,
-        target_megapixels: float,
         cfg_scale: float,
         img_cfg_scale: float,
         cfg_norm: str,
@@ -735,13 +1632,16 @@ class SenseNovaU1LocalImageEdit(io.ComfyNode):
         batch_size: int,
         seed: int,
         think_mode: bool = False,
+        output_size: dict[str, Any] | None = None,
     ) -> io.NodeOutput:
+        u1_model = _ensure_local_model_loaded(u1_model)
+        output_width, output_height, target_pixels = _resolve_edit_output_size(output_size)
         result = u1_model.edit_image(
             prompt=prompt,
-            input_image=image,
-            width=None if auto_size else width,
-            height=None if auto_size else height,
-            target_pixels=target_pixels_from_megapixels(target_megapixels),
+            input_images=[image, *reference_images.values()],
+            width=output_width,
+            height=output_height,
+            target_pixels=target_pixels,
             cfg_scale=cfg_scale,
             img_cfg_scale=img_cfg_scale,
             cfg_norm=cfg_norm,
@@ -812,6 +1712,7 @@ class SenseNovaU1LocalInterleave(io.ComfyNode):
         think_mode: bool,
         image=None,
     ) -> io.NodeOutput:
+        u1_model = _ensure_local_model_loaded(u1_model)
         width, height = parse_resolution_option(resolution)
         result = u1_model.interleave(
             prompt=prompt,
@@ -929,6 +1830,9 @@ class SenseNovaExtension(ComfyExtension):
             SenseNovaPromptBuilder,
             SenseNovaVisionURL,
             SenseNovaVisionImage,
+            SenseNovaU1LoraSelector,
+            SenseNovaU1EditOutputSize,
+            SenseNovaU1ModelLoader,
             SenseNovaU1LocalLoader,
             SenseNovaU1LocalTextToImage,
             SenseNovaU1LocalImageEdit,

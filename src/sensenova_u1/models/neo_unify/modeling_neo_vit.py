@@ -131,17 +131,33 @@ class NEOVisionEmbeddings(nn.Module):
         self.gelu = nn.GELU()
 
         self.rope_dim_part = self.embed_dim // 2
-        cos_x, sin_x = precompute_rope_freqs_sincos(
-            self.rope_dim_part, config.max_position_embeddings_vision, base=config.rope_theta_vision, device=None
+        self.max_position_embeddings_vision = config.max_position_embeddings_vision
+        self.rope_theta_vision = config.rope_theta_vision
+
+        # These deterministic caches are not checkpoint state.  In
+        # Transformers 5, ``from_pretrained`` constructs models on the meta
+        # device; tensors computed here would later be materialized as
+        # uninitialized memory because persistent=False buffers are absent
+        # from the checkpoint.  Build them lazily on the first real device.
+        self.register_buffer("cos_cached_x", None, persistent=False)
+        self.register_buffer("sin_cached_x", None, persistent=False)
+        self.register_buffer("cos_cached_y", None, persistent=False)
+        self.register_buffer("sin_cached_y", None, persistent=False)
+
+    def _ensure_rope_cache(self, device: torch.device) -> None:
+        if self.cos_cached_x is not None and self.cos_cached_x.device == device:
+            return
+
+        cos, sin = precompute_rope_freqs_sincos(
+            self.rope_dim_part,
+            self.max_position_embeddings_vision,
+            base=self.rope_theta_vision,
+            device=device,
         )
-        cos_y, sin_y = precompute_rope_freqs_sincos(
-            self.rope_dim_part, config.max_position_embeddings_vision, base=config.rope_theta_vision, device=None
-        )
-        
-        self.register_buffer("cos_cached_x", cos_x, persistent=False)
-        self.register_buffer("sin_cached_x", sin_x, persistent=False)
-        self.register_buffer("cos_cached_y", cos_y, persistent=False)
-        self.register_buffer("sin_cached_y", sin_y, persistent=False)
+        self.cos_cached_x = cos
+        self.sin_cached_x = sin
+        self.cos_cached_y = cos.clone()
+        self.sin_cached_y = sin.clone()
 
     def _apply_2d_rotary_pos_emb(self, patch_embeds, grid_hw):
         """
@@ -166,10 +182,7 @@ class NEOVisionEmbeddings(nn.Module):
             self.patch_size,
         )   #  [28072, 768] -> [28072, 3, 16, 16]
         patch_embeds = self.gelu(self.patch_embedding(pixel_values)).view(-1, self.embed_dim)
-        self.cos_cached_x = self.cos_cached_x.to(patch_embeds.device)
-        self.sin_cached_x = self.sin_cached_x.to(patch_embeds.device)
-        self.cos_cached_y = self.cos_cached_y.to(patch_embeds.device)
-        self.sin_cached_y = self.sin_cached_y.to(patch_embeds.device)
+        self._ensure_rope_cache(patch_embeds.device)
         patch_embeds = self._apply_2d_rotary_pos_emb(patch_embeds, grid_hw) # [28072, 1024]
         assert (grid_hw[:,0] * grid_hw[:,1]).sum() == patch_embeds.shape[0]
 

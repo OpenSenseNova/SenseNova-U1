@@ -15,9 +15,14 @@ import numpy as np
 from PIL import Image
 
 try:
-    from .image_utils import comfy_image_to_pil, pil_to_comfy_image
+    from .image_utils import comfy_batch_to_pil_images, comfy_image_to_pil, pil_to_comfy_image
 except ImportError:  # pragma: no cover - supports direct imports during tests
-    from image_utils import comfy_image_to_pil, pil_to_comfy_image
+    from image_utils import comfy_batch_to_pil_images, comfy_image_to_pil, pil_to_comfy_image
+
+try:
+    from .hf_download import resolve_hf_model_snapshot_interruptibly
+except ImportError:  # pragma: no cover - supports direct imports during tests
+    from hf_download import resolve_hf_model_snapshot_interruptibly
 
 LOGGER = logging.getLogger(__name__)
 
@@ -124,6 +129,8 @@ INTERLEAVE_RESULT_TYPE = "SENSENOVA_INTERLEAVE_RESULT"
 DEFAULT_SEED = 42
 DEFAULT_SOURCE_PATH = ""
 DEFAULT_TARGET_PIXELS = 2048 * 2048
+DEFAULT_INPUT_MAX_PIXELS = 2048 * 2048
+MIN_INPUT_MAX_PIXELS = 512 * 512
 DEFAULT_IMAGE_PATCH_SIZE = 32
 DEFAULT_INTERLEAVE_SYSTEM_MESSAGE = (
     "You are a multimodal assistant capable of reasoning with both text and images. "
@@ -176,8 +183,11 @@ CFG_NORM_OPTIONS = ("none", "global", "channel", "cfg_zero_star")
 ATTN_BACKEND_OPTIONS = ("auto", "flash", "sdpa")
 DEVICE_MAP_OPTIONS = ("none", "auto", "balanced", "balanced_low_0", "sequential")
 
-VRAM_MODE_OPTIONS = ("full", "low", "balanced")
+VRAM_MODE_OPTIONS = ("full", "fast", "balanced", "low")
 DEFAULT_VRAM_MODE = "full"
+DEFAULT_FAST_VRAM_FRACTION = 0.90
+DEFAULT_FAST_VRAM_HEADROOM_GIB = 2.0
+DEFAULT_FAST_ACTIVATION_RESERVE_GIB = 4.0
 
 # vram_mode -> prefetch_count (the underlying knob on the layer-offload wrapper)
 # 0 = no offload, 1 = synchronous, >=2 = async prefetch this many layers ahead.
@@ -185,6 +195,7 @@ DEFAULT_VRAM_MODE = "full"
 # interleave mode), so modes describe the *mechanism*, not a fixed budget.
 _VRAM_MODE_TO_PREFETCH: dict[str, int] = {
     "full": 0,  # no offload, whole model on GPU
+    "fast": 2,  # async prefetch, then retain generation layers within budget
     "low": 1,  # sync per-layer offload, smallest weight footprint, slowest
     "balanced": 2,  # async prefetch, overlaps H2D with compute
 }
@@ -209,6 +220,7 @@ class SenseNovaU1LocalModel:
         self,
         *,
         model_path: str,
+        model_resources: str = "",
         sensenova_u1_src: str = "",
         device: str = "cuda",
         dtype: str = "bfloat16",
@@ -217,15 +229,31 @@ class SenseNovaU1LocalModel:
         max_memory: str = "",
         gguf_checkpoint: str = "",
         vram_mode: str = DEFAULT_VRAM_MODE,
+        fast_vram_fraction: float = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float = 0.0,
+        lora_path: str = "",
+        lora_strength: float = 1.0,
     ) -> None:
         if not model_path.strip():
             raise RuntimeError("Local model_path cannot be empty.")
         if vram_mode not in _VRAM_MODE_TO_PREFETCH:
             raise RuntimeError(f"Unsupported vram_mode={vram_mode!r}. Choose one of {VRAM_MODE_OPTIONS}.")
+        if not math.isfinite(fast_vram_fraction) or not 0 < fast_vram_fraction <= 1:
+            raise RuntimeError("fast_vram_fraction must satisfy 0 < value <= 1.")
+        if not math.isfinite(fast_vram_headroom_gib) or fast_vram_headroom_gib < 0:
+            raise RuntimeError("fast_vram_headroom_gib must be >= 0.")
+        if not math.isfinite(fast_activation_reserve_gib) or fast_activation_reserve_gib < 0:
+            raise RuntimeError("fast_activation_reserve_gib must be >= 0.")
+        if not math.isfinite(fast_vram_budget_gib) or fast_vram_budget_gib < 0:
+            raise RuntimeError("fast_vram_budget_gib must be >= 0; use 0 for automatic.")
+        if not math.isfinite(lora_strength):
+            raise RuntimeError("lora_strength must be finite.")
         prefetch_count = _VRAM_MODE_TO_PREFETCH[vram_mode]
 
         injected_path = _maybe_add_source_path(sensenova_u1_src)
-        model_path = _resolve_local_model_path(model_path)
+        model_path = model_path.strip()
         torch = _import_torch()
         sensenova_u1, load_model_and_tokenizer, _ = _import_sensenova_u1()
 
@@ -236,6 +264,8 @@ class SenseNovaU1LocalModel:
         torch_dtype = _resolve_dtype(torch, dtype)
         normalized_device_map = None if device_map == "none" else device_map
         normalized_gguf = gguf_checkpoint.strip() or None
+        normalized_lora = lora_path.strip()
+        artifact_is_gguf = bool(normalized_gguf or Path(model_path).suffix.lower() == ".gguf")
         offloading = prefetch_count > 0
         if offloading and normalized_device_map:
             LOGGER.warning(
@@ -245,27 +275,51 @@ class SenseNovaU1LocalModel:
                 normalized_device_map,
             )
             normalized_device_map = None
-        if normalized_gguf and normalized_device_map:
+        if artifact_is_gguf and normalized_device_map:
             # diffusers' GGUF quantizer skips accelerate sharding — let the user know.
-            raise RuntimeError("gguf_checkpoint cannot be combined with a device_map; pick one.")
+            raise RuntimeError("GGUF cannot be combined with a device_map; pick one.")
+        if artifact_is_gguf and normalized_lora:
+            raise RuntimeError(
+                "LoRA merge is not supported for GGUF weights yet; use the BF16 directory or standalone Safetensors."
+            )
         self.device = device
         self.dtype = dtype
         self.model_path = model_path
+        self.model_resources = model_resources.strip()
         self.attn_backend = attn_backend
         self.gguf_checkpoint = normalized_gguf or ""
         self.vram_mode = vram_mode
         self.prefetch_count = int(prefetch_count)
+        self.fast_vram_fraction = float(fast_vram_fraction)
+        self.fast_vram_headroom_gib = float(fast_vram_headroom_gib)
+        self.fast_activation_reserve_gib = float(fast_activation_reserve_gib)
+        self.fast_vram_budget_gib = float(fast_vram_budget_gib) or None
+        self.lora_path = normalized_lora
+        self.lora_strength = float(lora_strength)
         self.effective_attn_backend = sensenova_u1.effective_attn_backend()
+        resolved_model_path = model_path if artifact_is_gguf else resolve_hf_model_snapshot_interruptibly(model_path)
+        resolved_model_resources = self.model_resources
+        if resolved_model_resources == model_path:
+            resolved_model_resources = resolved_model_path
         _vram_snapshot(f"loader: pre-load (vram_mode={vram_mode})", device=device, reset_peak=True)
         self.model, self.tokenizer = load_model_and_tokenizer(
-            model_path,
+            resolved_model_path,
             dtype=torch_dtype,
             device=device,
             device_map=normalized_device_map,
             max_memory=max_memory or None,
             gguf_checkpoint=normalized_gguf,
+            model_resources=resolved_model_resources or None,
             for_offload=offloading,
         )
+        if normalized_lora and lora_strength != 0:
+            from sensenova_u1.utils import load_and_merge_lora_weight_from_safetensors
+
+            self.model = load_and_merge_lora_weight_from_safetensors(
+                self.model,
+                normalized_lora,
+                strength=lora_strength,
+            )
         _vram_snapshot(f"loader: post-load (for_offload={offloading})", device=device)
         _maybe_remove_source_path(injected_path)
 
@@ -273,6 +327,7 @@ class SenseNovaU1LocalModel:
     def info(self) -> dict[str, Any]:
         return {
             "model_path": self.model_path,
+            "model_resources": self.model_resources or "Auto",
             "device": self.device,
             "dtype": self.dtype,
             "attn_backend": self.attn_backend,
@@ -280,6 +335,12 @@ class SenseNovaU1LocalModel:
             "gguf_checkpoint": self.gguf_checkpoint,
             "vram_mode": self.vram_mode,
             "prefetch_count": self.prefetch_count,
+            "fast_vram_fraction": self.fast_vram_fraction,
+            "fast_vram_headroom_gib": self.fast_vram_headroom_gib,
+            "fast_activation_reserve_gib": self.fast_activation_reserve_gib,
+            "fast_vram_budget_gib": self.fast_vram_budget_gib,
+            "lora_path": self.lora_path,
+            "lora_strength": self.lora_strength,
         }
 
     def _offload_ctx(self):
@@ -293,10 +354,30 @@ class SenseNovaU1LocalModel:
         from sensenova_u1.utils import offload_layers_async, offload_layers_sync
 
         target = torch.device(self.device)
+        keep_generation_resident = self.vram_mode == "fast"
         if self.prefetch_count == 1:
-            inner = offload_layers_sync(self.model, DEFAULT_LAYERS_ATTR, target)
+            inner = offload_layers_sync(
+                self.model,
+                DEFAULT_LAYERS_ATTR,
+                target,
+                keep_generation_resident=keep_generation_resident,
+                fast_vram_fraction=self.fast_vram_fraction,
+                fast_vram_headroom_gib=self.fast_vram_headroom_gib,
+                fast_activation_reserve_gib=self.fast_activation_reserve_gib,
+                fast_vram_budget_gib=self.fast_vram_budget_gib,
+            )
         else:
-            inner = offload_layers_async(self.model, DEFAULT_LAYERS_ATTR, target, prefetch_count=self.prefetch_count)
+            inner = offload_layers_async(
+                self.model,
+                DEFAULT_LAYERS_ATTR,
+                target,
+                prefetch_count=self.prefetch_count,
+                keep_generation_resident=keep_generation_resident,
+                fast_vram_fraction=self.fast_vram_fraction,
+                fast_vram_headroom_gib=self.fast_vram_headroom_gib,
+                fast_activation_reserve_gib=self.fast_activation_reserve_gib,
+                fast_vram_budget_gib=self.fast_vram_budget_gib,
+            )
         return self._instrumented_offload_ctx(inner)
 
     @contextmanager
@@ -382,10 +463,10 @@ class SenseNovaU1LocalModel:
         self,
         *,
         prompt: str,
-        input_image: Any,
+        input_images: list[Any],
         width: int | None,
         height: int | None,
-        target_pixels: int,
+        target_pixels: int | None,
         cfg_scale: float,
         img_cfg_scale: float,
         cfg_norm: str,
@@ -401,17 +482,21 @@ class SenseNovaU1LocalModel:
         if cfg_norm == "cfg_zero_star":
             raise RuntimeError("cfg_zero_star is only supported for local text-to-image.")
 
-        pil_image = comfy_image_to_pil(input_image)
-        # Match the Terminal pipeline by upsampling small inputs to the same
-        # pixel budget before they hit the model; otherwise edits on sub-2K
-        # images come out noticeably softer than `examples/editing/inference.py`.
-        pil_image = _resize_input_to_budget(pil_image, target_pixels)
+        pil_images = [pil_image for image_batch in input_images for pil_image in comfy_batch_to_pil_images(image_batch)]
+        if not pil_images:
+            raise RuntimeError("Image editing requires at least one input image.")
         out_width, out_height = _resolve_edit_size(
-            pil_image,
+            pil_images[0],
             width=width,
             height=height,
             target_pixels=target_pixels,
         )
+        # Keep source/reference resolution independent from the requested
+        # output resolution. Matching Terminal's shared multi-image budget
+        # prevents N references at a large output target from multiplying the
+        # prefix length until eager attention exhausts VRAM.
+        input_max_pixels = _auto_input_max_pixels(len(pil_images))
+        pil_images = [_resize_input_to_budget(image, input_max_pixels) for image in pil_images]
         _check_cfg_interval(cfg_interval)
         torch = _import_torch()
 
@@ -423,7 +508,7 @@ class SenseNovaU1LocalModel:
             out = offloaded.it2i_generate(
                 self.tokenizer,
                 prompt,
-                [pil_image],
+                pil_images,
                 image_size=(out_width, out_height),
                 cfg_scale=cfg_scale,
                 img_cfg_scale=img_cfg_scale,
@@ -452,7 +537,9 @@ class SenseNovaU1LocalModel:
                 "seed": seed,
                 "batch_size": batch_size,
                 "num_steps": num_steps,
-                "target_pixels": target_pixels,
+                "target_pixels": target_pixels if target_pixels is not None else out_width * out_height,
+                "input_image_count": len(pil_images),
+                "input_max_pixels": input_max_pixels,
                 "think_mode": think_mode,
             },
         )
@@ -554,30 +641,13 @@ def default_device() -> str:
 
 
 def default_source_path() -> str:
-    """Resolve a `sensenova_u1` source path for the loader's default input.
+    """Return the explicit development source override, if configured.
 
-    Precedence:
-      1. ``SENSENOVA_U1_SRC`` env var (manual override; wins everywhere).
-      2. Monorepo symlink auto-discovery — *location-bound*: only fires when
-         this file resolves to ``<repo>/apps/comfyui/local_pipeline.py``,
-         which happens when ``install.py`` (default mode) symlinks the
-         directory into ``<ComfyUI>/custom_nodes/ComfyUI-SenseNova-U1``.
-         ``--copy`` mode and Registry / Manager installs land somewhere
-         else, so this branch is skipped for them.
-      3. ``DEFAULT_SOURCE_PATH`` (empty) — falls back to the installed
-         ``sensenova_u1`` wheel in the ComfyUI Python environment.
+    Normal installations import the ``sensenova_u1`` package from the
+    ComfyUI Python environment. Developers who cannot use an editable install
+    may opt into a source checkout with ``SENSENOVA_U1_SRC``.
     """
-    env = os.environ.get("SENSENOVA_U1_SRC", "").strip()
-    if env:
-        return env
-    # Path.resolve() follows symlinks, so the install.py-created link
-    # leads back to the monorepo checkout.
-    here = Path(__file__).resolve()
-    if here.parent.name == "comfyui" and here.parents[1].name == "apps":
-        repo_src = here.parents[2] / "src"
-        if repo_src.is_dir():
-            return str(repo_src)
-    return DEFAULT_SOURCE_PATH
+    return os.environ.get("SENSENOVA_U1_SRC", DEFAULT_SOURCE_PATH).strip()
 
 
 def parse_resolution_option(value: str) -> tuple[int, int]:
@@ -733,21 +803,10 @@ def _import_sensenova_u1():
             "Local SenseNova-U1 inference requires the `sensenova_u1` package. "
             "Install it into the ComfyUI Python environment, e.g.:\n"
             "  pip install 'sensenova-u1 @ git+https://github.com/OpenSenseNova/SenseNova-U1'\n"
-            "Or, for monorepo development, set SENSENOVA_U1_SRC=/path/to/SenseNova-U1/src "
-            "(or fill the loader's `sensenova_u1_src` input)."
+            "For monorepo development, prefer `pip install -e /path/to/SenseNova-U1`; "
+            "SENSENOVA_U1_SRC remains available as an explicit legacy override."
         ) from exc
     return sensenova_u1, load_model_and_tokenizer, smart_resize
-
-
-def _resolve_local_model_path(model_path: str) -> str:
-    if Path(model_path).exists():
-        return model_path
-    try:
-        from huggingface_hub import snapshot_download
-
-        return snapshot_download(model_path, local_files_only=True)
-    except Exception:
-        return model_path
 
 
 def _resolve_dtype(torch, dtype: str):
@@ -791,9 +850,9 @@ def _pil_images_to_comfy_batch(images: list[Image.Image]):
     return torch.cat(tensors, dim=0)
 
 
-def _resize_input_to_budget(image: Image.Image, target_pixels: int) -> Image.Image:
+def _resize_input_to_budget(image: Image.Image, input_max_pixels: int) -> Image.Image:
     """Match the Terminal pipeline (`examples/editing/inference.py`):
-    rescale the source image so its total pixels equal ``target_pixels``,
+    rescale the source image so its total pixels equal ``input_max_pixels``,
     keeping aspect ratio, snapping H/W to the model's grid factor, and using
     LANCZOS resampling. Without this step a small input (e.g. 1024x1024)
     would be passed through to the model as-is, costing visible detail.
@@ -803,12 +862,23 @@ def _resize_input_to_budget(image: Image.Image, target_pixels: int) -> Image.Ima
         height=image.height,
         width=image.width,
         factor=DEFAULT_IMAGE_PATCH_SIZE,
-        min_pixels=target_pixels,
-        max_pixels=target_pixels,
+        min_pixels=input_max_pixels,
+        max_pixels=input_max_pixels,
     )
     if (resized_width, resized_height) == image.size:
         return image
     return image.resize((resized_width, resized_height), Image.LANCZOS)
+
+
+def _auto_input_max_pixels(num_images: int) -> int:
+    """Match Terminal's shared vision-prefix budget for multi-image edits."""
+    if num_images <= 0:
+        raise ValueError("num_images must be positive.")
+    full_resolution_image_budget = 2
+    if num_images <= full_resolution_image_budget:
+        return DEFAULT_INPUT_MAX_PIXELS
+    total_budget = full_resolution_image_budget * DEFAULT_INPUT_MAX_PIXELS
+    return max(MIN_INPUT_MAX_PIXELS, total_budget // num_images)
 
 
 def _resolve_edit_size(
@@ -816,14 +886,17 @@ def _resolve_edit_size(
     *,
     width: int | None,
     height: int | None,
-    target_pixels: int,
+    target_pixels: int | None,
 ) -> tuple[int, int]:
+    """Resolve the output canvas; ``None`` target matches the source pixel count."""
     if width is not None or height is not None:
         if width is None or height is None:
             raise RuntimeError("width and height must be provided together.")
         _check_grid_divisible(width, height)
         return width, height
 
+    if target_pixels is None:
+        target_pixels = image.width * image.height
     _, _, smart_resize = _import_sensenova_u1()
     resized_height, resized_width = smart_resize(
         height=image.height,
@@ -846,8 +919,3 @@ def _check_cfg_interval(cfg_interval: tuple[float, float]) -> None:
     lo, hi = cfg_interval
     if not 0.0 <= lo <= hi <= 1.0:
         raise RuntimeError("cfg_interval must satisfy 0.0 <= start <= end <= 1.0.")
-
-
-def target_pixels_from_megapixels(megapixels: float) -> int:
-    minimum = DEFAULT_IMAGE_PATCH_SIZE * DEFAULT_IMAGE_PATCH_SIZE
-    return max(minimum, math.floor(megapixels * 1_000_000))

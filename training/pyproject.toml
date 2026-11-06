@@ -1,0 +1,56 @@
+[project]
+name = "sensenova-u1-training"
+version = "0.1.0"
+description = "Distributed training stack for SenseNova-U1 and SenseNova-U1.5."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "torch==2.5.1",
+    "torchvision==0.20.1",
+    "transformers>=4.43,<4.44",
+    "numpy>=1.24,<3",
+    "einops>=0.7",
+    "safetensors>=0.4",
+    "tqdm",
+    "pillow",
+    "timm>=0.9",
+    "opencv-python",
+    "imageio",
+    "decord",
+    "dill",
+    "tensorboard",
+]
+
+[project.optional-dependencies]
+# The checked-in CUDA training configurations require Flash Attention. It is
+# kept in an extra because it must be compiled after the matching Torch/CUDA
+# environment exists; see README.md for the required staged install.
+flash = [
+    "flash-attn>=2.5,<3",
+]
+flash-build = [
+    "ninja",
+    "packaging",
+    "psutil",
+    "wheel",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sensenovalm", "sensenovavl"]
+
+# Training is validated against the PyTorch 2.5.1 CUDA 12.4 wheel set. Keep
+# this source local to the training project so it cannot inherit inference's
+# CUDA 12.8 index from the repository root.
+[tool.uv.sources]
+torch = { index = "pytorch-cu124" }
+torchvision = { index = "pytorch-cu124" }
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true

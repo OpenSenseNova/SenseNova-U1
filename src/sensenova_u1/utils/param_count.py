@@ -8,6 +8,7 @@ import torch
 from transformers import AutoConfig, AutoModel
 
 from sensenova_u1 import check_checkpoint_compatibility
+from sensenova_u1.models.neo_unify.transformers_compat import pretrained_dtype_kwargs
 
 
 @dataclass(frozen=True)
@@ -142,7 +143,7 @@ class ModelParamInspector:
         self.model_path = model_path
         config = AutoConfig.from_pretrained(model_path)
         check_checkpoint_compatibility(config)
-        self.model = AutoModel.from_pretrained(model_path, config=config, torch_dtype=dtype)
+        self.model = AutoModel.from_pretrained(model_path, config=config, **pretrained_dtype_kwargs(dtype))
 
     def count(self, rules: Iterable[GroupRule]) -> ParamCountResult:
         total_params = 0

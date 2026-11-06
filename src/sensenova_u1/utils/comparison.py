@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import re
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Sequence
 
 from PIL import Image, ImageDraw, ImageFont
 
-__all__ = ["make_comparison", "save_compare"]
+__all__ = ["ensure_cjk_font", "make_comparison", "save_compare"]
 
 # Tokens for pixel-aware wrap: ASCII word, whitespace run, or a single CJK char.
 _WRAP_TOKEN_RE = re.compile(r"\s+|[\u4e00-\u9fff]|[^\s\u4e00-\u9fff]+")
@@ -26,22 +28,70 @@ _LATIN_FONTS = (
     "/usr/share/fonts/dejavu/DejaVuSans.ttf",
     "DejaVuSans.ttf",
 )
+_CJK_FONT_CACHE_DIR = Path.home() / ".cache" / "sensenova_u1" / "fonts"
+_CJK_FONT_CACHE_PATH = _CJK_FONT_CACHE_DIR / "NotoSansCJKsc-Regular.otf"
+_CJK_FONT_URLS = (
+    "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+    "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+)
 
 _warned_missing_cjk = False
+_warned_download_cjk = False
 
 
-def _load_font(size: int) -> tuple[ImageFont.ImageFont | ImageFont.FreeTypeFont, bool]:
+def _try_load_truetype(path: str | Path, size: int) -> ImageFont.FreeTypeFont | None:
+    try:
+        return ImageFont.truetype(str(path), size=size)
+    except OSError:
+        return None
+
+
+def ensure_cjk_font(*, timeout: float = 30.0) -> Path | None:
+    """Return a local CJK font path, downloading Noto Sans CJK SC if needed.
+
+    The font is stored under the user's cache directory so this works in
+    non-root containers and does not mutate system font directories.
+    """
+    for path in _CJK_FONTS:
+        if _try_load_truetype(path, size=16) is not None:
+            return Path(path)
+
+    if _try_load_truetype(_CJK_FONT_CACHE_PATH, size=16) is not None:
+        return _CJK_FONT_CACHE_PATH
+
+    tmp_path = _CJK_FONT_CACHE_PATH.with_suffix(".tmp")
+    _CJK_FONT_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    for url in _CJK_FONT_URLS:
+        try:
+            with urllib.request.urlopen(url, timeout=timeout) as response:
+                tmp_path.write_bytes(response.read())
+            if _try_load_truetype(tmp_path, size=16) is None:
+                tmp_path.unlink(missing_ok=True)
+                continue
+            tmp_path.replace(_CJK_FONT_CACHE_PATH)
+            return _CJK_FONT_CACHE_PATH
+        except (OSError, urllib.error.URLError):
+            tmp_path.unlink(missing_ok=True)
+            continue
+    return None
+
+
+def _load_font(size: int, *, need_cjk: bool = False) -> tuple[ImageFont.ImageFont | ImageFont.FreeTypeFont, bool]:
     """Return (font, has_cjk_coverage). Falls back to PIL default if nothing usable."""
     for path in _CJK_FONTS:
-        try:
-            return ImageFont.truetype(path, size=size), True
-        except OSError:
-            continue
+        font = _try_load_truetype(path, size)
+        if font is not None:
+            return font, True
+    if need_cjk:
+        path = ensure_cjk_font()
+        if path is not None:
+            font = _try_load_truetype(path, size)
+            if font is not None:
+                return font, True
     for path in _LATIN_FONTS:
-        try:
-            return ImageFont.truetype(path, size=size), False
-        except OSError:
-            continue
+        font = _try_load_truetype(path, size)
+        if font is not None:
+            return font, False
     try:
         return ImageFont.load_default(size=size), False
     except TypeError:
@@ -89,13 +139,18 @@ def make_comparison(
     row_imgs.append(output)
     row_w = sum(im.size[0] for im in row_imgs) + pad * (len(row_imgs) + 1)
 
-    font, has_cjk = _load_font(max(18, row_h // 30))
-    global _warned_missing_cjk
-    if not has_cjk and _CJK_RE.search(prompt) and not _warned_missing_cjk:
+    prompt_has_cjk = bool(_CJK_RE.search(prompt))
+    font, has_cjk = _load_font(max(18, row_h // 30), need_cjk=prompt_has_cjk)
+    global _warned_download_cjk, _warned_missing_cjk
+    if prompt_has_cjk and has_cjk and not _warned_download_cjk:
+        print("[compare] using a CJK-capable font for prompt rendering.")
+        _warned_download_cjk = True
+    if prompt_has_cjk and not has_cjk and not _warned_missing_cjk:
         print(
             "[compare] prompt contains CJK but no CJK-capable font was found; "
-            "Chinese characters will render as tofu. Install e.g. `fonts-noto-cjk` "
-            "(Debian/Ubuntu) or `google-noto-cjk-fonts` (RHEL-family) for proper rendering."
+            "automatic font download failed and Chinese characters will render as tofu. "
+            "Install e.g. `fonts-noto-cjk` (Debian/Ubuntu), `google-noto-cjk-fonts` "
+            "(RHEL-family) for proper rendering."
         )
         _warned_missing_cjk = True
 

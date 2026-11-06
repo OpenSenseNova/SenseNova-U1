@@ -10,6 +10,14 @@ from .configuration_neo_vit import NEOVisionConfig
 logger = logging.get_logger(__name__)
 
 
+def _restore_legacy_rope_theta(config) -> None:
+    """Expose the v4 rope attribute expected by the vendored model code."""
+    if hasattr(config, "rope_theta"):
+        return
+    rope_parameters = getattr(config, "rope_parameters", None) or {}
+    config.rope_theta = float(rope_parameters.get("rope_theta", 10000.0))
+
+
 class NEOLLMConfig(Qwen3Config):
     """Config for the dense Qwen3 backbone used by NEO-Unify.
 
@@ -19,6 +27,7 @@ class NEOLLMConfig(Qwen3Config):
 
     def __init__(self, rope_theta_hw=10000.0, max_position_embeddings_hw=10000, **kwargs):
         super().__init__(**kwargs)
+        _restore_legacy_rope_theta(self)
         self.rope_theta_hw = rope_theta_hw
         self.max_position_embeddings_hw = max_position_embeddings_hw
 
@@ -53,6 +62,7 @@ class NEOMoELLMConfig(Qwen3MoeConfig):
         **kwargs,
     ):
         super().__init__(**kwargs)
+        _restore_legacy_rope_theta(self)
         self.rope_theta_hw = rope_theta_hw
         self.max_position_embeddings_hw = max_position_embeddings_hw
 

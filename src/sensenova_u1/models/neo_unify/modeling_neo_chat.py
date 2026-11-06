@@ -159,6 +159,10 @@ class NEOChatModel(PreTrainedModel):
         "Qwen3DecoderLayer",
         "Qwen3MoeDecoderLayer",
     ]
+    _denoise_offload_module_paths = (
+        "language_model.model.embed_tokens",
+        "language_model.lm_head",
+    )
 
     # support transformers 4.51.+
     _tp_plan = ''
@@ -239,6 +243,17 @@ class NEOChatModel(PreTrainedModel):
         self.last_think_content = ""
         self.conv_template = get_conv_template(self.template)
         self.system_message = self.conv_template.system_message
+
+        # Transformers 5 builds composite-model metadata (including
+        # ``all_tied_weights_keys``) in ``post_init``.  Without this call a
+        # real checkpoint reaches the final loading pass with that metadata
+        # missing, even though the nested language model initialized it.
+        self.post_init()
+
+    def _notify_layer_offload_phase(self, phase: str) -> None:
+        callback = getattr(self, "_layer_offload_phase_callback", None)
+        if callback is not None:
+            callback(phase)
 
     def forward(
             self,
@@ -493,6 +508,10 @@ class NEOChatModel(PreTrainedModel):
         )
         return out.past_key_values, out.last_hidden_state
 
+    def _think_prefix_forward(self, **kwargs):
+        """Build the Think prefix cache without materialising per-token logits."""
+        return self.language_model(use_cache=True, logits_to_keep=1, **kwargs)
+
     def _append_text_tokens_to_cache(self, cache, t_idx, input_ids):
         if input_ids.shape[1] == 0:
             return t_idx
@@ -513,7 +532,7 @@ class NEOChatModel(PreTrainedModel):
         mask[:, :, :, past_len:] = causal_mask
         attention_mask_dict = {"full_attention": mask}
 
-        self.language_model(
+        self.language_model.model(
             inputs_embeds=inputs_embeds,
             indexes=indexes,
             attention_mask=attention_mask_dict,
@@ -877,7 +896,7 @@ class NEOChatModel(PreTrainedModel):
                         from tqdm import tqdm as _tqdm
                         step_iter = _tqdm(
                             step_iter,
-                            desc=f"image {img_count + 1} ({image_size[0]}x{image_size[1]})",
+                            desc=f"image {img_count + 1} ({cur_image_size[0]}x{cur_image_size[1]})",
                             total=num_steps,
                             leave=False,
                         )
@@ -899,20 +918,20 @@ class NEOChatModel(PreTrainedModel):
                     image_embeds = image_embeds + timestep_embeddings
 
                     use_cfg = (t > cfg_interval[0] and t < cfg_interval[1]) or cfg_interval[0] == 0
-                    out_cond = self._t2i_predict_v(image_embeds, indexes_image_condition, attention_mask_condition, past_key_values_cond_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
+                    out_cond = self._t2i_predict_v(image_embeds, indexes_image_condition, attention_mask_condition, past_key_values_cond_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=cur_image_size)
                     if not use_cfg:
                         v_pred = out_cond
                     elif cfg_scale == 1 and img_cfg_scale == 1:
                         v_pred = out_cond
                     elif img_cfg_scale == 1:
-                        out_img_cond = self._t2i_predict_v(image_embeds, indexes_image_text_uncondition, attention_mask_text_uncondition, past_key_values_tu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
+                        out_img_cond = self._t2i_predict_v(image_embeds, indexes_image_text_uncondition, attention_mask_text_uncondition, past_key_values_tu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=cur_image_size)
                         v_pred = out_img_cond + cfg_scale * (out_cond - out_img_cond)
                     elif cfg_scale == img_cfg_scale:
-                        out_uncond = self._t2i_predict_v(image_embeds, indexes_image_img_uncondition, attention_mask_img_uncondition, past_key_values_iu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
+                        out_uncond = self._t2i_predict_v(image_embeds, indexes_image_img_uncondition, attention_mask_img_uncondition, past_key_values_iu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=cur_image_size)
                         v_pred = out_uncond + cfg_scale * (out_cond - out_uncond)
                     else:
-                        out_img_cond = self._t2i_predict_v(image_embeds, indexes_image_text_uncondition, attention_mask_text_uncondition, past_key_values_tu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
-                        out_uncond = self._t2i_predict_v(image_embeds, indexes_image_img_uncondition, attention_mask_img_uncondition, past_key_values_iu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
+                        out_img_cond = self._t2i_predict_v(image_embeds, indexes_image_text_uncondition, attention_mask_text_uncondition, past_key_values_tu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=cur_image_size)
+                        out_uncond = self._t2i_predict_v(image_embeds, indexes_image_img_uncondition, attention_mask_img_uncondition, past_key_values_iu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=cur_image_size)
                         v_pred = (
                             out_uncond
                             + cfg_scale * (out_cond - out_img_cond)
@@ -1244,20 +1263,20 @@ class NEOChatModel(PreTrainedModel):
                     image_embeds = image_embeds + timestep_embeddings
 
                     use_cfg = (t > cfg_interval[0] and t < cfg_interval[1]) or cfg_interval[0] == 0
-                    out_cond = self._t2i_predict_v(image_embeds, indexes_image_condition, attention_mask_condition, past_key_values_cond_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
+                    out_cond = self._t2i_predict_v(image_embeds, indexes_image_condition, attention_mask_condition, past_key_values_cond_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=image_size)
                     if not use_cfg:
                         v_pred = out_cond
                     elif cfg_scale == 1 and img_cfg_scale == 1:
                         v_pred = out_cond
                     elif img_cfg_scale == 1:
-                        out_img_cond = self._t2i_predict_v(image_embeds, indexes_image_text_uncondition, attention_mask_text_uncondition, past_key_values_tu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
+                        out_img_cond = self._t2i_predict_v(image_embeds, indexes_image_text_uncondition, attention_mask_text_uncondition, past_key_values_tu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=image_size)
                         v_pred = out_img_cond + cfg_scale * (out_cond - out_img_cond)
                     elif cfg_scale == img_cfg_scale:
-                        out_uncond = self._t2i_predict_v(image_embeds, indexes_image_img_uncondition, attention_mask_img_uncondition, past_key_values_iu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
+                        out_uncond = self._t2i_predict_v(image_embeds, indexes_image_img_uncondition, attention_mask_img_uncondition, past_key_values_iu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=image_size)
                         v_pred = out_uncond + cfg_scale * (out_cond - out_uncond)
                     else:
-                        out_img_cond = self._t2i_predict_v(image_embeds, indexes_image_text_uncondition, attention_mask_text_uncondition, past_key_values_tu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
-                        out_uncond = self._t2i_predict_v(image_embeds, indexes_image_img_uncondition, attention_mask_img_uncondition, past_key_values_iu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings)
+                        out_img_cond = self._t2i_predict_v(image_embeds, indexes_image_text_uncondition, attention_mask_text_uncondition, past_key_values_tu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=image_size)
+                        out_uncond = self._t2i_predict_v(image_embeds, indexes_image_img_uncondition, attention_mask_img_uncondition, past_key_values_iu_cfg, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=image_size)
                         v_pred = (
                             out_uncond
                             + cfg_scale * (out_cond - out_img_cond)
@@ -1349,6 +1368,7 @@ class NEOChatModel(PreTrainedModel):
     @torch.no_grad()
     def it2i_generate(self, tokenizer, prompt, images, cfg_scale=1, img_cfg_scale=1, cfg_norm='none', enable_timestep_shift=True, timestep_shift=1, image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False, seed=0):
         assert cfg_norm in ['none', 'global', 'channel']
+        self._notify_layer_offload_phase("prefix")
 
         self.img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
         self.config.t_eps = t_eps
@@ -1440,15 +1460,14 @@ class NEOChatModel(PreTrainedModel):
         )
 
         if think_mode:
-            outputs_condition = self.language_model(
+            outputs_condition = self._think_prefix_forward(
                 inputs_embeds=input_embeds_condition,
                 indexes=indexes_condition,
                 attention_mask=attention_mask_condition_prefix,
-                use_cache=True,
-                output_hidden_states=True,
             )
             past_key_values_condition = outputs_condition.past_key_values
-            hidden_states_condition = outputs_condition.hidden_states[-1]
+            device = outputs_condition.logits.device
+            dtype = outputs_condition.logits.dtype
             t_index_condition = indexes_condition[0].max().item()
             past_key_values_condition, t_index_condition, think_text = self._generate_think(
                 tokenizer,
@@ -1460,10 +1479,14 @@ class NEOChatModel(PreTrainedModel):
             indexes_image_condition = self._build_t2i_image_indexes(
                 token_h, token_w, t_index_condition + 1, device=input_embeds_condition.device
             )
+            del outputs_condition
         else:
-            past_key_values_condition, hidden_states_condition = self._it2i_prefix_forward(
+            past_key_values_condition, prefix_hidden_states = self._it2i_prefix_forward(
                 input_embeds_condition, indexes_condition, attention_mask_condition_prefix
             )
+            device = prefix_hidden_states.device
+            dtype = prefix_hidden_states.dtype
+            del prefix_hidden_states
         past_key_values_img_condition = None
         if input_embeds_img_condition is not None:
             past_key_values_img_condition, _ = self._it2i_prefix_forward(
@@ -1475,16 +1498,13 @@ class NEOChatModel(PreTrainedModel):
                 input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
             )
 
-        device = hidden_states_condition.device
-        dtype = hidden_states_condition.dtype
-
         del pixel_values, grid_hw
         del input_embeds_condition, indexes_condition, attention_mask_condition_prefix
         if input_embeds_img_condition is not None:
             del input_embeds_img_condition, indexes_img_condition, attention_mask_img_condition_prefix
         if input_embeds_uncondition is not None:
             del input_embeds_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
-        del hidden_states_condition
+        self._notify_layer_offload_phase("denoise")
 
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(
@@ -1671,6 +1691,7 @@ class NEOChatModel(PreTrainedModel):
     def t2i_generate(self, tokenizer, prompt, cfg_scale=1, timestep_shift=1, enable_timestep_shift=True, cfg_norm='none', image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False, seed=0):
         assert self.concat_time_token_num == 0
         assert cfg_norm in ['cfg_zero_star', 'global', 'none', 'channel']
+        self._notify_layer_offload_phase("prefix")
         merge_size = int(1 / self.downsample_ratio)
 
         self.config.t_eps = t_eps
@@ -1702,15 +1723,14 @@ class NEOChatModel(PreTrainedModel):
         )
 
         if think_mode:
-            outputs_condition = self.language_model(
+            outputs_condition = self._think_prefix_forward(
                 input_ids=input_ids_condition,
                 indexes=indexes_condition,
                 attention_mask=attention_mask_condition_prefix,
-                use_cache=True,
-                output_hidden_states=True,
             )
             past_key_values_condition = outputs_condition.past_key_values
-            hidden_states_condition = outputs_condition.hidden_states[-1]
+            device = outputs_condition.logits.device
+            dtype = outputs_condition.logits.dtype
             t_index_condition = indexes_condition[0].max().item()
             past_key_values_condition, t_index_condition, think_text = self._generate_think(
                 tokenizer,
@@ -1722,19 +1742,20 @@ class NEOChatModel(PreTrainedModel):
             indexes_image_condition = self._build_t2i_image_indexes(
                 token_h, token_w, t_index_condition + 1, device=input_ids_condition.device
             )
+            del outputs_condition
         else:
-            past_key_values_condition, hidden_states_condition = self._t2i_prefix_forward(input_ids_condition, indexes_condition, attention_mask_condition_prefix)
+            past_key_values_condition, prefix_hidden_states = self._t2i_prefix_forward(input_ids_condition, indexes_condition, attention_mask_condition_prefix)
+            device = prefix_hidden_states.device
+            dtype = prefix_hidden_states.dtype
+            del prefix_hidden_states
         past_key_values_uncondition = None
         if input_ids_uncondition is not None:
             past_key_values_uncondition, _ = self._t2i_prefix_forward(input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix)
 
-        device = hidden_states_condition.device
-        dtype = hidden_states_condition.dtype
-
         del input_ids_condition, indexes_condition, attention_mask_condition_prefix
         if input_ids_uncondition is not None:
             del input_ids_uncondition, indexes_uncondition, attention_mask_uncondition_prefix
-        del hidden_states_condition
+        self._notify_layer_offload_phase("denoise")
 
         for layer_idx in range(len(past_key_values_condition.layers)):
             past_key_values_condition.layers[layer_idx].keys = past_key_values_condition.layers[layer_idx].keys.expand(batch_size, *past_key_values_condition.layers[layer_idx].keys.shape[1:])

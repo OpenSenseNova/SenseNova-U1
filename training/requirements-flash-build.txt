@@ -1,0 +1,8 @@
+# This file is generated from pyproject.toml by scripts/render_requirements.py.
+# Source: training/pyproject.toml [project.optional-dependencies].flash-build
+# Direct dependencies only; use uv.lock for an exact reproducible environment.
+
+ninja
+packaging
+psutil
+wheel

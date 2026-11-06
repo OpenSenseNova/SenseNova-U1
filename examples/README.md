@@ -77,8 +77,18 @@ interleave, editing, vqa):
 | `--vram_mode` | Behavior |
 |---------------|----------|
 | `full`        | Whole model on GPU, no offload. Fastest. (Default.) |
+| `fast`        | Async prefetch, then retain generation layers within the GPU memory budget. |
 | `low`         | Synchronous per-layer CPU<->GPU swap. Smallest weight footprint, slowest. |
 | `balanced`    | Async prefetch (overlaps host->device with compute). Faster than `low`. |
+
+Fast-mode residency controls are shared by all four scripts:
+
+| Option | Default | Meaning |
+|--------|---------|---------|
+| `--fast_vram_fraction` | `0.90` | Automatic budget as a fraction of physical VRAM. |
+| `--fast_vram_headroom_gib` | `2` | Reusable VRAM headroom reserved for later allocations. |
+| `--fast_activation_reserve_gib` | `4` | Allowance for post-decoder activations. |
+| `--fast_vram_budget_gib` | unset | Absolute budget overriding the fraction. |
 
 ```bash
 python examples/t2i/inference.py \

@@ -11,6 +11,9 @@ from PIL import Image
 
 import sensenova_u1
 from sensenova_u1.utils import (
+    DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+    DEFAULT_FAST_VRAM_FRACTION,
+    DEFAULT_FAST_VRAM_HEADROOM_GIB,
     DEFAULT_IMAGE_PATCH_SIZE,
     DEFAULT_VRAM_MODE,
     InferenceProfiler,
@@ -19,6 +22,7 @@ from sensenova_u1.utils import (
     load_and_merge_lora_weight_from_safetensors,
     load_model_and_tokenizer,
     make_offload_ctx,
+    vram_mode_keeps_generation_resident,
     vram_mode_to_prefetch_count,
 )
 
@@ -85,11 +89,19 @@ class SenseNovaU1T2I:
         vram_mode: str = DEFAULT_VRAM_MODE,
         device_map: str | None = None,
         max_memory: str | None = None,
+        fast_vram_fraction: float = DEFAULT_FAST_VRAM_FRACTION,
+        fast_vram_headroom_gib: float = DEFAULT_FAST_VRAM_HEADROOM_GIB,
+        fast_activation_reserve_gib: float = DEFAULT_FAST_ACTIVATION_RESERVE_GIB,
+        fast_vram_budget_gib: float | None = None,
     ) -> None:
         self.device = device
         self._last_think_text: str = ""
         self.vram_mode = vram_mode
         self.prefetch_count = vram_mode_to_prefetch_count(vram_mode)
+        self.fast_vram_fraction = fast_vram_fraction
+        self.fast_vram_headroom_gib = fast_vram_headroom_gib
+        self.fast_activation_reserve_gib = fast_activation_reserve_gib
+        self.fast_vram_budget_gib = fast_vram_budget_gib
         self.model, self.tokenizer = load_model_and_tokenizer(
             model_path,
             dtype=dtype,
@@ -102,7 +114,16 @@ class SenseNovaU1T2I:
 
     def _offload_ctx(self):
         """Wrap ``self.model`` for layer offload, or pass through when off."""
-        return make_offload_ctx(self.model, self.prefetch_count, self.device)
+        return make_offload_ctx(
+            self.model,
+            self.prefetch_count,
+            self.device,
+            keep_generation_resident=vram_mode_keeps_generation_resident(self.vram_mode),
+            fast_vram_fraction=self.fast_vram_fraction,
+            fast_vram_headroom_gib=self.fast_vram_headroom_gib,
+            fast_activation_reserve_gib=self.fast_activation_reserve_gib,
+            fast_vram_budget_gib=self.fast_vram_budget_gib,
+        )
 
     @property
     def last_think_text(self) -> str:
@@ -377,6 +398,10 @@ def main() -> None:
         device=args.device,
         config={
             "vram_mode": args.vram_mode,
+            "fast_vram_fraction": args.fast_vram_fraction,
+            "fast_vram_headroom_gib": args.fast_vram_headroom_gib,
+            "fast_activation_reserve_gib": args.fast_activation_reserve_gib,
+            "fast_vram_budget_gib": args.fast_vram_budget_gib,
             "attn_backend": sensenova_u1.effective_attn_backend(),
             "dtype": args.dtype,
             "gguf": args.gguf_checkpoint,
@@ -394,6 +419,10 @@ def main() -> None:
                 vram_mode=args.vram_mode,
                 device_map=args.device_map,
                 max_memory=args.max_memory,
+                fast_vram_fraction=args.fast_vram_fraction,
+                fast_vram_headroom_gib=args.fast_vram_headroom_gib,
+                fast_activation_reserve_gib=args.fast_activation_reserve_gib,
+                fast_vram_budget_gib=args.fast_vram_budget_gib,
             )
         if args.lora_path is not None:
             print(f"load lora {args.lora_path}")

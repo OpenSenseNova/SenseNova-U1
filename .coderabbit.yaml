@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+inheritance: true
+language: en-US
+reviews:
+  profile: chill
+  poem: false
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: false
+  path_filters:
+    - "!apps/comfyui/**"
+    - "!tests/test_comfyui_*.py"
+  path_instructions:
+    - path: "**/*"
+      instructions: |
+        SenseNova-U1 is a model inference project. Prioritize correctness, maintainability, and practical platform coverage.
+        Focus on actionable issues introduced by the change. Give evidence and distinguish bugs from suggestions or unverified risks.
+        Apply checks relevant to the file: documentation and image changes do not need GPU tests.
+    - path: "**/*.py"
+      instructions: |
+        Prefer simple, readable code with clear responsibilities. Avoid duplicated compatibility patches, hidden state, and unnecessary abstractions.
+        Preserve model semantics and numerical stability; check affected interfaces against actual dependency versions.
+        Support representative, documented environments without requiring every platform or version combination. Keep optional dependencies optional.
+        Isolate specialized acceleration behind clear interfaces with a usable baseline where supported. Require comparable measurements for performance claims and disclose quality tradeoffs.
+        Request focused tests for meaningful behavioral risks, not tests that merely repeat the implementation.
+    - path: "**/*.md"
+      instructions: |
+        Check that installation steps and examples match the code, and that links, model details, and support claims are accurate.
+        Check evidence and comparison conditions for performance claims. Keep key facts consistent across languages; respect dated release notes.
+        Avoid subjective wording changes. Review runtime prompt templates for behavioral impact, not as ordinary prose.
+    - path: "docs/assets/**"
+      instructions: |
+        Check references, captions, model versions, and visible chart labels against the surrounding documentation.
+        State when image contents cannot be inspected. Avoid aesthetic judgments and arbitrary file-size limits; flag concrete accuracy or loading problems.
+chat:
+  auto_reply: true

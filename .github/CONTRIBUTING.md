@@ -22,9 +22,9 @@ pull request, so we can align on scope and design.
    are caught locally before they fail CI:
 
    ```bash
-   uv pip install pre-commit   # or: pip install pre-commit
-   pre-commit install
-   pre-commit run --all-files  # optional: check the whole repo now
+   uv --project . sync --locked --extra dev
+   uv run pre-commit install
+   uv run pre-commit run --all-files  # optional: check the whole repo now
    ```
 
 4. Make your changes, add or update tests where applicable, and ensure

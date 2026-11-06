@@ -69,8 +69,18 @@ python examples/t2i/inference.py \
 | `--vram_mode` | 行为 |
 |---------------|------|
 | `full`        | 整模型常驻 GPU，不做 offload。最快。（默认）|
+| `fast`        | 异步预取，并在 GPU 显存预算内常驻 generation 层。|
 | `low`         | 每层同步 CPU<->GPU 交换，权重显存占用最小，速度最慢。|
 | `balanced`    | 异步预取（H2D 与计算重叠），比 `low` 快。|
+
+四个脚本共用以下 `fast` 常驻参数：
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `--fast_vram_fraction` | `0.90` | 物理显存比例形式的自动预算。|
+| `--fast_vram_headroom_gib` | `2` | 为后续分配保留的可复用显存余量。|
+| `--fast_activation_reserve_gib` | `4` | decoder 后续激活预留。|
+| `--fast_vram_budget_gib` | 未设置 | 覆盖 fraction 的绝对预算。|
 
 ```bash
 python examples/t2i/inference.py \

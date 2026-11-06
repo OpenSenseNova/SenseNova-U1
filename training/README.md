@@ -32,8 +32,13 @@
 
 ### Requirements
 
-- Python 3.10+
-- PyTorch 2.5+ — full list in [`requirements.txt`](requirements.txt)
+- Python 3.10–3.12
+- PyTorch 2.5.1 + CUDA 12.4
+- Transformers 4.43.x
+
+Training is an independent Python project. Its [`pyproject.toml`](pyproject.toml),
+[`uv.lock`](uv.lock), `.venv`, and CUDA wheel index are separate from the
+inference project at the repository root.
 
 **Minimum hardware (as shipped — `shell/train_u1/{8B,A3B,U1.5_8B}.sh` defaults):**
 
@@ -47,11 +52,54 @@ To fit on smaller setups, reduce `seq_len` / `num_imgs` (memory) and / or
 `wp_size` / `tp_size` (topology) at the top of the launcher.
 
 ```bash
-# install PyTorch matching your CUDA from https://pytorch.org first, then:
-pip install -r requirements.txt
+# From the repository root (recommended):
+uv --directory training sync --locked
+uv --directory training sync --locked --extra flash-build
+uv --directory training sync --locked --extra flash-build --extra flash \
+  --no-build-isolation-package flash-attn
+source training/.venv/bin/activate
+
+# Or run the equivalent commands from training/:
+cd training
+uv sync --locked
+uv sync --locked --extra flash-build
+uv sync --locked --extra flash-build --extra flash \
+  --no-build-isolation-package flash-attn
+source .venv/bin/activate
 ```
 
-> The repo ships training code only.
+The repository's CUDA training configurations set `use_flash_attn=True`, so
+the `flash` extra is required for the shipped launchers. The first two syncs
+install the matching Torch/CUDA environment and Flash Attention's build tools;
+the final sync builds the extension against that environment. You can install a
+compatible prebuilt wheel instead of the final command when one is available.
+
+For environments without uv, use the generated direct-dependency requirements.
+pip will resolve compatible transitive versions; use uv with `uv.lock` for the
+exact reference environment.
+
+```bash
+cd training
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pip install -r requirements-flash-build.txt
+python -m pip install --no-deps --no-build-isolation -r requirements-flash.txt
+python -m pip install -e . --no-deps
+```
+
+`pyproject.toml` is the source of truth for direct dependencies and version
+ranges, `uv.lock` contains the exact resolution, and `requirements*.txt` files
+mirror only the relevant pyproject dependency lists. The separate
+`requirements-flash-build.txt` and `requirements-flash.txt` preserve the required
+build order for this compiled extension. Do not edit generated requirements by
+hand. Repository maintainers can refresh both projects' locks and requirements
+from the repository root with
+`./scripts/lock_and_export_dependencies.sh`.
+
+Other accelerator kernels such as Apex, `grouped_gemm`, and `deeplink_ext`
+remain configuration-specific and must be installed separately with builds
+matching the training Torch/CUDA environment.
 
 ### Configure your environment
 

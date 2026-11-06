@@ -1,7 +1,5 @@
-# Register `<comfyui>/models/gguf` as a model folder before nodes.py is imported,
-# so SenseNovaU1LocalLoader's `gguf_checkpoint` dropdown can be populated via
-# folder_paths.get_filename_list("gguf"). Tolerant when folder_paths isn't
-# importable (e.g. running tests outside ComfyUI).
+# Register SenseNova-owned model folders before nodes.py is imported. Tolerant
+# when folder_paths isn't importable (e.g. running tests outside ComfyUI).
 try:
     import os as _os
 
@@ -16,6 +14,9 @@ try:
         if _gguf_dir not in _paths:
             _paths.append(_gguf_dir)
         _exts.add(".gguf")
+
+    _sensenova_dir = _os.path.join(_folder_paths.models_dir, "sensenova")
+    _folder_paths.add_model_folder_path("sensenova", _sensenova_dir, is_default=True)
 except Exception:  # pragma: no cover - non-ComfyUI env or registration race
     pass
 

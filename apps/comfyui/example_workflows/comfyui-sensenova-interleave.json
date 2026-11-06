@@ -1,0 +1,1968 @@
+{
+  "id": "9e1c9407-5154-4dfa-88a6-bd88c461ad46",
+  "revision": 0,
+  "last_node_id": 62,
+  "last_link_id": 103,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        100,
+        130
+      ],
+      "size": [
+        273.453125,
+        126
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            46
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            45,
+            49,
+            97
+          ]
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            99
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "SenseNova-U1.5-8B-MoT-BF16-T8.safetensors"
+      ],
+      "widgets_values_named": {
+        "ckpt_name": "SenseNova-U1.5-8B-MoT-BF16-T8.safetensors"
+      }
+    },
+    {
+      "id": 12,
+      "type": "SenseNovaTextEncode",
+      "pos": [
+        473.4576171875,
+        318
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 45
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            47
+          ]
+        }
+      ],
+      "title": "SenseNova Text Encode（正向）",
+      "properties": {
+        "Node name for S&R": "SenseNovaTextEncode"
+      },
+      "widgets_values": [
+        "香氛蜡烛的产品宣传图，多图",
+        "interleave",
+        true
+      ],
+      "widgets_values_named": {
+        "text": "香氛蜡烛的产品宣传图，多图",
+        "mode": "interleave",
+        "thinking": true
+      }
+    },
+    {
+      "id": 14,
+      "type": "SenseNovaSamplingOptions",
+      "pos": [
+        912.3452519287497,
+        198.0476129647788
+      ],
+      "size": [
+        270,
+        86
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 46
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            96
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaSamplingOptions"
+      },
+      "widgets_values": [
+        3
+      ],
+      "widgets_values_named": {
+        "shift": 3
+      }
+    },
+    {
+      "id": 21,
+      "type": "EmptyLatentImage",
+      "pos": [
+        100,
+        358
+      ],
+      "size": [
+        291.125,
+        142
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            98
+          ]
+        }
+      ],
+      "title": "空Latent图像（每轮新图都从这里开始）",
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ],
+      "widgets_values_named": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      }
+    },
+    {
+      "id": 24,
+      "type": "HiDreamO1ReferenceImages",
+      "pos": [
+        929.1732012925248,
+        502.8349733300348
+      ],
+      "size": [
+        278.03125,
+        98
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 47
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 48
+        },
+        {
+          "name": "images.image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            94
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            95
+          ]
+        }
+      ],
+      "title": "HiDream-O1 参考图像（只执行一次）",
+      "properties": {
+        "Node name for S&R": "HiDreamO1ReferenceImages"
+      }
+    },
+    {
+      "id": 25,
+      "type": "SenseNovaTextEncode",
+      "pos": [
+        472.65305490390955,
+        584.0052988182794
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 49
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            48
+          ]
+        }
+      ],
+      "title": "SenseNova Text Encode（负向）",
+      "properties": {
+        "Node name for S&R": "SenseNovaTextEncode"
+      },
+      "widgets_values": [
+        "",
+        "interleave",
+        false
+      ],
+      "widgets_values_named": {
+        "text": "",
+        "mode": "interleave",
+        "thinking": false
+      }
+    },
+    {
+      "id": 58,
+      "type": "PreviewImage",
+      "pos": [
+        1778.1543471595473,
+        502.0027938265053
+      ],
+      "size": [
+        225,
+        290
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 101
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 59,
+      "type": "PreviewAny",
+      "pos": [
+        1751.772909136129,
+        0.559518446786285
+      ],
+      "size": [
+        470.15625,
+        423.34375
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 100
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 62,
+      "type": "340c7c9d-afff-42ca-9010-e0956fb6f9ef",
+      "pos": [
+        1313.1306215572358,
+        317.67251857760226
+      ],
+      "size": [
+        351.9375,
+        238
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "inputs.input0",
+          "type": "*",
+          "link": 94
+        },
+        {
+          "name": "inputs.input1",
+          "shape": 7,
+          "type": "*",
+          "link": 95
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 96
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 97
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 98
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 99
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            100
+          ]
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            101
+          ]
+        }
+      ],
+      "properties": {
+        "previewExposures": [
+          {
+            "name": "$$canvas-image-preview",
+            "sourceNodeId": "47",
+            "sourcePreviewName": "$$canvas-image-preview"
+          }
+        ]
+      },
+      "widgets_values": [
+        919814394951983,
+        4
+      ],
+      "widgets_values_named": {
+        "seed": 919814394951983,
+        "mode.num_iterations": 4
+      }
+    }
+  ],
+  "links": [
+    [
+      45,
+      9,
+      1,
+      12,
+      0,
+      "CLIP"
+    ],
+    [
+      46,
+      9,
+      0,
+      14,
+      0,
+      "MODEL"
+    ],
+    [
+      47,
+      12,
+      0,
+      24,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      48,
+      25,
+      0,
+      24,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      49,
+      9,
+      1,
+      25,
+      0,
+      "CLIP"
+    ],
+    [
+      94,
+      24,
+      0,
+      62,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      95,
+      24,
+      1,
+      62,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      96,
+      14,
+      0,
+      62,
+      2,
+      "MODEL"
+    ],
+    [
+      97,
+      9,
+      1,
+      62,
+      3,
+      "CLIP"
+    ],
+    [
+      98,
+      21,
+      0,
+      62,
+      4,
+      "LATENT"
+    ],
+    [
+      99,
+      9,
+      2,
+      62,
+      5,
+      "VAE"
+    ],
+    [
+      100,
+      62,
+      0,
+      59,
+      0,
+      "STRING"
+    ],
+    [
+      101,
+      62,
+      1,
+      58,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "340c7c9d-afff-42ca-9010-e0956fb6f9ef",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 62,
+          "lastLinkId": 103,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "SenseNova Interleave Loop",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            1457.4313656451693,
+            241.60497130472515,
+            166.5,
+            208
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            5437.107695052329,
+            281.60497130472515,
+            128,
+            88
+          ]
+        },
+        "inputs": [
+          {
+            "id": "c7bc4425-e2c9-485b-9b8f-f0e0832b77df",
+            "name": "inputs.input0",
+            "type": "*",
+            "linkIds": [
+              51
+            ],
+            "localized_name": "input0",
+            "pos": [
+              1599.9313656451693,
+              265.60497130472515
+            ]
+          },
+          {
+            "id": "bb4d44e4-5d16-4d92-9b62-b72918484807",
+            "name": "inputs.input1",
+            "type": "*",
+            "linkIds": [
+              52
+            ],
+            "localized_name": "input1",
+            "shape": 7,
+            "pos": [
+              1599.9313656451693,
+              285.60497130472515
+            ]
+          },
+          {
+            "id": "81e2f8b7-4904-4ff5-b041-946af342c8c3",
+            "name": "model",
+            "type": "MODEL",
+            "linkIds": [
+              58,
+              63
+            ],
+            "localized_name": "model",
+            "pos": [
+              1599.9313656451693,
+              305.60497130472515
+            ]
+          },
+          {
+            "id": "ffe2a6ef-0173-4043-9940-0855a8fcac5a",
+            "name": "clip",
+            "type": "CLIP",
+            "linkIds": [
+              59
+            ],
+            "localized_name": "clip",
+            "pos": [
+              1599.9313656451693,
+              325.60497130472515
+            ]
+          },
+          {
+            "id": "74ced478-345f-448b-bfda-c2cc1c05d4a3",
+            "name": "latent_image",
+            "type": "LATENT",
+            "linkIds": [
+              66
+            ],
+            "localized_name": "Latent图像",
+            "pos": [
+              1599.9313656451693,
+              345.60497130472515
+            ]
+          },
+          {
+            "id": "7dc6fb54-cdf7-407e-9ae0-d77bea4035d9",
+            "name": "vae",
+            "type": "VAE",
+            "linkIds": [
+              70
+            ],
+            "localized_name": "vae",
+            "pos": [
+              1599.9313656451693,
+              365.60497130472515
+            ]
+          },
+          {
+            "id": "0791b07d-d7b4-4faf-ab64-76e52da24bbf",
+            "name": "seed",
+            "type": "INT",
+            "linkIds": [
+              102
+            ],
+            "pos": [
+              1599.9313656451693,
+              385.60497130472515
+            ]
+          },
+          {
+            "id": "22373717-5d17-46e9-b159-be7db25a9cc7",
+            "name": "mode.num_iterations",
+            "type": "INT",
+            "linkIds": [
+              103
+            ],
+            "pos": [
+              1599.9313656451693,
+              405.60497130472515
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "1262436f-36d5-4341-9b04-861f661ae8fa",
+            "name": "text",
+            "type": "STRING",
+            "linkIds": [
+              92
+            ],
+            "localized_name": "text",
+            "pos": [
+              5461.107695052329,
+              305.60497130472515
+            ]
+          },
+          {
+            "id": "b013174f-1a72-4a50-a79f-2382a8bb876f",
+            "name": "images",
+            "type": "IMAGE",
+            "linkIds": [
+              93
+            ],
+            "localized_name": "images",
+            "pos": [
+              5461.107695052329,
+              325.60497130472515
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 40,
+            "type": "StartLoop",
+            "pos": [
+              1645.7634765624998,
+              130
+            ],
+            "size": [
+              353.625,
+              282
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "parent_iteration",
+                "name": "parent_iteration",
+                "shape": 7,
+                "type": "INT",
+                "link": null
+              },
+              {
+                "localized_name": "initial_iteration_value",
+                "name": "initial_iteration_value",
+                "shape": 7,
+                "type": "*",
+                "link": 50
+              },
+              {
+                "localized_name": "num_iterations",
+                "name": "mode.num_iterations",
+                "type": "INT",
+                "widget": {
+                  "name": "mode.num_iterations"
+                },
+                "link": 103
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "iteration_index",
+                "name": "iteration_index",
+                "type": "INT",
+                "links": null
+              },
+              {
+                "localized_name": "is_first",
+                "name": "is_first",
+                "type": "BOOLEAN",
+                "links": [
+                  56
+                ]
+              },
+              {
+                "localized_name": "is_last",
+                "name": "is_last",
+                "type": "BOOLEAN",
+                "links": null
+              },
+              {
+                "localized_name": "list_item",
+                "name": "list_item",
+                "type": "*",
+                "links": null
+              },
+              {
+                "localized_name": "current_iteration_value",
+                "name": "current_iteration_value",
+                "type": "*",
+                "links": [
+                  53,
+                  54,
+                  55
+                ]
+              }
+            ],
+            "title": "Start Loop（最多生成 4 张，EOS 后只走空分支）",
+            "properties": {
+              "Node name for S&R": "StartLoop"
+            },
+            "widgets_values": [
+              "simple",
+              4,
+              false
+            ],
+            "widgets_values_named": {
+              "mode": "simple",
+              "mode.num_iterations": 4,
+              "cache_iterations": false
+            }
+          },
+          {
+            "id": 42,
+            "type": "GetItemFromList",
+            "pos": [
+              2099.398828125,
+              130
+            ],
+            "size": [
+              270,
+              86
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "list",
+                "name": "list",
+                "type": "*",
+                "link": 53
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "*",
+                "name": "*",
+                "type": "*",
+                "links": [
+                  60
+                ]
+              }
+            ],
+            "title": "取出当前正向 conditioning",
+            "properties": {
+              "Node name for S&R": "GetItemFromList"
+            },
+            "widgets_values": [
+              0
+            ],
+            "widgets_values_named": {
+              "index": 0
+            }
+          },
+          {
+            "id": 45,
+            "type": "ComfySwitchNode",
+            "pos": [
+              2456.8418023093054,
+              456.02953074156625
+            ],
+            "size": [
+              308.859375,
+              106
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "为假时",
+                "name": "on_false",
+                "shape": 7,
+                "type": "*",
+                "link": 57
+              },
+              {
+                "localized_name": "为真时",
+                "name": "on_true",
+                "shape": 7,
+                "type": "*",
+                "link": null
+              },
+              {
+                "localized_name": "切换",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 56
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "输出",
+                "name": "output",
+                "type": "*",
+                "links": [
+                  62
+                ]
+              }
+            ],
+            "title": "首轮不传 samples，后续轮次传回上一张图",
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ],
+            "widgets_values_named": {
+              "switch": false
+            }
+          },
+          {
+            "id": 41,
+            "type": "CreateList",
+            "pos": [
+              1657.8524493209184,
+              446.2794808747095
+            ],
+            "size": [
+              292.265625,
+              98
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "input0",
+                "name": "inputs.input0",
+                "type": "*",
+                "link": 51
+              },
+              {
+                "localized_name": "input1",
+                "name": "inputs.input1",
+                "shape": 7,
+                "type": "*",
+                "link": 52
+              },
+              {
+                "localized_name": "input2",
+                "name": "inputs.input2",
+                "shape": 7,
+                "type": "*",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "列表",
+                "name": "list",
+                "shape": 6,
+                "type": "*",
+                "links": [
+                  50
+                ]
+              }
+            ],
+            "title": "初始循环状态：正向 / 负向 conditioning",
+            "properties": {
+              "Node name for S&R": "CreateList"
+            }
+          },
+          {
+            "id": 43,
+            "type": "GetItemFromList",
+            "pos": [
+              2097.228283186436,
+              322.0806244845007
+            ],
+            "size": [
+              270,
+              86
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "list",
+                "name": "list",
+                "type": "*",
+                "link": 54
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "*",
+                "name": "*",
+                "type": "*",
+                "links": [
+                  61
+                ]
+              }
+            ],
+            "title": "取出当前负向 conditioning",
+            "properties": {
+              "Node name for S&R": "GetItemFromList"
+            },
+            "widgets_values": [
+              1
+            ],
+            "widgets_values_named": {
+              "index": 1
+            }
+          },
+          {
+            "id": 46,
+            "type": "SenseNovaGenerate",
+            "pos": [
+              2795.2864182239246,
+              416.4814276426798
+            ],
+            "size": [
+              291.90625,
+              166
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "showAdvanced": false,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 58
+              },
+              {
+                "localized_name": "clip",
+                "name": "clip",
+                "type": "CLIP",
+                "link": 59
+              },
+              {
+                "localized_name": "conditioning",
+                "name": "conditioning",
+                "type": "CONDITIONING",
+                "link": 60
+              },
+              {
+                "localized_name": "negative",
+                "name": "negative",
+                "shape": 7,
+                "type": "CONDITIONING",
+                "link": 61
+              },
+              {
+                "localized_name": "samples",
+                "name": "samples",
+                "shape": 7,
+                "type": "LATENT",
+                "link": 62
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "conditioning",
+                "name": "conditioning",
+                "type": "CONDITIONING",
+                "links": [
+                  64,
+                  76,
+                  79
+                ]
+              },
+              {
+                "localized_name": "thinking",
+                "name": "thinking",
+                "type": "STRING",
+                "links": [
+                  73
+                ]
+              },
+              {
+                "localized_name": "negative",
+                "name": "negative",
+                "type": "CONDITIONING",
+                "links": [
+                  65,
+                  77,
+                  80
+                ]
+              },
+              {
+                "localized_name": "image_requested",
+                "name": "image_requested",
+                "type": "BOOLEAN",
+                "links": [
+                  67,
+                  71,
+                  74
+                ]
+              }
+            ],
+            "title": "SenseNova Generate（单轮文本阶段）",
+            "properties": {
+              "Node name for S&R": "SenseNovaGenerate"
+            },
+            "widgets_values": [
+              1024
+            ],
+            "widgets_values_named": {
+              "max_think_tokens": 1024
+            }
+          },
+          {
+            "id": 47,
+            "type": "KSampler",
+            "pos": [
+              3139.420812733486,
+              153.61630706027802
+            ],
+            "size": [
+              345,
+              286
+            ],
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "模型",
+                "name": "model",
+                "type": "MODEL",
+                "link": 63
+              },
+              {
+                "localized_name": "正面条件",
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": 64
+              },
+              {
+                "localized_name": "负面条件",
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": 65
+              },
+              {
+                "localized_name": "Latent图像",
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": 66
+              },
+              {
+                "localized_name": "种子",
+                "name": "seed",
+                "type": "INT",
+                "widget": {
+                  "name": "seed"
+                },
+                "link": 102
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "Latent",
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [
+                  68,
+                  69
+                ]
+              }
+            ],
+            "title": "KSampler（仅 image_requested=true 时执行）",
+            "properties": {
+              "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+              641320288490607,
+              "fixed",
+              20,
+              8,
+              "euler",
+              "simple",
+              1
+            ],
+            "widgets_values_named": {
+              "seed": 641320288490607,
+              "control_after_generate": "fixed",
+              "steps": 20,
+              "cfg": 8,
+              "sampler_name": "euler",
+              "scheduler": "simple",
+              "denoise": 1
+            }
+          },
+          {
+            "id": 48,
+            "type": "ComfySwitchNode",
+            "pos": [
+              3539.115814782997,
+              167.39234066998145
+            ],
+            "size": [
+              289.5,
+              106
+            ],
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "为假时",
+                "name": "on_false",
+                "shape": 7,
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "localized_name": "为真时",
+                "name": "on_true",
+                "shape": 7,
+                "type": "*",
+                "link": 68
+              },
+              {
+                "localized_name": "切换",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 67
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "输出",
+                "name": "output",
+                "type": "LATENT",
+                "links": [
+                  78,
+                  81
+                ]
+              }
+            ],
+            "title": "Lazy Switch：EOS 后不执行 KSampler",
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ],
+            "widgets_values_named": {
+              "switch": false
+            }
+          },
+          {
+            "id": 49,
+            "type": "VAEDecode",
+            "pos": [
+              3543.119697075667,
+              416.36510720379783
+            ],
+            "size": [
+              323.625,
+              78
+            ],
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "Latent",
+                "name": "samples",
+                "type": "LATENT",
+                "link": 69
+              },
+              {
+                "localized_name": "vae",
+                "name": "vae",
+                "type": "VAE",
+                "link": 70
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "图像",
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [
+                  72
+                ]
+              }
+            ],
+            "title": "当前轮图像解码（由下游 Lazy Switch 控制）",
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            }
+          },
+          {
+            "id": 44,
+            "type": "GetItemFromList",
+            "pos": [
+              2099.398828125,
+              506
+            ],
+            "size": [
+              276.53125,
+              86
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "list",
+                "name": "list",
+                "type": "*",
+                "link": 55
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "*",
+                "name": "*",
+                "type": "*",
+                "links": [
+                  57
+                ]
+              }
+            ],
+            "title": "取出上一轮图像 latent（首轮不求值）",
+            "properties": {
+              "Node name for S&R": "GetItemFromList"
+            },
+            "widgets_values": [
+              2
+            ],
+            "widgets_values_named": {
+              "index": 2
+            }
+          },
+          {
+            "id": 50,
+            "type": "ComfySwitchNode",
+            "pos": [
+              3928.1155637158163,
+              384.6056863871703
+            ],
+            "size": [
+              303.90625,
+              106
+            ],
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "为假时",
+                "name": "on_false",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "localized_name": "为真时",
+                "name": "on_true",
+                "shape": 7,
+                "type": "*",
+                "link": 72
+              },
+              {
+                "localized_name": "切换",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 71
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "输出",
+                "name": "output",
+                "type": "IMAGE",
+                "links": [
+                  75
+                ]
+              }
+            ],
+            "title": "Lazy Switch：EOS 后不执行 VAEDecode",
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ],
+            "widgets_values_named": {
+              "switch": false
+            }
+          },
+          {
+            "id": 53,
+            "type": "CreateList",
+            "pos": [
+              3909.37469850637,
+              126.92515114091566
+            ],
+            "size": [
+              368.765625,
+              118
+            ],
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "input0",
+                "name": "inputs.input0",
+                "type": "*",
+                "link": 79
+              },
+              {
+                "localized_name": "input1",
+                "name": "inputs.input1",
+                "shape": 7,
+                "type": "*",
+                "link": 80
+              },
+              {
+                "localized_name": "input2",
+                "name": "inputs.input2",
+                "shape": 7,
+                "type": "*",
+                "link": 81
+              },
+              {
+                "localized_name": "input3",
+                "name": "inputs.input3",
+                "shape": 7,
+                "type": "*",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "列表",
+                "name": "list",
+                "shape": 6,
+                "type": "*",
+                "links": [
+                  83
+                ]
+              }
+            ],
+            "title": "回灌下一轮：conditioning / negative / image latent",
+            "properties": {
+              "Node name for S&R": "CreateList"
+            }
+          },
+          {
+            "id": 51,
+            "type": "SenseNovaInterleaveStage",
+            "pos": [
+              4313.570440623051,
+              246.8410822840539
+            ],
+            "size": [
+              390.828125,
+              219.703125
+            ],
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "image",
+                "name": "image",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 75
+              },
+              {
+                "localized_name": "conditioning",
+                "name": "conditioning",
+                "shape": 7,
+                "type": "CONDITIONING",
+                "link": 76
+              },
+              {
+                "localized_name": "negative",
+                "name": "negative",
+                "shape": 7,
+                "type": "CONDITIONING",
+                "link": 77
+              },
+              {
+                "localized_name": "samples",
+                "name": "samples",
+                "shape": 7,
+                "type": "LATENT",
+                "link": 78
+              },
+              {
+                "localized_name": "image_requested",
+                "name": "image_requested",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "image_requested"
+                },
+                "link": 74
+              },
+              {
+                "localized_name": "text",
+                "name": "text",
+                "shape": 7,
+                "type": "STRING",
+                "widget": {
+                  "name": "text"
+                },
+                "link": 73
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "stage",
+                "name": "stage",
+                "type": "*",
+                "links": [
+                  82
+                ]
+              }
+            ],
+            "title": "当前轮 Interleave Stage（EOS 空图由 Collector 过滤）",
+            "properties": {
+              "Node name for S&R": "SenseNovaInterleaveStage"
+            },
+            "widgets_values": [
+              false,
+              ""
+            ],
+            "widgets_values_named": {
+              "image_requested": false,
+              "text": ""
+            }
+          },
+          {
+            "id": 55,
+            "type": "EndLoop",
+            "pos": [
+              4757.0274065865915,
+              35.77022966236092
+            ],
+            "size": [
+              302.40625,
+              126
+            ],
+            "flags": {},
+            "order": 13,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "output_value",
+                "name": "output_value",
+                "shape": 7,
+                "type": "*",
+                "link": 82
+              },
+              {
+                "localized_name": "next_iteration_value",
+                "name": "next_iteration_value",
+                "shape": 7,
+                "type": "*",
+                "link": 83
+              },
+              {
+                "localized_name": "termination0",
+                "name": "terminations.termination0",
+                "shape": 7,
+                "type": "*",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "outputs",
+                "name": "outputs",
+                "shape": 6,
+                "type": "*",
+                "links": [
+                  91
+                ]
+              }
+            ],
+            "title": "End Loop（累积图片，EOS 后不再采样）",
+            "properties": {
+              "Node name for S&R": "EndLoop"
+            },
+            "widgets_values": [
+              true
+            ],
+            "widgets_values_named": {
+              "accumulate": true
+            }
+          },
+          {
+            "id": 61,
+            "type": "SenseNovaInterleaveCollector",
+            "pos": [
+              4741.830791030208,
+              255.91991414079007
+            ],
+            "size": [
+              348,
+              207.671875
+            ],
+            "flags": {},
+            "order": 14,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "stages",
+                "name": "stages",
+                "type": "*",
+                "link": 91
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "text",
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  92
+                ]
+              },
+              {
+                "localized_name": "images",
+                "name": "images",
+                "type": "IMAGE",
+                "links": [
+                  93
+                ]
+              },
+              {
+                "localized_name": "thinking",
+                "name": "thinking",
+                "type": "STRING",
+                "links": null
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SenseNovaInterleaveCollector"
+            }
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 50,
+            "origin_id": 41,
+            "origin_slot": 0,
+            "target_id": 40,
+            "target_slot": 1,
+            "type": "*"
+          },
+          {
+            "id": 53,
+            "origin_id": 40,
+            "origin_slot": 4,
+            "target_id": 42,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 57,
+            "origin_id": 44,
+            "origin_slot": 0,
+            "target_id": 45,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 56,
+            "origin_id": 40,
+            "origin_slot": 1,
+            "target_id": 45,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 54,
+            "origin_id": 40,
+            "origin_slot": 4,
+            "target_id": 43,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 60,
+            "origin_id": 42,
+            "origin_slot": 0,
+            "target_id": 46,
+            "target_slot": 2,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 61,
+            "origin_id": 43,
+            "origin_slot": 0,
+            "target_id": 46,
+            "target_slot": 3,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 62,
+            "origin_id": 45,
+            "origin_slot": 0,
+            "target_id": 46,
+            "target_slot": 4,
+            "type": "LATENT"
+          },
+          {
+            "id": 64,
+            "origin_id": 46,
+            "origin_slot": 0,
+            "target_id": 47,
+            "target_slot": 1,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 65,
+            "origin_id": 46,
+            "origin_slot": 2,
+            "target_id": 47,
+            "target_slot": 2,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 68,
+            "origin_id": 47,
+            "origin_slot": 0,
+            "target_id": 48,
+            "target_slot": 1,
+            "type": "LATENT"
+          },
+          {
+            "id": 67,
+            "origin_id": 46,
+            "origin_slot": 3,
+            "target_id": 48,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 69,
+            "origin_id": 47,
+            "origin_slot": 0,
+            "target_id": 49,
+            "target_slot": 0,
+            "type": "LATENT"
+          },
+          {
+            "id": 55,
+            "origin_id": 40,
+            "origin_slot": 4,
+            "target_id": 44,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 72,
+            "origin_id": 49,
+            "origin_slot": 0,
+            "target_id": 50,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 71,
+            "origin_id": 46,
+            "origin_slot": 3,
+            "target_id": 50,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 79,
+            "origin_id": 46,
+            "origin_slot": 0,
+            "target_id": 53,
+            "target_slot": 0,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 80,
+            "origin_id": 46,
+            "origin_slot": 2,
+            "target_id": 53,
+            "target_slot": 1,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 81,
+            "origin_id": 48,
+            "origin_slot": 0,
+            "target_id": 53,
+            "target_slot": 2,
+            "type": "LATENT"
+          },
+          {
+            "id": 75,
+            "origin_id": 50,
+            "origin_slot": 0,
+            "target_id": 51,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 76,
+            "origin_id": 46,
+            "origin_slot": 0,
+            "target_id": 51,
+            "target_slot": 1,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 77,
+            "origin_id": 46,
+            "origin_slot": 2,
+            "target_id": 51,
+            "target_slot": 2,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 78,
+            "origin_id": 48,
+            "origin_slot": 0,
+            "target_id": 51,
+            "target_slot": 3,
+            "type": "LATENT"
+          },
+          {
+            "id": 74,
+            "origin_id": 46,
+            "origin_slot": 3,
+            "target_id": 51,
+            "target_slot": 4,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 73,
+            "origin_id": 46,
+            "origin_slot": 1,
+            "target_id": 51,
+            "target_slot": 5,
+            "type": "STRING"
+          },
+          {
+            "id": 82,
+            "origin_id": 51,
+            "origin_slot": 0,
+            "target_id": 55,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 83,
+            "origin_id": 53,
+            "origin_slot": 0,
+            "target_id": 55,
+            "target_slot": 1,
+            "type": "*"
+          },
+          {
+            "id": 91,
+            "origin_id": 55,
+            "origin_slot": 0,
+            "target_id": 61,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 51,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 41,
+            "target_slot": 0,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 52,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 41,
+            "target_slot": 1,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 58,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 46,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 63,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 47,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 59,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 46,
+            "target_slot": 1,
+            "type": "CLIP"
+          },
+          {
+            "id": 66,
+            "origin_id": -10,
+            "origin_slot": 4,
+            "target_id": 47,
+            "target_slot": 3,
+            "type": "LATENT"
+          },
+          {
+            "id": 70,
+            "origin_id": -10,
+            "origin_slot": 5,
+            "target_id": 49,
+            "target_slot": 1,
+            "type": "VAE"
+          },
+          {
+            "id": 92,
+            "origin_id": 61,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 93,
+            "origin_id": 61,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 102,
+            "origin_id": -10,
+            "origin_slot": 6,
+            "target_id": 47,
+            "target_slot": 4,
+            "type": "INT"
+          },
+          {
+            "id": 103,
+            "origin_id": -10,
+            "origin_slot": 7,
+            "target_id": 40,
+            "target_slot": 2,
+            "type": "INT"
+          }
+        ],
+        "extra": {}
+      }
+    ]
+  },
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.630330474965844,
+      "offset": [
+        419.2714123807955,
+        404.8100856714175
+      ]
+    },
+    "frontendVersion": "1.52.7"
+  },
+  "version": 0.4
+}
