@@ -49,24 +49,31 @@ class TransformersCompatibilityTest(unittest.TestCase):
     def assert_base_model_output_controls(self, model, *, num_hidden_layers: int) -> None:
         model.eval()
         input_ids = torch.tensor([[1, 3, 4]])
+        inputs_embeds = model.get_input_embeddings()(input_ids).detach()
+        indexes = torch.stack((torch.arange(3), torch.zeros(3, dtype=torch.long), torch.zeros(3, dtype=torch.long)))
 
-        with torch.no_grad():
-            outputs = model(
-                input_ids=input_ids,
-                output_hidden_states=True,
-                output_attentions=True,
-            )
+        for inputs in (
+            {"input_ids": input_ids},
+            {"inputs_embeds": inputs_embeds, "indexes": indexes},
+        ):
+            with self.subTest(input_kind=next(iter(inputs))):
+                with torch.no_grad():
+                    outputs = model(
+                        **inputs,
+                        use_cache=True,
+                        output_hidden_states=True,
+                        output_attentions=True,
+                    )
+                    tuple_outputs = model(**inputs, return_dict=False)
 
-        self.assertEqual(outputs.last_hidden_state.shape[:2], input_ids.shape)
-        self.assertIsNotNone(outputs.hidden_states)
-        self.assertEqual(len(outputs.hidden_states), num_hidden_layers + 1)
-        self.assertIsNotNone(outputs.attentions)
-        self.assertEqual(len(outputs.attentions), num_hidden_layers)
-
-        with torch.no_grad():
-            tuple_outputs = model(input_ids=input_ids, return_dict=False)
-
-        self.assertIsInstance(tuple_outputs, tuple)
+                self.assertEqual(outputs.last_hidden_state.shape[:2], input_ids.shape)
+                self.assertTrue(torch.isfinite(outputs.last_hidden_state).all())
+                self.assertEqual(outputs.past_key_values.get_seq_length(), input_ids.shape[1])
+                self.assertIsNotNone(outputs.hidden_states)
+                self.assertEqual(len(outputs.hidden_states), num_hidden_layers + 1)
+                self.assertIsNotNone(outputs.attentions)
+                self.assertEqual(len(outputs.attentions), num_hidden_layers)
+                self.assertIsInstance(tuple_outputs, tuple)
 
     def test_dense_model_forward_cache_decode_and_generate(self) -> None:
         from sensenova_u1.models.neo_unify.configuration_neo_chat import NEOLLMConfig

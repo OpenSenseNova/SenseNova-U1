@@ -17,7 +17,14 @@ try:
         return merge_with_config_defaults(capture_outputs(func))
 
 except ImportError:  # Transformers 4.x
-    from transformers.utils.generic import check_model_inputs as model_input_compat
+    from transformers.utils.generic import check_model_inputs
+
+    # 4.57.1 accepts the function directly; 4.57.3 requires calling the
+    # decorator factory first. Later 4.x releases support both forms.
+    if "func" in inspect.signature(check_model_inputs).parameters:
+        model_input_compat = check_model_inputs
+    else:
+        model_input_compat = check_model_inputs()
 
 
 @lru_cache(maxsize=None)
