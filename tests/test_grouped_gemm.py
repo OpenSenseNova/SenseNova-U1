@@ -56,10 +56,11 @@ class GroupedGemmExpertsTest(unittest.TestCase):
                 super().__init__()
                 self.mlp = Qwen3MoeSparseMoeBlock(config)
                 self.mlp_mot_gen = Qwen3MoeSparseMoeBlock(config)
+                self.register_buffer("shared_scale", torch.tensor(0.5))
 
             def forward(self, x, *, exist_non_image_gen_tokens, exist_image_gen_tokens):
                 block = self.mlp_mot_gen if exist_image_gen_tokens else self.mlp
-                return x + block(x)
+                return x + block(x) * self.shared_scale
 
         class Model(torch.nn.Module):
             def __init__(self):
@@ -87,9 +88,14 @@ class GroupedGemmExpertsTest(unittest.TestCase):
                         keep_generation_resident=resident,
                     )
                     try:
+                        previous_generation = False
                         for generation in (False, True, True, False, True):
+                            transferred = wrapper._store.transfer_stats()
                             actual = wrapper(x, generation)
                             torch.testing.assert_close(actual, expected[generation], rtol=0, atol=0)
+                            if resident and generation and previous_generation:
+                                self.assertEqual(wrapper._store.transfer_stats(), transferred)
+                            previous_generation = generation
                     finally:
                         wrapper.teardown()
                     self.assertTrue(all(parameter.device.type == "cpu" for parameter in model.parameters()))

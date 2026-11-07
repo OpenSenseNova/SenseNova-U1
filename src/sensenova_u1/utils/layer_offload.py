@@ -637,6 +637,7 @@ class LayerOffloadWrapper(nn.Module):
         self._audit_handle: torch.utils.hooks.RemovableHandle | None = None
         self._prefetcher: _AsyncPrefetcher | None = None
         self._active_groups: frozenset[str] | None = None
+        self._residency_available_bytes: int | None = None
         self._prefix_weight_store: _PrefixWeightStore | None = None
         self._previous_phase_callback: Any = _MISSING
         self._phase_callback_installed = False
@@ -732,16 +733,26 @@ class LayerOffloadWrapper(nn.Module):
 
     def _can_keep_resident(self, activation_reserve_bytes: int) -> bool:
         """Return whether current allocations plus workspace fit the fast watermark."""
-        allocated = int(self._accel.memory_allocated(self._target_device))
+        # Avoid flattening the entire allocator statistics dictionary twice
+        # per layer through memory_allocated()/memory_reserved(). Both CUDA
+        # and XPU expose the underlying nested statistics.
+        stats = self._accel.memory_stats_as_nested_dict(self._target_device)
+        allocated = int(stats.get("allocated_bytes", {}).get("all", {}).get("current", 0))
+        reserved = int(stats.get("reserved_bytes", {}).get("all", {}).get("current", 0))
         required_free_memory = self._resident_headroom_bytes + activation_reserve_bytes
         try:
-            driver_free_memory = int(self._accel.mem_get_info(self._target_device)[0])
+            if self._residency_available_bytes is None:
+                driver_free_memory = int(self._accel.mem_get_info(self._target_device)[0])
+                self._residency_available_bytes = driver_free_memory + reserved
+            # Refresh external memory pressure once per decoder forward;
+            # cudaMemGetInfo on every layer serializes weight prefetch and
+            # compute. Account for our own allocations on every layer below.
+            driver_free_memory = self._residency_available_bytes - reserved
             # cudaMallocAsync owns separate pools per stream in this wrapper;
             # cached blocks from the prefetch stream cannot be assumed usable
             # by attention work on the compute stream.
             reclaimable_cache = 0
             if not self._cuda_malloc_async:
-                reserved = int(self._accel.memory_reserved(self._target_device))
                 reclaimable_cache = max(reserved - allocated, 0)
             effective_free_memory = driver_free_memory + reclaimable_cache
         except Exception:  # pragma: no cover - backend-specific fallback
@@ -760,7 +771,10 @@ class LayerOffloadWrapper(nn.Module):
             if idx not in self._resident_generation_layers:
                 self._resident_generation_layers.add(idx)
                 self._resident_generation_bytes += group_bytes
-            return groups - {_GROUP_GENERATION}
+            # Shared tensors (including RoPE buffers) are needed on every
+            # forward too. Keeping only the branch would still trigger H2D
+            # copies and prefetch events for every resident layer.
+            return groups - {_GROUP_GENERATION, _GROUP_SHARED}
         if idx in self._resident_generation_layers:
             self._resident_generation_layers.remove(idx)
             self._resident_generation_bytes -= group_bytes
@@ -804,7 +818,7 @@ class LayerOffloadWrapper(nn.Module):
             if idx not in self._resident_understanding_layers:
                 self._resident_understanding_layers.add(idx)
                 self._resident_understanding_bytes += group_bytes
-            return groups - {_GROUP_UNDERSTANDING}
+            return groups - {_GROUP_UNDERSTANDING, _GROUP_SHARED}
         if idx in self._resident_understanding_layers:
             self._resident_understanding_layers.remove(idx)
             self._resident_understanding_bytes -= group_bytes
@@ -817,6 +831,8 @@ class LayerOffloadWrapper(nn.Module):
         active_groups_by_layer: dict[int, frozenset[str]] = {}
 
         def _pre_hook(module: nn.Module, args: Any, kwargs: dict[str, Any], *, idx: int) -> None:
+            if idx == 0:
+                self._residency_available_bytes = None
             groups = _required_tensor_groups(kwargs)
             active_groups_by_layer[idx] = groups
             if idx == 0 and _GROUP_UNDERSTANDING in groups and args and isinstance(args[0], torch.Tensor):
@@ -865,6 +881,8 @@ class LayerOffloadWrapper(nn.Module):
             groups = active_groups_by_layer.pop(idx, _ALL_TENSOR_GROUPS)
             groups_to_evict = self._understanding_groups_to_evict(idx, groups)
             groups_to_evict = self._generation_groups_to_evict(idx, groups_to_evict)
+            if not groups_to_evict:
+                return
             if self._async_mode and self._cuda_malloc_async:
                 # cudaMallocAsync slow-but-safe path: per-stream pools
                 # require alloc and free on the same stream. Since
