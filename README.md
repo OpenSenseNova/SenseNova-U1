@@ -659,6 +659,17 @@ Pass `--vram_mode` to control language-model layer residency and CPU-to-GPU stre
 | `low` | Synchronous per-layer CPU↔GPU swap | Lowest VRAM footprint |
 | `balanced` | Async prefetch overlaps H2D copy with compute | Tight on VRAM but want to recover speed |
 
+Text-to-image inference batches the two CFG branches during denoising when accelerator
+memory permits. This applies to all four VRAM modes: projections and MLPs run together,
+while attention retains separate prefix caches and positions. In `fast`, the estimated
+batched workspace must also fit `--fast_activation_reserve_gib`. Insufficient headroom
+or an out-of-memory error switches the remaining steps back to serial CFG.
+CPU and non-default RoPE configurations retain serial execution.
+
+Batched floating-point operations can change pixels for the same seed. Use
+`--no_cfg_batching` (or `model.t2i_generate(..., cfg_batching=False)`) for the serial path.
+Editing and interleaved generation are unchanged.
+
 `fast` defaults to a 90% automatic VRAM budget, 2 GiB of reusable headroom,
 and a 4 GiB activation reserve. All values are configurable:
 

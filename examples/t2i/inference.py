@@ -143,6 +143,7 @@ class SenseNovaU1T2I:
         batch_size: int = 1,
         seed: int = 0,
         think_mode: bool = False,
+        cfg_batching: bool = True,
     ) -> list[Image.Image]:
         with self._offload_ctx() as offloaded:
             out = offloaded.t2i_generate(
@@ -157,6 +158,7 @@ class SenseNovaU1T2I:
                 batch_size=batch_size,
                 seed=seed,
                 think_mode=think_mode,
+                cfg_batching=cfg_batching,
             )
         if think_mode:
             tensor, think_text = out
@@ -235,6 +237,11 @@ def parse_args() -> argparse.Namespace:
         help=f"Output image height (default: {DEFAULT_HEIGHT}). See --width for supported values.",
     )
     p.add_argument("--cfg_scale", type=float, default=4.0)
+    p.add_argument(
+        "--no_cfg_batching",
+        action="store_true",
+        help="Run CFG branches serially to minimize activation memory or reproduce the serial path.",
+    )
     p.add_argument(
         "--cfg_norm",
         default="none",
@@ -445,6 +452,7 @@ def main() -> None:
                     batch_size=args.batch_size,
                     seed=args.seed,
                     think_mode=args.think,
+                    cfg_batching=not args.no_cfg_batching,
                 )
             _save_images(images, Path(args.output))
             if args.think:
@@ -491,6 +499,7 @@ def main() -> None:
                     batch_size=1,
                     seed=seed_i,
                     think_mode=think_i,
+                    cfg_batching=not args.no_cfg_batching,
                 )
             tag = sample.get("type")
             stem = f"{i + 1:04d}" + (f"_{tag}" if tag else "") + f"_{w}x{h}.png"

@@ -301,31 +301,40 @@ class LayerOffloadPartitionTest(unittest.TestCase):
         previous_callback = Mock()
         model = nn.Module()
         model._layer_offload_phase_callback = previous_callback
+        model._cfg_batching_activation_budget = 123
         wrapper = object.__new__(LayerOffloadWrapper)
         nn.Module.__init__(wrapper)
         wrapper._model = model
+        wrapper._keep_generation_resident = True
+        wrapper._activation_reserve_bytes = 456
 
         LayerOffloadWrapper._install_phase_callback(wrapper)
         self.assertEqual(model._layer_offload_phase_callback, wrapper.set_inference_phase)
+        self.assertEqual(model._cfg_batching_activation_budget, 456)
 
         LayerOffloadWrapper._restore_phase_callback(wrapper)
         self.assertIs(model._layer_offload_phase_callback, previous_callback)
+        self.assertEqual(model._cfg_batching_activation_budget, 123)
 
     def test_wrapper_removes_installed_phase_callback_when_model_had_none(self) -> None:
         model = nn.Module()
         wrapper = object.__new__(LayerOffloadWrapper)
         nn.Module.__init__(wrapper)
         wrapper._model = model
+        wrapper._keep_generation_resident = True
+        wrapper._activation_reserve_bytes = 456
 
         LayerOffloadWrapper._install_phase_callback(wrapper)
         LayerOffloadWrapper._restore_phase_callback(wrapper)
 
         self.assertNotIn("_layer_offload_phase_callback", model.__dict__)
+        self.assertNotIn("_cfg_batching_activation_budget", model.__dict__)
 
     def test_wrapper_does_not_remove_callback_it_did_not_install(self) -> None:
         previous_callback = Mock()
         model = nn.Module()
         model._layer_offload_phase_callback = previous_callback
+        model._cfg_batching_activation_budget = 123
         wrapper = object.__new__(LayerOffloadWrapper)
         nn.Module.__init__(wrapper)
         wrapper._model = model
@@ -334,6 +343,7 @@ class LayerOffloadPartitionTest(unittest.TestCase):
         LayerOffloadWrapper._restore_phase_callback(wrapper)
 
         self.assertIs(model._layer_offload_phase_callback, previous_callback)
+        self.assertEqual(model._cfg_batching_activation_budget, 123)
 
     def test_partitions_paired_branch_tensors_and_shared_buffers(self) -> None:
         groups = _partition_layer_tensor_names(_TwoBranchLayer())

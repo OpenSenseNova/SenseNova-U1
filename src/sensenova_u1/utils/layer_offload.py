@@ -58,6 +58,7 @@ DEFAULT_FAST_VRAM_FRACTION = 0.90
 DEFAULT_FAST_VRAM_HEADROOM_GIB = 2.0
 DEFAULT_FAST_ACTIVATION_RESERVE_GIB = 4.0
 _PHASE_CALLBACK_ATTR = "_layer_offload_phase_callback"
+_CFG_BATCHING_BUDGET_ATTR = "_cfg_batching_activation_budget"
 _MISSING = object()
 # The prefix understanding path uses eager attention with a float32 additive
 # mask.  At its peak, BF16 scores, promoted/masked scores, and float32 softmax
@@ -971,6 +972,11 @@ class LayerOffloadWrapper(nn.Module):
 
     def _install_phase_callback(self) -> None:
         self._previous_phase_callback = self._model.__dict__.get(_PHASE_CALLBACK_ATTR, _MISSING)
+        self._previous_cfg_batching_budget = self._model.__dict__.get(_CFG_BATCHING_BUDGET_ATTR, _MISSING)
+        if self._keep_generation_resident:
+            # CFG must fit the workspace already reserved by fast residency;
+            # otherwise a larger batch could evict the weights it aims to reuse.
+            setattr(self._model, _CFG_BATCHING_BUDGET_ATTR, self._activation_reserve_bytes)
         setattr(self._model, _PHASE_CALLBACK_ATTR, self.set_inference_phase)
         self._phase_callback_installed = True
 
@@ -982,6 +988,11 @@ class LayerOffloadWrapper(nn.Module):
                 delattr(self._model, _PHASE_CALLBACK_ATTR)
         else:
             setattr(self._model, _PHASE_CALLBACK_ATTR, self._previous_phase_callback)
+        if self._previous_cfg_batching_budget is _MISSING:
+            self._model.__dict__.pop(_CFG_BATCHING_BUDGET_ATTR, None)
+        else:
+            setattr(self._model, _CFG_BATCHING_BUDGET_ATTR, self._previous_cfg_batching_budget)
+        self._previous_cfg_batching_budget = _MISSING
         self._previous_phase_callback = _MISSING
         self._phase_callback_installed = False
 
