@@ -53,6 +53,34 @@ class _HookableTwoBranchLayer(_TwoBranchLayer):
 
 
 class LayerOffloadPartitionTest(unittest.TestCase):
+    def test_fast_residency_keeps_shared_buffers_and_releases_them_under_pressure(self) -> None:
+        layer = _TwoBranchLayer()
+        wrapper = object.__new__(LayerOffloadWrapper)
+        nn.Module.__init__(wrapper)
+        wrapper._keep_generation_resident = True
+        wrapper._activation_reserve_bytes = 0
+        wrapper._resident_generation_layers = set()
+        wrapper._resident_generation_bytes = 0
+        wrapper._can_keep_resident = Mock(return_value=True)
+        with patch.object(torch.Tensor, "pin_memory", lambda tensor, **kwargs: tensor):
+            wrapper._store = _LayerStore([layer], torch.device("cpu"))
+        groups = frozenset({_GROUP_SHARED, _GROUP_GENERATION})
+        wrapper._store.move_to_gpu(0, layer, groups=groups)
+        transferred = wrapper._store.transfer_stats()
+        to_evict = wrapper._generation_groups_to_evict(0, groups)
+        wrapper._store.evict_to_cpu(0, layer, groups=to_evict)
+        wrapper._store.move_to_gpu(0, layer, groups=groups)
+        self.assertEqual(wrapper._store.transfer_stats(), transferred)
+        self.assertEqual(wrapper._resident_generation_layers, {0})
+
+        wrapper._can_keep_resident.return_value = False
+        to_evict = wrapper._generation_groups_to_evict(0, groups)
+        self.assertEqual(to_evict, groups)
+        wrapper._store.evict_to_cpu(0, layer, groups=to_evict)
+        self.assertFalse(wrapper._store.is_on_gpu(0, groups))
+        self.assertEqual(wrapper._resident_generation_layers, set())
+        self.assertEqual(wrapper._resident_generation_bytes, 0)
+
     def test_resident_generation_does_not_rescan_weights_for_an_empty_shared_group(self) -> None:
         layer = _TwoBranchLayer()
         del layer.shared_scale
@@ -392,11 +420,49 @@ class LayerOffloadPartitionTest(unittest.TestCase):
         wrapper._resident_memory_limit_bytes = 72 * gib
         wrapper._cuda_malloc_async = True
         wrapper._accel = Mock()
-        wrapper._accel.memory_allocated.return_value = 30 * gib
-        wrapper._accel.memory_reserved.return_value = 60 * gib
+        wrapper._residency_available_bytes = None
+        wrapper._accel.memory_stats_as_nested_dict.return_value = {
+            "allocated_bytes": {"all": {"current": 30 * gib}},
+            "reserved_bytes": {"all": {"current": 60 * gib}},
+        }
         wrapper._accel.mem_get_info.return_value = (1 * gib, 80 * gib)
 
         self.assertFalse(LayerOffloadWrapper._can_keep_resident(wrapper, 4 * gib))
+
+    def test_residency_snapshot_accounts_for_growth_and_refreshes_between_forwards(self) -> None:
+        gib = 1024**3
+        for async_allocator in (False, True):
+            with self.subTest(async_allocator=async_allocator):
+                wrapper = object.__new__(LayerOffloadWrapper)
+                nn.Module.__init__(wrapper)
+                wrapper._target_device = torch.device("cuda")
+                wrapper._resident_headroom_bytes = 2 * gib
+                wrapper._resident_memory_limit_bytes = 72 * gib
+                wrapper._cuda_malloc_async = async_allocator
+                wrapper._residency_available_bytes = None
+                wrapper._accel = Mock()
+                stats = {
+                    "allocated_bytes": {"all": {"current": 30 * gib}},
+                    "reserved_bytes": {"all": {"current": 32 * gib}},
+                }
+                wrapper._accel.memory_stats_as_nested_dict.return_value = stats
+                wrapper._accel.mem_get_info.return_value = (10 * gib, 80 * gib)
+                self.assertTrue(wrapper._can_keep_resident(4 * gib))
+
+                # Growth within the same forward must consume the snapshot's
+                # headroom, even without another expensive driver query.
+                stats["allocated_bytes"]["all"]["current"] = 40 * gib
+                stats["reserved_bytes"]["all"]["current"] = 40 * gib
+                self.assertFalse(wrapper._can_keep_resident(4 * gib))
+                wrapper._accel.mem_get_info.assert_called_once()
+
+                # Another process has taken memory before the next forward.
+                wrapper._residency_available_bytes = None
+                stats["allocated_bytes"]["all"]["current"] = 30 * gib
+                stats["reserved_bytes"]["all"]["current"] = 32 * gib
+                wrapper._accel.mem_get_info.return_value = (1 * gib, 80 * gib)
+                self.assertFalse(wrapper._can_keep_resident(4 * gib))
+                self.assertEqual(wrapper._accel.mem_get_info.call_count, 2)
 
     def test_thinking_residency_waits_for_incremental_prefix_forward(self) -> None:
         wrapper = object.__new__(LayerOffloadWrapper)
@@ -443,8 +509,12 @@ class LayerOffloadPartitionTest(unittest.TestCase):
         wrapper._resident_understanding_bytes = 0
         wrapper._target_device = torch.device("cuda")
         wrapper._accel = Mock()
-        wrapper._accel.memory_allocated.return_value = 30 * gib
-        wrapper._accel.memory_reserved.return_value = 32 * gib
+        wrapper._cuda_malloc_async = False
+        wrapper._residency_available_bytes = None
+        wrapper._accel.memory_stats_as_nested_dict.return_value = {
+            "allocated_bytes": {"all": {"current": 30 * gib}},
+            "reserved_bytes": {"all": {"current": 32 * gib}},
+        }
         wrapper._accel.mem_get_info.return_value = (48 * gib, 80 * gib)
         wrapper._store = Mock()
         wrapper._store.group_nbytes.return_value = 1 * gib
@@ -452,11 +522,11 @@ class LayerOffloadPartitionTest(unittest.TestCase):
 
         groups_to_evict = LayerOffloadWrapper._understanding_groups_to_evict(wrapper, 3, groups)
 
-        self.assertEqual(groups_to_evict, frozenset({_GROUP_SHARED}))
+        self.assertEqual(groups_to_evict, frozenset())
         self.assertEqual(wrapper._resident_understanding_layers, {3})
         self.assertEqual(wrapper._resident_understanding_bytes, 1 * gib)
 
-        wrapper._accel.memory_allocated.return_value = 50 * gib
+        wrapper._accel.memory_stats_as_nested_dict.return_value["allocated_bytes"]["all"]["current"] = 50 * gib
         groups_to_evict = LayerOffloadWrapper._understanding_groups_to_evict(wrapper, 3, groups)
 
         self.assertEqual(groups_to_evict, groups)
