@@ -364,6 +364,23 @@ class Qwen3RotaryEmbedding(nn.Module):
         return cos.to(dtype=x.dtype), sin.to(dtype=x.dtype)
 
 
+def _generation_rope_cache(layers):
+    """Share static RoPE within a generation forward, after layer prefetch.
+
+    Decoder layers use the same configuration and non-persistent frequencies.
+    Keep this scoped to a forward so new positions, devices and dtypes cannot
+    reuse stale values. Stateful RoPE variants retain their per-layer updates.
+    """
+    if not layers or layers[0].training:
+        return None
+    attention = layers[0].self_attn
+    if any(rope.rope_type not in (None, "default") for rope in (attention.rotary_emb, attention.rotary_emb_hw)):
+        return None
+    # Populate lazily inside attention, after the layer's offload pre-hook
+    # has waited for any pending H2D transfer of its frequency buffers.
+    return []
+
+
 class Qwen3Attention(nn.Module):
     """Multi-headed attention from 'Attention Is All You Need' paper"""
 
@@ -614,13 +631,20 @@ class Qwen3Attention(nn.Module):
         value_states = self.v_proj_mot_gen(hidden_states).view(hidden_shape).transpose(1, 2)  # [B,H,S,D]
 
         # RoPE
-        cos_t, sin_t = self.rotary_emb(hidden_states, indexes[0].unsqueeze(0))
+        rope_cache = kwargs.get("generation_rope_cache")
+        if rope_cache:
+            generation_rope = rope_cache[0]
+        else:
+            generation_rope = (
+                self.rotary_emb(hidden_states, indexes[0].unsqueeze(0)),
+                self.rotary_emb_hw(hidden_states, indexes[1].unsqueeze(0)),
+                self.rotary_emb_hw(hidden_states, indexes[2].unsqueeze(0)),
+            )
+            if rope_cache is not None:
+                rope_cache.append(generation_rope)
+        (cos_t, sin_t), (cos_h, sin_h), (cos_w, sin_w) = generation_rope
         query_states_t, key_states_t = apply_rotary_pos_emb(query_states_t, key_states_t, cos_t, sin_t)
-
-        cos_h, sin_h = self.rotary_emb_hw(hidden_states, indexes[1].unsqueeze(0))
         query_states_h, key_states_h = apply_rotary_pos_emb(query_states_h, key_states_h, cos_h, sin_h)
-
-        cos_w, sin_w = self.rotary_emb_hw(hidden_states, indexes[2].unsqueeze(0))
         query_states_w, key_states_w = apply_rotary_pos_emb(query_states_w, key_states_w, cos_w, sin_w)
 
         # concat along head_dim
@@ -1164,6 +1188,9 @@ class Qwen3Model(Qwen3PreTrainedModel):
             #     causal_mask_mapping["sliding_attention"] = create_sliding_window_causal_mask(**mask_kwargs)
 
         hidden_states = inputs_embeds
+
+        if exist_image_gen_tokens and not exist_non_image_gen_tokens:
+            kwargs["generation_rope_cache"] = _generation_rope_cache(self.layers)
 
         for decoder_layer in self.layers[: self.config.num_hidden_layers]:
             hidden_states = decoder_layer(

@@ -19,6 +19,7 @@ from .configuration_neo_chat import NEOMoELLMConfig
 from .modeling_qwen3 import (
     Qwen3Attention,
     Qwen3RMSNorm,
+    _generation_rope_cache,
     create_block_causal_mask,
 )
 from .transformers_compat import causal_mask_kwargs, model_input_compat, tied_weights_keys
@@ -990,6 +991,9 @@ class Qwen3MoeModel(Qwen3MoePreTrainedModel):
             self.current_index = indexes[0].max()
 
         hidden_states = inputs_embeds
+
+        if exist_image_gen_tokens and not exist_non_image_gen_tokens:
+            kwargs["generation_rope_cache"] = _generation_rope_cache(self.layers)
 
         for decoder_layer in self.layers[: self.config.num_hidden_layers]:
             hidden_states = decoder_layer(
