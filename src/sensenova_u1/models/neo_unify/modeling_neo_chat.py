@@ -11,6 +11,7 @@ from transformers.modeling_utils import PreTrainedModel
 from transformers.utils import logging
 
 from .configuration_neo_chat import NEOChatConfig, NEOMoELLMConfig
+from .cfg_batching import BatchedCFGCache, cfg_batch_has_headroom, predict_cfg_batched
 from .conversation import get_conv_template
 from .modeling_neo_vit import NEOVisionModel
 from .modeling_qwen3 import Qwen3ForCausalLM, create_block_causal_mask
@@ -637,6 +638,29 @@ class NEOChatModel(PreTrainedModel):
         
         v_pred = (x_pred - z) / (1 - t).clamp_min(self.config.t_eps)
         return v_pred
+
+    def _t2i_predict_cfg(self, input_embeds, indexes, caches, t, z, image_token_num, *, cfg_cache=None, **kwargs):
+        """Predict both CFG branches, with a request-local serial fallback."""
+        if cfg_cache is not None and cfg_cache.enabled:
+            budget = getattr(self, "_cfg_batching_activation_budget", None)
+            if cfg_batch_has_headroom(input_embeds, self.config.llm_config, budget):
+                try:
+                    return predict_cfg_batched(
+                        self._t2i_predict_v, input_embeds, indexes, cfg_cache, t, z, image_token_num, **kwargs,
+                    )
+                except torch.OutOfMemoryError:
+                    logger.warning("Batched CFG ran out of memory; using serial CFG for the rest of this generation.")
+                # Leave the exception scope before retrying so failed-forward
+                # tensors held by its traceback can be freed by the allocator.
+                if input_embeds.device.type in ("cuda", "xpu"):
+                    getattr(torch, input_embeds.device.type).empty_cache()
+            else:
+                logger.info("Using serial CFG: batched workspace does not fit the available memory budget.")
+            cfg_cache.enabled = False
+        return tuple(
+            self._t2i_predict_v(input_embeds, index, {"full_attention": None}, cache, t, z, image_token_num, **kwargs)
+            for index, cache in zip(indexes, caches)
+        )
     
     def _build_it2i_inputs(self, tokenizer, query, pixel_values=None, grid_hw=None):
         model_inputs = tokenizer(query, return_tensors="pt")
@@ -1688,7 +1712,7 @@ class NEOChatModel(PreTrainedModel):
         return image_prediction
 
     @torch.no_grad()
-    def t2i_generate(self, tokenizer, prompt, cfg_scale=1, timestep_shift=1, enable_timestep_shift=True, cfg_norm='none', image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False, seed=0):
+    def t2i_generate(self, tokenizer, prompt, cfg_scale=1, timestep_shift=1, enable_timestep_shift=True, cfg_norm='none', image_size=(256, 256), num_steps=30, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', method='euler', cfg_interval=(0, 1), batch_size=1, t_eps=0.02, think_mode=False, seed=0, cfg_batching=True):
         assert self.concat_time_token_num == 0
         assert cfg_norm in ['cfg_zero_star', 'global', 'none', 'channel']
         self._notify_layer_offload_phase("prefix")
@@ -1794,7 +1818,11 @@ class NEOChatModel(PreTrainedModel):
         image_prediction = noise_scale * torch.randn((batch_size, 3, image_size[1], image_size[0]), device=device, dtype=dtype, generator=generator)
 
         attention_mask_condition = {"full_attention": None}
-        attention_mask_uncondition = {"full_attention": None}
+        cfg_cache = None
+        if cfg_batching and needs_cfg and not self.training and isinstance(self.language_model, (Qwen3ForCausalLM, Qwen3MoeForCausalLM)):
+            attention = self.language_model.model.layers[0].self_attn
+            if all(rope.rope_type in (None, "default") for rope in (attention.rotary_emb, attention.rotary_emb_hw)):
+                cfg_cache = BatchedCFGCache((past_key_values_condition, past_key_values_uncondition))
 
         timesteps = torch.linspace(0.0, 1.0, num_steps+1, device=device)
         if enable_timestep_shift:
@@ -1815,10 +1843,12 @@ class NEOChatModel(PreTrainedModel):
                 timestep_embeddings += noise_embeddings
             image_embeds = image_embeds + timestep_embeddings
 
-            v_pred_condition = self._t2i_predict_v(image_embeds, indexes_image_condition, attention_mask_condition, past_key_values_condition, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=image_size)
-            
             if t >= cfg_interval[0] and t <= cfg_interval[1] and cfg_scale > 1:
-                v_pred_uncondition = self._t2i_predict_v(image_embeds, indexes_image_uncondition, attention_mask_uncondition, past_key_values_uncondition, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=image_size)
+                v_pred_condition, v_pred_uncondition = self._t2i_predict_cfg(
+                    image_embeds, (indexes_image_condition, indexes_image_uncondition),
+                    (past_key_values_condition, past_key_values_uncondition), t, z, token_h * token_w,
+                    cfg_cache=cfg_cache, timestep_embeddings=timestep_embeddings, image_size=image_size,
+                )
                 if cfg_norm == 'cfg_zero_star':
                     positive_flat = v_pred_condition.view(batch_size, -1)  
                     negative_flat = v_pred_uncondition.view(batch_size, -1)  
@@ -1844,7 +1874,7 @@ class NEOChatModel(PreTrainedModel):
                         scale = (norm_v_condition / (norm_v_cfg + 1e-8)).clamp(min=0, max=1.0)
                         v_pred = v_pred * scale
             else:
-                v_pred = v_pred_condition
+                v_pred = self._t2i_predict_v(image_embeds, indexes_image_condition, attention_mask_condition, past_key_values_condition, t, z, image_token_num=token_h*token_w, timestep_embeddings=timestep_embeddings, image_size=image_size)
 
             z = z + (t_next - t) * v_pred
 

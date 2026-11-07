@@ -27,6 +27,7 @@ from transformers.utils.deprecation import deprecate_kwarg
 from transformers import Qwen3Config
 
 from .transformers_compat import causal_mask_kwargs, model_input_compat, tied_weights_keys
+from .cfg_batching import BatchedCFGCache
 
 try:
     from flash_attn import flash_attn_func  # type: ignore
@@ -631,14 +632,16 @@ class Qwen3Attention(nn.Module):
         value_states = self.v_proj_mot_gen(hidden_states).view(hidden_shape).transpose(1, 2)  # [B,H,S,D]
 
         # RoPE
+        if indexes.ndim == 2:
+            indexes = indexes.unsqueeze(1)
         rope_cache = kwargs.get("generation_rope_cache")
         if rope_cache:
             generation_rope = rope_cache[0]
         else:
             generation_rope = (
-                self.rotary_emb(hidden_states, indexes[0].unsqueeze(0)),
-                self.rotary_emb_hw(hidden_states, indexes[1].unsqueeze(0)),
-                self.rotary_emb_hw(hidden_states, indexes[2].unsqueeze(0)),
+                self.rotary_emb(hidden_states, indexes[0]),
+                self.rotary_emb_hw(hidden_states, indexes[1]),
+                self.rotary_emb_hw(hidden_states, indexes[2]),
             )
             if rope_cache is not None:
                 rope_cache.append(generation_rope)
@@ -653,6 +656,21 @@ class Qwen3Attention(nn.Module):
         key_states = torch.cat([key_states_t, key_states_h, key_states_w], dim=-1)
 
         update_cache = kwargs.get("update_cache", True)
+
+        if isinstance(past_key_values, BatchedCFGCache):
+            if update_cache or attention_mask is not None:
+                raise ValueError("Batched CFG requires generation without a dense mask or prefix-cache updates")
+            attn_output = past_key_values.attention(
+                self.layer_idx,
+                query_states.transpose(1, 2).contiguous(),
+                key_states.transpose(1, 2).contiguous(),
+                value_states.transpose(1, 2).contiguous(),
+                _flash_or_sdpa,
+                dropout_p=0.0,
+                softmax_scale=self.scaling,
+                causal=False,
+            )
+            return self.o_proj_mot_gen(attn_output.reshape(*input_shape, -1).contiguous()), None
 
         # ------------------------------------------------------------------
         # Flash path:
