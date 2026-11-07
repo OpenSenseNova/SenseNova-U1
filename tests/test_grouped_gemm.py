@@ -7,7 +7,7 @@ from packaging.version import Version
 from sensenova_u1.models.neo_unify import modeling_qwen3_moe
 from sensenova_u1.models.neo_unify.configuration_neo_chat import NEOMoELLMConfig
 from sensenova_u1.models.neo_unify.modeling_qwen3_moe import Qwen3MoeSparseMoeBlock
-from sensenova_u1.utils.layer_offload import _release_stale_runtime_weight_caches
+from sensenova_u1.utils.layer_offload import LayerOffloadWrapper, _release_stale_runtime_weight_caches
 
 
 def _config(*, top_k: int = 2, norm_topk_prob: bool = True) -> NEOMoELLMConfig:
@@ -44,6 +44,56 @@ def _reference_grouped_mm(
 
 
 class GroupedGemmExpertsTest(unittest.TestCase):
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required")
+    def test_offload_preserves_grouped_outputs_across_branch_switches(self) -> None:
+        config = _config()
+        config.hidden_size = 128
+        config.moe_intermediate_size = 256
+        config.experts_implementation = "grouped_mm"
+
+        class Layer(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.mlp = Qwen3MoeSparseMoeBlock(config)
+                self.mlp_mot_gen = Qwen3MoeSparseMoeBlock(config)
+
+            def forward(self, x, *, exist_non_image_gen_tokens, exist_image_gen_tokens):
+                block = self.mlp_mot_gen if exist_image_gen_tokens else self.mlp
+                return x + block(x)
+
+        class Model(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.layers = torch.nn.ModuleList([Layer(), Layer()])
+
+            def forward(self, x, generation):
+                for layer in self.layers:
+                    x = layer(x, exist_non_image_gen_tokens=not generation, exist_image_gen_tokens=generation)
+                return x
+
+        torch.manual_seed(31)
+        model = Model().eval().to(device="cuda", dtype=torch.bfloat16)
+        x = torch.randn(1, 16, config.hidden_size, device="cuda", dtype=torch.bfloat16)
+        with torch.inference_mode():
+            expected = {generation: model(x, generation).clone() for generation in (False, True)}
+            model.cpu()
+            for prefetch_count, resident in ((0, False), (1, False), (1, True)):
+                with self.subTest(prefetch_count=prefetch_count, resident=resident):
+                    wrapper = LayerOffloadWrapper(
+                        model,
+                        "layers",
+                        torch.device("cuda"),
+                        prefetch_count=prefetch_count,
+                        keep_generation_resident=resident,
+                    )
+                    try:
+                        for generation in (False, True, True, False, True):
+                            actual = wrapper(x, generation)
+                            torch.testing.assert_close(actual, expected[generation], rtol=0, atol=0)
+                    finally:
+                        wrapper.teardown()
+                    self.assertTrue(all(parameter.device.type == "cpu" for parameter in model.parameters()))
+
     @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required")
     def test_packing_preserves_weights_from_prefetch_stream(self) -> None:
         config = _config()

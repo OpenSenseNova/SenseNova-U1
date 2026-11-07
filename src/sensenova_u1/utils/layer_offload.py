@@ -38,6 +38,7 @@ import functools
 import itertools
 import logging
 import math
+from collections.abc import Callable
 from typing import Any
 
 import torch
@@ -152,6 +153,16 @@ def _unique_module_parameters(modules: tuple[nn.Module, ...]) -> tuple[nn.Parame
     return tuple(parameters)
 
 
+def _runtime_weight_cache_releasers(module: nn.Module) -> tuple[Callable[[], None], ...]:
+    if not isinstance(module, nn.Module):
+        return ()
+    return tuple(
+        release
+        for submodule in module.modules()
+        if callable(release := getattr(submodule, "release_stale_packed_weights", None))
+    )
+
+
 def _release_stale_runtime_weight_caches(module: nn.Module) -> None:
     """Let optimized modules release caches invalidated by ``Parameter.data``.
 
@@ -161,12 +172,8 @@ def _release_stale_runtime_weight_caches(module: nn.Module) -> None:
     layer could retain its former GPU storage and defeat VRAM offload.
     """
 
-    if not isinstance(module, nn.Module):
-        return
-    for submodule in module.modules():
-        release = getattr(submodule, "release_stale_packed_weights", None)
-        if callable(release):
-            release()
+    for release in _runtime_weight_cache_releasers(module):
+        release()
 
 
 class _PrefixWeightStore:
@@ -327,7 +334,12 @@ class _LayerStore:
         self._pin_device = target_device.type
 
         self._pinned: list[dict[str, torch.Tensor]] = []
-        self._tensor_groups: list[dict[str, str]] = []
+        # Module structure is fixed for the lifetime of an inference wrapper.
+        # Keep Parameter objects (not their changing .data views) so swaps and
+        # stream recording do not repeatedly walk hundreds of MoE submodules.
+        self._group_tensors: list[dict[str, list[tuple[str, torch.Tensor]]]] = []
+        self._group_bytes: list[dict[str, int]] = []
+        self._cache_releasers: list[tuple[Callable[[], None], ...]] = []
         self._resident_groups: list[set[str]] = []
         self._on_gpu: set[int] = set()
         self._managed_tensor_ids: set[int] = set()
@@ -336,14 +348,26 @@ class _LayerStore:
 
         for layer in layers:
             pinned: dict[str, torch.Tensor] = {}
+            tensor_groups = _partition_layer_tensor_names(layer)
+            grouped: dict[str, list[tuple[str, torch.Tensor]]] = {}
             for name, tensor in itertools.chain(layer.named_parameters(), layer.named_buffers()):
                 self._managed_tensor_ids.add(id(tensor))
                 pinned_tensor = tensor.data.pin_memory(device=self._pin_device)
                 tensor.data = pinned_tensor
                 pinned[name] = pinned_tensor
-            _release_stale_runtime_weight_caches(layer)
+                grouped.setdefault(tensor_groups[name], []).append((name, tensor))
+            releasers = _runtime_weight_cache_releasers(layer)
+            for release in releasers:
+                release()
             self._pinned.append(pinned)
-            self._tensor_groups.append(_partition_layer_tensor_names(layer))
+            self._group_tensors.append(grouped)
+            self._group_bytes.append(
+                {
+                    group: sum(pinned[name].numel() * pinned[name].element_size() for name, _ in tensors)
+                    for group, tensors in grouped.items()
+                }
+            )
+            self._cache_releasers.append(releasers)
             self._resident_groups.append(set())
 
     def _check_idx(self, idx: int) -> None:
@@ -354,7 +378,7 @@ class _LayerStore:
         self._check_idx(idx)
         if groups is None:
             return idx in self._on_gpu
-        return groups.issubset(self._resident_groups[idx])
+        return groups.intersection(self._group_tensors[idx]).issubset(self._resident_groups[idx])
 
     def move_to_gpu(
         self,
@@ -366,20 +390,19 @@ class _LayerStore:
     ) -> None:
         """Move layer *idx* parameters from pinned CPU to ``target_device``."""
         self._check_idx(idx)
-        missing_groups = groups - self._resident_groups[idx]
+        missing_groups = groups.intersection(self._group_tensors[idx]) - self._resident_groups[idx]
         if not missing_groups:
             return
         pinned = self._pinned[idx]
-        tensor_groups = self._tensor_groups[idx]
-        for name, param in itertools.chain(layer.named_parameters(), layer.named_buffers()):
-            group = tensor_groups.get(name, _GROUP_SHARED)
-            if name in pinned and group in missing_groups:
-                source = pinned[name]
-                param.data = source.to(self.target_device, non_blocking=non_blocking)
-                moved = source.numel() * source.element_size()
+        for group, tensors in self._group_tensors[idx].items():
+            if group in missing_groups:
+                for name, param in tensors:
+                    param.data = pinned[name].to(self.target_device, non_blocking=non_blocking)
+                moved = self._group_bytes[idx][group]
                 self._bytes_moved += moved
                 self._bytes_moved_by_group[group] += moved
-        _release_stale_runtime_weight_caches(layer)
+        for release in self._cache_releasers[idx]:
+            release()
         self._resident_groups[idx].update(missing_groups)
         self._on_gpu.add(idx)
 
@@ -392,14 +415,16 @@ class _LayerStore:
     ) -> None:
         """Swap layer *idx* parameters back to their pinned CPU copies."""
         self._check_idx(idx)
-        if idx not in self._on_gpu:
+        groups = groups.intersection(self._resident_groups[idx])
+        if not groups:
             return
         pinned = self._pinned[idx]
-        tensor_groups = self._tensor_groups[idx]
-        for name, param in itertools.chain(layer.named_parameters(), layer.named_buffers()):
-            if name in pinned and tensor_groups.get(name, _GROUP_SHARED) in groups:
-                param.data = pinned[name]
-        _release_stale_runtime_weight_caches(layer)
+        for group, tensors in self._group_tensors[idx].items():
+            if group in groups:
+                for name, param in tensors:
+                    param.data = pinned[name]
+        for release in self._cache_releasers[idx]:
+            release()
         self._resident_groups[idx].difference_update(groups)
         if not self._resident_groups[idx]:
             self._on_gpu.discard(idx)
@@ -412,11 +437,11 @@ class _LayerStore:
     ) -> list[torch.Tensor]:
         """Return tensors belonging to ``groups`` for stream recording."""
         self._check_idx(idx)
-        tensor_groups = self._tensor_groups[idx]
         return [
             tensor
-            for name, tensor in itertools.chain(layer.named_parameters(), layer.named_buffers())
-            if tensor_groups.get(name, _GROUP_SHARED) in groups
+            for group, tensors in self._group_tensors[idx].items()
+            if group in groups
+            for _name, tensor in tensors
         ]
 
     def transfer_stats(self) -> tuple[int, dict[str, int]]:
@@ -425,12 +450,7 @@ class _LayerStore:
     def group_nbytes(self, idx: int, group: str) -> int:
         """Return the pinned bytes belonging to one tensor group in a layer."""
         self._check_idx(idx)
-        tensor_groups = self._tensor_groups[idx]
-        return sum(
-            tensor.numel() * tensor.element_size()
-            for name, tensor in self._pinned[idx].items()
-            if tensor_groups.get(name, _GROUP_SHARED) == group
-        )
+        return self._group_bytes[idx].get(group, 0)
 
     def managed_tensor_ids(self) -> set[int]:
         return set(self._managed_tensor_ids)
@@ -440,7 +460,9 @@ class _LayerStore:
         for pinned_dict in self._pinned:
             pinned_dict.clear()
         self._pinned.clear()
-        self._tensor_groups.clear()
+        self._group_tensors.clear()
+        self._group_bytes.clear()
+        self._cache_releasers.clear()
         self._resident_groups.clear()
         self._on_gpu.clear()
         self._managed_tensor_ids.clear()

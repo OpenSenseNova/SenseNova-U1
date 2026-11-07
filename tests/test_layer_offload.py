@@ -1,7 +1,7 @@
 import argparse
 import unittest
 from types import SimpleNamespace
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import torch
 from torch import nn
@@ -53,9 +53,52 @@ class _HookableTwoBranchLayer(_TwoBranchLayer):
 
 
 class LayerOffloadPartitionTest(unittest.TestCase):
+    def test_resident_generation_does_not_rescan_weights_for_an_empty_shared_group(self) -> None:
+        layer = _TwoBranchLayer()
+        del layer.shared_scale
+        with patch.object(torch.Tensor, "pin_memory", lambda tensor, **kwargs: tensor):
+            store = _LayerStore([layer], torch.device("cpu"))
+        groups = frozenset({_GROUP_SHARED, _GROUP_GENERATION})
+        store.move_to_gpu(0, layer, groups=groups)
+        transferred = store.transfer_stats()
+
+        # Fast mode keeps generation resident and asks to evict shared weights.
+        # With no shared tensors, another forward must not touch either branch.
+        with (
+            patch.object(layer, "named_parameters", side_effect=AssertionError("rescanned parameters")),
+            patch.object(layer, "named_buffers", side_effect=AssertionError("rescanned buffers")),
+            patch.object(layer, "modules", side_effect=AssertionError("rescanned modules")),
+        ):
+            store.evict_to_cpu(0, layer, groups=frozenset({_GROUP_SHARED}))
+            self.assertTrue(store.is_on_gpu(0, groups))
+            store.move_to_gpu(0, layer, groups=groups)
+            tensors = store.tensors_for_groups(0, layer, groups)
+        self.assertEqual({id(t) for t in tensors}, {id(t) for n, t in layer.named_parameters() if "_mot_gen" in n})
+        self.assertEqual(store.transfer_stats(), transferred)
+
+    def test_cached_layer_tensors_preserve_branch_values_and_buffers_across_swaps(self) -> None:
+        layer = _TwoBranchLayer()
+        expected = {name: tensor.clone() for name, tensor in layer.state_dict().items()}
+        identities = {name: id(tensor) for name, tensor in layer.named_parameters()}
+        with patch.object(torch.Tensor, "pin_memory", lambda tensor, **kwargs: tensor):
+            store = _LayerStore([layer], torch.device("cpu"))
+        for _ in range(2):
+            for branch in (_GROUP_UNDERSTANDING, _GROUP_GENERATION):
+                groups = frozenset({_GROUP_SHARED, branch})
+                store.move_to_gpu(0, layer, groups=groups)
+                self.assertTrue(store.is_on_gpu(0, groups))
+                self.assertEqual(store.group_nbytes(0, branch), 320)
+                store.evict_to_cpu(0, layer, groups=groups)
+                self.assertFalse(store.is_on_gpu(0, groups))
+        self.assertEqual({name: id(tensor) for name, tensor in layer.named_parameters()}, identities)
+        for name, tensor in layer.state_dict().items():
+            torch.testing.assert_close(tensor, expected[name], rtol=0, atol=0)
+
     def test_layer_store_reports_parameter_identity_as_managed(self) -> None:
         parameter = Mock()
         pinned = Mock()
+        pinned.numel.return_value = 4
+        pinned.element_size.return_value = 4
         parameter.data.pin_memory.return_value = pinned
         layer = Mock()
         layer.named_parameters.return_value = (("weight", parameter),)
