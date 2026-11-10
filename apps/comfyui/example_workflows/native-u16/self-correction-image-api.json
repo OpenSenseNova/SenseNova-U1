@@ -1,0 +1,338 @@
+{
+  "1": {
+    "inputs": {
+      "ckpt_name": "SenseNova-U1.6-8B-MoT-BF16-selfcorr-step400-ema.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "3": {
+    "inputs": {
+      "shift": 3,
+      "model": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingSenseNova"
+  },
+  "4": {
+    "inputs": {
+      "text": "制作一张清晰易读的中文科普海报，标题为“太阳系”，依次展示并标注八大行星：水星、金星、地球、火星、木星、土星、天王星、海王星。使用简洁的白色背景和彩色图标。\n\n请检查这张初始信息图是否符合上述要求，修正可见文字中的错别字、乱码、漏字、多字及其他不符合要求的内容。",
+      "mode": "image",
+      "thinking": false,
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "TextEncodeSenseNova"
+  },
+  "5": {
+    "inputs": {
+      "text": "",
+      "mode": "image",
+      "thinking": false,
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "TextEncodeSenseNova"
+  },
+  "7": {
+    "inputs": {
+      "width": 2048,
+      "height": 2048,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage"
+  },
+  "40": {
+    "inputs": {
+      "mode": "simple",
+      "mode.num_iterations": 4,
+      "cache_iterations": false,
+      "initial_iteration_value": [
+        "41",
+        0
+      ]
+    },
+    "class_type": "StartLoop",
+    "_loop_body": [
+      "42",
+      "43",
+      "44",
+      "45",
+      "46",
+      "47",
+      "48",
+      "53"
+    ],
+    "_loop_end": "55"
+  },
+  "41": {
+    "inputs": {
+      "inputs.input0": [
+        "14",
+        0
+      ],
+      "inputs.input1": [
+        "14",
+        1
+      ]
+    },
+    "class_type": "CreateList"
+  },
+  "42": {
+    "inputs": {
+      "index": 0,
+      "list": [
+        "40",
+        4
+      ]
+    },
+    "class_type": "GetItemFromList"
+  },
+  "43": {
+    "inputs": {
+      "index": 1,
+      "list": [
+        "40",
+        4
+      ]
+    },
+    "class_type": "GetItemFromList"
+  },
+  "44": {
+    "inputs": {
+      "index": 2,
+      "list": [
+        "40",
+        4
+      ]
+    },
+    "class_type": "GetItemFromList"
+  },
+  "45": {
+    "inputs": {
+      "switch": [
+        "40",
+        1
+      ],
+      "on_false": [
+        "44",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode"
+  },
+  "46": {
+    "inputs": {
+      "max_think_tokens": 4096,
+      "model": [
+        "1",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ],
+      "conditioning": [
+        "42",
+        0
+      ],
+      "negative": [
+        "43",
+        0
+      ],
+      "samples": [
+        "45",
+        0
+      ],
+      "generation_mode": "interleave"
+    },
+    "class_type": "TextGenerateSenseNova"
+  },
+  "47": {
+    "inputs": {
+      "seed": [
+        "63",
+        1
+      ],
+      "steps": 50,
+      "cfg": 4,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "3",
+        0
+      ],
+      "positive": [
+        "46",
+        0
+      ],
+      "negative": [
+        "46",
+        2
+      ],
+      "latent_image": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "48": {
+    "inputs": {
+      "switch": [
+        "46",
+        3
+      ],
+      "on_true": [
+        "47",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode"
+  },
+  "53": {
+    "inputs": {
+      "inputs.input0": [
+        "46",
+        0
+      ],
+      "inputs.input1": [
+        "46",
+        2
+      ],
+      "inputs.input2": [
+        "48",
+        0
+      ]
+    },
+    "class_type": "CreateList"
+  },
+  "55": {
+    "inputs": {
+      "accumulate": false,
+      "output_value": [
+        "53",
+        0
+      ],
+      "next_iteration_value": [
+        "53",
+        0
+      ]
+    },
+    "class_type": "EndLoop"
+  },
+  "56": {
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "conditioning": [
+        "60",
+        0
+      ],
+      "samples": [
+        "61",
+        0
+      ]
+    },
+    "class_type": "SenseNovaInterleaveDecode"
+  },
+  "57": {
+    "inputs": {
+      "source": [
+        "56",
+        0
+      ]
+    },
+    "class_type": "PreviewAny"
+  },
+  "58": {
+    "inputs": {
+      "filename_prefix": "SenseNova-U1.6/self-correction-image-input",
+      "images": [
+        "56",
+        1
+      ]
+    },
+    "class_type": "SaveImage"
+  },
+  "59": {
+    "inputs": {
+      "source": [
+        "56",
+        2
+      ]
+    },
+    "class_type": "PreviewAny"
+  },
+  "60": {
+    "inputs": {
+      "index": 0,
+      "list": [
+        "55",
+        0
+      ]
+    },
+    "class_type": "GetItemFromList"
+  },
+  "61": {
+    "inputs": {
+      "index": 2,
+      "list": [
+        "55",
+        0
+      ]
+    },
+    "class_type": "GetItemFromList"
+  },
+  "62": {
+    "inputs": {
+      "seed": 42
+    },
+    "class_type": "SeedNode"
+  },
+  "63": {
+    "inputs": {
+      "expression": "a + b",
+      "values.a": [
+        "62",
+        0
+      ],
+      "values.b": [
+        "40",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression"
+  },
+  "12": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "self-correction-input.png"
+    }
+  },
+  "14": {
+    "class_type": "HiDreamO1ReferenceImages",
+    "inputs": {
+      "positive": [
+        "4",
+        0
+      ],
+      "negative": [
+        "5",
+        0
+      ],
+      "images.image_1": [
+        "12",
+        0
+      ]
+    }
+  }
+}

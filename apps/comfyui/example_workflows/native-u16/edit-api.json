@@ -1,0 +1,167 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "SenseNova-U1.6-8B-MoT-BF16-step1200.safetensors"
+    }
+  },
+  "3": {
+    "class_type": "ModelSamplingSenseNova",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "shift": 3
+    }
+  },
+  "4": {
+    "class_type": "TextEncodeSenseNova",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "Change the jacket of the person on the left to bright yellow.",
+      "mode": "image",
+      "thinking": false
+    }
+  },
+  "5": {
+    "class_type": "TextEncodeSenseNova",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "",
+      "mode": "image",
+      "thinking": false
+    }
+  },
+  "6": {
+    "class_type": "TextGenerateSenseNova",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ],
+      "conditioning": [
+        "14",
+        0
+      ],
+      "negative": [
+        "14",
+        1
+      ],
+      "max_think_tokens": 1024,
+      "generation_mode": "image"
+    }
+  },
+  "7": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 832,
+      "height": 1248,
+      "batch_size": 1
+    }
+  },
+  "8": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "3",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "6",
+        2
+      ],
+      "latent_image": [
+        "7",
+        0
+      ],
+      "seed": 45,
+      "steps": 30,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1
+    }
+  },
+  "9": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "8",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    }
+  },
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "9",
+        0
+      ],
+      "filename_prefix": "SenseNova-U1.6/edit"
+    }
+  },
+  "11": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": [
+        "6",
+        1
+      ]
+    }
+  },
+  "12": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "nova_editor_example.webp"
+    }
+  },
+  "13": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "12",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1,
+      "resolution_steps": 32
+    }
+  },
+  "14": {
+    "class_type": "HiDreamO1ReferenceImages",
+    "inputs": {
+      "positive": [
+        "4",
+        0
+      ],
+      "negative": [
+        "5",
+        0
+      ],
+      "images.image_1": [
+        "13",
+        0
+      ]
+    }
+  }
+}

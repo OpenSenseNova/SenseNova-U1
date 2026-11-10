@@ -99,7 +99,7 @@
     },
     {
       "id": 3,
-      "type": "SenseNovaSamplingOptions",
+      "type": "ModelSamplingSenseNova",
       "pos": [
         973.4576171875,
         130
@@ -128,7 +128,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaSamplingOptions"
+        "Node name for S&R": "ModelSamplingSenseNova"
       },
       "widgets_values": [
         3
@@ -139,7 +139,7 @@
     },
     {
       "id": 4,
-      "type": "SenseNovaTextEncode",
+      "type": "TextEncodeSenseNova",
       "pos": [
         473.4576171875,
         342
@@ -169,7 +169,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaTextEncode"
+        "Node name for S&R": "TextEncodeSenseNova"
       },
       "widgets_values": [
         "Change the jacket of the person on the left to bright yellow.",
@@ -184,7 +184,7 @@
     },
     {
       "id": 5,
-      "type": "SenseNovaTextEncode",
+      "type": "TextEncodeSenseNova",
       "pos": [
         474.6684070181261,
         606.2616796334428
@@ -214,7 +214,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaTextEncode"
+        "Node name for S&R": "TextEncodeSenseNova"
       },
       "widgets_values": [
         "",
@@ -229,7 +229,7 @@
     },
     {
       "id": 6,
-      "type": "SenseNovaGenerate",
+      "type": "TextGenerateSenseNova",
       "pos": [
         1343.4576171875,
         130
@@ -279,7 +279,7 @@
           ]
         },
         {
-          "name": "thinking",
+          "name": "generated_text",
           "type": "STRING",
           "links": [
             16
@@ -299,13 +299,15 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaGenerate"
+        "Node name for S&R": "TextGenerateSenseNova"
       },
       "widgets_values": [
-        1024
+        1024,
+        "image"
       ],
       "widgets_values_named": {
-        "max_think_tokens": 1024
+        "max_think_tokens": 1024,
+        "generation_mode": "image"
       }
     },
     {

@@ -1,8 +1,8 @@
 {
   "id": "58f303a0-37fa-4162-aa23-aab9bb090ce9",
   "revision": 0,
-  "last_node_id": 61,
-  "last_link_id": 41,
+  "last_node_id": 63,
+  "last_link_id": 44,
   "nodes": [
     {
       "id": 1,
@@ -41,9 +41,7 @@
         {
           "name": "VAE",
           "type": "VAE",
-          "links": [
-            25
-          ]
+          "links": null
         }
       ],
       "properties": {
@@ -100,7 +98,7 @@
     },
     {
       "id": 3,
-      "type": "SenseNovaSamplingOptions",
+      "type": "ModelSamplingSenseNova",
       "pos": [
         973.4576171875,
         130
@@ -129,7 +127,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaSamplingOptions"
+        "Node name for S&R": "ModelSamplingSenseNova"
       },
       "widgets_values": [
         3
@@ -140,7 +138,7 @@
     },
     {
       "id": 4,
-      "type": "SenseNovaTextEncode",
+      "type": "TextEncodeSenseNova",
       "pos": [
         473.4576171875,
         342
@@ -170,7 +168,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaTextEncode"
+        "Node name for S&R": "TextEncodeSenseNova"
       },
       "widgets_values": [
         "请生成三张香氛蜡烛产品宣传图：产品细节、自然窗台、温馨客厅。最后简短介绍三张图。",
@@ -185,7 +183,7 @@
     },
     {
       "id": 5,
-      "type": "SenseNovaTextEncode",
+      "type": "TextEncodeSenseNova",
       "pos": [
         462.6208896994577,
         600.0658311389416
@@ -215,7 +213,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaTextEncode"
+        "Node name for S&R": "TextEncodeSenseNova"
       },
       "widgets_values": [
         "",
@@ -298,7 +296,9 @@
         {
           "name": "iteration_index",
           "type": "INT",
-          "links": null
+          "links": [
+            43
+          ]
         },
         {
           "name": "is_first",
@@ -565,7 +565,7 @@
     },
     {
       "id": 46,
-      "type": "SenseNovaGenerate",
+      "type": "TextGenerateSenseNova",
       "pos": [
         1965.7983810297933,
         383.6415016720182
@@ -616,7 +616,7 @@
           ]
         },
         {
-          "name": "thinking",
+          "name": "generated_text",
           "type": "STRING",
           "links": null
         },
@@ -632,19 +632,20 @@
           "name": "image_requested",
           "type": "BOOLEAN",
           "links": [
-            22,
-            26
+            22
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaGenerate"
+        "Node name for S&R": "TextGenerateSenseNova"
       },
       "widgets_values": [
-        2048
+        2048,
+        "interleave"
       ],
       "widgets_values_named": {
-        "max_think_tokens": 2048
+        "max_think_tokens": 2048,
+        "generation_mode": "interleave"
       }
     },
     {
@@ -681,6 +682,14 @@
           "name": "latent_image",
           "type": "LATENT",
           "link": 21
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": 44
         }
       ],
       "outputs": [
@@ -688,8 +697,7 @@
           "name": "LATENT",
           "type": "LATENT",
           "links": [
-            23,
-            24
+            23
           ]
         }
       ],
@@ -697,8 +705,8 @@
         "Node name for S&R": "KSampler"
       },
       "widgets_values": [
-        933648719849645,
-        "randomize",
+        41,
+        "fixed",
         8,
         1,
         "euler",
@@ -706,8 +714,8 @@
         1
       ],
       "widgets_values_named": {
-        "seed": 933648719849645,
-        "control_after_generate": "randomize",
+        "seed": 41,
+        "control_after_generate": "fixed",
         "steps": 8,
         "cfg": 1,
         "sampler_name": "euler",
@@ -771,100 +779,6 @@
       }
     },
     {
-      "id": 49,
-      "type": "VAEDecode",
-      "pos": [
-        2608.702501863122,
-        531.6568197546411
-      ],
-      "size": [
-        140,
-        46
-      ],
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 24
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": 25
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            27
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAEDecode"
-      }
-    },
-    {
-      "id": 50,
-      "type": "ComfySwitchNode",
-      "pos": [
-        2596.311909930194,
-        661.0022729864093
-      ],
-      "size": [
-        270,
-        78
-      ],
-      "flags": {},
-      "order": 16,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "on_false",
-          "shape": 7,
-          "type": "IMAGE",
-          "link": null
-        },
-        {
-          "name": "on_true",
-          "shape": 7,
-          "type": "*",
-          "link": 27
-        },
-        {
-          "name": "switch",
-          "type": "BOOLEAN",
-          "widget": {
-            "name": "switch"
-          },
-          "link": 26
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "IMAGE",
-          "links": [
-            31
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ComfySwitchNode"
-      },
-      "widgets_values": [
-        false
-      ],
-      "widgets_values_named": {
-        "switch": false
-      }
-    },
-    {
       "id": 53,
       "type": "CreateList",
       "pos": [
@@ -898,12 +812,6 @@
         },
         {
           "name": "inputs.input3",
-          "shape": 7,
-          "type": "*",
-          "link": 31
-        },
-        {
-          "name": "inputs.input4",
           "shape": 7,
           "type": "*",
           "link": null
@@ -981,7 +889,7 @@
     },
     {
       "id": 56,
-      "type": "SenseNovaDecode",
+      "type": "SenseNovaInterleaveDecode",
       "pos": [
         3787.446969218106,
         392.6792048140011
@@ -1005,9 +913,9 @@
           "link": 35
         },
         {
-          "name": "image",
+          "name": "samples",
           "shape": 7,
-          "type": "IMAGE",
+          "type": "LATENT",
           "link": 36
         }
       ],
@@ -1036,7 +944,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaDecode"
+        "Node name for S&R": "SenseNovaInterleaveDecode"
       }
     },
     {
@@ -1217,10 +1125,110 @@
         "Node name for S&R": "GetItemFromList"
       },
       "widgets_values": [
-        3
+        2
       ],
       "widgets_values_named": {
-        "index": 3
+        "index": 2
+      }
+    },
+    {
+      "id": 62,
+      "type": "SeedNode",
+      "pos": [
+        100,
+        1100
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "seed",
+          "type": "INT",
+          "links": [
+            42
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SeedNode"
+      },
+      "title": "基础 Seed（固定，便于对照）",
+      "widgets_values": [
+        41,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "seed": 41,
+        "control_after_generate": "fixed"
+      }
+    },
+    {
+      "id": 63,
+      "type": "ComfyMathExpression",
+      "pos": [
+        500,
+        1100
+      ],
+      "size": [
+        300,
+        150
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 42
+        },
+        {
+          "name": "values.b",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 43
+        },
+        {
+          "name": "values.c",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            44
+          ]
+        },
+        {
+          "name": "BOOL",
+          "type": "BOOLEAN",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfyMathExpression"
+      },
+      "title": "每轮 Seed = 基础 Seed + 循环序号",
+      "widgets_values": [
+        "a + b"
+      ],
+      "widgets_values_named": {
+        "expression": "a + b"
       }
     }
   ],
@@ -1410,38 +1418,6 @@
       "LATENT"
     ],
     [
-      24,
-      47,
-      0,
-      49,
-      0,
-      "LATENT"
-    ],
-    [
-      25,
-      1,
-      2,
-      49,
-      1,
-      "VAE"
-    ],
-    [
-      26,
-      46,
-      3,
-      50,
-      2,
-      "BOOLEAN"
-    ],
-    [
-      27,
-      49,
-      0,
-      50,
-      1,
-      "IMAGE"
-    ],
-    [
       28,
       46,
       0,
@@ -1464,14 +1440,6 @@
       53,
       2,
       "LATENT"
-    ],
-    [
-      31,
-      50,
-      0,
-      53,
-      3,
-      "IMAGE"
     ],
     [
       32,
@@ -1511,7 +1479,7 @@
       0,
       56,
       2,
-      "IMAGE"
+      "LATENT"
     ],
     [
       37,
@@ -1552,6 +1520,30 @@
       61,
       0,
       "*"
+    ],
+    [
+      42,
+      62,
+      0,
+      63,
+      0,
+      "INT"
+    ],
+    [
+      43,
+      40,
+      0,
+      63,
+      1,
+      "INT"
+    ],
+    [
+      44,
+      63,
+      1,
+      47,
+      4,
+      "INT"
     ]
   ],
   "groups": [],

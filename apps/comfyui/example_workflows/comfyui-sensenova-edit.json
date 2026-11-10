@@ -17,7 +17,7 @@
     }
   },
   "3": {
-    "class_type": "SenseNovaSamplingOptions",
+    "class_type": "ModelSamplingSenseNova",
     "inputs": {
       "model": [
         "2",
@@ -27,7 +27,7 @@
     }
   },
   "4": {
-    "class_type": "SenseNovaTextEncode",
+    "class_type": "TextEncodeSenseNova",
     "inputs": {
       "clip": [
         "1",
@@ -39,7 +39,7 @@
     }
   },
   "5": {
-    "class_type": "SenseNovaTextEncode",
+    "class_type": "TextEncodeSenseNova",
     "inputs": {
       "clip": [
         "1",
@@ -51,7 +51,7 @@
     }
   },
   "6": {
-    "class_type": "SenseNovaGenerate",
+    "class_type": "TextGenerateSenseNova",
     "inputs": {
       "model": [
         "1",
@@ -69,7 +69,8 @@
         "14",
         1
       ],
-      "max_think_tokens": 1024
+      "max_think_tokens": 1024,
+      "generation_mode": "image"
     }
   },
   "7": {

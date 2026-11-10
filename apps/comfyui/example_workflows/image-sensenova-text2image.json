@@ -99,7 +99,7 @@
     },
     {
       "id": 3,
-      "type": "SenseNovaSamplingOptions",
+      "type": "ModelSamplingSenseNova",
       "pos": [
         973.4576171875,
         130
@@ -128,7 +128,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaSamplingOptions"
+        "Node name for S&R": "ModelSamplingSenseNova"
       },
       "widgets_values": [
         3
@@ -139,7 +139,7 @@
     },
     {
       "id": 4,
-      "type": "SenseNovaTextEncode",
+      "type": "TextEncodeSenseNova",
       "pos": [
         464.95445897093725,
         318.2804358209746
@@ -169,7 +169,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaTextEncode"
+        "Node name for S&R": "TextEncodeSenseNova"
       },
       "widgets_values": [
         "A studio photograph of a red apple on a white table, soft daylight.",
@@ -184,7 +184,7 @@
     },
     {
       "id": 5,
-      "type": "SenseNovaTextEncode",
+      "type": "TextEncodeSenseNova",
       "pos": [
         466.4674961122998,
         565.2584523193744
@@ -214,22 +214,22 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaTextEncode"
+        "Node name for S&R": "TextEncodeSenseNova"
       },
       "widgets_values": [
         "",
         "image",
-        true
+        false
       ],
       "widgets_values_named": {
         "text": "",
         "mode": "image",
-        "thinking": true
+        "thinking": false
       }
     },
     {
       "id": 6,
-      "type": "SenseNovaGenerate",
+      "type": "TextGenerateSenseNova",
       "pos": [
         973.4576171875,
         318
@@ -280,7 +280,7 @@
           ]
         },
         {
-          "name": "thinking",
+          "name": "generated_text",
           "type": "STRING",
           "links": [
             16
@@ -300,13 +300,15 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "SenseNovaGenerate"
+        "Node name for S&R": "TextGenerateSenseNova"
       },
       "widgets_values": [
-        1024
+        1024,
+        "image"
       ],
       "widgets_values_named": {
-        "max_think_tokens": 1024
+        "max_think_tokens": 1024,
+        "generation_mode": "image"
       }
     },
     {

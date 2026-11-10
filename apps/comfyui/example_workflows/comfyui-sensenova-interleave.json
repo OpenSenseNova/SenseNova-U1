@@ -30,9 +30,9 @@
         0
       ]
     },
-    "class_type": "SenseNovaSamplingOptions",
+    "class_type": "ModelSamplingSenseNova",
     "_meta": {
-      "title": "SenseNova 采样选项"
+      "title": "ModelSamplingSenseNova"
     }
   },
   "4": {
@@ -45,9 +45,9 @@
         1
       ]
     },
-    "class_type": "SenseNovaTextEncode",
+    "class_type": "TextEncodeSenseNova",
     "_meta": {
-      "title": "SenseNova Text Encode"
+      "title": "Text Encode SenseNova"
     }
   },
   "5": {
@@ -60,9 +60,9 @@
         1
       ]
     },
-    "class_type": "SenseNovaTextEncode",
+    "class_type": "TextEncodeSenseNova",
     "_meta": {
-      "title": "SenseNova Text Encode"
+      "title": "Text Encode SenseNova"
     }
   },
   "7": {
@@ -195,11 +195,12 @@
       "samples": [
         "45",
         0
-      ]
+      ],
+      "generation_mode": "interleave"
     },
-    "class_type": "SenseNovaGenerate",
+    "class_type": "TextGenerateSenseNova",
     "_meta": {
-      "title": "SenseNova Generate"
+      "title": "Generate SenseNova Text"
     }
   },
   "47": {
@@ -303,9 +304,9 @@
         0
       ]
     },
-    "class_type": "SenseNovaDecode",
+    "class_type": "SenseNovaInterleaveDecode",
     "_meta": {
-      "title": "SenseNova Decode"
+      "title": "SenseNova Interleave Decode"
     }
   },
   "57": {

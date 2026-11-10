@@ -72,6 +72,10 @@ source from the symlink location.
 
 ## Workflows
 
+For the native ComfyUI implementation (`CheckpointLoaderSimple` + `KSampler`),
+see the [native workflow guide](example_workflows/NATIVE_WORKFLOWS.md), including
+U1.5 UI/API templates and U1.6 self-correction API graphs with the current node IDs.
+
 Example workflows live in `example_workflows/`. Each links to a screenshot of the loaded graph in `docs/`:
 
 | Workflow | Description | Preview |
