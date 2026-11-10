@@ -138,7 +138,7 @@ class NEOVisionEmbeddings(nn.Module):
         # Transformers 5, ``from_pretrained`` constructs models on the meta
         # device; tensors computed here would later be materialized as
         # uninitialized memory because persistent=False buffers are absent
-        # from the checkpoint.  Build them lazily on the first real device.
+        # from the checkpoint.  Build CPU tables lazily once real tensors are available.
         self.register_buffer("cos_cached_x", None, persistent=False)
         self.register_buffer("sin_cached_x", None, persistent=False)
         self.register_buffer("cos_cached_y", None, persistent=False)
@@ -152,8 +152,11 @@ class NEOVisionEmbeddings(nn.Module):
             self.rope_dim_part,
             self.max_position_embeddings_vision,
             base=self.rope_theta_vision,
-            device=device,
+            device="cpu",
         )
+        # Match the checkpoint implementation's CPU FP32 tables, while keeping
+        # lazy construction for Transformers meta-device loading.
+        cos, sin = cos.to(device), sin.to(device)
         self.cos_cached_x = cos
         self.sin_cached_x = sin
         self.cos_cached_y = cos.clone()
