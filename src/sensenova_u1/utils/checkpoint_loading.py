@@ -360,6 +360,23 @@ def load_model_and_tokenizer(
             max_memory=max_memory,
             for_offload=for_offload,
         )
+    elif (
+        not device_map
+        and not for_offload
+        and torch.device(device).type == "mps"
+        and (shards := _sharded_safetensors_files(artifact.weights_path))
+    ):
+        # Memory-safe path for unified-memory Macs: never materialize the full
+        # (fp32) checkpoint; stream shard by shard, casting to ``dtype``.
+        model = _load_from_safetensors(
+            config,
+            shards,
+            dtype=dtype,
+            device=device,
+            device_map=None,
+            max_memory=None,
+            for_offload=False,
+        )
     else:
         model_kwargs: dict[str, Any] = {"config": config, **pretrained_dtype_kwargs(dtype)}
         if device_map:
@@ -381,9 +398,18 @@ def load_model_and_tokenizer(
     return model, tokenizer
 
 
+def _sharded_safetensors_files(weights_path: str) -> list[str] | None:
+    """Return shard paths for a local HF directory with a Safetensors index, else None."""
+    index_path = Path(weights_path) / "model.safetensors.index.json"
+    if not index_path.is_file():
+        return None
+    weight_map = json.loads(index_path.read_text())["weight_map"]
+    return [str(Path(weights_path) / name) for name in sorted(set(weight_map.values()))]
+
+
 def _load_from_safetensors(
     config,
-    checkpoint: str,
+    checkpoint: str | list[str],
     *,
     dtype: torch.dtype,
     device: str | torch.device | None,
@@ -438,20 +464,27 @@ def _load_from_safetensors(
     expected = set(model.state_dict())
     loaded: set[str] = set()
     unexpected: list[str] = []
-    with safe_open(checkpoint, framework="pt", device="cpu") as weights:
-        for name in weights.keys():
-            if name not in expected:
-                unexpected.append(name)
-                continue
-            tensor = weights.get_tensor(name)
-            set_module_tensor_to_device(
-                model,
-                name,
-                _device_for_tensor(name, target_map),
-                value=tensor,
-                dtype=dtype,
-            )
-            loaded.add(name)
+    shards = [checkpoint] if isinstance(checkpoint, str) else checkpoint
+    for shard in shards:
+        # One shard at a time; each tensor is cast to ``dtype`` on its target
+        # device and the source (fp32) tensor is freed before the next one.
+        with safe_open(shard, framework="pt", device="cpu") as weights:
+            for name in weights.keys():
+                if name not in expected:
+                    unexpected.append(name)
+                    continue
+                tensor = weights.get_tensor(name)
+                set_module_tensor_to_device(
+                    model,
+                    name,
+                    _device_for_tensor(name, target_map),
+                    value=tensor,
+                    dtype=dtype,
+                )
+                del tensor
+                loaded.add(name)
+        gc.collect()
+        LOGGER.info("Loaded shard %s (%d/%d tensors)", Path(shard).name, len(loaded), len(expected))
 
     if hasattr(model, "tie_weights"):
         model.tie_weights()
@@ -469,6 +502,9 @@ def _load_from_safetensors(
 
     if len(set(target_map.values())) > 1:
         model = dispatch_model(model, device_map=target_map)
+    elif not device_map and not for_offload and torch.device(target_map[""]).type == "mps":
+        # Non-persistent buffers (e.g. RoPE tables) are not in the checkpoint.
+        model = model.to(target_map[""])
     return model.eval()
 
 

@@ -69,6 +69,14 @@ def set_gguf2meta_model(
     hf_quantizer = GGUFQuantizer(quantization_config=g_config)
     hf_quantizer.pre_quantized = True  # required: weights are already quantized
 
+    # Cast plain (non-quantized) tensors on the CPU first. A cast fused into the
+    # host-to-device copy returns garbage on MPS (torch 2.8).
+    from diffusers.quantizers.gguf.utils import GGUFParameter
+
+    for key, value in model_state_dict.items():
+        if not isinstance(value, GGUFParameter) and value.is_floating_point():
+            model_state_dict[key] = value.to(dtype or torch.bfloat16)
+
     device_map = {"": device} if device is not None else None
     hf_quantizer._process_model_before_weight_loading(meta_model, device_map=device_map, state_dict=model_state_dict)
     load_model_dict_into_meta(
@@ -79,6 +87,13 @@ def set_gguf2meta_model(
         dtype=dtype,
     )
     hf_quantizer._process_model_after_weight_loading(meta_model)
+
+    # Host-to-device copies can be asynchronous (notably on MPS). Wait for them
+    # before the CPU source tensors are freed, or small tensors read garbage.
+    if device is not None:
+        from . import accel
+
+        accel.synchronize(device)
 
     del model_state_dict
     gc.collect()
