@@ -1,0 +1,135 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "SenseNova-U1.5-8B-MoT-BF16-T8.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "lora_name": "SenseNova-U1.5-8B-MoT-LoRA-8step-ComfyUI.safetensors",
+      "strength_model": 1
+    }
+  },
+  "3": {
+    "class_type": "ModelSamplingSenseNova",
+    "inputs": {
+      "model": [
+        "2",
+        0
+      ],
+      "shift": 3
+    }
+  },
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "A studio photograph of a red apple on a white table, soft daylight."
+    }
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": ""
+    }
+  },
+  "6": {
+    "class_type": "TextGenerateSenseNova",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ],
+      "conditioning": [
+        "4",
+        0
+      ],
+      "task": "image thinking",
+      "max_tokens": 1024
+    }
+  },
+  "7": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "8": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "3",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "5",
+        0
+      ],
+      "latent_image": [
+        "7",
+        0
+      ],
+      "seed": 42,
+      "steps": 8,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1
+    }
+  },
+  "9": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "8",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    }
+  },
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "9",
+        0
+      ],
+      "filename_prefix": "SenseNova/token-regression-t2i"
+    }
+  },
+  "11": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": [
+        "6",
+        1
+      ]
+    }
+  }
+}

@@ -18,26 +18,22 @@
   "4": {
     "inputs": {
       "text": "请生成三张香氛蜡烛产品宣传图：产品细节、自然窗台、温馨客厅。最后简短介绍三张图。",
-      "mode": "interleave",
-      "thinking": true,
       "clip": [
         "1",
         1
       ]
     },
-    "class_type": "TextEncodeSenseNova"
+    "class_type": "CLIPTextEncode"
   },
   "5": {
     "inputs": {
       "text": "",
-      "mode": "interleave",
-      "thinking": false,
       "clip": [
         "1",
         1
       ]
     },
-    "class_type": "TextEncodeSenseNova"
+    "class_type": "CLIPTextEncode"
   },
   "7": {
     "inputs": {
@@ -128,7 +124,6 @@
   },
   "46": {
     "inputs": {
-      "max_think_tokens": 1024,
       "model": [
         "1",
         0
@@ -141,15 +136,17 @@
         "42",
         0
       ],
-      "negative": [
+      "task": "interleave",
+      "task.negative": [
         "43",
         0
       ],
-      "samples": [
+      "task.samples": [
         "45",
         0
       ],
-      "generation_mode": "interleave"
+      "task.thinking": true,
+      "max_tokens": 1024
     },
     "class_type": "TextGenerateSenseNova"
   },

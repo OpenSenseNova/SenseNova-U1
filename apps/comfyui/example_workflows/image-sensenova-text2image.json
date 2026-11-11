@@ -24,8 +24,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            1,
-            5
+            1
           ]
         },
         {
@@ -33,8 +32,7 @@
           "type": "CLIP",
           "links": [
             3,
-            4,
-            6
+            4
           ]
         },
         {
@@ -139,7 +137,7 @@
     },
     {
       "id": 4,
-      "type": "TextEncodeSenseNova",
+      "type": "CLIPTextEncode",
       "pos": [
         464.95445897093725,
         318.2804358209746
@@ -164,27 +162,23 @@
           "name": "CONDITIONING",
           "type": "CONDITIONING",
           "links": [
-            7
+            10
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "TextEncodeSenseNova"
+        "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        "A studio photograph of a red apple on a white table, soft daylight.",
-        "image",
-        true
+        "A studio photograph of a red apple on a white table, soft daylight."
       ],
       "widgets_values_named": {
-        "text": "A studio photograph of a red apple on a white table, soft daylight.",
-        "mode": "image",
-        "thinking": true
+        "text": "A studio photograph of a red apple on a white table, soft daylight."
       }
     },
     {
       "id": 5,
-      "type": "TextEncodeSenseNova",
+      "type": "CLIPTextEncode",
       "pos": [
         466.4674961122998,
         565.2584523193744
@@ -209,106 +203,18 @@
           "name": "CONDITIONING",
           "type": "CONDITIONING",
           "links": [
-            8
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "TextEncodeSenseNova"
-      },
-      "widgets_values": [
-        "",
-        "image",
-        false
-      ],
-      "widgets_values_named": {
-        "text": "",
-        "mode": "image",
-        "thinking": false
-      }
-    },
-    {
-      "id": 6,
-      "type": "TextGenerateSenseNova",
-      "pos": [
-        973.4576171875,
-        318
-      ],
-      "size": [
-        272.49609375,
-        138
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "showAdvanced": true,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 5
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 6
-        },
-        {
-          "name": "conditioning",
-          "type": "CONDITIONING",
-          "link": 7
-        },
-        {
-          "name": "negative",
-          "shape": 7,
-          "type": "CONDITIONING",
-          "link": 8
-        },
-        {
-          "name": "samples",
-          "shape": 7,
-          "type": "LATENT",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "conditioning",
-          "type": "CONDITIONING",
-          "links": [
-            10
-          ]
-        },
-        {
-          "name": "generated_text",
-          "type": "STRING",
-          "links": [
-            16
-          ]
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "links": [
             11
           ]
-        },
-        {
-          "name": "image_requested",
-          "type": "BOOLEAN",
-          "links": null
         }
       ],
       "properties": {
-        "Node name for S&R": "TextGenerateSenseNova"
+        "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        1024,
-        "image"
+        ""
       ],
       "widgets_values_named": {
-        "max_think_tokens": 1024,
-        "generation_mode": "image"
+        "text": ""
       }
     },
     {
@@ -490,40 +396,6 @@
       "widgets_values_named": {
         "filename_prefix": "SenseNova/token-regression-t2i"
       }
-    },
-    {
-      "id": 11,
-      "type": "PreviewAny",
-      "pos": [
-        1897.0852905503689,
-        122.56706358793969
-      ],
-      "size": [
-        463.78589250257335,
-        401.9999193074313
-      ],
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "source",
-          "type": "*",
-          "link": 16
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": null
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewAny"
-      },
-      "widgets_values": [],
-      "widgets_values_named": {}
     }
   ],
   "links": [
@@ -560,38 +432,6 @@
       "CLIP"
     ],
     [
-      5,
-      1,
-      0,
-      6,
-      0,
-      "MODEL"
-    ],
-    [
-      6,
-      1,
-      1,
-      6,
-      1,
-      "CLIP"
-    ],
-    [
-      7,
-      4,
-      0,
-      6,
-      2,
-      "CONDITIONING"
-    ],
-    [
-      8,
-      5,
-      0,
-      6,
-      3,
-      "CONDITIONING"
-    ],
-    [
       9,
       3,
       0,
@@ -601,7 +441,7 @@
     ],
     [
       10,
-      6,
+      4,
       0,
       8,
       1,
@@ -609,8 +449,8 @@
     ],
     [
       11,
-      6,
-      2,
+      5,
+      0,
       8,
       2,
       "CONDITIONING"
@@ -646,14 +486,6 @@
       10,
       0,
       "IMAGE"
-    ],
-    [
-      16,
-      6,
-      1,
-      11,
-      0,
-      "STRING"
     ]
   ],
   "groups": [],

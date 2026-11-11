@@ -24,8 +24,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            1,
-            5
+            1
           ]
         },
         {
@@ -33,8 +32,7 @@
           "type": "CLIP",
           "links": [
             3,
-            4,
-            6
+            4
           ]
         },
         {
@@ -139,7 +137,7 @@
     },
     {
       "id": 4,
-      "type": "TextEncodeSenseNova",
+      "type": "CLIPTextEncode",
       "pos": [
         473.4576171875,
         342
@@ -169,22 +167,18 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "TextEncodeSenseNova"
+        "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        "Change the jacket of the person on the left to bright yellow.",
-        "image",
-        true
+        "Change the jacket of the person on the left to bright yellow."
       ],
       "widgets_values_named": {
-        "text": "Change the jacket of the person on the left to bright yellow.",
-        "mode": "image",
-        "thinking": true
+        "text": "Change the jacket of the person on the left to bright yellow."
       }
     },
     {
       "id": 5,
-      "type": "TextEncodeSenseNova",
+      "type": "CLIPTextEncode",
       "pos": [
         474.6684070181261,
         606.2616796334428
@@ -214,100 +208,13 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "TextEncodeSenseNova"
+        "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        "",
-        "image",
-        false
+        ""
       ],
       "widgets_values_named": {
-        "text": "",
-        "mode": "image",
-        "thinking": false
-      }
-    },
-    {
-      "id": 6,
-      "type": "TextGenerateSenseNova",
-      "pos": [
-        1343.4576171875,
-        130
-      ],
-      "size": [
-        272.49609375,
-        138
-      ],
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 5
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 6
-        },
-        {
-          "name": "conditioning",
-          "type": "CONDITIONING",
-          "link": 7
-        },
-        {
-          "name": "negative",
-          "shape": 7,
-          "type": "CONDITIONING",
-          "link": 8
-        },
-        {
-          "name": "samples",
-          "shape": 7,
-          "type": "LATENT",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "conditioning",
-          "type": "CONDITIONING",
-          "links": [
-            10
-          ]
-        },
-        {
-          "name": "generated_text",
-          "type": "STRING",
-          "links": [
-            16
-          ]
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "links": [
-            11
-          ]
-        },
-        {
-          "name": "image_requested",
-          "type": "BOOLEAN",
-          "links": null
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "TextGenerateSenseNova"
-      },
-      "widgets_values": [
-        1024,
-        "image"
-      ],
-      "widgets_values_named": {
-        "max_think_tokens": 1024,
-        "generation_mode": "image"
+        "text": ""
       }
     },
     {
@@ -491,40 +398,6 @@
       }
     },
     {
-      "id": 11,
-      "type": "PreviewAny",
-      "pos": [
-        2000.7920185922962,
-        340.9120210586297
-      ],
-      "size": [
-        293.4398815824063,
-        527.6811643792028
-      ],
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "source",
-          "type": "*",
-          "link": 16
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": null
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewAny"
-      },
-      "widgets_values": [],
-      "widgets_values_named": {}
-    },
-    {
       "id": 12,
       "type": "LoadImage",
       "pos": [
@@ -652,14 +525,14 @@
           "name": "positive",
           "type": "CONDITIONING",
           "links": [
-            7
+            10
           ]
         },
         {
           "name": "negative",
           "type": "CONDITIONING",
           "links": [
-            8
+            11
           ]
         }
       ],
@@ -702,38 +575,6 @@
       "CLIP"
     ],
     [
-      5,
-      1,
-      0,
-      6,
-      0,
-      "MODEL"
-    ],
-    [
-      6,
-      1,
-      1,
-      6,
-      1,
-      "CLIP"
-    ],
-    [
-      7,
-      14,
-      0,
-      6,
-      2,
-      "CONDITIONING"
-    ],
-    [
-      8,
-      14,
-      1,
-      6,
-      3,
-      "CONDITIONING"
-    ],
-    [
       9,
       3,
       0,
@@ -743,7 +584,7 @@
     ],
     [
       10,
-      6,
+      14,
       0,
       8,
       1,
@@ -751,8 +592,8 @@
     ],
     [
       11,
-      6,
-      2,
+      14,
+      1,
       8,
       2,
       "CONDITIONING"
@@ -788,14 +629,6 @@
       10,
       0,
       "IMAGE"
-    ],
-    [
-      16,
-      6,
-      1,
-      11,
-      0,
-      "STRING"
     ],
     [
       17,

@@ -18,26 +18,22 @@
   "4": {
     "inputs": {
       "text": "制作一张清晰易读的中文科普海报，标题为“太阳系”，依次展示并标注八大行星：水星、金星、地球、火星、木星、土星、天王星、海王星。使用简洁的白色背景和彩色图标。",
-      "mode": "image",
-      "thinking": false,
       "clip": [
         "1",
         1
       ]
     },
-    "class_type": "TextEncodeSenseNova"
+    "class_type": "CLIPTextEncode"
   },
   "5": {
     "inputs": {
       "text": "",
-      "mode": "image",
-      "thinking": false,
       "clip": [
         "1",
         1
       ]
     },
-    "class_type": "TextEncodeSenseNova"
+    "class_type": "CLIPTextEncode"
   },
   "7": {
     "inputs": {
@@ -128,7 +124,6 @@
   },
   "46": {
     "inputs": {
-      "max_think_tokens": 4096,
       "model": [
         "1",
         0
@@ -141,15 +136,16 @@
         "42",
         0
       ],
-      "negative": [
+      "task": "self-correction",
+      "task.negative": [
         "43",
         0
       ],
-      "samples": [
+      "task.samples": [
         "45",
         0
       ],
-      "generation_mode": "interleave"
+      "max_tokens": 4096
     },
     "class_type": "TextGenerateSenseNova"
   },

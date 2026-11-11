@@ -138,7 +138,7 @@
     },
     {
       "id": 4,
-      "type": "TextEncodeSenseNova",
+      "type": "CLIPTextEncode",
       "pos": [
         473.4576171875,
         342
@@ -168,22 +168,18 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "TextEncodeSenseNova"
+        "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        "请生成三张香氛蜡烛产品宣传图：产品细节、自然窗台、温馨客厅。最后简短介绍三张图。",
-        "interleave",
-        true
+        "请生成三张香氛蜡烛产品宣传图：产品细节、自然窗台、温馨客厅。最后简短介绍三张图。"
       ],
       "widgets_values_named": {
-        "text": "请生成三张香氛蜡烛产品宣传图：产品细节、自然窗台、温馨客厅。最后简短介绍三张图。",
-        "mode": "interleave",
-        "thinking": true
+        "text": "请生成三张香氛蜡烛产品宣传图：产品细节、自然窗台、温馨客厅。最后简短介绍三张图。"
       }
     },
     {
       "id": 5,
-      "type": "TextEncodeSenseNova",
+      "type": "CLIPTextEncode",
       "pos": [
         462.6208896994577,
         600.0658311389416
@@ -213,17 +209,13 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "TextEncodeSenseNova"
+        "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        "",
-        "interleave",
-        false
+        ""
       ],
       "widgets_values_named": {
-        "text": "",
-        "mode": "interleave",
-        "thinking": false
+        "text": ""
       }
     },
     {
@@ -571,8 +563,8 @@
         383.6415016720182
       ],
       "size": [
-        272.49609375,
-        138
+        340,
+        220
       ],
       "flags": {},
       "order": 12,
@@ -594,13 +586,12 @@
           "link": 15
         },
         {
-          "name": "negative",
-          "shape": 7,
+          "name": "task.negative",
           "type": "CONDITIONING",
           "link": 16
         },
         {
-          "name": "samples",
+          "name": "task.samples",
           "shape": 7,
           "type": "LATENT",
           "link": 17
@@ -640,12 +631,14 @@
         "Node name for S&R": "TextGenerateSenseNova"
       },
       "widgets_values": [
-        2048,
-        "interleave"
+        "interleave",
+        true,
+        2048
       ],
       "widgets_values_named": {
-        "max_think_tokens": 2048,
-        "generation_mode": "interleave"
+        "task": "interleave",
+        "max_tokens": 2048,
+        "task.thinking": true
       }
     },
     {
