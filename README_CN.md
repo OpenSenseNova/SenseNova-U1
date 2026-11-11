@@ -127,6 +127,10 @@
 
 ### ⚙️ 部署指南
 
+**首次运行 U1.5：**请从[中文快速开始](doc/quickstart.md)进入，依次完成硬件检查、固定环境与权重准备、首图生成和输出验证。指南使用独立工作目录检出固定 U1.5 代码版本，不需要切换当前文档分支。
+
+详细指南：[环境与模型准备](doc/installation.md) · [Python 推理](doc/inference.md) · [API 服务部署](doc/serving.md) · [常见问题与验收](doc/troubleshooting.md)。集成内容独立维护：[ComfyUI](doc/integrations/comfyui.md) · [GGUF](doc/integrations/gguf.md)。本组指南面向 U1.5 正式完整模型，不适用于 U1.6 或 Preview 权重。
+
 - **使用 Transformers 快速开始**
 
 ```bash
