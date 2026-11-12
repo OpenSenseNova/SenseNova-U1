@@ -177,6 +177,7 @@ class SenseNovaU1Interleave:
         timestep_shift: float = 3.0,
         cfg_interval: tuple[float, float] = (0.0, 1.0),
         num_steps: int = 50,
+        max_images: int = 10,
         think_mode: bool = True,
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
         seed: int = 0,
@@ -201,6 +202,7 @@ class SenseNovaU1Interleave:
                 timestep_shift=timestep_shift,
                 cfg_interval=cfg_interval,
                 num_steps=num_steps,
+                max_images=max_images,
                 system_message=system_message,
                 think_mode=think_mode,
                 seed=seed,
@@ -379,6 +381,7 @@ def parse_args() -> argparse.Namespace:
         metavar=("LO", "HI"),
     )
     p.add_argument("--num_steps", type=int, default=50)
+    p.add_argument("--max_images", type=int, default=10, help="Maximum number of generated images (default: 10).")
     p.add_argument(
         "--think_mode",
         action=argparse.BooleanOptionalAction,
@@ -437,7 +440,10 @@ def parse_args() -> argparse.Namespace:
             f"normalized per image token (patch size = {DEFAULT_IMAGE_PATCH_SIZE})."
         ),
     )
-    return p.parse_args()
+    args = p.parse_args()
+    if args.max_images < 1:
+        p.error("--max_images must be at least 1.")
+    return args
 
 
 def main() -> None:
@@ -506,6 +512,7 @@ def main() -> None:
                 timestep_shift=args.timestep_shift,
                 cfg_interval=cfg_interval,
                 num_steps=args.num_steps,
+                max_images=args.max_images,
                 think_mode=args.think_mode,
                 system_message=args.system_message,
                 seed=args.seed,
@@ -563,6 +570,7 @@ def main() -> None:
                     timestep_shift=args.timestep_shift,
                     cfg_interval=cfg_interval,
                     num_steps=args.num_steps,
+                    max_images=args.max_images,
                     think_mode=think_mode,
                     system_message=args.system_message,
                     seed=args.seed,

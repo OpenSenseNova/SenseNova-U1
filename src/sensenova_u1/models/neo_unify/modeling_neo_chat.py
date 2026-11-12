@@ -1139,7 +1139,6 @@ class NEOChatModel(PreTrainedModel):
 
         generated_text = ""
         generated_images =[]
-        max_images = 10
         img_count = 0
 
         next_token = torch.argmax(outputs_cond.logits[:, -1, :], dim=-1)
