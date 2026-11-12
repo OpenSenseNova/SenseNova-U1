@@ -72,22 +72,27 @@ source from the symlink location.
 
 ## Workflows
 
-For the native ComfyUI implementation (`CheckpointLoaderSimple` + `KSampler`),
-see the [native workflow guide](example_workflows/NATIVE_WORKFLOWS.md), including
-U1.5 UI/API templates and U1.6 self-correction API graphs with the current node IDs.
+See the [workflow guide](example_workflows/NATIVE_WORKFLOWS.md) for the complete
+catalog: this plugin's custom-node examples, native U1.5 workflows from ComfyUI
+PR #16032, and native U1.6 generation, editing, and self-correction API graphs.
+Native workflows use `CheckpointLoaderSimple` + `KSampler` and require the
+corresponding ComfyUI implementation; installing this plugin alone does not
+provide those nodes.
 
-Example workflows live in `example_workflows/`. Each links to a screenshot of the loaded graph in `docs/`:
+Custom-node workflows live in `example_workflows/`, with previews of the main graphs in `docs/`:
 
 | Workflow | Description | Preview |
 | --- | --- | --- |
-| `sensenova_api_gen_t2i.json` | SenseNova API prompt building and text-to-image | ![api_u1_fast_t2i](docs/api_u1_fast_t2i.jpg) |
-| `sensenova_text_to_image.json` | Local SenseNova-U1 text-to-image | ![t2i](docs/t2i.jpg) |
-| `sensenova_image_editing.json` | Local SenseNova-U1 image editing | ![editing](docs/editing.jpg) |
-| `interleave.json` | Local SenseNova-U1 interleaved generation | ![interleave](docs/interleave.jpg) |
+| [API text to image](example_workflows/image-sensenova-custom-api-text2image.json) | SenseNova API prompt building and text-to-image | ![api_u1_fast_t2i](docs/api_u1_fast_t2i.jpg) |
+| [Local text to image](example_workflows/image-sensenova-custom-text2image.json) | Local SenseNova-U1 text-to-image | ![t2i](docs/t2i.jpg) |
+| [Local image editing](example_workflows/image-sensenova-custom-image-edit.json) | Local SenseNova-U1 image editing | ![editing](docs/editing.jpg) |
+| [Local interleave](example_workflows/image-sensenova-custom-interleave.json) | Local SenseNova-U1 interleaved generation | ![interleave](docs/interleave.jpg) |
+| [Infographic generation and editing](example_workflows/image-sensenova-custom-infographic-text2image-edit.json) | Local Infographic V3 generation and editing, with an optional API prompt builder | — |
 
-Drag a workflow JSON into ComfyUI, then update `model_path`, `device`, `device_map`, and prompt
-settings as needed. For a smoke test, set `num_steps` to `1` or `2` before returning to the
-recommended `50`.
+Drag a custom-node workflow JSON into ComfyUI, then select your model in the loader,
+choose uploaded reference images, and update device and prompt settings as needed.
+Text-to-image and editing use `SenseNova U1 Model Loader`; interleave and the
+infographic example use the supported `SenseNova U1 Local Loader` and its `model_path`.
 
 `SenseNova U1 Local Image Edit` uses a v3 autogrow input. Connect the base image to `image`,
 then use the node's add-input control to attach up to nine additional references (`image2`
