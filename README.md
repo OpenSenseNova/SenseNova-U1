@@ -129,6 +129,10 @@ The official release improves upon the Preview, though challenges remain in:
 
 ### ⚙️ Deployment Guidance
 
+**New to U1.5?** Follow the [Chinese quick-start guide](doc/quickstart.md) for hardware checks, pinned environment and model setup, first-image generation, and output validation. The guide uses a separate runtime checkout at a fixed U1.5 commit; it does not require changing your current documentation branch.
+
+Detailed guides: [installation](doc/installation.md) · [Python inference](doc/inference.md) · [API serving](doc/serving.md) · [troubleshooting](doc/troubleshooting.md). Integrations are documented separately: [ComfyUI](doc/integrations/comfyui.md) · [GGUF](doc/integrations/gguf.md). These guides are in Chinese and target the full U1.5 model, not U1.6 or Preview checkpoints.
+
 - **Quick start with Transformers**
 
 ```bash
