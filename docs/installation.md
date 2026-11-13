@@ -1,6 +1,6 @@
-# Installation (Transformers Inference)
+# Installation
 
-This guide covers setting up the Python environment for running SenseNova-U1 locally with the `transformers` backend.
+This guide covers the Python environment for running SenseNova-U1 and U1.5 locally with the `transformers` backend.
 
 > The repository root is the **inference project**. Training has an independent
 > project, lockfile, and virtual environment under [`training/`](../training/README.md);
@@ -8,14 +8,14 @@ This guide covers setting up the Python environment for running SenseNova-U1 loc
 
 > **Software versions:** Python 3.11, torch 2.8, CUDA 12.8 (cu128). Update `pyproject.toml` index URLs if your driver requires a different CUDA version.
 
-We recommend [**uv**](https://docs.astral.sh/uv/) to manage the Python environment.
+Use [**uv**](https://docs.astral.sh/uv/) with the committed `uv.lock` to install the reference environment.
 
 > uv installation guide: <https://docs.astral.sh/uv/getting-started/installation/>
 
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/OpenSenseNova/SenseNova-U1.git
+git clone --depth 1 https://github.com/OpenSenseNova/SenseNova-U1.git
 cd SenseNova-U1
 ```
 
@@ -34,24 +34,6 @@ The `sensenova_u1` package is installed in editable mode, so the canonical [NEO-
 > adjust the pinned torch / torchvision versions accordingly) before
 > running `uv lock` and then `uv --project . sync --locked`.
 
-### pip fallback
-
-For environments without uv, install the generated direct-dependency mirror
-`requirements.txt`, then install the inference package itself without resolving
-dependencies a second time. pip will choose compatible transitive dependencies;
-use uv with `uv.lock` when you need the exact reference environment.
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m pip install -e . --no-deps
-```
-
-`requirements.txt` mirrors `[project].dependencies` in `pyproject.toml`; edit the
-pyproject and run `./scripts/lock_and_export_dependencies.sh` instead of changing
-the generated requirements file by hand.
-
 ## Optional: flash-attn
 
 `flash-attn` is declared as an optional extra;
@@ -65,3 +47,5 @@ uv --project . sync --locked --extra flash
 # (b) Install a prebuilt CUDA wheel matching your torch + Python
 uv pip install /path/to/flash_attn-2.8.3+cu12torch28cxx11abitrue-cp311-cp311-*.whl
 ```
+
+With the environment active, choose a model guide: [U1.5](u1.5_model.md), [U1.5 Preview](u1.5_preview.md#run-u15-preview), [U1 infographic](u1_infographic_model.md#run-infographic-v3), or [original U1](u1_model.md). Each guide links its own run commands and examples.

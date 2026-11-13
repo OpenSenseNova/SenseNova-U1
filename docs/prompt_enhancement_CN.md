@@ -1,6 +1,6 @@
 # SenseNova-U1 提示词增强
 
-> 简短的用户提示词——尤其是用于**信息图**生成时——通常会对图像模型限制不足。先将原始提示词通过强力 LLM 增强器处理，能够持续提升最终图像的结构性、排版质量、信息密度和"简报可读性"。本文档介绍如何开启该功能、我们推荐的上游 LLM，以及使用过程中需要权衡的因素。
+短信息图提示词常缺少版式和文字细节。开启 `--enhance` 后，脚本会先调用上游 LLM 扩写提示词，再交给 U1 生成图片，因此会多一次 API 请求。本页说明配置方法并展示输出样例。
 
 ## 1. 使用时机
 
@@ -30,9 +30,9 @@ user prompt ──► LLM (system prompt = infographic expander) ──► expan
 | `U1_ENHANCE_BACKEND`  | `chat_completions` | `chat_completions`（兼容 OpenAI）或 `anthropic` |
 | `U1_ENHANCE_ENDPOINT` | Gemini OpenAI 兼容 URL | 完整的 `/chat/completions` 或 `/v1/messages` URL |
 | `U1_ENHANCE_MODEL`    | `gemini-3.1-pro`   | 请求体中发送的模型名称字符串 |
-| `U1_ENHANCE_API_KEY`  | xxx            | Bearer token（必填） |
+| `U1_ENHANCE_API_KEY`  | 未设置 | Bearer token（必填） |
 
-首先创建 `.env` 文件并填入四个必要参数，然后在 `examples/t2i/inference.py` 命令行中添加 `--enhance` 即可。
+在仓库根目录创建 `.env` 文件，至少填入 `U1_ENHANCE_API_KEY`。其余三项有脚本默认值；换后端时再覆盖。运行 `examples/t2i/inference.py` 时加上 `--enhance`。
 添加 `--print_enhance` 可显示原始提示词和增强后的提示词，便于调试。
 
 如需使用 **SenseNova 6.7 Flash-Lite** 作为增强器，请从
@@ -45,20 +45,20 @@ U1_ENHANCE_MODEL=sensenova-6.7-flash-lite
 U1_ENHANCE_API_KEY=<your SenseNova API key>
 ```
 
-### 3.1 推荐后端
+### 3.1 后端配置示例
 
-| 模型 | 后端 | 端点模板 | 备注 |
-| :---- | :------ | :---------------- | :---- |
-| **Gemini 3.1 Pro**（默认） | `chat_completions` | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` | 内部测评中信息图整体质量最佳，尤其擅长结构化、层级化内容。 |
-| SenseNova 6.7 Flash-Lite | `chat_completions` | `https://token.sensenova.cn/v1/chat/completions` | 生成的中文质量接近 Gemini 3.1 Pro，单 token 成本更低，推荐用于生产环境。 |
-| Anthropic Claude（Sonnet/Opus） | `anthropic`        | `https://api.anthropic.com/v1/messages` | 排版规范性强，开箱即用时信息密度略低。 |
-| Kimi 2.5                      | `chat_completions` | `https://api.moonshot.cn/v1/chat/completions` | 中文增强效果好，测试显示生成以英文为主的信息图质量不高。 |
-| Gemini 3.1 Flash-Lite（第三方服务） | `chat_completions` | `https://aigateway.edgecloudapp.com/v1/f194fd69361cd590f1fa136c9c90eca1/senseai` | 信息图整体质量高，生成速度快。 |
-| Kimi 2.5/Qwen3.6-Plus（第三方服务） | `chat_completions` | `https://coding.dashscope.aliyuncs.com/v1/chat/completions` | 中文增强效果好，可灵活选择不同模型。 |
+| 模型 | 后端 | 端点示例 |
+| :---- | :------ | :---------------- |
+| Gemini 3.1 Pro（脚本默认） | `chat_completions` | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` |
+| SenseNova 6.7 Flash-Lite | `chat_completions` | `https://token.sensenova.cn/v1/chat/completions` |
+| Anthropic Claude（Sonnet/Opus） | `anthropic` | `https://api.anthropic.com/v1/messages` |
+| Kimi 2.5 | `chat_completions` | `https://api.moonshot.cn/v1/chat/completions` |
+| Gemini 3.1 Flash-Lite（第三方服务） | `chat_completions` | `https://aigateway.edgecloudapp.com/v1/f194fd69361cd590f1fa136c9c90eca1/senseai` |
+| Kimi 2.5/Qwen3.6-Plus（第三方服务） | `chat_completions` | `https://coding.dashscope.aliyuncs.com/v1/chat/completions` |
 
-## 4. 效果对比
+## 4. 输出示例
 
-> 下表数据为使用相同基础提示词、分辨率及采样参数生成的图片。
+下表展示不同提示词增强模型的输出样例。
 
 | 基础提示词 | 无增强 | Gemini 3.1 Pro | SenseNova | Qwen3.6-Plus | Kimi 2.5 |
 | :---------- | :------------- | :------------- | :------------- | :------------- | :------------- |

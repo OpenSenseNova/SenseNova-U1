@@ -1,19 +1,17 @@
 # SenseNova-U1 效果展示
 
-[← 返回 README](../README_CN.md)
+<p align="center"><a href="./showcases.md">English</a> | <strong>简体中文</strong></p>
 
-以下所有样例均由 **SenseNova-U1** 生成（可运行命令详见主 README）。图像以有损 WebP 格式存放于 [`docs/assets/showcases/`](./assets/showcases/)，点击任意缩略图即可查看完整分辨率的渲染结果。
-
----
+以下所有样例均由 **SenseNova-U1** 生成。[U1 指南](u1_model_CN.md)提供首图命令，其他脚本见[任务示例](../examples/README_CN.md)。图像以有损 WebP 格式存放于 [`docs/assets/showcases/`](./assets/showcases/)，点击任意缩略图即可查看完整分辨率的渲染结果。
 
 ## 文生图
 
-主表格展示完整的 n × 3 网格布局，涵盖不同分辨率下的横版、方版和竖版格式。
+下面按横版、方版和竖版展示文生图结果。
 
 
 #### 🖼️ *文生图（通用）*
 
-可复现的 prompt 位于 [`examples/t2i/data/samples.jsonl`](../examples/t2i/data/samples.jsonl)。
+示例使用的提示词见 [`examples/t2i/data/samples.jsonl`](../examples/t2i/data/samples.jsonl)。
 
 
 | | | |
@@ -27,7 +25,7 @@
 
 #### 🖼️ *文生图（推理）*
 
-可复现的 prompt 位于 [`examples/t2i/data/samples_reasoning.jsonl`](../examples/t2i/data/samples_reasoning.jsonl)。
+示例使用的提示词见 [`examples/t2i/data/samples_reasoning.jsonl`](../examples/t2i/data/samples_reasoning.jsonl)。
 
 <table>
   <tr>
@@ -64,7 +62,7 @@
 
 #### 🖼️ *文生图（信息图）*
 
-可复现的 prompt 位于 [`examples/t2i/data/samples_infographic.jsonl`](../examples/t2i/data/samples_infographic.jsonl)。
+示例使用的提示词见 [`examples/t2i/data/samples_infographic.jsonl`](../examples/t2i/data/samples_infographic.jsonl)。
 
 <table align="center">
   <tr>
@@ -124,7 +122,7 @@
 
 #### ✏️ *图像编辑（通用）*
 
-可复现的 prompt 位于 [`examples/editing/data/samples.jsonl`](../examples/editing/data/samples.jsonl)。
+示例使用的提示词见 [`examples/editing/data/samples.jsonl`](../examples/editing/data/samples.jsonl)。
 
 | | |
 | :---: | :---: |
@@ -136,7 +134,7 @@
 
 #### ✏️ *图像编辑（推理）*
 
-可复现的 prompt 位于 [`examples/editing/data/samples_reasoning.jsonl`](../examples/editing/data/samples_reasoning.jsonl)。
+示例使用的提示词见 [`examples/editing/data/samples_reasoning.jsonl`](../examples/editing/data/samples_reasoning.jsonl)。
 
 <table>
   <tr>
@@ -203,7 +201,7 @@
 
 下方每个案例均为 `model.interleave_gen` 的一次完整响应：模型先在 `<think>...</think>` 推理块中生成若干中间图像，再输出最终图文交错的答案。
 
-可复现的 prompt 位于 [`examples/interleave/data/samples.jsonl`](../examples/interleave/data/samples.jsonl)。
+示例使用的提示词见 [`examples/interleave/data/samples.jsonl`](../examples/interleave/data/samples.jsonl)。
 所有示例均带 think 推理生成；为可视化简洁，部分示例未展示思维链。
 
 
@@ -228,10 +226,14 @@
 
 涵盖空间推理、多图比较、OCR、几何以及知识密集型问答的通用视觉理解能力：
 
-可复现的 prompt 位于 [`examples/vqa/data/samples.jsonl`](../examples/vqa/data/samples.jsonl)。
+示例使用的提示词见 [`examples/vqa/data/samples.jsonl`](../examples/vqa/data/samples.jsonl)。
 
 | |
 | :---: |
 | [<img alt="vqa agentic case" src="./assets/showcases/vqa/agentic_case.webp">](./assets/showcases/vqa/agentic_case.webp) |
 | [<img alt="vqa agentic case 2" src="./assets/showcases/vqa/agentic_case_2.webp">](./assets/showcases/vqa/agentic_case_2.webp) |
 | [<img alt="vqa general cases" src="./assets/showcases/vqa/general_case_all.webp">](./assets/showcases/vqa/general_case_all.webp) |
+
+## 早期 U1 对比
+
+[基座与 8 步输出图集](base_vs_distill.md)收录了早期 U1 的案例（英文）。

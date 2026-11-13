@@ -1,4 +1,4 @@
-# LightLLM + LightX2V 部署
+# U1 的 LightLLM + LightX2V 部署
 
 本文档介绍如何基于 Docker 镜像 `lightx2v/lightllm_lightx2v:20260407`，通过 LightLLM + LightX2V 部署 SenseNova-U1 推理服务。
 
@@ -11,7 +11,7 @@ docker run --gpus all --ipc=host --network host -it lightx2v/lightllm_lightx2v:2
 
 ## 2) 在容器内克隆运行时依赖
 
-镜像中自带的源码未必是最新版本，建议重新克隆这两个仓库，并将 LightLLM 切到已验证的分支：
+镜像中未必带有下方命令所用的源码。克隆两个仓库，并将 LightLLM 切到本示例使用的分支：
 
 ```bash
 git clone https://github.com/ModelTC/LightX2V.git
@@ -19,6 +19,8 @@ git clone https://github.com/ModelTC/LightLLM.git
 cd LightLLM
 git checkout neo_plus_clean
 ```
+
+上述命令使用的是上游可移动分支。部署时请记录两个仓库实际检出的 commit；只固定 Docker 镜像标签，无法固定容器内另行克隆的源码版本。
 
 ## 3) X2I 相关参数
 
@@ -61,29 +63,22 @@ python -m lightllm.server.api_server \
 
 ### 模式 B：`separate`（理解与生成分离部署）
 
-`separate` 的思路与 LLM 服务中的 PD 分离类似：将不同阶段放到不同的 GPU 组上，避免长阶段拖慢短阶段。
+`separate` 将理解与生成进程放在不同的 GPU 组上。下面是三种资源配置；具体选择应按实际请求负载测量。
 
-在多模态场景下，图像生成通常是长阶段，而理解请求轻量且耗时较短。将两者分离后，即便生成 worker 被占满，理解请求依然能正常流转。
-
-推荐的部署配置方案：
-
-1. **默认方案（以稳定性为先）：理解 `tp=1` + 生成 1 GPU**
+1. **理解 `tp=1`；生成 1 GPU**
    - 理解：`--tp 1`
    - 生成：`--x2i_server_used_gpus 1`
-   - 适合作为混合负载下的基线方案。pipeline 简单，又能避免理解与生成互相产生队头阻塞。
 
-2. **理解加强方案：理解 `tp=2` + 生成 1 GPU**
+2. **理解 `tp=2`；生成 1 GPU**
    - 理解：`--tp 2`
    - 生成：`--x2i_server_used_gpus 1`
-   - 适用于复杂 prompt 或高理解 QPS 成为瓶颈的场景。
 
-3. **生成加强方案：理解 `tp=1/2` + 生成并行**
+3. **理解 `tp=1/2`；生成 2 或 4 GPU**
    - 理解：`--tp 1` 或 `--tp 2`
    - 生成方案 A（2 GPU）：`--x2i_server_used_gpus 2` +
      `/workspace/LightX2V/configs/neopp/neopp_dense_parallel_cfg.json`
    - 生成方案 B（4 GPU）：`--x2i_server_used_gpus 4` +
      `/workspace/LightX2V/configs/neopp/neopp_dense_parallel_cfg_seq.json`
-   - 适用于生成延迟/吞吐量占主导的场景，也是最常见的扩容路径。
 
 `separate` 模式启动 API 服务示例：
 
@@ -104,21 +99,17 @@ python -m lightllm.server.api_server \
 
 ## 5) 量化
 
-`separate` 模式的另一个好处是，理解与生成可以各自采用独立的量化策略。
-
-两条路径解耦后，可分别针对各自的质量与延迟目标进行调优：
+`separate` 模式下，理解侧和生成侧可以分别选择量化精度：
 
 1. **理解 FP16/BF16 + 生成 FP8**
    - 理解：不加量化参数，保持默认精度。
    - 生成：使用 FP8 生成配置，例如
      `/workspace/LightX2V/configs/neopp/neopp_dense_fp8.json`
-   - 推荐作为生产环境的默认量化方案。
 
 2. **理解 FP8 + 生成 FP8**
    - 理解：添加 `--quant_type fp8w8a8`
    - 生成：使用 FP8 生成配置
      `/workspace/LightX2V/configs/neopp/neopp_dense_fp8.json`
-   - 适用于 GPU 显存或吞吐量吃紧的场景。
 
 说明：
 - `--quant_type fp8w8a8` 控制理解路径的量化精度。

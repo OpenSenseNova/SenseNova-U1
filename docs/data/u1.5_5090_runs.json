@@ -1,0 +1,481 @@
+{
+  "description": "Per-call RTX 5090 U1.5 + 8-step V2 LoRA benchmark results; local model paths omitted",
+  "environment": {
+    "test_date": "2026-11-13",
+    "gpu": "GeForce RTX 5090",
+    "gpu_total_mib": 32607,
+    "driver": "580.95.05",
+    "python": "3.12.3",
+    "pytorch": "2.8.0+cu128",
+    "transformers": "5.15.0",
+    "code_commit": "c19cb24656d369e729bbfeed4d4ec95a051a1174",
+    "base_revision_from_download_metadata": "19bc874ef6ffc97fda9837b40fc1d1301806158a",
+    "adapter_revision": "f33b8fe0216e6f10e5aed58ebbfdd05f02826732",
+    "adapter_sha256": "f4190cabd01fa261a45be853275c483d3a8069295c52cf01f7b2b31f4356f201",
+    "pytorch_allocator_cap": "none",
+    "fast_vram_fraction": 0.9,
+    "fast_vram_headroom_gib": 2,
+    "fast_activation_reserve_gib": 4
+  },
+  "runs": [
+    {
+      "task": "edit",
+      "mode": "balanced",
+      "prompt": "Change the jacket of the person on the left to bright yellow.",
+      "size": [
+        2048,
+        2048
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 37.943,
+          "allocated_gib": 10.161,
+          "reserved_gib": 15.023,
+          "cpu_rss_gib": 52.239,
+          "sha256": "bf62de8000827f3cbb26b7fe0609e391fca66303a25908455cba0449db7d4fd8"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 5.73,
+          "allocated_gib": 10.197,
+          "reserved_gib": 15.168,
+          "cpu_rss_gib": 52.239,
+          "sha256": "8bb80d2a288626a0d61df31a07b0c8d969255276c2ede45a9f84982115cdb87e"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 5.724,
+          "allocated_gib": 10.197,
+          "reserved_gib": 15.168,
+          "cpu_rss_gib": 52.239,
+          "sha256": "dc879f9a287296feaee17f3cdc2eb71ea495ea552ce24bbed14e8bc7b2612d90"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 5.743,
+          "allocated_gib": 10.197,
+          "reserved_gib": 15.168,
+          "cpu_rss_gib": 52.239,
+          "sha256": "a47e06938462293f4c2a41ea0c3c35ec283a02da6f6f46f6612837a4c90155f0"
+        }
+      ]
+    },
+    {
+      "task": "edit",
+      "mode": "fast",
+      "prompt": "Change the jacket of the person on the left to bright yellow.",
+      "size": [
+        2048,
+        2048
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 37.604,
+          "allocated_gib": 17.952,
+          "reserved_gib": 24.832,
+          "cpu_rss_gib": 52.223,
+          "sha256": "bf62de8000827f3cbb26b7fe0609e391fca66303a25908455cba0449db7d4fd8"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 5.725,
+          "allocated_gib": 17.951,
+          "reserved_gib": 24.977,
+          "cpu_rss_gib": 52.223,
+          "sha256": "8bb80d2a288626a0d61df31a07b0c8d969255276c2ede45a9f84982115cdb87e"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 5.709,
+          "allocated_gib": 17.951,
+          "reserved_gib": 24.977,
+          "cpu_rss_gib": 52.223,
+          "sha256": "dc879f9a287296feaee17f3cdc2eb71ea495ea552ce24bbed14e8bc7b2612d90"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 5.706,
+          "allocated_gib": 17.951,
+          "reserved_gib": 24.977,
+          "cpu_rss_gib": 52.223,
+          "sha256": "a47e06938462293f4c2a41ea0c3c35ec283a02da6f6f46f6612837a4c90155f0"
+        }
+      ]
+    },
+    {
+      "task": "edit",
+      "mode": "low",
+      "prompt": "Change the jacket of the person on the left to bright yellow.",
+      "size": [
+        2048,
+        2048
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 40.799,
+          "allocated_gib": 9.443,
+          "reserved_gib": 9.936,
+          "cpu_rss_gib": 52.234,
+          "sha256": "bf62de8000827f3cbb26b7fe0609e391fca66303a25908455cba0449db7d4fd8"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 8.238,
+          "allocated_gib": 9.478,
+          "reserved_gib": 10.08,
+          "cpu_rss_gib": 52.234,
+          "sha256": "8bb80d2a288626a0d61df31a07b0c8d969255276c2ede45a9f84982115cdb87e"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 8.222,
+          "allocated_gib": 9.478,
+          "reserved_gib": 10.08,
+          "cpu_rss_gib": 52.234,
+          "sha256": "dc879f9a287296feaee17f3cdc2eb71ea495ea552ce24bbed14e8bc7b2612d90"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 8.223,
+          "allocated_gib": 9.478,
+          "reserved_gib": 10.08,
+          "cpu_rss_gib": 52.234,
+          "sha256": "a47e06938462293f4c2a41ea0c3c35ec283a02da6f6f46f6612837a4c90155f0"
+        }
+      ]
+    },
+    {
+      "task": "interleave",
+      "mode": "balanced",
+      "prompt": "Create one image of a chubby orange cat exploring a flower shop, then describe it in one sentence.",
+      "size": [
+        1536,
+        1536
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 56.591,
+          "allocated_gib": 6.99,
+          "reserved_gib": 12.426,
+          "cpu_rss_gib": 52.207,
+          "sha256": "fbaaa6a7c4de5772abb8cca31001772c1d1b60df218f0a5c8050aaa490eb58eb"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 23.985,
+          "allocated_gib": 6.99,
+          "reserved_gib": 12.469,
+          "cpu_rss_gib": 52.207,
+          "sha256": "fdacf0ca48f8bd92606242593143a934535353d1afc0ee1e54cbc2043727b734"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 24.883,
+          "allocated_gib": 6.992,
+          "reserved_gib": 12.475,
+          "cpu_rss_gib": 52.207,
+          "sha256": "977415df1cd5e1145ebd30f73341047500a1c294824a79c4faf7095dcd9cb1a8"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 24.269,
+          "allocated_gib": 6.992,
+          "reserved_gib": 12.475,
+          "cpu_rss_gib": 52.207,
+          "sha256": "a3517657ae068d0e6e08c650b58ba9da835ca21079a41c6b0a30de2c0ee6466a"
+        }
+      ]
+    },
+    {
+      "task": "interleave",
+      "mode": "fast",
+      "prompt": "Create one image of a chubby orange cat exploring a flower shop, then describe it in one sentence.",
+      "size": [
+        1536,
+        1536
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 56.544,
+          "allocated_gib": 19.128,
+          "reserved_gib": 22.289,
+          "cpu_rss_gib": 52.203,
+          "sha256": "fbaaa6a7c4de5772abb8cca31001772c1d1b60df218f0a5c8050aaa490eb58eb"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 23.709,
+          "allocated_gib": 19.168,
+          "reserved_gib": 22.387,
+          "cpu_rss_gib": 52.203,
+          "sha256": "fdacf0ca48f8bd92606242593143a934535353d1afc0ee1e54cbc2043727b734"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 24.57,
+          "allocated_gib": 19.168,
+          "reserved_gib": 22.387,
+          "cpu_rss_gib": 52.203,
+          "sha256": "977415df1cd5e1145ebd30f73341047500a1c294824a79c4faf7095dcd9cb1a8"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 23.989,
+          "allocated_gib": 19.168,
+          "reserved_gib": 22.387,
+          "cpu_rss_gib": 52.203,
+          "sha256": "a3517657ae068d0e6e08c650b58ba9da835ca21079a41c6b0a30de2c0ee6466a"
+        }
+      ]
+    },
+    {
+      "task": "interleave",
+      "mode": "low",
+      "prompt": "Create one image of a chubby orange cat exploring a flower shop, then describe it in one sentence.",
+      "size": [
+        1536,
+        1536
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 61.341,
+          "allocated_gib": 6.269,
+          "reserved_gib": 7.387,
+          "cpu_rss_gib": 52.21,
+          "sha256": "fbaaa6a7c4de5772abb8cca31001772c1d1b60df218f0a5c8050aaa490eb58eb"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 28.209,
+          "allocated_gib": 6.274,
+          "reserved_gib": 7.43,
+          "cpu_rss_gib": 52.21,
+          "sha256": "fdacf0ca48f8bd92606242593143a934535353d1afc0ee1e54cbc2043727b734"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 29.134,
+          "allocated_gib": 6.274,
+          "reserved_gib": 7.434,
+          "cpu_rss_gib": 52.21,
+          "sha256": "977415df1cd5e1145ebd30f73341047500a1c294824a79c4faf7095dcd9cb1a8"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 28.509,
+          "allocated_gib": 6.274,
+          "reserved_gib": 7.434,
+          "cpu_rss_gib": 52.21,
+          "sha256": "a3517657ae068d0e6e08c650b58ba9da835ca21079a41c6b0a30de2c0ee6466a"
+        }
+      ]
+    },
+    {
+      "task": "t2i",
+      "mode": "balanced",
+      "prompt": "A cinematic mountain lake at sunrise, realistic photography.",
+      "size": [
+        2048,
+        2048
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 36.449,
+          "allocated_gib": 3.637,
+          "reserved_gib": 8.035,
+          "cpu_rss_gib": 52.216,
+          "sha256": "99dc6cf677cb26faaf176819e5ae3b1d386dc3ce729b8296a0e22bf7e72b0b07"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 4.461,
+          "allocated_gib": 3.675,
+          "reserved_gib": 8.65,
+          "cpu_rss_gib": 52.216,
+          "sha256": "621849c2635f776ddc2f101c76867e0fe9740965aeba711cc59ffe156fd86497"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 4.465,
+          "allocated_gib": 3.675,
+          "reserved_gib": 8.65,
+          "cpu_rss_gib": 52.216,
+          "sha256": "a89bff97b6d36b8f2101d6d62762324c481d73f3f513f3e83a13a53c7ed9ff0c"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 4.448,
+          "allocated_gib": 3.675,
+          "reserved_gib": 8.65,
+          "cpu_rss_gib": 52.216,
+          "sha256": "553fcea4e41e1d5df06b99281652c523c57020a3fd543cddd18a8807a81da12d"
+        }
+      ]
+    },
+    {
+      "task": "t2i",
+      "mode": "fast",
+      "prompt": "A cinematic mountain lake at sunrise, realistic photography.",
+      "size": [
+        2048,
+        2048
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 36.485,
+          "allocated_gib": 16.595,
+          "reserved_gib": 17.844,
+          "cpu_rss_gib": 52.216,
+          "sha256": "99dc6cf677cb26faaf176819e5ae3b1d386dc3ce729b8296a0e22bf7e72b0b07"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 4.469,
+          "allocated_gib": 16.596,
+          "reserved_gib": 18.459,
+          "cpu_rss_gib": 52.216,
+          "sha256": "621849c2635f776ddc2f101c76867e0fe9740965aeba711cc59ffe156fd86497"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 4.476,
+          "allocated_gib": 16.596,
+          "reserved_gib": 18.459,
+          "cpu_rss_gib": 52.216,
+          "sha256": "a89bff97b6d36b8f2101d6d62762324c481d73f3f513f3e83a13a53c7ed9ff0c"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 4.469,
+          "allocated_gib": 16.596,
+          "reserved_gib": 18.459,
+          "cpu_rss_gib": 52.216,
+          "sha256": "553fcea4e41e1d5df06b99281652c523c57020a3fd543cddd18a8807a81da12d"
+        }
+      ]
+    },
+    {
+      "task": "t2i",
+      "mode": "low",
+      "prompt": "A cinematic mountain lake at sunrise, realistic photography.",
+      "size": [
+        2048,
+        2048
+      ],
+      "num_steps": 8,
+      "cfg_scale": 1.0,
+      "dtype": "bfloat16",
+      "attn_backend": "sdpa",
+      "calls": [
+        {
+          "seed": 0,
+          "warmup": true,
+          "generation_s": 38.583,
+          "allocated_gib": 2.917,
+          "reserved_gib": 2.947,
+          "cpu_rss_gib": 52.209,
+          "sha256": "99dc6cf677cb26faaf176819e5ae3b1d386dc3ce729b8296a0e22bf7e72b0b07"
+        },
+        {
+          "seed": 1,
+          "warmup": false,
+          "generation_s": 6.74,
+          "allocated_gib": 2.955,
+          "reserved_gib": 3.562,
+          "cpu_rss_gib": 52.209,
+          "sha256": "621849c2635f776ddc2f101c76867e0fe9740965aeba711cc59ffe156fd86497"
+        },
+        {
+          "seed": 2,
+          "warmup": false,
+          "generation_s": 6.74,
+          "allocated_gib": 2.955,
+          "reserved_gib": 3.562,
+          "cpu_rss_gib": 52.209,
+          "sha256": "a89bff97b6d36b8f2101d6d62762324c481d73f3f513f3e83a13a53c7ed9ff0c"
+        },
+        {
+          "seed": 3,
+          "warmup": false,
+          "generation_s": 6.726,
+          "allocated_gib": 2.955,
+          "reserved_gib": 3.562,
+          "cpu_rss_gib": 52.209,
+          "sha256": "553fcea4e41e1d5df06b99281652c523c57020a3fd543cddd18a8807a81da12d"
+        }
+      ]
+    }
+  ]
+}

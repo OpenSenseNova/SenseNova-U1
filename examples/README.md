@@ -19,7 +19,6 @@ examples/
 │       └── samples_infographic.jsonl
 ├── editing/                   # image editing (it2i)
 │   ├── inference.py
-│   ├── resize_inputs.py       # offline pre-resize helper (recommended)
 │   └── data/
 │       ├── samples.jsonl
 │       ├── samples_reasoning.jsonl
@@ -40,46 +39,16 @@ examples/
         └── images/
 ```
 
-## Multi-GPU dispatch
+## Single-GPU memory modes
 
-All reference inference scripts support Transformers / Accelerate device-map loading.
-For multi-GPU machines, add `--device_map auto` so Accelerate can split the model across visible GPUs:
-
-```bash
-python examples/t2i/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
-  --prompt "A cinematic mountain village at sunrise" \
-  --device_map auto \
-  --max_memory "0=22GiB,1=22GiB" \
-  --output output.png
-```
-
-When `--device_map` is set, the model is dispatched by Accelerate and the
-script does not call `.to(device)` on the full model.
-
-With `--device_map auto`, Accelerate estimates module sizes, checks the
-available memory on each visible GPU, and assigns modules to GPUs in order.
-Passing `--max_memory` overrides the automatically detected per-device budget
-and is recommended for reproducible placement on heterogeneous setups.
-
-`--max_memory` constrains how Transformers / Accelerate places **model weights** across GPUs.
-It is not a hard end-to-end VRAM cap: forward-time activation tensors, KV cache,
-PyTorch reserved memory, and image-generation intermediates still need extra room.
-On small GPUs, set the per-GPU budget below physical VRAM (for example `26GiB`-`28GiB` on a 32GB card)
-and lower resolution / batch size if generation still OOMs.
-
-### Low-VRAM single-card: `--vram_mode`
-
-For single-card low-VRAM setups, prefer the project's layer-offload path over Accelerate CPU/disk
-dispatch — it is significantly faster and is supported by all four reference scripts (t2i,
-interleave, editing, vqa):
+On a single GPU, start U1.5 with `--vram_mode balanced`; the CLI uses `full` when this option is omitted. All four reference scripts (t2i, interleave, editing, vqa) accept the memory modes below. `balanced` and `low` need substantial host RAM: process CPU RSS peaked around 52.2 GiB in the RTX 5090 U1.5 runs. Plan for 64 GB of system RAM as a starting point; see the [U1.5 memory and timing results](../docs/u1.5_inference.md) for the tested scope and GPU figures.
 
 | `--vram_mode` | Behavior |
 |---------------|----------|
-| `full`        | Whole model on GPU, no offload. Fastest. (Default.) |
+| `full`        | Whole model on GPU, no offload. (Default.) |
 | `fast`        | Async prefetch, then retain generation layers within the GPU memory budget. |
-| `low`         | Synchronous per-layer CPU<->GPU swap. Smallest weight footprint, slowest. |
-| `balanced`    | Async prefetch (overlaps host->device with compute). Faster than `low`. |
+| `low`         | Synchronous per-layer CPU<->GPU swap to reduce weight VRAM use. |
+| `balanced`    | Async prefetch to overlap data transfer with compute. Recommended starting mode for U1.5. |
 
 Fast-mode residency controls are shared by all four scripts:
 
@@ -92,14 +61,11 @@ Fast-mode residency controls are shared by all four scripts:
 
 ```bash
 python examples/t2i/inference.py \
-  --model_path SenseNova/SenseNova-U1-8B-MoT \
+  --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "A cinematic mountain village at sunrise" \
   --vram_mode balanced \
   --output output.png
 ```
-
-`--vram_mode` is mutually exclusive with `--device_map`: layer offload requires the model to stay
-on CPU between forwards, which is incompatible with Accelerate's static dispatch.
 
 ## Text-to-Image
 
@@ -108,14 +74,16 @@ Single prompt:
 ```bash
 python examples/t2i/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
-  --prompt "这张信息图的标题是“SenseNova-U1”，采用现代极简科技矩阵风格。整体布局为水平三列网格结构，背景是带有极浅银灰色细密点阵的哑光纯白高级纸张纹理，画面长宽比为16:9。\n\n排版采用严谨的视觉层级：主标题使用粗体无衬线黑体字，正文使用清晰的现代等宽字体。配色方案极其克制，以纯白色为底，深炭黑为主视觉文字和边框，浅石板灰用于背景色块和次要信息区分，图标采用精致的银灰色线框绘制。\n\n在画面正上方居中位置，使用醒目的深炭黑粗体字排布着大标题“SenseNova-U1”。标题正下方是浅石板灰色的等宽字体副标题“新一代端到端统一多模态大模型家族”。\n\n画面主体分为左、中、右三个相等的垂直信息区块，区块之间通过充足的负空间进行物理隔离。\n\n左侧区块的主题是概述。顶部有一个银灰色线框绘制的、由放大镜和齿轮交织的图标，旁边是粗体小标题“Overview”。该区块内从上到下垂直排列着三个要点：第一个要点旁边是一个代表文档与照片重叠的极简图标，紧跟着文字“多模态模型家族，统一文本/图像理解和生成”。向下是由两个相连的同心圆组成的架构图标，配有文字“基于NEO-Unify架构（端到端统一理解和生成）”。最下方是一个带有斜线划掉的眼睛和漏斗形状的图标，明确指示文本“无需视觉编码器(VE)和变分自编码器(VAE)”。\n\n中间区块展示模型矩阵。顶部是一个包含两个分支节点的树状网络图标，旁边是粗体小标题“两个模型规格”。区块内分为上下两个包裹在浅石板灰色极细边框内的卡片。上方的卡片内画着一个代表高密度的实心几何立方体图标，大字标注“SenseNova-U1-8B-MoT”，下方是等宽字体说明“8B MoT 密集主干模型”。下方的卡片内画着一个带有闪电符号的网状发光大脑图标，大字标注“SenseNova-U1-A3B-MoT”，下方是等宽字体说明“A3B MoT 混合专家（MoE）主干模型”。在这两个独立卡片的正下方，左侧放置一个笑脸轮廓图标搭配文字“将在HF等平台公开”，右侧放置一个带有折角的书面报告图标搭配文字“将发布技术报告”。\n\n右侧区块呈现核心优势。顶部是一个代表巅峰的上升阶梯折线图图标，旁边是粗体小标题“Highlights”。该区块内部垂直分布着四个带有浅石板灰底色的长方形色块，每个色块内部左侧对应一个具体的图标，右侧为文字。第一个色块内是一个无缝相连的莫比乌斯环图标，配文“原生统一架构，无VE和VAE”。第二个色块内是一个顶端带有星星的奖杯图标，配文“单一统一模型在理解和生成任务上均达到SOTA性能”。第三个色块内是代表文本行与拍立得照片交替穿插的图标，配文“强大的原生交错推理能力（模型原生生成图像进行推理）”。最后一个色块内是一个被切分出一小块的硬币与详细饼状图结合的图标，配文“能生成复杂信息图表，性价比出色”。" \
+  --prompt "A four-step pour-over coffee infographic on a light background, titled Pour-over Coffee" \
   --width 2720 --height 1536 \
-  --device_map auto \
+  --vram_mode balanced \
   --batch_size 1 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
   --output output.png \
   --profile
 ```
+
+The [original infographic prompt](t2i/data/u1_infographic_prompt.txt) is kept as a sample input. Its release copy does not describe the current version.
 
 Batched prompts from a JSONL file (each line must contain a `prompt`;
 `width` / `height` / `seed` are optional):
@@ -147,9 +115,13 @@ The prompts in the existing [`t2i/data/samples_infographic_V2.jsonl`](./t2i/data
 Infographic-focused 8-step LoRA generation (V1.0 LoRA)
 
 ```bash
+hf download sensenova/SenseNova-U1-8B-MoT-LoRAs \
+  SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
+  --local-dir ./models/SenseNova-U1-8B-MoT-LoRAs
+
 python examples/t2i/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT-Infographic \
-    --lora_path sensenova/SenseNova-U1-8B-MoT-LoRAs/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
+    --lora_path ./models/SenseNova-U1-8B-MoT-LoRAs/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors \
     --jsonl examples/t2i/data/samples_infographic.jsonl \
     --output_dir outputs/ \
     --cfg_scale 1.0 --cfg_norm none --timestep_shift 3.0 --num_steps 8 \
@@ -207,15 +179,10 @@ SenseNova-U1 is trained on ~2K-pixel resolution buckets. Passing arbitrary `--wi
 
 ### Prompt Enhancement for Infographics
 
-Short prompts — especially for **infographic** generation — can be enhanced by a strong LLM before inference, which noticeably lifts information density, typography fidelity, and layout adherence. Enable with `--enhance`:
+`--enhance` calls an external model to expand the prompt before U1 generates the image. It requires an API key and adds one request. See [prompt enhancement](../docs/prompt_enhancement.md) for backend configuration.
 
 ```bash
-# export U1_ENHANCE_API_KEY=sk-...                # required
-# defaults target Gemini 3.1 Pro via its OpenAI-compatible endpoint;
-# override any of these to point at SenseNova / Claude / Kimi 2.5 etc.:
-# export U1_ENHANCE_BACKEND=chat_completions   # or 'anthropic'
-# export U1_ENHANCE_ENDPOINT=https://...chat/completions
-# export U1_ENHANCE_MODEL=gemini-3.1-pro
+export U1_ENHANCE_API_KEY="your-api-key"
 
 python examples/t2i/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
@@ -223,8 +190,6 @@ python examples/t2i/inference.py \
   --enhance --print_enhance \
   --output output.png
 ```
-
-See [`docs/prompt_enhancement.md`](../docs/prompt_enhancement.md) for full details.
 
 ## Image Editing (it2i)
 
@@ -297,6 +262,8 @@ by a concise final answer. See [`interleave/run.sh`](./interleave/run.sh) for a
 three-mode launcher covering every usage pattern below.
 
 **Output files:** every sample writes `<stem>.txt` (generated text) plus `<stem>_image_<i>.png` for each generated image; `--jsonl` mode also emits a `results.jsonl` manifest.
+
+Use `--max_images 1` to cap a run at one generated image (default: 10), for example when comparing single-image inference times. A prompt can still return text without an image.
 
 **Resolution:** when input images are provided via `--image` or the JSONL `image` field, the output resolution follows the first input image (snapped to 32-aligned buckets via `smart_resize`), overriding `--resolution` / `--width` / `--height`.
 
