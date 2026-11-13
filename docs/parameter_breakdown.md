@@ -1,4 +1,4 @@
-# Parameter Breakdown
+# U1 parameter breakdown
 
 `SenseNova-U1-8B-MoT` contains roughly **8B understanding parameters** and
 **8B generation parameters**. To avoid confusion caused by the naming and to

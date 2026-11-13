@@ -86,7 +86,7 @@ General-purpose T2I benchmark with direct image-question judging.
 Prepare the IGenBench metadata from
 [`Brookseeworld/IGenBench-Dataset`](https://huggingface.co/datasets/Brookseeworld/IGenBench-Dataset/tree/main)
 and place the per-item JSON files under
-[`igenbench/data/`](../gen/igenbench/data/). The scripts read those JSON files
+`evaluation/gen/igenbench/data/`. The scripts read those JSON files
 directly for both generation prompts and evaluation questions.
 
 ```bash
@@ -155,7 +155,7 @@ bash evaluation/gen/cvtg/run_cvtgeval.sh
 
 Prepare the CVTG-2K data from
 [`dnkdnk/CVTG-2K`](https://huggingface.co/datasets/dnkdnk/CVTG-2K)
-and place it under [`cvtg/data/`](../gen/cvtg/data/). The LAION
+and place it under `evaluation/gen/cvtg/data/`. The LAION
 aesthetic-predictor head
 [`sa_0_4_vit_l_14_linear.pth`](../gen/cvtg/sa_0_4_vit_l_14_linear.pth)
 sits next to the eval script.
@@ -201,7 +201,7 @@ API_KEY=sk-... \
 Prepare the TIIF-Bench data from
 [`A113N-W3I/TIIF-Bench`](https://github.com/A113N-W3I/TIIF-Bench)
 and place the prompts under
-[`tiif/data/`](../gen/tiif/data/). The three eval helper scripts live under
+`evaluation/gen/tiif/data/`. The three eval helper scripts live under
 [`tiif/eval/`](../gen/tiif/eval/).
 
 Required / common overrides:
