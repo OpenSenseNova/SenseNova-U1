@@ -32,14 +32,6 @@ tools/quantization/
 python -m pip install torch safetensors numpy gguf comfy-kitchen
 ```
 
-Q6_K 还需要编译 GGML。Linux 安装好 C/C++ 编译器、CMake、curl 后，在项目根目录运行一次：
-
-```bash
-bash tools/quantization/gguf_q6_k/build_ggml.sh
-```
-
-脚本下载并校验固定版本源码，在 `gguf_q6_k` 内生成 `libggml-base.so`。Q4/Q8 不需要这一步。
-
 ## 2. 哪些参数需要改
 
 在项目根目录设置下面两个路径，然后运行转换命令：

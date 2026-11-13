@@ -33,16 +33,6 @@ Install the conversion dependencies:
 python -m pip install torch safetensors numpy gguf comfy-kitchen
 ```
 
-Q6_K also requires building GGML. On Linux, install a C/C++ compiler, CMake,
-and curl, then run this once from the project root:
-
-```bash
-bash tools/quantization/gguf_q6_k/build_ggml.sh
-```
-
-The script downloads and verifies a pinned source version, then creates
-`libggml-base.so` inside `gguf_q6_k`. Q4/Q8 do not need this step.
-
 ## 2. Set the paths
 
 Set these two paths from the project root before running a conversion:

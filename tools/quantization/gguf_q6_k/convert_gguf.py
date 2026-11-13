@@ -59,7 +59,7 @@ def main():
     qtype = getattr(gguf.GGMLQuantizationType, a.qtype)
     quant = quantize
     if a.qtype == "Q6_K":
-        from native_q6 import quantize_q6
+        from quant_q6_k import quantize_q6
 
         quant = quantize_q6
     writer = gguf.GGUFWriter(partial, "sensenova_u1.6")
