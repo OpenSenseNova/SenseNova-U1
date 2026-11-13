@@ -11,8 +11,8 @@ from safetensors.torch import save_file
 
 
 def should_quantize(name):
-    """按层名判断是否量化，只选择 Attention 和 MLP 的线性层权重。"""
-    # 示例：language_model.model.layers.0.self_attn.q_proj.weight
+    """Select Attention and MLP linear weights by their layer names."""
+    # Example: language_model.model.layers.0.self_attn.q_proj.weight
     parts = name.split(".")
     if len(parts) != 7:
         return False
@@ -31,7 +31,7 @@ def should_quantize(name):
         return False
 
     if module_name == "self_attn":
-        # 理解分支，以及名称带 _mot_gen 的图像生成分支。
+        # Understanding branch and image generation branch (names containing _mot_gen).
         return projection_name in [
             "q_proj",
             "k_proj",

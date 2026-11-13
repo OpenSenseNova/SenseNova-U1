@@ -1,15 +1,18 @@
-# U1.6 权重转换与临时验证
+# U1.6 Weight Conversion and Validation
 
-六套脚本分别用于 BF16 合并、GGUF Q4/Q6/Q8、FP8、INT8 ConvRot。
-使用步骤：放好文件夹 → 填写路径 → 运行脚本。
+English | [Chinese](README_CN.md)
 
-## 1. 文件夹怎么放
+The six scripts cover BF16 merging, GGUF Q4/Q6/Q8, FP8, and INT8 ConvRot.
+To use them: place the files, set the paths, then run the scripts.
 
-在完整 SenseNova-U1 项目中保留下面的结构：
+## 1. Directory layout
+
+Keep this structure inside the complete SenseNova-U1 project:
 
 ```text
 tools/quantization/
 ├── README.md
+├── README_CN.md
 ├── bf16/
 ├── gguf_q4_0/
 ├── gguf_q6_k/
@@ -20,47 +23,53 @@ tools/quantization/
 └── quant_runtime.py
 ```
 
-每个转换子文件夹可以单独复制使用。里面的 `.sh`、`.py` 文件要一起保留，
-不依赖其它转换子文件夹。推理入口需要完整项目。
+Each conversion subdirectory can be copied and used independently. Keep its
+`.sh` and `.py` files together; it does not depend on the other conversion
+subdirectories. Inference requires the complete project.
 
-转换依赖：
+Install the conversion dependencies:
 
 ```bash
 python -m pip install torch safetensors numpy gguf comfy-kitchen
 ```
 
-Q6_K 还需要编译 GGML。Linux 安装好 C/C++ 编译器、CMake、curl 后，在项目根目录运行一次：
+Q6_K also requires building GGML. On Linux, install a C/C++ compiler, CMake,
+and curl, then run this once from the project root:
 
 ```bash
 bash tools/quantization/gguf_q6_k/build_ggml.sh
 ```
 
-脚本下载并校验固定版本源码，在 `gguf_q6_k` 内生成 `libggml-base.so`。Q4/Q8 不需要这一步。
+The script downloads and verifies a pinned source version, then creates
+`libggml-base.so` inside `gguf_q6_k`. Q4/Q8 do not need this step.
 
-## 2. 哪些参数需要改
+## 2. Set the paths
 
-在项目根目录设置下面两个路径，然后运行转换命令：
+Set these two paths from the project root before running a conversion:
 
 ```bash
 export U1_SOURCE_DIR="/data/models/hf_checkpoint"
 export U1_OUTPUT_DIR="/data/SenseNova-U1/outputs/quantization"
 ```
 
-- `U1_SOURCE_DIR`：原始 HF/EMA 文件夹，包含全部分片、`model.safetensors.index.json`、配置和 Tokenizer。
-- `U1_OUTPUT_DIR`：结果总目录，脚本会在下面创建 `sensenova` 及各权重子文件夹。
+- `U1_SOURCE_DIR`: the original HF/EMA directory, containing all weight shards,
+  `model.safetensors.index.json`, configuration files, and tokenizer files.
+- `U1_OUTPUT_DIR`: the output root. The scripts create `sensenova` and the
+  corresponding weight subdirectories inside it.
 
-也可以直接修改各 `.sh` 中 `# set manually:` 下的默认路径。
-脚本使用当前环境的 `python`，不指定虚拟环境位置。
+Alternatively, edit the default paths below `# set manually:` in each `.sh`
+file. The scripts use `python` from the current environment; they do not require
+a specific virtual environment path.
 
-FP8/INT8 还需要选择 GPU：
+Select a GPU for FP8/INT8:
 
 ```bash
 export CUDA_VISIBLE_DEVICES="0"
 ```
 
-## 3. 怎么运行
+## 3. Run a conversion
 
-在项目根目录按需执行：
+Run the scripts you need from the project root:
 
 ```bash
 bash tools/quantization/bf16/convert_bf16.sh
@@ -71,10 +80,11 @@ bash tools/quantization/fp8_w8a8/convert_fp8_w8a8.sh
 bash tools/quantization/int8_convrot_w8a8/convert_int8_convrot_w8a8.sh
 ```
 
-脚本不会覆盖已有权重。重复转换请设置新的 `U1_OUTPUT_DIR`。
-中途失败留下的 `.partial` 文件也会阻止覆盖；确认不再需要后再手动清理。
+The scripts do not overwrite existing weights. Use a new `U1_OUTPUT_DIR` to
+repeat a conversion. A `.partial` file left by an interrupted conversion also
+blocks overwriting; remove it manually only when it is no longer needed.
 
-## 4. 结果在哪里
+## 4. Find the outputs
 
 ```text
 U1_OUTPUT_DIR/sensenova/
@@ -88,24 +98,28 @@ U1_OUTPUT_DIR/sensenova/
     └── Q8_0/SenseNova-U1.6-8B-MoT-Q8_0.gguf
 ```
 
-每个权重旁都会复制 `config.json`、`tokenizer_config.json`、`vocab.json`、
-`merges.txt`、`special_tokens_map.json`、`added_tokens.json`；输入目录需要提供这些文件。
-`conversion.json` 记录格式、张量数和文件 SHA256，FP8/INT8 另有 `quantization_config.json`。
+The scripts copy `config.json`, `tokenizer_config.json`, `vocab.json`,
+`merges.txt`, `special_tokens_map.json`, and `added_tokens.json` next to each
+checkpoint. These files must be present in the input directory.
 
+`conversion.json` records the format, tensor counts, and file SHA256.
+FP8/INT8 also produce `quantization_config.json`.
 
-## 5. 如何验证推理
+## 5. Validate inference
 
-推理依赖：基础包
+Install the base inference dependencies:
+
 ```bash
 python -m pip install torch torchvision triton transformers huggingface-hub accelerate safetensors tokenizers sentencepiece numpy pillow einops diffusers gguf comfy-kitchen packaging tqdm httpx psutil PyYAML
 ```
-推理依赖：FlashAttention 在 PyTorch 安装完成后单独安装
+
+Install FlashAttention separately after installing PyTorch:
+
 ```bash
 python -m pip install flash-attn --no-build-isolation
 ```
 
-
-苹果图示例（项目根目录执行，沿用上面设置的 `U1_OUTPUT_DIR`）：
+FP8 apple example: run from the project root using the `U1_OUTPUT_DIR` set above.
 
 ```bash
 python tools/quantization/inference.py \
@@ -119,6 +133,10 @@ python tools/quantization/inference.py \
   --output_dir "$U1_OUTPUT_DIR/validation/fp8"
 ```
 
-验证 INT8 时换成对应权重文件，设置 `--format int8-convrot`，并换一个输出目录。BF16 使用 `--format bf16`，三个 GGUF 都使用 `--format gguf`；`--model_path` 均填写具体权重文件。
+For INT8, use its checkpoint file, set `--format int8-convrot`, and choose a new
+output directory. Use `--format bf16` for BF16 and `--format gguf` for all three
+GGUF formats. Always set `--model_path` to the checkpoint file itself.
 
-推理固定使用 FlashAttention、BF16 非量化层和全模型驻留 GPU。图片及耗时、显存记录保存在 `--output_dir`。
+Inference uses FlashAttention, BF16 for non-quantized layers, and keeps the full
+model on the GPU. Images, timing results, and peak GPU memory usage are saved
+under `--output_dir`.
