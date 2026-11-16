@@ -1,11 +1,8 @@
 # Prompt Enhancement for SenseNova-U1
 
-> Short user prompts — especially for **infographic** generation —
-> often under-constrain the image model. Running the raw prompt through a
-> strong LLM enhancer first consistently lifts structure, typography,
-> information density, and "brief-readability" of the final image. This
-> document describes how to turn it on, which upstream LLMs we recommend,
-> and what the tradeoffs look like.
+For short infographic prompts, `--enhance` can ask an upstream LLM to add
+layout and text details before U1 generates an image. It adds an API call.
+This page shows how to configure it and includes example outputs.
 
 ## 1. When to use
 
@@ -39,7 +36,9 @@ switch backends without code changes.
 | `U1_ENHANCE_MODEL`    | `gemini-3.1-pro`   | Model name string sent in the request body |
 | `U1_ENHANCE_API_KEY`  | _unset_            | Bearer token (required) |
 
-First, create a `.env` file and populate it with the four required parameters. Then just add `--enhance` to your `examples/t2i/inference.py` command line.
+Create a `.env` file at the repository root and set `U1_ENHANCE_API_KEY`.
+The script has defaults for the other three settings; set them too when using
+a different backend. Then add `--enhance` to your `examples/t2i/inference.py` command line.
 Add `--print_enhance` to echo the original + enhanced prompt for
 debugging.
 
@@ -54,22 +53,20 @@ U1_ENHANCE_MODEL=sensenova-6.7-flash-lite
 U1_ENHANCE_API_KEY=<your SenseNova API key>
 ```
 
-### 3.1 Recommended backends
+### 3.1 Backend examples
 
-| Model | Backend | Endpoint template | Notes |
-| :---- | :------ | :---------------- | :---- |
-| **Gemini 3.1 Pro** (Default) | `chat_completions` | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` | Best overall infographic quality in our internal bench. Excellent at structured / hierarchical content. |
-| SenseNova 6.7 Flash-Lite | `chat_completions` | `https://token.sensenova.cn/v1/chat/completions` | Near Gemini 3.1 Pro quality on Chinese content at lower per-token cost, preferred for production. |
-| Anthropic Claude (Sonnet/Opus) | `anthropic`        | `https://api.anthropic.com/v1/messages` | Strong typography discipline, slightly less "information-dense" out of the box. |
-| Kimi 2.5                      | `chat_completions` | `https://api.moonshot.cn/v1/chat/completions` | Good Chinese enhancements, weaker for English-dense infographics in our runs. |
-| Gemini 3.1 Flash-Lite (Third-party service) | `chat_completions` | `https://aigateway.edgecloudapp.com/v1/f194fd69361cd590f1fa136c9c90eca1/senseai` | The overall quality of the information chart is high and its generation speed is fast. |
-| Kimi 2.5/Qwen3.6-Plus (Third-party service) | `chat_completions` | `https://coding.dashscope.aliyuncs.com/v1/chat/completions` | Good Chinese enhancements. Different models can be flexibly selected. |
+| Model | Backend | Endpoint template |
+| :---- | :------ | :---------------- |
+| Gemini 3.1 Pro (script default) | `chat_completions` | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` |
+| SenseNova 6.7 Flash-Lite | `chat_completions` | `https://token.sensenova.cn/v1/chat/completions` |
+| Anthropic Claude (Sonnet/Opus) | `anthropic` | `https://api.anthropic.com/v1/messages` |
+| Kimi 2.5 | `chat_completions` | `https://api.moonshot.cn/v1/chat/completions` |
+| Gemini 3.1 Flash-Lite (third-party service) | `chat_completions` | `https://aigateway.edgecloudapp.com/v1/f194fd69361cd590f1fa136c9c90eca1/senseai` |
+| Kimi 2.5/Qwen3.6-Plus (third-party service) | `chat_completions` | `https://coding.dashscope.aliyuncs.com/v1/chat/completions` |
 
-## 4. Qualitative comparison
+## 4. Example outputs
 
-> The table below will be populated with side-by-side samples from the same
-> handful of base prompts, rendered at `2048×2048` with identical sampler
-> knobs. PRs with new backends welcome.
+The images below show outputs from different prompt enhancers.
 
 | Base prompt | No enhance | Gemini 3.1 Pro | SenseNova | Qwen3.6-Plus | Kimi 2.5 |
 | :---------- | :------------- | :------------- | :------------- | :------------- | :------------- |

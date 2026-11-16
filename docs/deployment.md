@@ -1,4 +1,4 @@
-# LightLLM + LightX2V Deployment
+# U1 deployment with LightLLM + LightX2V
 
 This guide provides a practical deployment flow for serving SenseNova-U1 with
 LightLLM + LightX2V using the Docker image
@@ -13,8 +13,8 @@ docker run --gpus all --ipc=host --network host -it lightx2v/lightllm_lightx2v:2
 
 ## 2) Clone runtime dependencies inside the container
 
-The image may not include the latest source trees. Clone both repositories and
-pin LightLLM to the validated branch:
+The image may not include the source trees used below. Clone both repositories
+and select the LightLLM branch used by this example:
 
 ```bash
 git clone https://github.com/ModelTC/LightX2V.git
@@ -22,6 +22,10 @@ git clone https://github.com/ModelTC/LightLLM.git
 cd LightLLM
 git checkout neo_plus_clean
 ```
+
+These commands use moving upstream branches. Record the commit hashes of both
+checkouts for your deployment; the Docker image tag alone does not fix the
+versions of source code cloned inside it.
 
 ## 3) X2I-related arguments
 
@@ -68,34 +72,22 @@ python -m lightllm.server.api_server \
 
 ### Mode B: `separate` (understanding and generation decoupled)
 
-`separate` is conceptually similar to PD-style decoupling in LLM serving: split
-different stages onto different GPU groups so a long stage does not block the
-short stage.
+`separate` places understanding and generation processes on different GPU groups. The following resource configurations are examples; choose one based on measurements of your workload.
 
-For multimodal serving, image generation is usually the long stage, while
-understanding is short and lightweight. Separating them allows understanding
-requests to keep flowing even when generation workers are busy.
-
-Recommended deployment profiles:
-
-1. **Default profile (continuity-first): Understanding `tp=1` + Generation 1 GPU**
+1. **Understanding `tp=1`; generation 1 GPU**
    - Understanding: `--tp 1`
    - Generation: `--x2i_server_used_gpus 1`
-   - Use as the baseline profile for mixed workloads. It keeps the pipeline simple
-     while avoiding head-of-line blocking between understanding and generation.
 
-2. **Understanding-expanded profile: Understanding `tp=2` + Generation 1 GPU**
+2. **Understanding `tp=2`; generation 1 GPU**
    - Understanding: `--tp 2`
    - Generation: `--x2i_server_used_gpus 1`
-   - Use when complex prompts or high understanding QPS become the bottleneck.
 
-3. **Generation-expanded profile: Understanding `tp=1/2` + Generation parallel**
+3. **Understanding `tp=1/2`; generation 2 or 4 GPUs**
    - Understanding: `--tp 1` or `--tp 2`
    - Generation option A (2 GPUs): `--x2i_server_used_gpus 2` +
      `/workspace/LightX2V/configs/neopp/neopp_dense_parallel_cfg.json`
    - Generation option B (4 GPUs): `--x2i_server_used_gpus 4` +
      `/workspace/LightX2V/configs/neopp/neopp_dense_parallel_cfg_seq.json`
-   - Use when generation latency/throughput dominates (most common scaling path).
 
 Example launch (separate mode in API server):
 
@@ -116,23 +108,17 @@ python -m lightllm.server.api_server \
 
 ## 5) Quantization
 
-`separate` mode also enables independent quantization strategies for
-understanding and generation.
-
-Because understanding and generation are decoupled, you can tune quality/latency
-for each path independently:
+In `separate` mode, you can set precision independently for understanding and generation:
 
 1. **Understanding FP16/BF16 + Generation FP8**
    - Understanding: no quantization flag (keep default precision)
    - Generation: use FP8 generation config, for example
      `/workspace/LightX2V/configs/neopp/neopp_dense_fp8.json`
-   - Recommended as the default quantized profile for production.
 
 2. **Understanding FP8 + Generation FP8**
    - Understanding: add `--quant_type fp8w8a8`
    - Generation: use FP8 generation config
      `/workspace/LightX2V/configs/neopp/neopp_dense_fp8.json`
-   - Use when GPU memory/throughput is the primary constraint.
 
 Notes:
 - `--quant_type fp8w8a8` controls quantization on the understanding path.
