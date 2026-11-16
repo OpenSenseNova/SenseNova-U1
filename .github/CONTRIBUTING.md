@@ -31,6 +31,10 @@ pull request, so we can align on scope and design.
    `pre-commit run --all-files` passes.
 5. Push the branch to your fork and open a pull request against `main`.
 
+## Documentation maintenance
+
+For model, release, or documentation changes, read the repository [agent instructions](../AGENTS.md) and the [model release guide](../docs/contributing/model_release.md) before editing. The release guide is the canonical source for model documentation structure, evidence, bilingual synchronization, and homepage entry points.
+
 ## Pull request checklist
 
 - [ ] The PR has a descriptive title and summary explaining the motivation.

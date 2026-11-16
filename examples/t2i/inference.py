@@ -206,7 +206,7 @@ def parse_args() -> argparse.Namespace:
         "--lora_path",
         required=False,
         default=None,
-        help="HuggingFace Hub id or a local path to a lora model.",
+        help="Local path to a LoRA .safetensors file (download Hub weights first).",
     )
 
     src = p.add_mutually_exclusive_group(required=True)

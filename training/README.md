@@ -2,7 +2,7 @@
 
 > Training code for **SenseNova-U1** and **SenseNova-U1.5 Preview**.
 
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](../LICENSE)
 
 ## Repository layout
 
@@ -74,27 +74,9 @@ install the matching Torch/CUDA environment and Flash Attention's build tools;
 the final sync builds the extension against that environment. You can install a
 compatible prebuilt wheel instead of the final command when one is available.
 
-For environments without uv, use the generated direct-dependency requirements.
-pip will resolve compatible transitive versions; use uv with `uv.lock` for the
-exact reference environment.
-
-```bash
-cd training
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m pip install -r requirements-flash-build.txt
-python -m pip install --no-deps --no-build-isolation -r requirements-flash.txt
-python -m pip install -e . --no-deps
-```
-
-`pyproject.toml` is the source of truth for direct dependencies and version
-ranges, `uv.lock` contains the exact resolution, and `requirements*.txt` files
-mirror only the relevant pyproject dependency lists. The separate
-`requirements-flash-build.txt` and `requirements-flash.txt` preserve the required
-build order for this compiled extension. Do not edit generated requirements by
-hand. Repository maintainers can refresh both projects' locks and requirements
-from the repository root with
+`pyproject.toml` defines the training dependencies, and `uv.lock` pins the
+reference environment. Repository maintainers can refresh the generated
+requirements files and both projects' locks from the repository root with
 `./scripts/lock_and_export_dependencies.sh`.
 
 Other accelerator kernels such as Apex, `grouped_gemm`, and `deeplink_ext`
