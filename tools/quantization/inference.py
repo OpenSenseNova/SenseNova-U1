@@ -1,4 +1,4 @@
-"""T2I validation for BF16, GGUF and v2 FP8/INT8 weights."""
+"""Quantization smoke test using the shared SenseNova-U1 T2I inference path."""
 
 import argparse
 import json
@@ -10,10 +10,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 import torch
-from quant_runtime import QuantLinear, load_quant
 
 import sensenova_u1
 from examples.t2i.inference import SenseNovaU1T2I
+from sensenova_u1.utils.quant_runtime import QuantLinear
 
 
 def main():
@@ -42,15 +42,13 @@ def main():
     sensenova_u1.set_attn_backend("flash")
     torch.cuda.synchronize()
     started = time.perf_counter()
-    if a.format in ("fp8", "int8-convrot"):
-        engine = SenseNovaU1T2I.__new__(SenseNovaU1T2I)
-        engine.model, engine.tokenizer = load_quant(a.model_path, "cuda")
-        engine.device, engine.vram_mode, engine.prefetch_count = "cuda", "full", 0
-        engine.fast_vram_fraction, engine.fast_vram_headroom_gib = 1.0, 0.0
-        engine.fast_activation_reserve_gib, engine.fast_vram_budget_gib = 0.0, None
-        engine._last_think_text = ""
-    else:
-        engine = SenseNovaU1T2I(model_path=a.model_path, dtype=torch.bfloat16, device="cuda", vram_mode="full")
+    engine = SenseNovaU1T2I(
+        model_path=a.model_path,
+        model_format=a.format,
+        dtype=torch.bfloat16,
+        device="cuda",
+        vram_mode="full",
+    )
     torch.cuda.synchronize()
     load_seconds = time.perf_counter() - started
     # Fail before PNG conversion if the model produces invalid pixels.

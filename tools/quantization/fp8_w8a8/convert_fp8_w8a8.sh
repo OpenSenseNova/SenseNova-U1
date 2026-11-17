@@ -9,4 +9,4 @@ export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 
 python "$SCRIPT_DIR/convert_w8a8.py" \
   --model-path "$U1_SOURCE_DIR" \
-  --output "${U1_OUTPUT_DIR}/sensenova/SenseNova-U1.6-8B-MoT-ComfyUI/fp8/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors"
+  --output "${U1_OUTPUT_DIR}/sensenova/SenseNova-U1.6-8B-MoT-Native/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors"

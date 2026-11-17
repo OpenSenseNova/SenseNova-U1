@@ -2,8 +2,15 @@
 
 [English](README.md) | 简体中文
 
-六套脚本分别用于 BF16 合并、GGUF Q4/Q6/Q8、FP8、INT8 ConvRot。
+原生转换脚本用于 BF16 合并、GGUF Q4/Q6/Q8、FP8 和 INT8 ConvRot。
+`comfyui/` 目录另外提供 ComfyUI 专用的 BF16 和 INT8 ConvRot 导出器。
 使用步骤：放好文件夹 → 填写路径 → 运行脚本。
+
+推理只保留一条主路径：`examples/t2i/inference.py`、
+`examples/editing/inference.py` 和 `examples/interleave/inference.py` 都使用
+`src/sensenova_u1/utils/checkpoint_loading.py` 中的共享加载器；加载原生量化权重时
+使用默认的 `--model_format auto` 或显式指定格式。`tools/quantization/inference.py`
+只是复用同一个 T2I 引擎的量化冒烟验证封装，不再维护第二套模型运行时。
 
 ## 1. 文件夹怎么放
 
@@ -19,8 +26,8 @@ tools/quantization/
 ├── gguf_q8_0/
 ├── fp8_w8a8/
 ├── int8_convrot_w8a8/
-├── inference.py
-└── quant_runtime.py
+├── comfyui/
+└── inference.py
 ```
 
 每个转换子文件夹可以单独复制使用。里面的 `.sh`、`.py` 文件要一起保留，
@@ -66,6 +73,19 @@ bash tools/quantization/fp8_w8a8/convert_fp8_w8a8.sh
 bash tools/quantization/int8_convrot_w8a8/convert_int8_convrot_w8a8.sh
 ```
 
+ComfyUI 导出器使用独立的配置模板和输出格式：
+
+```bash
+cp tools/quantization/comfyui/config.env.example tools/quantization/comfyui/config.env
+# 修改 tools/quantization/comfyui/config.env
+bash tools/quantization/comfyui/convert_bf16.sh
+bash tools/quantization/comfyui/convert_int8_convrot.sh
+```
+
+原生 INT8 转换器和 ComfyUI INT8 导出器不能互换：前者写入
+`src/sensenova_u1/utils/quant_runtime.py` 读取的 `sensenova-w8a8-v2` 文件级 metadata，后者写入
+ComfyUI 读取的每层 `.comfy_quant` metadata。
+
 脚本不会覆盖已有权重。重复转换请设置新的 `U1_OUTPUT_DIR`。
 中途失败留下的 `.partial` 文件也会阻止覆盖；确认不再需要后再手动清理。
 
@@ -73,15 +93,22 @@ bash tools/quantization/int8_convrot_w8a8/convert_int8_convrot_w8a8.sh
 
 ```text
 U1_OUTPUT_DIR/sensenova/
+├── SenseNova-U1.6-8B-MoT-Native/
+│   ├── SenseNova-U1.6-BF16.safetensors
+│   ├── SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors
+│   └── SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors
 ├── SenseNova-U1.6-8B-MoT-ComfyUI/
-│   ├── bf16/SenseNova-U1.6-BF16.safetensors
-│   ├── fp8/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors
-│   └── int8-convrot/SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors
+│   └── checkpoints/
+│       ├── SenseNova-U1.6-BF16.safetensors
+│       └── SenseNova-U1.6-INT8-ConvRot.safetensors
 └── SenseNova-U1.6-8B-MoT-GGUF/
-    ├── Q4_0/SenseNova-U1.6-8B-MoT-Q4_0.gguf
-    ├── Q6_K/SenseNova-U1.6-8B-MoT-Q6_K.gguf
-    └── Q8_0/SenseNova-U1.6-8B-MoT-Q8_0.gguf
+    ├── SenseNova-U1.6-8B-MoT-Q4_0.gguf
+    ├── SenseNova-U1.6-8B-MoT-Q6_K.gguf
+    └── SenseNova-U1.6-8B-MoT-Q8_0.gguf
 ```
+
+将 `SenseNova-U1.6-8B-MoT-ComfyUI/` 作为 ComfyUI 的 models 根目录使用，
+其中的 `checkpoints/` 子目录符合 ComfyUI 的目录约定。
 
 每个权重旁都会复制 `config.json`、`tokenizer_config.json`、`vocab.json`、
 `merges.txt`、`special_tokens_map.json`、`added_tokens.json`；输入目录需要提供这些文件。
@@ -104,7 +131,7 @@ python -m pip install flash-attn --no-build-isolation
 
 ```bash
 python tools/quantization/inference.py \
-  --model_path "$U1_OUTPUT_DIR/sensenova/SenseNova-U1.6-8B-MoT-ComfyUI/fp8/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors" \
+  --model_path "$U1_OUTPUT_DIR/sensenova/SenseNova-U1.6-8B-MoT-Native/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors" \
   --format fp8 \
   --prompt "A studio photograph of a red apple on a white table, soft daylight." \
   --width 1024 --height 1024 \

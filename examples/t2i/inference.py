@@ -20,7 +20,7 @@ from sensenova_u1.utils import (
     add_offload_args,
     best_available_device,
     load_and_merge_lora_weight_from_safetensors,
-    load_model_and_tokenizer,
+    load_model_and_tokenizer_for_format,
     make_offload_ctx,
     vram_mode_keeps_generation_resident,
     vram_mode_to_prefetch_count,
@@ -85,6 +85,7 @@ class SenseNovaU1T2I:
         model_path: str,
         device: str = "cuda",
         dtype: torch.dtype = torch.bfloat16,
+        model_format: str = "auto",
         gguf_checkpoint: str | None = None,
         vram_mode: str = DEFAULT_VRAM_MODE,
         device_map: str | None = None,
@@ -102,8 +103,9 @@ class SenseNovaU1T2I:
         self.fast_vram_headroom_gib = fast_vram_headroom_gib
         self.fast_activation_reserve_gib = fast_activation_reserve_gib
         self.fast_vram_budget_gib = fast_vram_budget_gib
-        self.model, self.tokenizer = load_model_and_tokenizer(
+        self.model, self.tokenizer = load_model_and_tokenizer_for_format(
             model_path,
+            model_format=model_format,
             dtype=dtype,
             device=device,
             gguf_checkpoint=gguf_checkpoint,
@@ -282,6 +284,15 @@ def parse_args() -> argparse.Namespace:
         default="bfloat16",
         choices=["bfloat16", "float16", "float32"],
     )
+    p.add_argument(
+        "--model_format",
+        default="auto",
+        choices=["auto", "bf16", "fp8", "int8-convrot", "gguf"],
+        help=(
+            "Native checkpoint format. 'auto' detects the SenseNova native INT8/FP8 metadata "
+            "and leaves ordinary HF/Safetensors checkpoints on the standard loader."
+        ),
+    )
     add_offload_args(p)
     p.add_argument(
         "--gguf_checkpoint",
@@ -411,6 +422,7 @@ def main() -> None:
             "fast_vram_budget_gib": args.fast_vram_budget_gib,
             "attn_backend": sensenova_u1.effective_attn_backend(),
             "dtype": args.dtype,
+            "model_format": args.model_format,
             "gguf": args.gguf_checkpoint,
         },
     )
@@ -422,6 +434,7 @@ def main() -> None:
                 args.model_path,
                 device=args.device,
                 dtype=dtype,
+                model_format=args.model_format,
                 gguf_checkpoint=args.gguf_checkpoint,
                 vram_mode=args.vram_mode,
                 device_map=args.device_map,

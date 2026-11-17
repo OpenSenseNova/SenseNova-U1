@@ -42,6 +42,7 @@ from . import accel
 LOGGER = logging.getLogger(__name__)
 
 ModelArtifactFormat = Literal["pretrained", "safetensors", "gguf"]
+ModelRuntimeFormat = Literal["auto", "pretrained", "bf16", "safetensors", "fp8", "int8-convrot", "gguf"]
 
 
 @dataclass(frozen=True)
@@ -379,6 +380,76 @@ def load_model_and_tokenizer(
             model = model.to(device)
 
     return model, tokenizer
+
+
+def resolve_model_runtime_format(model_path: str, model_format: ModelRuntimeFormat = "auto") -> ModelRuntimeFormat:
+    """Resolve a runtime format without treating ComfyUI metadata as native quantization."""
+    valid = {"auto", "pretrained", "bf16", "safetensors", "fp8", "int8-convrot", "gguf"}
+    if model_format not in valid:
+        raise ValueError(f"model_format must be one of {sorted(valid)}, got {model_format!r}")
+    if model_format != "auto":
+        return model_format
+
+    suffix = Path(model_path).suffix.lower()
+    if suffix == ".gguf":
+        return "gguf"
+    if suffix in {".safetensors", ".sft"}:
+        try:
+            metadata = _read_safetensors_metadata(model_path)
+            spec = json.loads(metadata.get("quantization", "{}"))
+        except (OSError, RuntimeError, TypeError, ValueError, json.JSONDecodeError):
+            spec = {}
+        if spec.get("schema") == "sensenova-w8a8-v2" and spec.get("format") in {"fp8", "int8-convrot"}:
+            return spec["format"]
+        return "safetensors"
+    return "pretrained"
+
+
+def load_model_and_tokenizer_for_format(
+    model_path: str,
+    *,
+    model_format: ModelRuntimeFormat = "auto",
+    dtype: torch.dtype,
+    device: str | torch.device | None = None,
+    gguf_checkpoint: str | None = None,
+    model_resources: str | None = None,
+    device_map: str | None = None,
+    max_memory: str | dict[int | str, str] | None = None,
+    for_offload: bool = False,
+    experts_implementation: str | None = None,
+) -> tuple[nn.Module, Any]:
+    """Load a native U1 model through the standard or quantized runtime.
+
+    Native FP8 and INT8 checkpoints are full-device runtime artifacts and do
+    not support layer offload or a static ``device_map``. BF16, GGUF, HF
+    directories, and ordinary Safetensors continue through the existing
+    loader. ComfyUI per-module quantization markers are deliberately not
+    interpreted by this function.
+    """
+    resolved_format = resolve_model_runtime_format(model_path, model_format)
+    if resolved_format in {"fp8", "int8-convrot"}:
+        if for_offload or device_map:
+            raise ValueError(
+                f"native {resolved_format} checkpoints require full-device loading; "
+                "disable layer offload and device_map"
+            )
+        if device is None:
+            device = _default_device()
+        from .quant_runtime import load_quant
+
+        return load_quant(model_path, device)
+
+    return load_model_and_tokenizer(
+        model_path,
+        dtype=dtype,
+        device=device,
+        gguf_checkpoint=gguf_checkpoint,
+        model_resources=model_resources,
+        device_map=device_map,
+        max_memory=max_memory,
+        for_offload=for_offload,
+        experts_implementation=experts_implementation,
+    )
 
 
 def _load_from_safetensors(

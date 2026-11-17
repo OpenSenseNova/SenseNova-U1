@@ -6,11 +6,14 @@ from .accel import (
 )
 from .checkpoint_loading import (
     ModelArtifact,
+    ModelRuntimeFormat,
     add_offload_args,
     infer_input_device,
     load_model_and_tokenizer,
+    load_model_and_tokenizer_for_format,
     parse_max_memory,
     resolve_model_artifact,
+    resolve_model_runtime_format,
 )
 from .comparison import save_compare
 from .gguf_loader import load_gguf_checkpoint, match_state_dict, set_gguf2meta_model
@@ -46,6 +49,7 @@ __all__ = [
     "InferenceProfiler",
     "ModelParamInspector",
     "ModelArtifact",
+    "ModelRuntimeFormat",
     "VRAM_MODE_OPTIONS",
     "add_offload_args",
     "best_available_device",
@@ -56,12 +60,14 @@ __all__ = [
     "load_and_merge_lora_weight_from_safetensors",
     "load_gguf_checkpoint",
     "load_model_and_tokenizer",
+    "load_model_and_tokenizer_for_format",
     "make_offload_ctx",
     "match_state_dict",
     "offload_layers_async",
     "offload_layers_sync",
     "parse_max_memory",
     "resolve_model_artifact",
+    "resolve_model_runtime_format",
     "save_compare",
     "seed_all_accelerators",
     "set_gguf2meta_model",
