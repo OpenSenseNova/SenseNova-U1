@@ -9,4 +9,4 @@ U1_OUTPUT_DIR="${U1_OUTPUT_DIR:-./outputs/quantization}"
 python "$SCRIPT_DIR/convert_gguf.py" \
   --model-path "$U1_SOURCE_DIR" \
   --qtype Q8_0 \
-  --output "${U1_OUTPUT_DIR}/sensenova/SenseNova-U1.6-8B-MoT-GGUF/Q8_0/SenseNova-U1.6-8B-MoT-Q8_0.gguf"
+  --output "${U1_OUTPUT_DIR}/sensenova/SenseNova-U1.6-8B-MoT-GGUF/SenseNova-U1.6-8B-MoT-Q8_0.gguf"

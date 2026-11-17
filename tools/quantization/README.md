@@ -2,8 +2,17 @@
 
 English | [Chinese](README_CN.md)
 
-The six scripts cover BF16 merging, GGUF Q4/Q6/Q8, FP8, and INT8 ConvRot.
-To use them: place the files, set the paths, then run the scripts.
+The native conversion scripts cover BF16 merging, GGUF Q4/Q6/Q8, FP8, and
+INT8 ConvRot. The `comfyui/` directory contains the separate ComfyUI BF16 and
+INT8 ConvRot exporters.
+
+The runtime has one inference path. `examples/t2i/inference.py`,
+`examples/editing/inference.py`, and `examples/interleave/inference.py` all use
+the shared loader in `src/sensenova_u1/utils/checkpoint_loading.py`; pass
+`--model_format auto` (the default) or an explicit native format when loading
+quantized weights. `tools/quantization/inference.py` is kept as a small
+quantization smoke-test wrapper around the same T2I engine, so it does not
+implement a second model runtime.
 
 ## 1. Directory layout
 
@@ -19,8 +28,8 @@ tools/quantization/
 ├── gguf_q8_0/
 ├── fp8_w8a8/
 ├── int8_convrot_w8a8/
-├── inference.py
-└── quant_runtime.py
+├── comfyui/
+└── inference.py
 ```
 
 Each conversion subdirectory can be copied and used independently. Keep its
@@ -70,6 +79,20 @@ bash tools/quantization/fp8_w8a8/convert_fp8_w8a8.sh
 bash tools/quantization/int8_convrot_w8a8/convert_int8_convrot_w8a8.sh
 ```
 
+The ComfyUI exporters use their own configuration template and output format:
+
+```bash
+cp tools/quantization/comfyui/config.env.example tools/quantization/comfyui/config.env
+# edit tools/quantization/comfyui/config.env
+bash tools/quantization/comfyui/convert_bf16.sh
+bash tools/quantization/comfyui/convert_int8_convrot.sh
+```
+
+The native INT8 converter and the ComfyUI INT8 exporter are not interchangeable:
+the former writes the `sensenova-w8a8-v2` file-level metadata consumed by
+`src/sensenova_u1/utils/quant_runtime.py`, while the latter writes per-module
+`.comfy_quant` metadata for ComfyUI.
+
 The scripts do not overwrite existing weights. Use a new `U1_OUTPUT_DIR` to
 repeat a conversion. A `.partial` file left by an interrupted conversion also
 blocks overwriting; remove it manually only when it is no longer needed.
@@ -78,15 +101,22 @@ blocks overwriting; remove it manually only when it is no longer needed.
 
 ```text
 U1_OUTPUT_DIR/sensenova/
+├── SenseNova-U1.6-8B-MoT-Native/
+│   ├── SenseNova-U1.6-BF16.safetensors
+│   ├── SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors
+│   └── SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors
 ├── SenseNova-U1.6-8B-MoT-ComfyUI/
-│   ├── bf16/SenseNova-U1.6-BF16.safetensors
-│   ├── fp8/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors
-│   └── int8-convrot/SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors
+│   └── checkpoints/
+│       ├── SenseNova-U1.6-BF16.safetensors
+│       └── SenseNova-U1.6-INT8-ConvRot.safetensors
 └── SenseNova-U1.6-8B-MoT-GGUF/
-    ├── Q4_0/SenseNova-U1.6-8B-MoT-Q4_0.gguf
-    ├── Q6_K/SenseNova-U1.6-8B-MoT-Q6_K.gguf
-    └── Q8_0/SenseNova-U1.6-8B-MoT-Q8_0.gguf
+    ├── SenseNova-U1.6-8B-MoT-Q4_0.gguf
+    ├── SenseNova-U1.6-8B-MoT-Q6_K.gguf
+    └── SenseNova-U1.6-8B-MoT-Q8_0.gguf
 ```
+
+Use `SenseNova-U1.6-8B-MoT-ComfyUI/` as the ComfyUI models root; its
+`checkpoints/` subdirectory follows ComfyUI's expected layout.
 
 The scripts copy `config.json`, `tokenizer_config.json`, `vocab.json`,
 `merges.txt`, `special_tokens_map.json`, and `added_tokens.json` next to each
@@ -113,7 +143,7 @@ FP8 apple example: run from the project root using the `U1_OUTPUT_DIR` set above
 
 ```bash
 python tools/quantization/inference.py \
-  --model_path "$U1_OUTPUT_DIR/sensenova/SenseNova-U1.6-8B-MoT-ComfyUI/fp8/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors" \
+  --model_path "$U1_OUTPUT_DIR/sensenova/SenseNova-U1.6-8B-MoT-Native/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors" \
   --format fp8 \
   --prompt "A studio photograph of a red apple on a white table, soft daylight." \
   --width 1024 --height 1024 \
