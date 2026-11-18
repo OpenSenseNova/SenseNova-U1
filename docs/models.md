@@ -36,6 +36,28 @@ These LoRA files require their matching base checkpoint; they are not standalone
 
 For architecture context, see the [U1 technical report](pdf/SenseNOVA_U1.pdf) and [parameter breakdown](parameter_breakdown.md).
 
+## U1.6 repository conversion artifacts
+
+The repository's [quantization guide](../tools/quantization/README.md) produces
+U1.6 conversion artifacts from a matching source checkpoint. These files are
+runtime-specific outputs rather than additional official checkpoints. Each
+format directory includes the model configuration, tokenizer files, conversion
+reports, and `manifest.json` needed to identify the artifact.
+
+| Format | Files | Runtime | Placement and dependency notes |
+| --- | --- | --- | --- |
+| Native BF16 | `SenseNova-U1.6-BF16.safetensors` | SenseNova-U1 Python examples | Standard BF16 baseline. |
+| Native FP8 W8A8 | `SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors` | SenseNova-U1 Python examples | CUDA full-device loading with the native FP8 runtime. |
+| Native INT8 ConvRot W8A8 | `SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors` | SenseNova-U1 Python examples | CUDA full-device loading with the native INT8 runtime. |
+| GGUF Q4/Q6/Q8 | `SenseNova-U1.6-8B-MoT-Q4_0.gguf`, `Q6_K`, `Q8_0` | SenseNova-U1 GGUF loader | Keep the six config/tokenizer files beside the GGUF file. External GGUF engines require their own U1.6 architecture support. |
+
+Native FP8 and INT8 use `--model_format fp8` or `--model_format int8-convrot`,
+`--dtype bfloat16`, `--device cuda`, and `--vram_mode full` in the reference
+examples. GGUF uses `--model_format gguf` and the same BF16 compute dtype. Use
+the format directory's `manifest.json` and conversion report as the source for
+the exact artifact hash and tested scope. ComfyUI checkpoint conversion follows
+the official ComfyUI integration's release process.
+
 ## Community models and tools
 
 The following weights and integrations are published by their named maintainers. They are separate from the official checkpoints above; follow each project's instructions and check that the conversion matches the U1, U1.5 Preview, or U1.5 base you intend to use.
