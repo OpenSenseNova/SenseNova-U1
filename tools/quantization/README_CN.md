@@ -193,7 +193,8 @@ export HF_TOKEN="<huggingface-user-access-token>"
 
 python tools/quantization/publish_lora_hf.py \
   --lora-path ./outputs/SenseNova-U1.6-example.safetensors \
-  --repo-id sensenova/SenseNova-U1.6-example-LoRA \
+  --adapter-name SenseNova-U1.6-8B-MoT-LoRA-8step.safetensors \
+  --repo-id sensenova/SenseNova-U1.6-8B-MoT-LoRAs \
   --base-model sensenova/SenseNova-U1.6-8B-MoT \
   --purpose "Publish U1.6 RC1 LoRA adapter" \
   --source-revision rc1 \
@@ -201,4 +202,8 @@ python tools/quantization/publish_lora_hf.py \
   --commit-message "release: publish U1.6 RC1 LoRA adapter"
 ```
 
-适配器有经过审核的模型卡时使用 `--readme`。基座模型和对应 revision 会记录在 `lora_manifest.json` 中，作为适配器发布契约的一部分。
+使用 `--adapter-name` 可以把 `ema_lora.safetensors` 这类训练产物改成正式发布文件名。原始文件保持不变，源文件名和发布文件名都会记录在 `lora_manifest.json` 中。适配器有经过审核的模型卡时使用 `--readme`。基座模型和对应 revision 会记录在 `lora_manifest.json` 中，作为适配器发布契约的一部分。
+
+不同蒸馏步数可以放在同一个适配器仓库中，分别命名为
+`SenseNova-U1.6-8B-MoT-LoRA-8step.safetensors` 和
+`SenseNova-U1.6-8B-MoT-LoRA-4step.safetensors`。

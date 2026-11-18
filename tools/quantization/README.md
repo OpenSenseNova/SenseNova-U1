@@ -219,7 +219,8 @@ export HF_TOKEN="<huggingface-user-access-token>"
 
 python tools/quantization/publish_lora_hf.py \
   --lora-path ./outputs/SenseNova-U1.6-example.safetensors \
-  --repo-id sensenova/SenseNova-U1.6-example-LoRA \
+  --adapter-name SenseNova-U1.6-8B-MoT-LoRA-8step.safetensors \
+  --repo-id sensenova/SenseNova-U1.6-8B-MoT-LoRAs \
   --base-model sensenova/SenseNova-U1.6-8B-MoT \
   --purpose "Publish U1.6 RC1 LoRA adapter" \
   --source-revision rc1 \
@@ -227,6 +228,12 @@ python tools/quantization/publish_lora_hf.py \
   --commit-message "release: publish U1.6 RC1 LoRA adapter"
 ```
 
-Use `--readme` when the adapter has a reviewed model card. The base model and
-its revision are recorded in `lora_manifest.json`; they are part of the adapter
-release contract.
+Use `--adapter-name` to give a training output such as `ema_lora.safetensors`
+the release filename. The source file remains unchanged, and both source and
+published names are recorded in `lora_manifest.json`. Use `--readme` when the
+adapter has a reviewed model card. The base model and its revision are recorded
+in `lora_manifest.json`; they are part of the adapter release contract.
+
+Keep different distillation targets as separate files in the same adapter
+repository, for example `SenseNova-U1.6-8B-MoT-LoRA-8step.safetensors` and
+`SenseNova-U1.6-8B-MoT-LoRA-4step.safetensors`.

@@ -82,6 +82,11 @@ def validate_lora_file(path: str | Path) -> dict[str, Any]:
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--lora-path", required=True, help="Local LoRA .safetensors file.")
+    parser.add_argument(
+        "--adapter-name",
+        default=None,
+        help="Filename to use in the HF repository. Defaults to the local filename.",
+    )
     parser.add_argument("--repo-id", required=True, help="Hugging Face adapter repository.")
     parser.add_argument("--base-model", required=True, help="Compatible base model repository ID.")
     parser.add_argument("--purpose", required=True, help="Release purpose recorded in the upload commit description.")
@@ -131,6 +136,9 @@ for runtime requirements and task-specific commands.
 def main() -> None:
     args = _parse_args()
     adapter = validate_lora_file(args.lora_path)
+    adapter_name = args.adapter_name or adapter["adapter_file"]
+    if Path(adapter_name).name != adapter_name or Path(adapter_name).suffix.lower() != ".safetensors":
+        raise ValueError("--adapter-name must be a filename ending in .safetensors")
     token = os.environ.get(args.token_env)
     if not token and not args.dry_run:
         raise RuntimeError(
@@ -143,7 +151,8 @@ def main() -> None:
         "path_in_repo": args.path_in_repo or ".",
         "purpose": args.purpose,
         "base_model": args.base_model,
-        "adapter_file": adapter["adapter_file"],
+        "adapter_file": adapter_name,
+        "source_file": adapter["adapter_file"],
         "sha256": adapter["sha256"],
         "tag": args.tag,
     }
@@ -155,10 +164,11 @@ def main() -> None:
 
     with tempfile.TemporaryDirectory(prefix="sensenova-lora-publish-") as temporary_dir:
         staging = Path(temporary_dir)
-        shutil.copy2(args.lora_path, staging / adapter["adapter_file"])
+        shutil.copy2(args.lora_path, staging / adapter_name)
+        manifest_adapter = {**adapter, "adapter_file": adapter_name, "source_file": adapter["adapter_file"]}
         manifest = {
             "schema": LORA_MANIFEST_SCHEMA,
-            "adapter": adapter,
+            "adapter": manifest_adapter,
             "base_model": args.base_model,
             "base_revision": args.source_revision,
             "purpose": args.purpose,
@@ -169,7 +179,7 @@ def main() -> None:
         else:
             _write_generated_readme(
                 staging / "README.md",
-                adapter_name=Path(adapter["adapter_file"]).stem,
+                adapter_name=Path(adapter_name).stem,
                 base_model=args.base_model,
                 source_revision=args.source_revision,
             )
