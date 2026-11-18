@@ -3,8 +3,8 @@
 [English](README.md) | 简体中文
 
 原生转换脚本用于 BF16 合并、GGUF Q4/Q6/Q8、FP8 和 INT8 ConvRot。
-`comfyui/` 目录另外提供 ComfyUI 专用的 BF16 和 INT8 ConvRot 导出器。
-使用步骤：放好文件夹 → 填写路径 → 运行脚本。
+ComfyUI checkpoint 转换由官方 ComfyUI 集成维护，不属于本仓库的发布流程。
+使用步骤：准备原始模型 → 填写路径 → 运行目标格式脚本。
 
 推理只保留一条主路径：`examples/t2i/inference.py`、
 `examples/editing/inference.py` 和 `examples/interleave/inference.py` 都使用
@@ -26,12 +26,12 @@ tools/quantization/
 ├── gguf_q8_0/
 ├── fp8_w8a8/
 ├── int8_convrot_w8a8/
-├── comfyui/
+├── conversion_utils.py
 └── inference.py
 ```
 
-每个转换子文件夹可以单独复制使用。里面的 `.sh`、`.py` 文件要一起保留，
-不依赖其它转换子文件夹。推理入口需要完整项目。
+转换脚本依赖共享的 `conversion_utils.py`，请在完整项目中运行。
+推理入口同样需要完整项目。
 
 转换依赖：
 
@@ -73,18 +73,8 @@ bash tools/quantization/fp8_w8a8/convert_fp8_w8a8.sh
 bash tools/quantization/int8_convrot_w8a8/convert_int8_convrot_w8a8.sh
 ```
 
-ComfyUI 导出器使用独立的配置模板和输出格式：
-
-```bash
-cp tools/quantization/comfyui/config.env.example tools/quantization/comfyui/config.env
-# 修改 tools/quantization/comfyui/config.env
-bash tools/quantization/comfyui/convert_bf16.sh
-bash tools/quantization/comfyui/convert_int8_convrot.sh
-```
-
-原生 INT8 转换器和 ComfyUI INT8 导出器不能互换：前者写入
-`src/sensenova_u1/utils/quant_runtime.py` 读取的 `sensenova-w8a8-v2` 文件级 metadata，后者写入
-ComfyUI 读取的每层 `.comfy_quant` metadata。
+原生 INT8 转换器写入 `src/sensenova_u1/utils/quant_runtime.py` 使用的
+`sensenova-w8a8-v2` 文件级 metadata。ComfyUI 转换有独立的发布流程和 metadata 格式。
 
 脚本不会覆盖已有权重。重复转换请设置新的 `U1_OUTPUT_DIR`。
 中途失败留下的 `.partial` 文件也会阻止覆盖；确认不再需要后再手动清理。
@@ -94,25 +84,49 @@ ComfyUI 读取的每层 `.comfy_quant` metadata。
 ```text
 U1_OUTPUT_DIR/sensenova/
 ├── SenseNova-U1.6-8B-MoT-Native/
+│   ├── config.json
+│   ├── tokenizer_config.json
+│   ├── vocab.json
+│   ├── merges.txt
+│   ├── special_tokens_map.json
+│   ├── added_tokens.json
 │   ├── SenseNova-U1.6-BF16.safetensors
 │   ├── SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors
-│   └── SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors
-├── SenseNova-U1.6-8B-MoT-ComfyUI/
-│   └── checkpoints/
-│       ├── SenseNova-U1.6-BF16.safetensors
-│       └── SenseNova-U1.6-INT8-ConvRot.safetensors
+│   ├── SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors
+│   ├── SenseNova-U1.6-BF16.conversion.json
+│   ├── SenseNova-U1.6-FP8-E4M3FN-W8A8.conversion.json
+│   ├── SenseNova-U1.6-INT8-ConvRot-W8A8.conversion.json
+│   ├── SenseNova-U1.6-FP8-E4M3FN-W8A8.quantization_config.json
+│   ├── SenseNova-U1.6-INT8-ConvRot-W8A8.quantization_config.json
+│   ├── manifest.json
+│   └── ...
 └── SenseNova-U1.6-8B-MoT-GGUF/
+    ├── config.json
+    ├── tokenizer_config.json
+    ├── vocab.json
+    ├── merges.txt
+    ├── special_tokens_map.json
+    ├── added_tokens.json
     ├── SenseNova-U1.6-8B-MoT-Q4_0.gguf
     ├── SenseNova-U1.6-8B-MoT-Q6_K.gguf
-    └── SenseNova-U1.6-8B-MoT-Q8_0.gguf
+    ├── SenseNova-U1.6-8B-MoT-Q8_0.gguf
+    ├── SenseNova-U1.6-8B-MoT-Q4_0.conversion.json
+    ├── SenseNova-U1.6-8B-MoT-Q6_K.conversion.json
+    ├── SenseNova-U1.6-8B-MoT-Q8_0.conversion.json
+    ├── manifest.json
+    └── ...
 ```
 
-将 `SenseNova-U1.6-8B-MoT-ComfyUI/` 作为 ComfyUI 的 models 根目录使用，
-其中的 `checkpoints/` 子目录符合 ComfyUI 的目录约定。
+六个配置和 tokenizer 文件会复制到各格式目录中，用户可以直接下载完整的格式目录。
+生成的 `manifest.json` 列出该目录中的所有产物。若输出路径符合上面的结构，
+`U1_OUTPUT_DIR/sensenova/manifest.json` 还会列出 Native 和 GGUF 下的全部产物。
 
-每个权重旁都会复制 `config.json`、`tokenizer_config.json`、`vocab.json`、
-`merges.txt`、`special_tokens_map.json`、`added_tokens.json`；输入目录需要提供这些文件。
-`conversion.json` 记录格式、张量数和文件 SHA256，FP8/INT8 另有 `quantization_config.json`。
+输入目录必须提供 `config.json`、`tokenizer_config.json`、`vocab.json`、`merges.txt`、
+`special_tokens_map.json` 和 `added_tokens.json`，脚本会把它们复制到各格式目录。
+
+每个产物都会生成独立的 `<artifact>.conversion.json`，记录格式、张量数量、源模型配置
+哈希和文件 SHA256。FP8 和 INT8 还会生成独立的
+`<artifact>.quantization_config.json`，不同模型的报告不会互相覆盖。
 
 
 ## 5. 如何验证推理
@@ -141,6 +155,6 @@ python tools/quantization/inference.py \
   --output_dir "$U1_OUTPUT_DIR/validation/fp8"
 ```
 
-验证 INT8 时换成对应权重文件，设置 `--format int8-convrot`，并换一个输出目录。BF16 使用 `--format bf16`，三个 GGUF 都使用 `--format gguf`；`--model_path` 均填写具体权重文件。
+验证 INT8 时换成对应权重文件，设置 `--format int8-convrot`，并换一个输出目录。BF16 使用 `--format bf16`，三个 GGUF 都使用 `--format gguf`；`--model_path` 均填写具体权重文件，并保留同目录下的六个资源文件。
 
 推理固定使用 FlashAttention、BF16 非量化层和全模型驻留 GPU。图片及耗时、显存记录保存在 `--output_dir`。
