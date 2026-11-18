@@ -36,6 +36,26 @@
 
 架构细节见 [U1 技术报告](pdf/SenseNOVA_U1.pdf)和[参数说明](parameter_breakdown_CN.md)。
 
+## U1.6 仓库转换产物
+
+仓库中的[量化指南](../tools/quantization/README_CN.md)可以基于匹配的 U1.6
+源模型生成以下转换产物。这些文件是面向运行时的转换结果，不属于新增的官方
+模型权重。每个格式目录都会包含模型配置、tokenizer 文件、转换报告和
+`manifest.json`，用于确认产物身份和转换范围。
+
+| 格式 | 文件 | 运行时 | 放置和依赖说明 |
+| --- | --- | --- | --- |
+| Native BF16 | `SenseNova-U1.6-BF16.safetensors` | SenseNova-U1 Python 示例 | 标准 BF16 基线。 |
+| Native FP8 W8A8 | `SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors` | SenseNova-U1 Python 示例 | 使用原生 FP8 runtime，需要 CUDA 全设备驻留。 |
+| Native INT8 ConvRot W8A8 | `SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors` | SenseNova-U1 Python 示例 | 使用原生 INT8 runtime，需要 CUDA 全设备驻留。 |
+| GGUF Q4/Q6/Q8 | `SenseNova-U1.6-8B-MoT-Q4_0.gguf`、`Q6_K`、`Q8_0` | SenseNova-U1 GGUF loader | 六个配置和 tokenizer 文件需要与 GGUF 文件放在同一目录。外部 GGUF 引擎需要单独支持 U1.6 模型结构。 |
+
+Native FP8 和 INT8 在参考示例中使用 `--model_format fp8` 或
+`--model_format int8-convrot`、`--dtype bfloat16`、`--device cuda` 和
+`--vram_mode full`。GGUF 使用 `--model_format gguf` 和相同的 BF16 计算 dtype。
+具体产物的哈希和验证范围以对应格式目录的 `manifest.json` 与转换报告为准。
+ComfyUI checkpoint 转换遵循官方 ComfyUI 集成的发布流程。
+
 ## 社区模型与工具
 
 以下权重和集成由表中作者维护，与上方官方权重分开列出。使用前请阅读对应项目的说明，核对转换权重所基于的 U1、U1.5 Preview 或 U1.5。
