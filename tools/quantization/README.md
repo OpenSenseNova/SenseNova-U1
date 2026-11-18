@@ -206,3 +206,27 @@ Use `--dry-run` to validate the tree and print the upload plan without contactin
 Hugging Face. Use `--replace-tag` only when intentionally moving an existing tag
 to the new upload commit. Formal release promotion can create `v1.0.0` from the
 same immutable revision after the release checks are complete.
+
+## 7. Publish a LoRA adapter to Hugging Face
+
+Use the LoRA publisher for a standalone adapter file. It validates paired
+`.lora_down.weight` and `.lora_up.weight` tensors, finite floating-point values,
+rank shapes, the compatible base model, and the adapter SHA256. It creates a
+`lora_manifest.json` and a minimal model card when no README is supplied.
+
+```bash
+export HF_TOKEN="<huggingface-user-access-token>"
+
+python tools/quantization/publish_lora_hf.py \
+  --lora-path ./outputs/SenseNova-U1.6-example.safetensors \
+  --repo-id sensenova/SenseNova-U1.6-example-LoRA \
+  --base-model sensenova/SenseNova-U1.6-8B-MoT \
+  --purpose "Publish U1.6 RC1 LoRA adapter" \
+  --source-revision rc1 \
+  --tag rc1 \
+  --commit-message "release: publish U1.6 RC1 LoRA adapter"
+```
+
+Use `--readme` when the adapter has a reviewed model card. The base model and
+its revision are recorded in `lora_manifest.json`; they are part of the adapter
+release contract.

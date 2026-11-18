@@ -2,10 +2,14 @@ import json
 import sys
 from pathlib import Path
 
+import torch
+from safetensors.torch import save_file
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools" / "quantization"))
 
 from conversion_utils import CONFIG_FILES, finish, write_quantization_config
 from publish_hf import validate_release_tree
+from publish_lora_hf import validate_lora_file
 
 
 def _source_directory(root: Path) -> Path:
@@ -79,3 +83,20 @@ def test_quantization_config_is_named_after_its_artifact(tmp_path: Path) -> None
 
     assert json.loads(first.with_suffix(".quantization_config.json").read_text()) == {"format": "fp8"}
     assert json.loads(second.with_suffix(".quantization_config.json").read_text()) == {"format": "int8-convrot"}
+
+
+def test_lora_publisher_validates_paired_adapter_tensors(tmp_path: Path) -> None:
+    adapter = tmp_path / "SenseNova-U1.6-example.safetensors"
+    save_file(
+        {
+            "language_model.layers.0.lora_down.weight": torch.ones(2, 4),
+            "language_model.layers.0.lora_up.weight": torch.ones(4, 2),
+            "language_model.layers.0.alpha": torch.tensor(2.0),
+        },
+        adapter,
+    )
+
+    metadata = validate_lora_file(adapter)
+    assert metadata["layer_count"] == 1
+    assert metadata["ranks"] == [2]
+    assert metadata["alpha_layers"] == 1

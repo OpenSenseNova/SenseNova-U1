@@ -182,3 +182,23 @@ python tools/quantization/publish_hf.py \
 ```
 
 使用 `--dry-run` 可以只校验目录并打印发布计划，不连接 Hugging Face。仅在明确要把已有 tag 移动到新 commit 时使用 `--replace-tag`。正式发布完成后，可以把同一个不可变 revision 标记为 `v1.0.0`。
+
+## 7. 发布 LoRA 适配器到 Hugging Face
+
+独立 LoRA 文件使用专用发布脚本。脚本会校验成对的
+`.lora_down.weight` 和 `.lora_up.weight`、有限浮点值、rank 形状、兼容基座模型以及适配器 SHA256。未提供 README 时，脚本会生成 `lora_manifest.json` 和最小模型卡。
+
+```bash
+export HF_TOKEN="<huggingface-user-access-token>"
+
+python tools/quantization/publish_lora_hf.py \
+  --lora-path ./outputs/SenseNova-U1.6-example.safetensors \
+  --repo-id sensenova/SenseNova-U1.6-example-LoRA \
+  --base-model sensenova/SenseNova-U1.6-8B-MoT \
+  --purpose "Publish U1.6 RC1 LoRA adapter" \
+  --source-revision rc1 \
+  --tag rc1 \
+  --commit-message "release: publish U1.6 RC1 LoRA adapter"
+```
+
+适配器有经过审核的模型卡时使用 `--readme`。基座模型和对应 revision 会记录在 `lora_manifest.json` 中，作为适配器发布契约的一部分。
