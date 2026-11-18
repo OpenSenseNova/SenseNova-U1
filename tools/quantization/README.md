@@ -175,3 +175,34 @@ the six resource files beside it.
 Inference uses FlashAttention, BF16 for non-quantized layers, and keeps the full
 model on the GPU. Images, timing results, and peak GPU memory usage are saved
 under `--output_dir`.
+
+## 6. Publish validated artifacts to Hugging Face
+
+Publishing is separate from conversion. The publisher validates `manifest.json`,
+the artifact-specific conversion reports, the quantization configs, and the six
+config/tokenizer files before uploading. It reads the token from an environment
+variable and never accepts a token as a command-line argument.
+
+Set the token in the shell that runs the command:
+
+```bash
+export HF_TOKEN="<huggingface-user-access-token>"
+```
+
+Publish a complete `sensenova` output tree into a destination directory in the
+model repository:
+
+```bash
+python tools/quantization/publish_hf.py \
+  --source-dir "$U1_OUTPUT_DIR/sensenova" \
+  --repo-id sensenova/SenseNova-U1.6-8B-MoT \
+  --path-in-repo quantized \
+  --purpose "Publish U1.6 RC1 Native and GGUF artifacts" \
+  --tag rc1 \
+  --commit-message "release: publish U1.6 RC1 quantized artifacts"
+```
+
+Use `--dry-run` to validate the tree and print the upload plan without contacting
+Hugging Face. Use `--replace-tag` only when intentionally moving an existing tag
+to the new upload commit. Formal release promotion can create `v1.0.0` from the
+same immutable revision after the release checks are complete.

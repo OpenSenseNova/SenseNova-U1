@@ -158,3 +158,27 @@ python tools/quantization/inference.py \
 验证 INT8 时换成对应权重文件，设置 `--format int8-convrot`，并换一个输出目录。BF16 使用 `--format bf16`，三个 GGUF 都使用 `--format gguf`；`--model_path` 均填写具体权重文件，并保留同目录下的六个资源文件。
 
 推理固定使用 FlashAttention、BF16 非量化层和全模型驻留 GPU。图片及耗时、显存记录保存在 `--output_dir`。
+
+## 6. 发布已验证产物到 Hugging Face
+
+发布和转换分开执行。发布脚本会先校验 `manifest.json`、产物级转换报告、量化配置以及六个配置和 tokenizer 文件，再上传到目标模型仓库。脚本从环境变量读取 token，不接受命令行中的明文 token。
+
+在执行命令的 shell 中设置 token：
+
+```bash
+export HF_TOKEN="<huggingface-user-access-token>"
+```
+
+将完整的 `sensenova` 输出目录发布到模型仓库中的 `quantized` 目录：
+
+```bash
+python tools/quantization/publish_hf.py \
+  --source-dir "$U1_OUTPUT_DIR/sensenova" \
+  --repo-id sensenova/SenseNova-U1.6-8B-MoT \
+  --path-in-repo quantized \
+  --purpose "Publish U1.6 RC1 Native and GGUF artifacts" \
+  --tag rc1 \
+  --commit-message "release: publish U1.6 RC1 quantized artifacts"
+```
+
+使用 `--dry-run` 可以只校验目录并打印发布计划，不连接 Hugging Face。仅在明确要把已有 tag 移动到新 commit 时使用 `--replace-tag`。正式发布完成后，可以把同一个不可变 revision 标记为 `v1.0.0`。

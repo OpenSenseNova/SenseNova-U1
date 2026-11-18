@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools" / "quantization"))
 
 from conversion_utils import CONFIG_FILES, finish, write_quantization_config
+from publish_hf import validate_release_tree
 
 
 def _source_directory(root: Path) -> Path:
@@ -65,6 +66,9 @@ def test_conversion_reports_and_manifests_are_artifact_specific(tmp_path: Path) 
         "SenseNova-U1.6-8B-MoT-Native/SenseNova-U1.6-BF16.safetensors",
         "SenseNova-U1.6-8B-MoT-Native/SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors",
     ]
+    validation = validate_release_tree(tmp_path / "sensenova")
+    assert validation["artifact_count"] == 3
+    assert "manifest.json" in validation["upload_paths"]
 
 
 def test_quantization_config_is_named_after_its_artifact(tmp_path: Path) -> None:
