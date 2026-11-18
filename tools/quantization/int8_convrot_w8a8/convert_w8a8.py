@@ -2,10 +2,15 @@
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import torch
-from convert_utils import finish, prepare_output, tensors
+from conversion_utils import finish, prepare_output, tensors, write_quantization_config
 from quant import quantize_weight
 from safetensors.torch import save_file
 
@@ -80,7 +85,7 @@ def main():
     fmt = "fp8" if first.dtype == torch.float8_e4m3fn else "int8-convrot"
     config = dict(schema="sensenova-w8a8-v2", format=fmt, granularity="per_output_channel", layers=layers)
     save_file(state, str(partial), metadata={"format": "pt", "quantization": json.dumps(config)})
-    (Path(a.output).parent / "quantization_config.json").write_text(json.dumps(config, indent=2) + "\n")
+    write_quantization_config(a.output, config)
     finish(partial, a.output, a.model_path, format=fmt, tensors=source_count, quantized=len(layers))
 
 

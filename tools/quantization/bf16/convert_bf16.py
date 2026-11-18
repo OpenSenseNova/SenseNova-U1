@@ -1,9 +1,15 @@
 """Merge BF16 shards without changing tensor names, shapes or values."""
 
 import argparse
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import torch
-from convert_utils import finish, prepare_output, tensors
+from conversion_utils import finish, prepare_output, tensors
 from safetensors.torch import save_file
 
 

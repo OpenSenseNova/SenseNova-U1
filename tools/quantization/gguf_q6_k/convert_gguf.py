@@ -1,12 +1,17 @@
 """Quantize U1.6 linear weights and write a complete GGUF checkpoint."""
 
 import argparse
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import gguf
 import numpy as np
 import torch
-from convert_utils import finish, prepare_output, tensors
+from conversion_utils import finish, prepare_output, tensors
 from gguf.quants import quantize
 
 
