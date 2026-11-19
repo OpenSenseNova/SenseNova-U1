@@ -76,4 +76,4 @@ ComfyUI checkpoint 转换遵循官方 ComfyUI 集成的发布流程。
 | [leejet](https://github.com/leejet) | [stable-diffusion.cpp 指南](https://github.com/leejet/stable-diffusion.cpp/blob/master/docs/sensenova_u1.md) | U1.5 文生图集成。 |
 | [ggml-org](https://github.com/ggml-org) | [llama.cpp SenseNova-U1 支持](https://github.com/ggml-org/llama.cpp/pull/28919) | 文本与图像理解集成；具体支持的模型和格式以该项目说明为准。 |
 
-项目维护的 [ComfyUI 节点](../apps/comfyui/README.md)另有使用说明和工作流；[OpenSenseNova ComfyUI 仓库](https://github.com/OpenSenseNova/ComfyUI-SenseNova-U1)是其发布镜像。
+U1.5 和 U1.6 的 [ComfyUI 原生工作流](../apps/comfyui/README.md#native-workflows)需要 ComfyUI 0.46.0 或更高版本。[OpenSenseNova ComfyUI 仓库](https://github.com/OpenSenseNova/ComfyUI-SenseNova-U1)是项目维护的[自定义节点](../apps/comfyui/README.md#nodes)的发布镜像。

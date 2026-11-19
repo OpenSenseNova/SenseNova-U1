@@ -1,6 +1,8 @@
 # SenseNova-U1 for ComfyUI
 
-ComfyUI custom nodes for SenseNova-U1 API and local inference.
+SenseNova-U1 workflows for ComfyUI and custom nodes for API and local inference.
+
+For built-in ComfyUI support, see the [native workflows](#native-workflows).
 
 > Source of truth lives in [`OpenSenseNova/SenseNova-U1`](https://github.com/OpenSenseNova/SenseNova-U1)
 > under `apps/comfyui/`. The standalone repo
@@ -8,7 +10,7 @@ ComfyUI custom nodes for SenseNova-U1 API and local inference.
 > is a read-only publish mirror used by Comfy Registry; please open PRs against
 > the monorepo.
 
-> Requires a ComfyUI build that ships the v3 node API (`comfy_api.latest`). The nodes are registered through `comfy_entrypoint()`; older ComfyUI installs that only support the v1 `NODE_CLASS_MAPPINGS` registration will not load them.
+> The custom nodes require the ComfyUI v3 node API (`comfy_api.latest`) and register through `comfy_entrypoint()`.
 
 ## Nodes
 
@@ -72,7 +74,26 @@ source from the symlink location.
 
 ## Workflows
 
-Example workflows live in `example_workflows/`. Each links to a screenshot of the loaded graph in `docs/`:
+### Native workflows
+
+These workflows use built-in nodes and require [ComfyUI 0.46.0 or later](https://github.com/Comfy-Org/ComfyUI/releases/tag/v0.46.0).
+
+| Workflow | Settings |
+| --- | --- |
+| [U1.5 text-to-image](example_workflows/comfyui-sensenova-u1.5-t2i-8step.json) | 8 steps with LoRA |
+| [U1.5 image editing](example_workflows/comfyui-sensenova-u1.5-edit-8step.json) | 8 steps with LoRA and a reference image |
+| [U1.5 interleaved text and image generation](example_workflows/comfyui-sensenova-u1.5-interleave.json) | 50 steps with base weights |
+| [U1.5 interleaved text and image generation with LoRA](example_workflows/comfyui-sensenova-u1.5-interleave-8step.json) | 8 steps with LoRA |
+| [U1.6 self-correction](example_workflows/comfyui-sensenova-u1.6-self-correction-8step.json) | 8 steps with LoRA |
+| [U1.6 self-correction with a reference image](example_workflows/comfyui-sensenova-u1.6-self-correction-with-image-8step.json) | 8 steps with LoRA and a reference image |
+
+Drag a JSON file into ComfyUI. Place the ComfyUI-format checkpoint in
+`ComfyUI/models/checkpoints/` and select it in **Load Checkpoint**. For an
+8-step workflow, place the matching LoRA in `ComfyUI/models/loras/` and select
+it in **Load LoRA (Model Only)**. Upload and select a reference image in
+**Load Image** for workflows that take an image input.
+
+### Custom-node workflows
 
 | Workflow | Description | Preview |
 | --- | --- | --- |
