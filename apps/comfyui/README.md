@@ -86,12 +86,20 @@ These workflows use built-in nodes and require [ComfyUI 0.46.0 or later](https:/
 | [U1.5 interleaved text and image generation with LoRA](example_workflows/comfyui-sensenova-u1.5-interleave-8step.json) | 8 steps with LoRA |
 | [U1.6 self-correction](example_workflows/comfyui-sensenova-u1.6-self-correction-8step.json) | 8 steps with LoRA |
 | [U1.6 self-correction with a reference image](example_workflows/comfyui-sensenova-u1.6-self-correction-with-image-8step.json) | 8 steps with LoRA and a reference image |
+| [U1.6 text-to-image with Qwen-Image-2.1 PE](example_workflows/comfyui-sensenova-u1.6-t2i-8step-with-qwen21-pe.json) | 8 steps with LoRA and prompt enhancement |
+| [U1.6 text-to-image with H3 PE](example_workflows/comfyui-sensenova-u1.6-t2i-8step-with-h3-pe.json) | 8 steps with LoRA and prompt enhancement |
+| [U1.6 text-to-image with MOSS-Image PE](example_workflows/comfyui-sensenova-u1.6-t2i-8step-with-moss-pe.json) | 8 steps with LoRA and prompt enhancement |
 
 Drag a JSON file into ComfyUI. Place the ComfyUI-format checkpoint in
 `ComfyUI/models/checkpoints/` and select it in **Load Checkpoint**. For an
 8-step workflow, place the matching LoRA in `ComfyUI/models/loras/` and select
 it in **Load LoRA (Model Only)**. Upload and select a reference image in
 **Load Image** for workflows that take an image input.
+
+The three prompt enhancement (PE) workflows were verified on ComfyUI 0.46.0.
+Place the PE text encoder selected in **Load CLIP** in
+`ComfyUI/models/text_encoders/`. Turn off **Enable PE** to use the original
+prompt.
 
 ### Custom-node workflows
 
