@@ -566,12 +566,12 @@
       },
       "widgets_values": [
         "qwen3.8_27b_w4a8.safetensors",
-        "moss_image",
+        "minimax",
         "default"
       ],
       "widgets_values_named": {
         "clip_name": "qwen3.8_27b_w4a8.safetensors",
-        "type": "moss_image",
+        "type": "minimax",
         "device": "default"
       }
     },
