@@ -78,4 +78,4 @@ The following weights and integrations are published by their named maintainers.
 | [leejet](https://github.com/leejet) | [stable-diffusion.cpp guide](https://github.com/leejet/stable-diffusion.cpp/blob/master/docs/sensenova_u1.md) | U1.5 text-to-image integration. |
 | [ggml-org](https://github.com/ggml-org) | [llama.cpp SenseNova-U1 support](https://github.com/ggml-org/llama.cpp/pull/28919) | Text and image understanding integration; check the linked project for supported models and formats. |
 
-The project-maintained [ComfyUI nodes](../apps/comfyui/README.md) have their own instructions and workflows. The [OpenSenseNova ComfyUI repository](https://github.com/OpenSenseNova/ComfyUI-SenseNova-U1) is their publish mirror.
+The [native SenseNova workflows](../apps/comfyui/README.md#native-workflows) for U1.5 and U1.6 require ComfyUI 0.46.0 or later. The [OpenSenseNova ComfyUI repository](https://github.com/OpenSenseNova/ComfyUI-SenseNova-U1) is the publish mirror for the project-maintained [custom nodes](../apps/comfyui/README.md#nodes).

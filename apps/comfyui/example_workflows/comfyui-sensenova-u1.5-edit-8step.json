@@ -1,0 +1,833 @@
+{
+  "id": "7043bfaa-ceab-4ed1-9370-afc1bb47917c",
+  "revision": 0,
+  "last_node_id": 13,
+  "last_link_id": 27,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -254.0900239632058,
+        7.825791437374221
+      ],
+      "size": [
+        420,
+        100
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "slot_index": 1,
+          "links": [
+            3,
+            4,
+            23
+          ]
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "slot_index": 2,
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "SenseNova-U1.5-8B-MoT-BF16-T8.safetensors"
+      ],
+      "widgets_values_named": {
+        "ckpt_name": "SenseNova-U1.5-8B-MoT-BF16-T8.safetensors"
+      }
+    },
+    {
+      "id": 2,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -261.31376367909627,
+        154.43044361270358
+      ],
+      "size": [
+        420,
+        82
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "SenseNova-U1.5-8B-MoT-LoRA-8step-V2-ComfyUI.safetensors",
+        1
+      ],
+      "widgets_values_named": {
+        "lora_name": "SenseNova-U1.5-8B-MoT-LoRA-8step-V2-ComfyUI.safetensors",
+        "strength_model": 1
+      }
+    },
+    {
+      "id": 3,
+      "type": "SenseNovaSamplingOptions",
+      "pos": [
+        693.3008975027577,
+        27.656326958623424
+      ],
+      "size": [
+        300,
+        60
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaSamplingOptions"
+      },
+      "widgets_values": [
+        3
+      ],
+      "widgets_values_named": {
+        "shift": 3
+      }
+    },
+    {
+      "id": 4,
+      "type": "CLIPTextEncode",
+      "pos": [
+        209.94660874603085,
+        10.555788326130823
+      ],
+      "size": [
+        420,
+        200
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            12
+          ]
+        }
+      ],
+      "title": "Positive",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "Change the jacket of the person on the left to bright yellow."
+      ],
+      "widgets_values_named": {
+        "text": "Change the jacket of the person on the left to bright yellow."
+      }
+    },
+    {
+      "id": 5,
+      "type": "CLIPTextEncode",
+      "pos": [
+        232.52991874897236,
+        276.6004277426119
+      ],
+      "size": [
+        420,
+        100
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            13
+          ]
+        }
+      ],
+      "title": "Negative (unused at cfg 1)",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "text": ""
+      }
+    },
+    {
+      "id": 6,
+      "type": "EmptyHiDreamO1LatentImage",
+      "pos": [
+        891.6734431706853,
+        328.8185706006478
+      ],
+      "size": [
+        300,
+        106
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 20
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyHiDreamO1LatentImage"
+      },
+      "widgets_values": [
+        2048,
+        2048,
+        1
+      ],
+      "widgets_values_named": {
+        "width": 2048,
+        "height": 2048,
+        "batch_size": 1
+      }
+    },
+    {
+      "id": 7,
+      "type": "KSampler",
+      "pos": [
+        1290,
+        60
+      ],
+      "size": [
+        320,
+        474
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 26
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 27
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        42,
+        "fixed",
+        8,
+        1,
+        "euler",
+        "simple",
+        1
+      ],
+      "widgets_values_named": {
+        "seed": 42,
+        "control_after_generate": "fixed",
+        "steps": 8,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1660,
+        60
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 9
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        1920,
+        60
+      ],
+      "size": [
+        700,
+        760
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "SenseNova/u16_t2i"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "SenseNova/u16_t2i"
+      }
+    },
+    {
+      "id": 10,
+      "type": "LoadImage",
+      "pos": [
+        303.85546990700243,
+        354.6257108499784
+      ],
+      "size": [
+        282.798828125,
+        102
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            18,
+            19
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "nova_editor_example.webp",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "nova_editor_example.webp",
+        "upload": "image"
+      }
+    },
+    {
+      "id": 11,
+      "type": "HiDreamO1ReferenceImages",
+      "pos": [
+        694.1208759062981,
+        140.78067991582952
+      ],
+      "size": [
+        243.52890625,
+        106
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 12
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 13
+        },
+        {
+          "name": "images.image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 18
+        },
+        {
+          "name": "images.image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            22
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "HiDreamO1ReferenceImages"
+      }
+    },
+    {
+      "id": 12,
+      "type": "GetImageSize",
+      "pos": [
+        647.452683039642,
+        358.06225093077063
+      ],
+      "size": [
+        140,
+        66
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 19
+        }
+      ],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            20
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            21
+          ]
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageSize"
+      }
+    },
+    {
+      "id": 13,
+      "type": "SenseNovaConditioning",
+      "pos": [
+        988.6806151373548,
+        -154.91957282915737
+      ],
+      "size": [
+        340,
+        142
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 22
+        },
+        {
+          "name": "clip",
+          "shape": 7,
+          "type": "CLIP",
+          "link": 23
+        },
+        {
+          "name": "negative",
+          "shape": 7,
+          "type": "CONDITIONING",
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            26
+          ]
+        },
+        {
+          "name": "generated_text",
+          "type": "STRING",
+          "slot_index": 1,
+          "links": []
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "slot_index": 2,
+          "links": [
+            27
+          ]
+        },
+        {
+          "name": "image_requested",
+          "type": "BOOLEAN",
+          "slot_index": 3,
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaConditioning"
+      },
+      "widgets_values": [
+        "image",
+        1024
+      ],
+      "widgets_values_named": {
+        "task": "image",
+        "max_tokens": 1024
+      }
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      3,
+      1,
+      1,
+      4,
+      0,
+      "CLIP"
+    ],
+    [
+      4,
+      1,
+      1,
+      5,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      3,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      8,
+      6,
+      0,
+      7,
+      3,
+      "LATENT"
+    ],
+    [
+      9,
+      7,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      10,
+      1,
+      2,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      11,
+      8,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      19,
+      10,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      20,
+      12,
+      0,
+      6,
+      0,
+      "INT"
+    ],
+    [
+      21,
+      12,
+      1,
+      6,
+      1,
+      "INT"
+    ],
+    [
+      12,
+      4,
+      0,
+      11,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      13,
+      5,
+      0,
+      11,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      18,
+      10,
+      0,
+      11,
+      2,
+      "IMAGE"
+    ],
+    [
+      26,
+      13,
+      0,
+      7,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      27,
+      13,
+      2,
+      7,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      22,
+      11,
+      0,
+      13,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      23,
+      1,
+      1,
+      13,
+      1,
+      "CLIP"
+    ],
+    [
+      24,
+      11,
+      1,
+      13,
+      2,
+      "CONDITIONING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.8829947514381394,
+      "offset": [
+        507.9772057579926,
+        258.22904450489006
+      ]
+    },
+    "frontendVersion": "1.59.6",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
