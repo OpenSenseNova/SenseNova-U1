@@ -1,0 +1,2250 @@
+{
+  "id": "69ea8d60-1219-4c1b-a2fb-d092986fd8c8",
+  "revision": 0,
+  "last_node_id": 42,
+  "last_link_id": 69,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -1697.363227482015,
+        -411.36376501717797
+      ],
+      "size": [
+        768.1563636289785,
+        127.2027008808711
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            40,
+            61
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "slot_index": 1,
+          "links": [
+            2,
+            3,
+            14,
+            34
+          ]
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "slot_index": 2,
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "SenseNova-U1.6-8B-MoT-RC1-INT8-ConvRot.safetensors"
+      ],
+      "widgets_values_named": {
+        "ckpt_name": "SenseNova-U1.6-8B-MoT-RC1-INT8-ConvRot.safetensors"
+      }
+    },
+    {
+      "id": 3,
+      "type": "SenseNovaSamplingOptions",
+      "pos": [
+        -1216.4799787026072,
+        -8.123198206550683
+      ],
+      "size": [
+        420,
+        60
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 63
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaSamplingOptions"
+      },
+      "widgets_values": [
+        3
+      ],
+      "widgets_values_named": {
+        "shift": 3
+      }
+    },
+    {
+      "id": 4,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -725.0250228056003,
+        -400.8092629709224
+      ],
+      "size": [
+        420,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            43
+          ]
+        }
+      ],
+      "title": "Prompt",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "Create a retro movie poster"
+      ],
+      "widgets_values_named": {
+        "text": "Create a retro movie poster"
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 5,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -709.9222726231872,
+        -159.21835766836637
+      ],
+      "size": [
+        420,
+        100
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            44
+          ]
+        }
+      ],
+      "title": "Negative",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "text": ""
+      }
+    },
+    {
+      "id": 6,
+      "type": "EmptyHiDreamO1LatentImage",
+      "pos": [
+        -445.3204832999411,
+        310.88351698348754
+      ],
+      "size": [
+        420,
+        106
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 68
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 69
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            21
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyHiDreamO1LatentImage"
+      },
+      "widgets_values": [
+        2048,
+        1152,
+        1
+      ],
+      "widgets_values_named": {
+        "width": 2048,
+        "height": 1152,
+        "batch_size": 1
+      }
+    },
+    {
+      "id": 7,
+      "type": "PrimitiveInt",
+      "pos": [
+        179.2735553735722,
+        537.5721252435914
+      ],
+      "size": [
+        420,
+        82
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "slot_index": 0,
+          "links": [
+            17
+          ]
+        }
+      ],
+      "title": "Seed",
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        944861539896026,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 944861539896026,
+        "control_after_generate": "fixed"
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 8,
+      "type": "CreateList",
+      "pos": [
+        95.31670033490173,
+        -90.31078819864717
+      ],
+      "size": [
+        270,
+        102
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "inputs.input0",
+          "type": "*",
+          "link": 45
+        },
+        {
+          "name": "inputs.input1",
+          "shape": 7,
+          "type": "*",
+          "link": 46
+        },
+        {
+          "name": "inputs.input2",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "list",
+          "shape": 6,
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            6
+          ]
+        }
+      ],
+      "title": "Initial value: positive, negative",
+      "properties": {
+        "Node name for S&R": "CreateList"
+      }
+    },
+    {
+      "id": 9,
+      "type": "StartLoop",
+      "pos": [
+        94.07302089560426,
+        207.48542637682135
+      ],
+      "size": [
+        300,
+        186
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "parent_iteration",
+          "shape": 7,
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "initial_iteration_value",
+          "shape": 7,
+          "type": "*",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "iteration_index",
+          "type": "INT",
+          "slot_index": 0,
+          "links": [
+            16
+          ]
+        },
+        {
+          "name": "is_first",
+          "type": "BOOLEAN",
+          "slot_index": 1,
+          "links": [
+            11
+          ]
+        },
+        {
+          "name": "is_last",
+          "type": "BOOLEAN",
+          "slot_index": 2,
+          "links": []
+        },
+        {
+          "name": "list_item",
+          "type": "*",
+          "slot_index": 3,
+          "links": []
+        },
+        {
+          "name": "current_iteration_value",
+          "type": "*",
+          "slot_index": 4,
+          "links": [
+            7,
+            8,
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StartLoop"
+      },
+      "widgets_values": [
+        "simple",
+        5,
+        false
+      ],
+      "widgets_values_named": {
+        "mode": "simple",
+        "mode.num_iterations": 5,
+        "cache_iterations": false
+      }
+    },
+    {
+      "id": 10,
+      "type": "GetItemFromList",
+      "pos": [
+        460,
+        80
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "list",
+          "type": "*",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            12
+          ]
+        }
+      ],
+      "title": "Positive",
+      "properties": {
+        "Node name for S&R": "GetItemFromList"
+      },
+      "widgets_values": [
+        0
+      ],
+      "widgets_values_named": {
+        "index": 0
+      }
+    },
+    {
+      "id": 11,
+      "type": "GetItemFromList",
+      "pos": [
+        460,
+        210
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "list",
+          "type": "*",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            15
+          ]
+        }
+      ],
+      "title": "Negative",
+      "properties": {
+        "Node name for S&R": "GetItemFromList"
+      },
+      "widgets_values": [
+        1
+      ],
+      "widgets_values_named": {
+        "index": 1
+      }
+    },
+    {
+      "id": 12,
+      "type": "GetItemFromList",
+      "pos": [
+        460,
+        340
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "list",
+          "type": "*",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            10
+          ]
+        }
+      ],
+      "title": "Previous latent",
+      "properties": {
+        "Node name for S&R": "GetItemFromList"
+      },
+      "widgets_values": [
+        2
+      ],
+      "widgets_values_named": {
+        "index": 2
+      }
+    },
+    {
+      "id": 13,
+      "type": "ComfySwitchNode",
+      "pos": [
+        780,
+        340
+      ],
+      "size": [
+        300,
+        102
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "shape": 7,
+          "type": "*",
+          "link": 10
+        },
+        {
+          "name": "on_true",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            13
+          ]
+        }
+      ],
+      "title": "Previous latent (none on first)",
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 14,
+      "type": "SenseNovaConditioning",
+      "pos": [
+        1132.9049737939652,
+        67.20499222165267
+      ],
+      "size": [
+        340,
+        142
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 12
+        },
+        {
+          "name": "clip",
+          "shape": 7,
+          "type": "CLIP",
+          "link": 14
+        },
+        {
+          "name": "negative",
+          "shape": 7,
+          "type": "CONDITIONING",
+          "link": 15
+        },
+        {
+          "name": "task.samples",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            19,
+            25
+          ]
+        },
+        {
+          "name": "generated_text",
+          "type": "STRING",
+          "slot_index": 1,
+          "links": [
+            28
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "slot_index": 2,
+          "links": [
+            20,
+            26
+          ]
+        },
+        {
+          "name": "image_requested",
+          "type": "BOOLEAN",
+          "slot_index": 3,
+          "links": [
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaConditioning"
+      },
+      "widgets_values": [
+        "self-correction",
+        1024
+      ],
+      "widgets_values_named": {
+        "task": "self-correction",
+        "max_tokens": 1024
+      }
+    },
+    {
+      "id": 15,
+      "type": "ComfyMathExpression",
+      "pos": [
+        780,
+        500
+      ],
+      "size": [
+        300,
+        160
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 16
+        },
+        {
+          "name": "values.b",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 17
+        },
+        {
+          "name": "values.c",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "slot_index": 0,
+          "links": []
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "slot_index": 1,
+          "links": [
+            22
+          ]
+        },
+        {
+          "name": "BOOL",
+          "type": "BOOLEAN",
+          "slot_index": 2,
+          "links": []
+        }
+      ],
+      "title": "Seed per iteration",
+      "properties": {
+        "Node name for S&R": "ComfyMathExpression"
+      },
+      "widgets_values": [
+        "a + b"
+      ],
+      "widgets_values_named": {
+        "expression": "a + b"
+      }
+    },
+    {
+      "id": 16,
+      "type": "KSampler",
+      "pos": [
+        1520,
+        80
+      ],
+      "size": [
+        320,
+        262
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 18
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 19
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 20
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 21
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": 22
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": 64
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "widget": {
+            "name": "cfg"
+          },
+          "link": 65
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        42,
+        "fixed",
+        8,
+        1,
+        "euler",
+        "simple",
+        1
+      ],
+      "widgets_values_named": {
+        "seed": 42,
+        "control_after_generate": "fixed",
+        "steps": 8,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    {
+      "id": 17,
+      "type": "ComfySwitchNode",
+      "pos": [
+        1890,
+        80
+      ],
+      "size": [
+        310.8765625,
+        102
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "shape": 7,
+          "type": "LATENT",
+          "link": null
+        },
+        {
+          "name": "on_true",
+          "shape": 7,
+          "type": "*",
+          "link": 23
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            27
+          ]
+        }
+      ],
+      "title": "Sample only when an image is requested",
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 18,
+      "type": "CreateList",
+      "pos": [
+        2240,
+        80
+      ],
+      "size": [
+        300,
+        122
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "inputs.input0",
+          "type": "*",
+          "link": 25
+        },
+        {
+          "name": "inputs.input1",
+          "shape": 7,
+          "type": "*",
+          "link": 26
+        },
+        {
+          "name": "inputs.input2",
+          "shape": 7,
+          "type": "*",
+          "link": 27
+        },
+        {
+          "name": "inputs.input3",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "list",
+          "shape": 6,
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            29,
+            30
+          ]
+        }
+      ],
+      "title": "Next value: positive, negative, latent",
+      "properties": {
+        "Node name for S&R": "CreateList"
+      }
+    },
+    {
+      "id": 19,
+      "type": "PreviewAny",
+      "pos": [
+        1890,
+        240
+      ],
+      "size": [
+        679.0683898237929,
+        434.2349575624528
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 28
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            31
+          ]
+        }
+      ],
+      "title": "Stage text",
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 20,
+      "type": "EndLoop",
+      "pos": [
+        2590,
+        80
+      ],
+      "size": [
+        300,
+        138
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "output_value",
+          "shape": 7,
+          "type": "*",
+          "link": 29
+        },
+        {
+          "name": "next_iteration_value",
+          "shape": 7,
+          "type": "*",
+          "link": 30
+        },
+        {
+          "name": "terminations.termination0",
+          "shape": 7,
+          "type": "*",
+          "link": 31
+        },
+        {
+          "name": "terminations.termination1",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "outputs",
+          "shape": 6,
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            32,
+            33
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EndLoop"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "accumulate": false
+      }
+    },
+    {
+      "id": 21,
+      "type": "GetItemFromList",
+      "pos": [
+        2940,
+        80
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "list",
+          "type": "*",
+          "link": 32
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            35
+          ]
+        }
+      ],
+      "title": "Final conditioning",
+      "properties": {
+        "Node name for S&R": "GetItemFromList"
+      },
+      "widgets_values": [
+        0
+      ],
+      "widgets_values_named": {
+        "index": 0
+      }
+    },
+    {
+      "id": 22,
+      "type": "GetItemFromList",
+      "pos": [
+        2940,
+        210
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "list",
+          "type": "*",
+          "link": 33
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            36
+          ]
+        }
+      ],
+      "title": "Final latent",
+      "properties": {
+        "Node name for S&R": "GetItemFromList"
+      },
+      "widgets_values": [
+        2
+      ],
+      "widgets_values_named": {
+        "index": 2
+      }
+    },
+    {
+      "id": 23,
+      "type": "SenseNovaInterleaveDecode",
+      "pos": [
+        3260,
+        80
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 34
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 35
+        },
+        {
+          "name": "samples",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 36
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            42
+          ]
+        },
+        {
+          "name": "images",
+          "shape": 6,
+          "type": "IMAGE",
+          "slot_index": 1,
+          "links": [
+            37
+          ]
+        },
+        {
+          "name": "thinking",
+          "type": "STRING",
+          "slot_index": 2,
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SenseNovaInterleaveDecode"
+      }
+    },
+    {
+      "id": 24,
+      "type": "SaveImage",
+      "pos": [
+        3570.3335186451436,
+        84.15990561824765
+      ],
+      "size": [
+        900,
+        600
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 37
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "SenseNova/u16_interleave"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "SenseNova/u16_interleave"
+      }
+    },
+    {
+      "id": 27,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -1692.1716129393576,
+        -229.95479646972797
+      ],
+      "size": [
+        742.2198538777345,
+        114.00000031978783
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 40
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            62
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0-ComfyUI.safetensors",
+        1
+      ],
+      "widgets_values_named": {
+        "lora_name": "SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0-ComfyUI.safetensors",
+        "strength_model": 1
+      }
+    },
+    {
+      "id": 28,
+      "type": "PreviewAny",
+      "pos": [
+        2941.032599481236,
+        384.46627241573566
+      ],
+      "size": [
+        507.49088727120284,
+        210.62430489617753
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 42
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 29,
+      "type": "HiDreamO1ReferenceImages",
+      "pos": [
+        -179.3587352267524,
+        -94.73322428634735
+      ],
+      "size": [
+        243.52890625,
+        66
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 43
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 44
+        },
+        {
+          "name": "images.image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            45
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            46
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "HiDreamO1ReferenceImages"
+      }
+    },
+    {
+      "id": 34,
+      "type": "PrimitiveBoolean",
+      "pos": [
+        -1288.29082071866,
+        -710.9083538775776
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "BOOLEAN",
+          "type": "BOOLEAN",
+          "links": [
+            56,
+            59,
+            60
+          ]
+        }
+      ],
+      "title": "Enable turbo",
+      "properties": {
+        "Node name for S&R": "PrimitiveBoolean"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "value": false
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 35,
+      "type": "PrimitiveInt",
+      "pos": [
+        -926.5500517504504,
+        -703.4431910750307
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            55
+          ]
+        }
+      ],
+      "title": "8steps",
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        8,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 8,
+        "control_after_generate": "fixed"
+      }
+    },
+    {
+      "id": 36,
+      "type": "PrimitiveInt",
+      "pos": [
+        -928.3680257921079,
+        -749.2409223552521
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            54
+          ]
+        }
+      ],
+      "title": "50steps",
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        50,
+        "fixed"
+      ],
+      "widgets_values_named": {
+        "value": 50,
+        "control_after_generate": "fixed"
+      }
+    },
+    {
+      "id": 37,
+      "type": "PrimitiveFloat",
+      "pos": [
+        -940.1845682112053,
+        -620.8004960030539
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            57
+          ]
+        }
+      ],
+      "title": "cfg 4.0",
+      "properties": {
+        "Node name for S&R": "PrimitiveFloat"
+      },
+      "widgets_values": [
+        4
+      ],
+      "widgets_values_named": {
+        "value": 4
+      }
+    },
+    {
+      "id": 38,
+      "type": "PrimitiveFloat",
+      "pos": [
+        -930.1883816773362,
+        -565.2206876215714
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            58
+          ]
+        }
+      ],
+      "title": "cfg 1.0",
+      "properties": {
+        "Node name for S&R": "PrimitiveFloat"
+      },
+      "widgets_values": [
+        1
+      ],
+      "widgets_values_named": {
+        "value": 1
+      }
+    },
+    {
+      "id": 39,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -620.2803030516937,
+        -753.7317234124237
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "shape": 7,
+          "type": "INT",
+          "link": 54
+        },
+        {
+          "name": "on_true",
+          "shape": 7,
+          "type": "INT",
+          "link": 55
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 56
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "INT",
+          "links": [
+            64
+          ]
+        }
+      ],
+      "title": "steps",
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 40,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -614.2062317590442,
+        -583.9242658261065
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "shape": 7,
+          "type": "FLOAT",
+          "link": 57
+        },
+        {
+          "name": "on_true",
+          "shape": 7,
+          "type": "FLOAT",
+          "link": 58
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 59
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "FLOAT",
+          "links": [
+            65
+          ]
+        }
+      ],
+      "title": "cfg",
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 41,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -928.1688316902078,
+        -463.13551335419953
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "shape": 7,
+          "type": "MODEL",
+          "link": 61
+        },
+        {
+          "name": "on_true",
+          "shape": 7,
+          "type": "MODEL",
+          "link": 62
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 60
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "MODEL",
+          "links": [
+            63
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    },
+    {
+      "id": 42,
+      "type": "ResolutionSelector",
+      "pos": [
+        -749.3209749776058,
+        334.8931692823056
+      ],
+      "size": [
+        270,
+        150
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            68
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            69
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ResolutionSelector"
+      },
+      "widgets_values": [
+        "3:2 (Photo)",
+        4,
+        32
+      ],
+      "widgets_values_named": {
+        "aspect_ratio": "3:2 (Photo)",
+        "megapixels": 4,
+        "multiple": 32
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    }
+  ],
+  "links": [
+    [
+      2,
+      1,
+      1,
+      4,
+      0,
+      "CLIP"
+    ],
+    [
+      3,
+      1,
+      1,
+      5,
+      0,
+      "CLIP"
+    ],
+    [
+      7,
+      9,
+      4,
+      10,
+      0,
+      "*"
+    ],
+    [
+      8,
+      9,
+      4,
+      11,
+      0,
+      "*"
+    ],
+    [
+      9,
+      9,
+      4,
+      12,
+      0,
+      "*"
+    ],
+    [
+      10,
+      12,
+      0,
+      13,
+      0,
+      "*"
+    ],
+    [
+      11,
+      9,
+      1,
+      13,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      18,
+      3,
+      0,
+      16,
+      0,
+      "MODEL"
+    ],
+    [
+      19,
+      14,
+      0,
+      16,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      20,
+      14,
+      2,
+      16,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      21,
+      6,
+      0,
+      16,
+      3,
+      "LATENT"
+    ],
+    [
+      22,
+      15,
+      1,
+      16,
+      4,
+      "INT"
+    ],
+    [
+      23,
+      16,
+      0,
+      17,
+      1,
+      "LATENT"
+    ],
+    [
+      24,
+      14,
+      3,
+      17,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      28,
+      14,
+      1,
+      19,
+      0,
+      "*"
+    ],
+    [
+      32,
+      20,
+      0,
+      21,
+      0,
+      "*"
+    ],
+    [
+      33,
+      20,
+      0,
+      22,
+      0,
+      "*"
+    ],
+    [
+      34,
+      1,
+      1,
+      23,
+      0,
+      "CLIP"
+    ],
+    [
+      35,
+      21,
+      0,
+      23,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      36,
+      22,
+      0,
+      23,
+      2,
+      "LATENT"
+    ],
+    [
+      37,
+      23,
+      1,
+      24,
+      0,
+      "IMAGE"
+    ],
+    [
+      40,
+      1,
+      0,
+      27,
+      0,
+      "MODEL"
+    ],
+    [
+      42,
+      23,
+      0,
+      28,
+      0,
+      "STRING"
+    ],
+    [
+      54,
+      36,
+      0,
+      39,
+      0,
+      "INT"
+    ],
+    [
+      55,
+      35,
+      0,
+      39,
+      1,
+      "INT"
+    ],
+    [
+      56,
+      34,
+      0,
+      39,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      57,
+      37,
+      0,
+      40,
+      0,
+      "FLOAT"
+    ],
+    [
+      58,
+      38,
+      0,
+      40,
+      1,
+      "FLOAT"
+    ],
+    [
+      59,
+      34,
+      0,
+      40,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      60,
+      34,
+      0,
+      41,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      61,
+      1,
+      0,
+      41,
+      0,
+      "MODEL"
+    ],
+    [
+      62,
+      27,
+      0,
+      41,
+      1,
+      "MODEL"
+    ],
+    [
+      63,
+      41,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      64,
+      39,
+      0,
+      16,
+      5,
+      "INT"
+    ],
+    [
+      65,
+      40,
+      0,
+      16,
+      6,
+      "FLOAT"
+    ],
+    [
+      45,
+      29,
+      0,
+      8,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      46,
+      29,
+      1,
+      8,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      6,
+      8,
+      0,
+      9,
+      1,
+      "*"
+    ],
+    [
+      12,
+      10,
+      0,
+      14,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      14,
+      1,
+      1,
+      14,
+      1,
+      "CLIP"
+    ],
+    [
+      15,
+      11,
+      0,
+      14,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      13,
+      13,
+      0,
+      14,
+      3,
+      "LATENT"
+    ],
+    [
+      16,
+      9,
+      0,
+      15,
+      0,
+      "FLOAT,INT,BOOLEAN"
+    ],
+    [
+      17,
+      7,
+      0,
+      15,
+      1,
+      "FLOAT,INT,BOOLEAN"
+    ],
+    [
+      25,
+      14,
+      0,
+      18,
+      0,
+      "*"
+    ],
+    [
+      26,
+      14,
+      2,
+      18,
+      1,
+      "*"
+    ],
+    [
+      27,
+      17,
+      0,
+      18,
+      2,
+      "*"
+    ],
+    [
+      29,
+      18,
+      0,
+      20,
+      0,
+      "*"
+    ],
+    [
+      30,
+      18,
+      0,
+      20,
+      1,
+      "*"
+    ],
+    [
+      31,
+      19,
+      0,
+      20,
+      2,
+      "*"
+    ],
+    [
+      43,
+      4,
+      0,
+      29,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      44,
+      5,
+      0,
+      29,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      68,
+      42,
+      0,
+      6,
+      0,
+      "INT"
+    ],
+    [
+      69,
+      42,
+      1,
+      6,
+      1,
+      "INT"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Interleave loop",
+      "bounding": [
+        90,
+        0,
+        2820,
+        700
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.34092013530421134,
+      "offset": [
+        3000.490692873531,
+        1314.5985980688454
+      ]
+    },
+    "frontendVersion": "1.59.6",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
