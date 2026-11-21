@@ -84,6 +84,10 @@ These workflows use built-in nodes and require [ComfyUI 0.46.0 or later](https:/
 | [U1.5 image editing](example_workflows/comfyui-sensenova-u1.5-edit-8step.json) | 8 steps with LoRA and a reference image |
 | [U1.5 interleaved text and image generation](example_workflows/comfyui-sensenova-u1.5-interleave.json) | 50 steps with base weights |
 | [U1.5 interleaved text and image generation with LoRA](example_workflows/comfyui-sensenova-u1.5-interleave-8step.json) | 8 steps with LoRA |
+| [U1.6 text-to-image with Turbo](example_workflows/comfyui-sensenova-u1.6-t2i-turbo.json) | Switchable Turbo |
+| [U1.6 image editing with Turbo](example_workflows/comfyui-sensenova-u1.6-edit-turbo.json) | Switchable Turbo and a reference image |
+| [U1.6 self-correction with Turbo](example_workflows/comfyui-sensenova-u1.6-self-correction-turbo.json) | Switchable Turbo |
+| [U1.6 self-correction with a reference image and Turbo](example_workflows/comfyui-sensenova-u1.6-self-correction-with-image-turbo.json) | Switchable Turbo and a reference image |
 | [U1.6 self-correction](example_workflows/comfyui-sensenova-u1.6-self-correction-8step.json) | 8 steps with LoRA |
 | [U1.6 self-correction with a reference image](example_workflows/comfyui-sensenova-u1.6-self-correction-with-image-8step.json) | 8 steps with LoRA and a reference image |
 | [U1.6 text-to-image with Qwen-Image-2.1 PE](example_workflows/comfyui-sensenova-u1.6-t2i-8step-with-qwen21-pe.json) | 8 steps with LoRA and prompt enhancement |
@@ -95,6 +99,13 @@ Drag a JSON file into ComfyUI. Place the ComfyUI-format checkpoint in
 8-step workflow, place the matching LoRA in `ComfyUI/models/loras/` and select
 it in **Load LoRA (Model Only)**. Upload and select a reference image in
 **Load Image** for workflows that take an image input.
+
+In the Turbo workflows, **Enable turbo** switches from the base checkpoint at
+50 steps and CFG 4 (the default) to the 8-step LoRA at CFG 1. Keep the matching
+LoRA available in both modes because ComfyUI validates the connected loader
+when queuing the workflow. The two Turbo workflows with a reference image
+optionally scale it by a multiplier before aligning both dimensions to
+multiples of 32. The aligned image determines the output dimensions.
 
 The three prompt enhancement (PE) workflows were verified on ComfyUI 0.46.0.
 Place the PE text encoder selected in **Load CLIP** in
