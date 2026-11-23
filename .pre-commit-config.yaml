@@ -14,4 +14,4 @@ repos:
       - id: pretty-format-json
         name: format ComfyUI example workflows
         args: ["--autofix", "--indent=2", "--no-sort-keys", "--no-ensure-ascii"]
-        files: ^apps/comfyui/example_workflows/.*\.json$
+        files: ^examples/comfyui/.*\.json$

@@ -8,9 +8,6 @@ reviews:
     enabled: true
     auto_incremental_review: true
     drafts: false
-  path_filters:
-    - "!apps/comfyui/**"
-    - "!tests/test_comfyui_*.py"
   path_instructions:
     - path: "**/*"
       instructions: |
