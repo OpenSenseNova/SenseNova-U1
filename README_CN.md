@@ -99,11 +99,15 @@ python examples/t2i/inference.py \
 
 <p align="center"><img src="docs/assets/u15_perform_vs_speed_6bench.webp" alt="U1.5 与其他模型的六项图像生成评测平均分及 2K 图像生成耗时" width="90%"></p>
 
-## 图像样例（U1.5）
+## 图像样例（U1.6）
 
-<p align="center"><img src="docs/assets/u1.5_teaser2_preview.webp" alt="U1.5 图像生成、编辑和多图输入效果预览" width="100%"></p>
+### 文生图
 
-<p align="center"><sub>图中结果使用 U1.5 基座权重。<a href="docs/assets/u1.5_teaser2.webp">原尺寸拼图（约 45 MiB）</a>另行提供；单独案例及提示词见 <a href="docs/u1.5_showcases_CN.md">U1.5 效果展示</a>。</sub></p>
+<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/t2i/SenseNova-U1.6-T2I.webp"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/t2i/SenseNova-U1.6-T2I.webp" alt="SenseNova-U1.6 文生图样例" width="100%"></a></p>
+
+### 自修正
+
+<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/self-correction/SenseNova-U1.6-SC.gif"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/self-correction/SenseNova-U1.6-SC.gif" alt="SenseNova-U1.6 自修正前后对比" width="100%"></a></p>
 
 ## 文档
 

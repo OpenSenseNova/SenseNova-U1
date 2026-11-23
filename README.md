@@ -99,11 +99,15 @@ These charts are release evaluation records for the U1.5 checkpoint. They are se
 
 <p align="center"><img src="docs/assets/u15_perform_vs_speed_6bench.webp" alt="Average score across six image generation benchmarks versus latency per 2K image for U1.5 and other models" width="90%"></p>
 
-## Image examples (U1.5)
+## Image examples (U1.6)
 
-<p align="center"><img src="docs/assets/u1.5_teaser2_preview.webp" alt="Preview of U1.5 generation, editing, and multiple-input results" width="100%"></p>
+### Text-to-image generation
 
-<p align="center"><sub>These results use the U1.5 base checkpoint. The <a href="docs/assets/u1.5_teaser2.webp">full-resolution collage (about 45 MiB)</a> is available separately; individual examples and prompts are in the <a href="docs/u1.5_showcases.md">U1.5 showcases</a>.</sub></p>
+<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/t2i/SenseNova-U1.6-T2I.webp"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/t2i/SenseNova-U1.6-T2I.webp" alt="SenseNova-U1.6 text-to-image examples" width="100%"></a></p>
+
+### Self-correction
+
+<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/self-correction/SenseNova-U1.6-SC.gif"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/self-correction/SenseNova-U1.6-SC.gif" alt="SenseNova-U1.6 self-correction before and after" width="100%"></a></p>
 
 ## Documentation
 
