@@ -569,7 +569,7 @@
           ]
         }
       ],
-      "title": "PE System Prompt · V3",
+      "title": "PE System Prompt",
       "properties": {
         "Node name for S&R": "PrimitiveStringMultiline"
       },
@@ -598,13 +598,13 @@
       "mode": 0,
       "inputs": [],
       "outputs": [],
-      "title": "使用说明 · V3 PE / Turbo",
+      "title": "使用说明 PE / Turbo",
       "properties": {},
       "widgets_values": [
-        "## V3 PE · Turbo 开关\n\n- 默认 Turbo 关闭：基础模型，50 步，CFG 4。\n- Enable Turbo 开启：8-step LoRA，8 步，CFG 1；一个开关联动三项。\n- PE 默认启用，system prompt 为已测试的 V3，thinking 开启，max_length 4096。\n- 在「原始输入」节点填写需求；节点 26 显示实际用于生图的最终 Prompt。\n- 在 Resolution Selector 选择宽高比；默认 16:9、4 MP、32 倍数。"
+        "## PE · Turbo 开关\n\n- 默认 Turbo 关闭：基础模型，50 步，CFG 4。\n- Enable Turbo 开启：8-step LoRA，8 步，CFG 1；一个开关联动三项。\n- PE 默认启用，system prompt 已验证，thinking 开启，max_length 4096。\n- 在「原始输入」节点填写需求；节点 26 显示实际用于生图的最终 Prompt。\n- 在 Resolution Selector 选择宽高比；默认 16:9、4 MP、32 倍数。"
       ],
       "widgets_values_named": {
-        "text": "## V3 PE · Turbo 开关\n\n- 默认 Turbo 关闭：基础模型，50 步，CFG 4。\n- Enable Turbo 开启：8-step LoRA，8 步，CFG 1；一个开关联动三项。\n- PE 默认启用，system prompt 为已测试的 V3，thinking 开启，max_length 4096。\n- 在「原始输入」节点填写需求；节点 26 显示实际用于生图的最终 Prompt。\n- 在 Resolution Selector 选择宽高比；默认 16:9、4 MP、32 倍数。"
+        "text": "## PE · Turbo 开关\n\n- 默认 Turbo 关闭：基础模型，50 步，CFG 4。\n- Enable Turbo 开启：8-step LoRA，8 步，CFG 1；一个开关联动三项。\n- PE 默认启用，system prompt 已验证，thinking 开启，max_length 4096。\n- 在「原始输入」节点填写需求；节点 26 显示实际用于生图的最终 Prompt。\n- 在 Resolution Selector 选择宽高比；默认 16:9、4 MP、32 倍数。"
       },
       "color": "#222",
       "bgcolor": "#000"
@@ -679,7 +679,7 @@
           "links": []
         }
       ],
-      "title": "PE · V3 · Thinking ON",
+      "title": "PE · Thinking ON",
       "properties": {
         "Node name for S&R": "TextGenerate"
       },
