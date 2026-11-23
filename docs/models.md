@@ -2,7 +2,7 @@
 
 <p align="center"><strong>English</strong> | <a href="./models_CN.md">简体中文</a></p>
 
-The [SenseNova-U homepage](../README.md) introduces the model family. This catalog lists the released weights. Model names link to their guides where available; the last column links to the weights. For new work, start with the [U1.5 guide](u1.5_model.md). Its 8-step V2 LoRA is an adapter for that base checkpoint, not a replacement for the base weights.
+The [SenseNova-U homepage](../README.md) introduces the model family. Model names link to their guides where available, and the last column links to the weights. For new work, start with the [U1.5 guide](u1.5_model.md). Its 8-step V2 LoRA requires the U1.5 base checkpoint.
 
 ## Official checkpoints
 
@@ -10,6 +10,7 @@ The status column separates a release with a repository guide from a weight that
 
 | Model | Role | Repository status | Weights |
 | --- | --- | --- | --- |
+| [SenseNova-U1.6-8B-MoT](u1.6_model.md) | Original U1.6 sharded BF16 checkpoint | Guide + showcase | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT/tree/8f582699bac7f1e5362df2a776397d0e1a963b6c) |
 | [SenseNova-U1.5-8B-MoT](u1.5_model.md) | U1.5 base for image generation, editing, interleaved output, and visual understanding | Guide + showcase; homepage default | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
 | SenseNova-U1.5-8B-MoT-TailSteer | U1.5 variant for more stable multi-turn image editing; see its model card for usage | Model card only | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-TailSteer) |
 | SenseNova-U1.5-8B-MoT-SFT | U1.5 checkpoint from the supervised fine-tuning stage | Model card only | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |
@@ -29,6 +30,10 @@ These LoRA files require their matching base checkpoint; they are not standalone
 
 | Adapter | Base checkpoint | Purpose | Weights |
 | --- | --- | --- | --- |
+| SenseNova-U1.6-8B-MoT-LoRA-4step-v1.0 | SenseNova-U1.6-8B-MoT | 4-step Python adapter | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/blob/3f955cc2e3ed9077f38844ae3b9ec5fedda5d660/SenseNova-U1.6-8B-MoT-LoRA-4step-v1.0.safetensors) |
+| SenseNova-U1.6-8B-MoT-LoRA-4step-v1.0-ComfyUI | SenseNova-U1.6-8B-MoT | 4-step ComfyUI adapter | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/blob/3f955cc2e3ed9077f38844ae3b9ec5fedda5d660/SenseNova-U1.6-8B-MoT-LoRA-4step-v1.0-ComfyUI.safetensors) |
+| SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0 | SenseNova-U1.6-8B-MoT | 8-step Python adapter | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/blob/3f955cc2e3ed9077f38844ae3b9ec5fedda5d660/SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0.safetensors) |
+| SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0-ComfyUI | SenseNova-U1.6-8B-MoT | 8-step ComfyUI adapter | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/blob/3f955cc2e3ed9077f38844ae3b9ec5fedda5d660/SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0-ComfyUI.safetensors) |
 | [SenseNova-U1.5-8B-MoT-LoRA-8step-V2](u1.5_model.md#8-step-v2-lora) | U1.5 | Current 8-step adapter; improved color balance and contrast over the first version | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors) |
 | SenseNova-U1.5-8B-MoT-LoRA-8step | U1.5 | First 8-step adapter for this checkpoint | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) |
 | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | SenseNova-U1-8B-MoT-Infographic | 8-step infographic generation | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
@@ -37,6 +42,8 @@ These LoRA files require their matching base checkpoint; they are not standalone
 For architecture context, see the [U1 technical report](pdf/SenseNOVA_U1.pdf) and [parameter breakdown](parameter_breakdown.md).
 
 ## U1.6 repository conversion artifacts
+
+The [Native](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-Native/tree/ed98cc5ca5a1891028db2041f665b43b96a43cfa) and [GGUF](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-GGUF/tree/78774504dd6316c48ba4704df0ce805684df70eb) repositories distribute files derived from SenseNova-U1.6-8B-MoT. See the [U1.6 model guide](u1.6_model.md) for workflows and local inference commands.
 
 The repository's [quantization guide](../tools/quantization/README.md) produces
 U1.6 conversion artifacts from a matching source checkpoint. These files are
@@ -49,7 +56,7 @@ reports, and `manifest.json` needed to identify the artifact.
 | Native BF16 | `SenseNova-U1.6-BF16.safetensors` | SenseNova-U1 Python examples | Standard BF16 baseline. |
 | Native FP8 W8A8 | `SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors` | SenseNova-U1 Python examples | CUDA full-device loading with the native FP8 runtime. |
 | Native INT8 ConvRot W8A8 | `SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors` | SenseNova-U1 Python examples | CUDA full-device loading with the native INT8 runtime. |
-| GGUF Q4/Q6/Q8 | `SenseNova-U1.6-8B-MoT-Q4_0.gguf`, `Q6_K`, `Q8_0` | SenseNova-U1 GGUF loader | Keep the six config/tokenizer files beside the GGUF file. External GGUF engines require their own U1.6 architecture support. |
+| GGUF Q4/Q6/Q8 | `SenseNova-U1.6-8B-MoT-Q4_0.gguf`, `SenseNova-U1.6-8B-MoT-Q6_K.gguf`, `SenseNova-U1.6-8B-MoT-Q8_0.gguf` | SenseNova-U1 GGUF loader | Keep the six config/tokenizer files beside the GGUF file. External GGUF engines require their own U1.6 architecture support. |
 
 Native FP8 and INT8 use `--model_format fp8` or `--model_format int8-convrot`,
 `--dtype bfloat16`, `--device cuda`, and `--vram_mode full` in the reference
