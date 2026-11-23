@@ -14,13 +14,23 @@ if __package__ in {None, ""}:
 import torch
 
 import sensenova_u1
-from examples.t2i.inference import SUPPORTED_RESOLUTIONS, SenseNovaU1T2I
+from examples.t2i.inference import SenseNovaU1T2I
+from sensenova_u1.utils.resolutions import calculate_image_size
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent / "data"
 DEFAULT_EN_DATA_PATH = DEFAULT_DATA_DIR / "text_prompts.jsonl"
 DEFAULT_ZH_DATA_PATH = DEFAULT_DATA_DIR / "text_prompts_zh.jsonl"
 DEFAULT_ASPECT_RATIO = "1:1"
 DEFAULT_ATTN_BACKEND = "auto"
+_EVALUATION_ASPECT_RATIOS = ("1:1", "16:9", "9:16", "3:2", "2:3", "4:3", "3:4", "1:2", "2:1", "1:3", "3:1")
+
+# Keep the original evaluation dimensions for these aspect ratios.
+_EVALUATION_SIZE_OVERRIDES = {
+    "4:3": (2368, 1760),
+    "3:4": (1760, 2368),
+    "3:1": (3456, 1152),
+    "1:3": (1152, 3456),
+}
 
 
 def _parse_args() -> argparse.Namespace:
@@ -32,7 +42,7 @@ def _parse_args() -> argparse.Namespace:
         "--lang", default="en", choices=["en", "zh"], help="Default data split when --data-path is not set."
     )
     parser.add_argument(
-        "--aspect-ratio", default=DEFAULT_ASPECT_RATIO, help="Output aspect ratio key in SUPPORTED_RESOLUTIONS."
+        "--aspect-ratio", default=DEFAULT_ASPECT_RATIO, choices=_EVALUATION_ASPECT_RATIOS, help="Output aspect ratio."
     )
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--dtype", default="bfloat16", choices=["bfloat16", "float16", "float32"])
@@ -71,14 +81,8 @@ def _resolve_dtype(name: str) -> torch.dtype:
     }[name]
 
 
-def _resolve_image_size(
-    *,
-    aspect_ratio: str,
-    supported_resolutions: dict[str, tuple[int, int]],
-) -> tuple[int, int]:
-    if aspect_ratio not in supported_resolutions:
-        raise ValueError(f"Unsupported aspect ratio: {aspect_ratio!r}. Supported: {sorted(supported_resolutions)}")
-    return supported_resolutions[aspect_ratio]
+def _resolve_image_size(aspect_ratio: str) -> tuple[int, int]:
+    return _EVALUATION_SIZE_OVERRIDES.get(aspect_ratio) or calculate_image_size(2048**2, aspect_ratio)
 
 
 def main() -> None:
@@ -101,10 +105,7 @@ def main() -> None:
 
     generated = 0
     skipped = 0
-    width, height = _resolve_image_size(
-        aspect_ratio=args.aspect_ratio,
-        supported_resolutions=SUPPORTED_RESOLUTIONS,
-    )
+    width, height = _resolve_image_size(args.aspect_ratio)
 
     for item in items:
         prompt_id = int(item["prompt_id"])

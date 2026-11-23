@@ -62,7 +62,7 @@ hf download sensenova/SenseNova-U1.5-8B-MoT \
 python examples/t2i/inference.py \
   --model_path ./models/SenseNova-U1.5-8B-MoT \
   --prompt "A cinematic mountain lake at sunrise, realistic photography." \
-  --width 2048 --height 2048 --num_steps 50 \
+  --bucket 4m --aspect_ratio 1:1 --num_steps 50 \
   --vram_mode balanced --attn_backend sdpa \
   --output output.png
 ~~~
