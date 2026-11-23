@@ -1,6 +1,6 @@
 # 示例
 
-ComfyUI 用户可参阅 [SenseNova 原生工作流示例](comfyui/README.md)。
+ComfyUI 用户可参阅 [SenseNova-U1.6 官方模板](comfyui/README.md)。
 
 本目录提供 SenseNova-U1 的参考推理脚本。所有脚本均刻意保持自包含——除 `sensenova_u1` 包本身外，仅依赖 `torch`、`transformers`、`pillow`、`numpy`（以及可选的 `tqdm` / `flash-attn`）。
 
