@@ -72,6 +72,10 @@ python examples/t2i/inference.py \
 
 环境配置见[安装指南](docs/installation_CN.md)，其他任务的命令见[任务示例](examples/README_CN.md)。8 步 V2 LoRA 的命令见[U1.5 模型指南](docs/u1.5_model_CN.md#8-步-v2-lora)；[U1.5 显存与 8 步耗时](docs/u1.5_inference_CN.md)记录了 RTX 5090 和 H100 分配器限额测试。
 
+## 评测 (U1.6)
+
+<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png" alt="U1.6 评测结果" width="90%"></a></p>
+
 ## 评测（U1.5）
 
 这些图表是 U1.5 权重的发布评测记录，与 [U1.5 推理记录](docs/u1.5_inference_CN.md)中的 RTX 5090 和 H100 运行数据分开；[详细结果](docs/assets/benchmarks/u1.5_combined.webp)列出发布评测的范围。
