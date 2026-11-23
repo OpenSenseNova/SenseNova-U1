@@ -103,11 +103,11 @@ These charts are release evaluation records for the U1.5 checkpoint. They are se
 
 ### Text-to-image generation
 
-<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/t2i/SenseNova-U1.6-T2I.webp"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/t2i/SenseNova-U1.6-T2I.webp" alt="SenseNova-U1.6 text-to-image examples" width="100%"></a></p>
+<p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-T2I.webp"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-T2I.webp" alt="SenseNova-U1.6 text-to-image examples" width="100%"></a></p>
 
 ### Self-correction
 
-<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/self-correction/SenseNova-U1.6-SC.gif"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/main/u1.6/self-correction/SenseNova-U1.6-SC.gif" alt="SenseNova-U1.6 self-correction before and after" width="100%"></a></p>
+<p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif" alt="SenseNova-U1.6 self-correction before and after" width="100%"></a></p>
 
 ## Documentation
 
