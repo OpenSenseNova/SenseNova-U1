@@ -1,0 +1,32 @@
+name: File size
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+
+# Require "File Size Gate" in the target branch ruleset after first deployment.
+# Execute only the trusted base version of this workflow and checker. PR objects
+# are fetched for inspection but never checked out or executed.
+jobs:
+  file-size:
+    name: File Size Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Inspect every PR commit
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git fetch --no-tags origin "refs/pull/${PR_NUMBER}/head"
+          test "$(git rev-parse FETCH_HEAD)" = "$HEAD_SHA"
+          python3 scripts/check_file_sizes.py "$BASE_SHA" "$HEAD_SHA"
