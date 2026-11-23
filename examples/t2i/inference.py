@@ -25,38 +25,17 @@ from sensenova_u1.utils import (
     vram_mode_keeps_generation_resident,
     vram_mode_to_prefetch_count,
 )
+from sensenova_u1.utils.resolutions import (
+    add_resolution_args,
+    calculate_image_size,
+    print_output_size,
+    resolve_cli_image_size,
+)
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
 
 DEFAULT_SEED = 42
-
-
-SUPPORTED_RESOLUTIONS: dict[str, tuple[int, int]] = {
-    "1:1": (2048, 2048),
-    "16:9": (2720, 1536),
-    "9:16": (1536, 2720),
-    "3:2": (2496, 1664),
-    "2:3": (1664, 2496),
-    "4:3": (2368, 1760),
-    "3:4": (1760, 2368),
-    "1:2": (1440, 2880),
-    "2:1": (2880, 1440),
-    "1:3": (1152, 3456),
-    "3:1": (3456, 1152),
-}
-
-DEFAULT_WIDTH, DEFAULT_HEIGHT = SUPPORTED_RESOLUTIONS["1:1"]
-
-
-def _warn_if_unsupported(width: int, height: int) -> None:
-    if (width, height) in SUPPORTED_RESOLUTIONS.values():
-        return
-    buckets = ", ".join(f"{r}->{w}x{h}" for r, (w, h) in SUPPORTED_RESOLUTIONS.items())
-    print(
-        f"[warn] ({width}x{height}) is outside the trained resolution set; "
-        f"quality may degrade. Supported buckets: {buckets}"
-    )
 
 
 def _denorm(x: torch.Tensor) -> torch.Tensor:
@@ -136,7 +115,7 @@ class SenseNovaU1T2I:
     def generate(
         self,
         prompt: str,
-        image_size: tuple[int, int] = (DEFAULT_WIDTH, DEFAULT_HEIGHT),
+        image_size: tuple[int, int] = calculate_image_size(),
         cfg_scale: float = 4.0,
         cfg_norm: str = "none",
         timestep_shift: float = 3.0,
@@ -175,7 +154,7 @@ def _resolve_size(sample: dict, default_width: int, default_height: int) -> tupl
     """Pick output (W, H) for a sample.
 
     If the sample JSON provides ``width`` and ``height`` they take precedence.
-    Otherwise fall back to the CLI defaults (``--width`` / ``--height``).
+    Otherwise use the CLI output size.
     """
     if "width" in sample and "height" in sample:
         return int(sample["width"]), int(sample["height"])
@@ -216,28 +195,14 @@ def parse_args() -> argparse.Namespace:
     src.add_argument(
         "--jsonl",
         help='JSONL file, one sample per line. Required: {"prompt": ...}. '
-        'Optional: {"width": W, "height": H, "seed": S}.',
+        'Optional: {"width": W, "height": H, "seed": S}. '
+        "A width and height pair overrides the CLI output size for that sample.",
     )
 
     p.add_argument("--output", default="output.png", help="Output path when using --prompt.")
     p.add_argument("--output_dir", default="outputs", help="Output directory when using --jsonl.")
 
-    p.add_argument(
-        "--width",
-        type=int,
-        default=DEFAULT_WIDTH,
-        help=(
-            f"Output image width (default: {DEFAULT_WIDTH}). For --jsonl, this is the "
-            "fallback when a sample does not specify its own width/height. "
-            f"Trained buckets: {sorted(set(SUPPORTED_RESOLUTIONS.values()))}."
-        ),
-    )
-    p.add_argument(
-        "--height",
-        type=int,
-        default=DEFAULT_HEIGHT,
-        help=f"Output image height (default: {DEFAULT_HEIGHT}). See --width for supported values.",
-    )
+    add_resolution_args(p)
     p.add_argument("--cfg_scale", type=float, default=4.0)
     p.add_argument(
         "--no_cfg_batching",
@@ -363,7 +328,9 @@ def parse_args() -> argparse.Namespace:
         help="With --think: also print the reasoning block to stdout.",
     )
 
-    return p.parse_args()
+    args = p.parse_args()
+    args.image_size = resolve_cli_image_size(p, args)
+    return args
 
 
 def _build_enhancer(args: argparse.Namespace):
@@ -405,6 +372,7 @@ def _maybe_enhance(enhancer, loop, prompt: str, *, verbose: bool) -> str:
 
 def main() -> None:
     args = parse_args()
+    width, height = args.image_size or calculate_image_size()
 
     dtype = {"bfloat16": torch.bfloat16, "float16": torch.float16, "float32": torch.float32}[args.dtype]
 
@@ -452,11 +420,11 @@ def main() -> None:
 
         if args.prompt is not None:
             prompt = _maybe_enhance(enhancer, loop, args.prompt, verbose=args.print_enhance)
-            _warn_if_unsupported(args.width, args.height)
-            with profiler.time_generate(args.width, args.height, args.batch_size):
+            print_output_size(width, height)
+            with profiler.time_generate(width, height, args.batch_size):
                 images = engine.generate(
                     prompt,
-                    image_size=(args.width, args.height),
+                    image_size=(width, height),
                     cfg_scale=args.cfg_scale,
                     cfg_norm=args.cfg_norm,
                     timestep_shift=args.timestep_shift,
@@ -495,11 +463,11 @@ def main() -> None:
                 return x
 
         for i, sample in enumerate(tqdm(samples, desc="T2I")):
-            w, h = _resolve_size(sample, args.width, args.height)
-            _warn_if_unsupported(w, h)
+            w, h = _resolve_size(sample, width, height)
             seed_i = int(sample.get("seed", args.seed))
             think_i = bool(sample["think"]) if "think" in sample else args.think
             prompt = _maybe_enhance(enhancer, loop, sample["prompt"], verbose=args.print_enhance)
+            print_output_size(w, h, sample_number=i + 1)
             with profiler.time_generate(w, h, 1):
                 images = engine.generate(
                     prompt,

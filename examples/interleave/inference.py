@@ -28,39 +28,17 @@ from sensenova_u1.utils import (
     vram_mode_keeps_generation_resident,
     vram_mode_to_prefetch_count,
 )
+from sensenova_u1.utils.resolutions import (
+    add_resolution_args,
+    calculate_image_size,
+    print_output_size,
+    resolve_cli_image_size,
+)
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
 
 DEFAULT_SEED = 42
-
-SUPPORTED_RESOLUTIONS: dict[str, tuple[int, int]] = {
-    "1:1": (1536, 1536),
-    "16:9": (2048, 1152),
-    "9:16": (1152, 2048),
-    "3:2": (1888, 1248),
-    "2:3": (1248, 1888),
-    "4:3": (1760, 1312),
-    "3:4": (1312, 1760),
-    "1:2": (1088, 2144),
-    "2:1": (2144, 1088),
-    "1:3": (864, 2592),
-    "3:1": (2592, 864),
-}
-
-DEFAULT_RESOLUTION = "16:9"
-DEFAULT_WIDTH, DEFAULT_HEIGHT = SUPPORTED_RESOLUTIONS[DEFAULT_RESOLUTION]
-
-
-def _warn_if_unsupported(width: int, height: int) -> None:
-    if (width, height) in SUPPORTED_RESOLUTIONS.values():
-        return
-    buckets = ", ".join(f"{r}->{w}x{h}" for r, (w, h) in SUPPORTED_RESOLUTIONS.items())
-    print(
-        f"[warn] ({width}x{height}) is outside the trained resolution set; "
-        f"quality may degrade. Supported buckets: {buckets}"
-    )
-
 
 # Interleave inference requires a system prompt that describes the
 # think / no-think protocol expected by the model during training.
@@ -173,7 +151,7 @@ class SenseNovaU1Interleave:
         self,
         prompt: str,
         input_images: Sequence[Image.Image] = (),
-        image_size: tuple[int, int] = (DEFAULT_WIDTH, DEFAULT_HEIGHT),
+        image_size: tuple[int, int] = calculate_image_size(),
         cfg_scale: float = 4.0,
         img_cfg_scale: float = 1.0,
         timestep_shift: float = 3.0,
@@ -227,18 +205,16 @@ def _load_input_images(paths: Sequence[str], image_root: str = "") -> list[Image
 
 def _resolve_image_size(
     input_images: Sequence[Image.Image],
-    fallback_w: int,
-    fallback_h: int,
+    fallback_size: tuple[int, int],
 ) -> tuple[int, int]:
     """Pick generation (W, H). With input images, follow the first one so
     edits stay aligned (snapped to 32-aligned buckets via ``smart_resize``).
-    Without input images, use the caller-provided fallback as-is — it is
-    expected to already be one of ``SUPPORTED_RESOLUTIONS``."""
+    Without input images, use the caller-provided fallback as-is."""
     if input_images:
         w, h = input_images[0].size
         resized_h, resized_w = smart_resize(h, w)
         return resized_w, resized_h
-    return fallback_w, fallback_h
+    return fallback_size
 
 
 def _save_outputs(
@@ -316,11 +292,10 @@ def parse_args() -> argparse.Namespace:
         help=(
             'JSONL file, one sample per line. Required: {"prompt": ...} or '
             '{"conversations": [{"from": "human", "value": ...}, ...]}. '
-            'Optional: {"image": [paths], "width": W, "height": H, "seed": S, '
+            'Optional: {"image": [paths], "width": W, "height": H, '
             '"think_mode": bool}. '
-            "If 'image' is set, output size follows the first input image "
-            "(via smart_resize); 'width'/'height' are used only for "
-            "text-only samples."
+            "With input images and no CLI size options, use the first input image to derive the size. "
+            "Otherwise, a per-sample width and height override the CLI size."
         ),
     )
     p.add_argument(
@@ -348,30 +323,7 @@ def parse_args() -> argparse.Namespace:
         help="Filename stem when using --prompt. Generated files are <stem>.txt and <stem>_image_<i>.png.",
     )
 
-    p.add_argument(
-        "--resolution",
-        default=DEFAULT_RESOLUTION,
-        choices=list(SUPPORTED_RESOLUTIONS.keys()),
-        help=(
-            f"Aspect-ratio bucket used when no input image is provided "
-            f"(default: {DEFAULT_RESOLUTION} -> "
-            f"{SUPPORTED_RESOLUTIONS[DEFAULT_RESOLUTION][0]}x"
-            f"{SUPPORTED_RESOLUTIONS[DEFAULT_RESOLUTION][1]}). "
-            "Overridden by --width/--height when both are set."
-        ),
-    )
-    p.add_argument(
-        "--width",
-        type=int,
-        default=None,
-        help="Explicit fallback width. Overrides --resolution when both --width and --height are set.",
-    )
-    p.add_argument(
-        "--height",
-        type=int,
-        default=None,
-        help="Explicit fallback height. Overrides --resolution when both --width and --height are set.",
-    )
+    add_resolution_args(p)
     p.add_argument("--cfg_scale", type=float, default=4.0)
     p.add_argument("--img_cfg_scale", type=float, default=1.0)
     p.add_argument("--timestep_shift", type=float, default=3.0)
@@ -399,10 +351,7 @@ def parse_args() -> argparse.Namespace:
         "--seed",
         type=int,
         default=DEFAULT_SEED,
-        help=(
-            f"Random seed for reproducible sampling (default: {DEFAULT_SEED}). "
-            "In --jsonl mode, a per-sample `seed` field overrides this."
-        ),
+        help=f"Random seed for each sample in this run (default: {DEFAULT_SEED}).",
     )
 
     p.add_argument(
@@ -454,6 +403,7 @@ def parse_args() -> argparse.Namespace:
     args = p.parse_args()
     if args.max_images < 1:
         p.error("--max_images must be at least 1.")
+    args.image_size = resolve_cli_image_size(p, args)
     return args
 
 
@@ -503,18 +453,15 @@ def main() -> None:
     cfg_interval = tuple(args.cfg_interval)
     out_dir = Path(args.output_dir)
 
-    if args.width is not None and args.height is not None:
-        fallback_w, fallback_h = args.width, args.height
-        _warn_if_unsupported(fallback_w, fallback_h)
-    else:
-        fallback_w, fallback_h = SUPPORTED_RESOLUTIONS[args.resolution]
+    fallback_size = args.image_size or calculate_image_size()
 
     # Single-sample inference: --prompt + optional --image (repeatable).
     if args.prompt is not None:
         print("prompt:", args.prompt)
         input_images = _load_input_images(args.image)
-        w, h = _resolve_image_size(input_images, fallback_w, fallback_h)
+        w, h = args.image_size or _resolve_image_size(input_images, fallback_size)
         # _set_seed(args.seed)
+        print_output_size(w, h)
         with profiler.time_generate(w, h, 1) as gen:
             text, images = engine.generate(
                 args.prompt,
@@ -560,19 +507,16 @@ def main() -> None:
         for i, sample in enumerate(tqdm(samples, desc="interleave")):
             prompt = _extract_prompt(sample)
             input_images = _sample_images(sample, image_root=args.image_root)
-            if input_images:
-                # When the sample ships input images, always follow their
-                # size (via smart_resize); any per-sample width/height is
-                # treated as a no-input-image fallback only.
-                w, h = _resolve_image_size(input_images, fallback_w, fallback_h)
+            if input_images and args.image_size is None:
+                w, h = _resolve_image_size(input_images, fallback_size)
             elif "width" in sample and "height" in sample:
                 w, h = int(sample["width"]), int(sample["height"])
-                _warn_if_unsupported(w, h)
             else:
-                w, h = fallback_w, fallback_h
+                w, h = fallback_size
             think_mode = bool(sample.get("think_mode", args.think_mode))
             # _set_seed(int(sample.get("seed", args.seed)))
 
+            print_output_size(w, h, sample_number=i + 1)
             with profiler.time_generate(w, h, 1) as gen:
                 text, images = engine.generate(
                     prompt,

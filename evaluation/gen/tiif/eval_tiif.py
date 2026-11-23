@@ -17,7 +17,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(repo_root / "src"))
 
 import sensenova_u1
-from examples.t2i.inference import SenseNovaU1T2I, _warn_if_unsupported
+from examples.t2i.inference import SenseNovaU1T2I
 
 
 def set_random_seeds(seed_value, rank=0):
@@ -179,7 +179,6 @@ def main():
     sensenova_u1.set_attn_backend(args.attn_backend)
     if rank == 0:
         print(f"[attn] backend={args.attn_backend!r} (effective={sensenova_u1.effective_attn_backend()!r})")
-        _warn_if_unsupported(*image_size)
 
     engine = SenseNovaU1T2I(
         args.model_path,

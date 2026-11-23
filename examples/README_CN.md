@@ -73,7 +73,7 @@ python examples/t2i/inference.py \
 python examples/t2i/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "一张四步手冲咖啡信息图，浅色背景，标题为「手冲咖啡」" \
-  --width 2720 --height 1536 \
+  --bucket 4m --aspect_ratio 16:9 \
   --vram_mode balanced \
   --batch_size 1 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -83,7 +83,7 @@ python examples/t2i/inference.py \
 
 旧版信息图的[原始提示词](t2i/data/u1_infographic_prompt.txt)保留作案例输入，其中的发布文案不代表当前版本。
 
-通过 JSONL 文件批量推理（每行必须包含 `prompt` 字段；`width` / `height` / `seed` 为可选字段）：
+通过 JSONL 文件批量推理时，每行须包含 `prompt`，也可指定 `seed`。同时提供 `width` 和 `height` 时，这组宽高会覆盖该样本的 CLI 输出尺寸。
 
 ```bash
 python examples/t2i/inference.py \
@@ -137,7 +137,7 @@ python examples/t2i/inference.py \
 python examples/t2i/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "A male peacock trying to attract a female" \
-  --width 2048 --height 2048 \
+  --bucket 4m --aspect_ratio 1:1 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
   --seed 42 \
   --think \
@@ -159,20 +159,24 @@ python examples/t2i/inference.py \
     --profile
 ```
 
-JSONL 模式下，可在单条样本里设置 `"think": true`（即使全局没传 `--think` 也会对该条启用）；也可以直接传全局 `--think` 对所有样本启用。
+JSONL 模式下，`--think` 设置本次运行的默认值。样本的 `think` 字段可以覆盖该默认值。
 
 ### 推荐分辨率档位
 
-SenseNova-U1 在约 2K 像素的分辨率档位上训练。尽管支持任意的 `--width` / `--height`，但对未训练过的尺寸组合，生成质量可能有所下降。
+脚本会在每条样本生成前打印最终尺寸，例如 `[resolution] sample=1 --width 1536 --height 1536`。样本序号从 1 开始。要复现该输出尺寸，可直接复制这两个参数。两者均须为 32 的正整数倍，这组宽高优先于 `--bucket` 和 `--aspect_ratio`。
 
-| 宽高比         | 宽 × 高                  |
-| :----------- | :------------------------ |
-| 1:1          | 2048 × 2048               |
-| 16:9 / 9:16  | 2720 × 1536 / 1536 × 2720 |
-| 3:2 / 2:3    | 2496 × 1664 / 1664 × 2496 |
-| 4:3 / 3:4    | 2368 × 1760 / 1760 × 2368 |
-| 2:1 / 1:2    | 2880 × 1440 / 1440 × 2880 |
-| 3:1 / 1:3    | 3456 × 1152 / 1152 × 3456 |
+用 `--bucket` 指定总像素预算，用 `--aspect_ratio` 选择宽高比。CLI 接受 `1m` 到 `16m` 之间的值（含两端），也支持 `2.5m` 和 `12.5m` 等小数。每个 `m` 对应 1024 × 1024 像素，推荐从 `4m` 开始。宽高比用 `宽:高` 格式表示，宽和高均为正整数，比例范围为 `1:3` 到 `3:1`（含两端），例如 `21:9` 或 `5:4`。只传其中一个参数时，另一个取默认值 `4m` 或 `9:16`。脚本根据总像素预算和宽高比计算尺寸，再将宽和高向下对齐到 32 的倍数。请选用支持所需输出尺寸的模型权重。下表给出部分尺寸示例。
+
+| 宽高比        | 1M 宽 × 高 | 4M 宽 × 高 | 16M 宽 × 高 |
+| :----------- | :--------- | :--------- | :---------- |
+| 1:1          | 1024 × 1024             | 2048 × 2048             | 4096 × 4096             |
+| 16:9 / 9:16  | 1344 × 768 / 768 × 1344 | 2720 × 1536 / 1536 × 2720 | 5440 × 3072 / 3072 × 5440 |
+| 3:2 / 2:3    | 1248 × 832 / 832 × 1248 | 2496 × 1664 / 1664 × 2496 | 4992 × 3328 / 3328 × 4992 |
+| 4:3 / 3:4    | 1152 × 864 / 864 × 1152 | 2336 × 1760 / 1760 × 2336 | 4704 × 3520 / 3520 × 4704 |
+| 2:1 / 1:2    | 1440 × 704 / 704 × 1440 | 2880 × 1440 / 1440 × 2880 | 5792 × 2880 / 2880 × 5792 |
+| 3:1 / 1:3    | 1760 × 576 / 576 × 1760 | 3520 × 1152 / 1152 × 3520 | 7072 × 2336 / 2336 × 7072 |
+
+文生图默认使用 `4m` 和 `9:16`（1536 × 2720）。例如，`--bucket 8m --aspect_ratio 1:1` 会选中 2880 × 2880。批量推理时，这组参数为未指定宽高的样本设置输出尺寸。
 
 ### 信息图场景的 Prompt 增强
 
@@ -197,13 +201,14 @@ python examples/editing/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "Change the jacket of the person on the left to bright yellow." \
   --image examples/editing/data/images/1.webp \
+  --bucket 4m --aspect_ratio 1:1 \
   --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
   --timestep_shift 3.0 --num_steps 50 \
   --output edited.png \
   --profile --compare
 ```
 
-通过 JSONL 文件批量编辑（每行必须包含 `prompt` 以及 `image` 路径；`seed` / `type` 为可选字段；`image` 也可以是路径列表以传入多张参考图；若某行同时提供 `width` 和 `height`，则会覆盖该样本上命令行的默认值）：
+通过 JSONL 文件批量编辑时，每行须包含 `prompt` 和 `image`，后者可以是单条参考图路径或路径列表。可选的 `type` 用于输出文件名。整次运行的种子通过 `--seed` 设置。
 
 ```bash
 python examples/editing/inference.py \
@@ -230,10 +235,13 @@ python examples/editing/inference.py \
   --profile --compare
 ```
 
-输出分辨率共支持两种模式：
+图像编辑可指定确切尺寸、使用预算和比例计算，或根据输入图自动推导。
 
-- **自动模式（默认）**：不传 `--width / --height` 时，输出分辨率跟随第一张输入图，通过 `smart_resize` 保持宽高比，总像素数归一化到 `--target_pixels`（默认 `2048 * 2048`），且 H / W 均对齐到 32 的倍数。
-- **显式指定**：传入 `--width W --height H`（二者均须为 32 的倍数）。2048 × 2048 是一个通用场景下的稳妥选择。
+- 同时传入 `--width` 和 `--height` 可复用确切的输出尺寸。
+- 传入 `--bucket 4m --aspect_ratio 1:1` 选择 2048 × 2048，或从[分辨率表](#推荐分辨率档位)选择其他组合。
+- 自动推导时，`smart_resize` 使用第一张输入图经过输入缩放后的宽高比。输出面积以 `--target_pixels`（默认 `2048 * 2048`）为目标，宽和高对齐到 32 的倍数。
+
+JSONL 中的样本可以同时指定 `width` 和 `height` 来覆盖 CLI 选定的尺寸，二者均须为 32 的倍数。
 
 为了获得更好的编辑质量，建议尽量提供高分辨率输入/参考图。
 显存有限时可使用 `--input_max_pixels auto`：1-2 张图保持单图最高2048 × 2048，超过 2 张时把两张 2048 × 2048 的总预算均分给所有输入图。
@@ -249,20 +257,20 @@ CFG 默认值：`--cfg_scale 4.0`（文本引导强度），`--img_cfg_scale 1.0
 
 ## 图文交错生成（Interleave）
 
-`examples/interleave/inference.py` 调用的是 `model.interleave_gen`，可在**单次响应中交错生成文本与图像**。模型会先输出一段 `<think>...</think>` 的推理块，在其中生成中间图像，最后再给出简洁的答复。涵盖以下三种用法的启动脚本见 [`interleave/run.sh`](./interleave/run.sh)。
+`examples/interleave/inference.py` 调用的是 `model.interleave_gen`，可在**单次响应中交错生成文本与图像**。模型可以在 `<think>...</think>` 推理块中生成中间图像，再给出简洁的答复。将 `MODEL_PATH` 设为本地权重路径或 Hugging Face 模型 ID，再运行 `bash examples/interleave/run.sh` 即可启动下面的示例。参见 [`interleave/run.sh`](./interleave/run.sh)。
 
-**输出文件：** 每个样本会写出 `<stem>.txt`（生成的文本）以及对应每张图像的 `<stem>_image_<i>.png`；在 `--jsonl` 模式下还会额外生成一份 `results.jsonl` 清单。
+每个样本将提示词和生成文本写入 `<stem>.txt`，将生成图像保存为 `<stem>_image_<i>.png`。有输入图像时也会保存 `<stem>_input_<i>.png`。JSONL 模式还会写出 `results.jsonl` 清单。
 
 用 `--max_images 1` 可将单次生成限制为最多一张图（默认上限为 10 张），便于比较单图推理耗时。提示词仍有可能只返回文本而不出图。
 
-**分辨率：** 若通过 `--image` 或 JSONL 中的 `image` 字段提供了输入图像，输出分辨率会跟随第一张输入图（经 `smart_resize` 对齐到 32 的倍数），并覆盖 `--resolution` / `--width` / `--height` 的设置。
+可用 `--width` 和 `--height` 指定输出尺寸，也可用 `--bucket` 和 `--aspect_ratio` 计算。省略 CLI 尺寸参数时，带图样本按第一张输入图的宽高比计算尺寸，自动缩放的面积范围为 262,144 到 2,097,152 像素，宽高对齐到 32 的倍数。纯文本样本默认使用 `4m` 和 `9:16`（1536 × 2720）。
 
 ### 1) 单样本，仅文本 prompt
 ```bash
 python examples/interleave/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
-  --resolution "16:9" \
+  --bucket 4m --aspect_ratio 16:9 \
   --output_dir outputs/interleave/text \
   --stem demo_text
 ```
@@ -280,7 +288,7 @@ python examples/interleave/inference.py \
 
 ### 3) 通过 JSONL 批量推理
 
-每行代表一个样本：
+每行代表一个样本。对于纯文本样本，或通过 CLI 选择了输出尺寸的带图样本，同一行里的 `width` 和 `height` 可以覆盖默认或 CLI 选定的尺寸。整次运行的种子通过 `--seed` 设置。
 
 ```json
 {"prompt": "..."}
@@ -291,11 +299,11 @@ python examples/interleave/inference.py \
 python examples/interleave/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/interleave/data/samples.jsonl \
-    --resolution "16:9" \
+    --bucket 4m --aspect_ratio 16:9 \
     --output_dir outputs/interleave/jsonl
 ```
 
-[`interleave/data/samples.jsonl`](./interleave/data/samples.jsonl) 提供了一份包含两条样本（一条纯文本、一条图像条件）的起步文件。
+[`interleave/data/samples.jsonl`](./interleave/data/samples.jsonl) 同时包含纯文本和带图样本。
 
 ## 视觉理解（VQA）
 

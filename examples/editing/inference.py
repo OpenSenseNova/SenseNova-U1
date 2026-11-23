@@ -28,20 +28,13 @@ from sensenova_u1.utils import (
     vram_mode_keeps_generation_resident,
     vram_mode_to_prefetch_count,
 )
+from sensenova_u1.utils.resolutions import add_resolution_args, print_output_size, resolve_cli_image_size
 from sensenova_u1_5.edit.edit_pe import enhance_edit_prompt
 
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_STD = (0.5, 0.5, 0.5)
 
 DEFAULT_SEED = 42
-
-SUGGESTED_RESOLUTIONS: dict[str, tuple[int, int]] = {
-    "1:1": (2048, 2048),
-    "16:9": (2720, 1536),
-    "9:16": (1536, 2720),
-    "2:3": (1664, 2496),
-    "3:2": (2496, 1664),
-}
 
 # Output H / W must be divisible by this (= patch_size * merge_size).
 _IMAGE_GRID_FACTOR = DEFAULT_IMAGE_PATCH_SIZE
@@ -330,8 +323,8 @@ def parse_args() -> argparse.Namespace:
         "--jsonl",
         help='JSONL file, one sample per line. Required: {"prompt": str, '
         '"image": str | list[str]}. Optional: {"width": int, "height": int, '
-        '"seed": int, "type": str}. When "width" and "height" are both '
-        "present they override --width / --height for that sample.",
+        '"type": str}. When "width" and "height" are both '
+        "present they set the output size for that sample.",
     )
 
     p.add_argument(
@@ -344,24 +337,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--output", default="output.png", help="Output path when using --prompt.")
     p.add_argument("--output_dir", default="outputs", help="Output directory when using --jsonl.")
 
-    p.add_argument(
-        "--width",
-        type=int,
-        default=None,
-        help=(
-            "Explicit output width in pixels. Must be given together with --height, "
-            f"and must be a multiple of {_IMAGE_GRID_FACTOR}. "
-            "When both --width and --height are omitted the output resolution is "
-            "derived from the first input image: aspect ratio preserved, total "
-            "pixels normalized to --target_pixels."
-        ),
-    )
-    p.add_argument(
-        "--height",
-        type=int,
-        default=None,
-        help=f"Explicit output height in pixels. See --width. Must be a multiple of {_IMAGE_GRID_FACTOR}.",
-    )
+    add_resolution_args(p)
     p.add_argument(
         "--target_pixels",
         type=int,
@@ -369,9 +345,9 @@ def parse_args() -> argparse.Namespace:
         help=(
             f"Target pixel count for the auto-derived output resolution "
             f"(default: {DEFAULT_TARGET_PIXELS} = 2048*2048). The first input "
-            "image's aspect ratio is preserved and H*W is rescaled to match "
-            f"this target, which is a multiple of {_IMAGE_GRID_FACTOR}. "
-            "Ignored when --width / --height are given."
+            "image's aspect ratio is retained approximately while rescaling toward the target "
+            f"and aligning both dimensions to multiples of {_IMAGE_GRID_FACTOR}. "
+            "Applies when the output size is derived from the first input image."
         ),
     )
     p.add_argument(
@@ -433,10 +409,7 @@ def parse_args() -> argparse.Namespace:
         "--seed",
         type=int,
         default=DEFAULT_SEED,
-        help=(
-            f"Random seed for reproducible sampling (default: {DEFAULT_SEED}). "
-            "In --jsonl mode, a per-sample `seed` field in the JSONL overrides this."
-        ),
+        help=f"Random seed for each sample in this run (default: {DEFAULT_SEED}).",
     )
 
     p.add_argument(
@@ -543,13 +516,7 @@ def parse_args() -> argparse.Namespace:
         p.error("--image is only valid with --prompt; in --jsonl mode, put 'image' in the JSONL.")
     if args.print_edit_pe and not args.use_edit_pe:
         p.error("--print_edit_pe requires --use_edit_pe.")
-    if (args.width is None) != (args.height is None):
-        p.error("--width and --height must be given together (or both omitted).")
-    if args.width is not None:
-        if args.width % _IMAGE_GRID_FACTOR or args.height % _IMAGE_GRID_FACTOR:
-            p.error(
-                f"--width / --height must each be a multiple of {_IMAGE_GRID_FACTOR} (got {args.width}x{args.height})."
-            )
+    args.image_size = resolve_cli_image_size(p, args)
     return args
 
 
@@ -598,7 +565,6 @@ def main() -> None:
         engine.model = load_and_merge_lora_weight_from_safetensors(engine.model, args.lora_path)
 
     cfg_interval = tuple(args.cfg_interval)
-    cli_explicit_size: tuple[int, int] | None = (args.width, args.height) if args.width is not None else None
 
     if args.prompt is not None:
         prompt = _maybe_enhance_edit_prompt(
@@ -615,10 +581,11 @@ def main() -> None:
         images = [_load_input_image(p, do_resize=args.do_resize, input_max_pixels=input_max_pixels) for p in args.image]
         w, h = _resolve_output_size(
             images,
-            explicit=cli_explicit_size,
+            explicit=args.image_size,
             target_pixels=args.target_pixels,
         )
         # _set_seed(args.seed)
+        print_output_size(w, h)
         with profiler.time_generate(w, h, args.batch_size):
             outputs, think_text = engine.edit(
                 prompt,
@@ -679,10 +646,11 @@ def main() -> None:
         images = [_load_input_image(p, do_resize=sample_do_resize, input_max_pixels=input_max_pixels) for p in paths]
         w, h = _resolve_output_size(
             images,
-            explicit=_explicit_size_from_sample(sample) or cli_explicit_size,
+            explicit=_explicit_size_from_sample(sample) or args.image_size,
             target_pixels=args.target_pixels,
         )
         # _set_seed(int(sample.get("seed", args.seed)))
+        print_output_size(w, h, sample_number=i + 1)
         with profiler.time_generate(w, h, 1):
             outputs, think_text = engine.edit(
                 prompt,

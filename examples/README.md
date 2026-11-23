@@ -80,7 +80,7 @@ Single prompt:
 python examples/t2i/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "A four-step pour-over coffee infographic on a light background, titled Pour-over Coffee" \
-  --width 2720 --height 1536 \
+  --bucket 4m --aspect_ratio 16:9 \
   --vram_mode balanced \
   --batch_size 1 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
@@ -90,8 +90,8 @@ python examples/t2i/inference.py \
 
 The [original infographic prompt](t2i/data/u1_infographic_prompt.txt) is kept as a sample input. Its release copy does not describe the current version.
 
-Batched prompts from a JSONL file (each line must contain a `prompt`;
-`width` / `height` / `seed` are optional):
+Batched prompts from a JSONL file. Each line needs a `prompt` and can set a `seed`.
+A `width` and `height` pair overrides the CLI output size for that sample.
 
 ```bash
 python examples/t2i/inference.py \
@@ -145,7 +145,7 @@ Single prompt (image + reasoning text):
 python examples/t2i/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "A male peacock trying to attract a female" \
-  --width 2048 --height 2048 \
+  --bucket 4m --aspect_ratio 1:1 \
   --cfg_scale 4.0 --cfg_norm none --timestep_shift 3.0 --num_steps 50 \
   --seed 42 \
   --think \
@@ -167,20 +167,24 @@ python examples/t2i/inference.py \
     --profile
 ```
 
-JSONL: set `"think": true` per sample, or pass `--think` for all samples.
+In JSONL mode, `--think` sets the run default. A sample's `think` field overrides it.
 
 ### Supported resolution buckets
 
-SenseNova-U1 is trained on ~2K-pixel resolution buckets. Passing arbitrary `--width` / `--height` is allowed but quality may degrade for untrained shapes.
+Each script prints the resolved size before generating a sample, in the form `[resolution] sample=1 --width 1536 --height 1536`. Sample numbers start at 1. Copy both flags to reuse that output size. Both values must be positive multiples of 32, and the pair overrides `--bucket` and `--aspect_ratio`.
 
-| Aspect ratio | Width × Height |
-| :----------- | :------------- |
-| 1:1          | 2048 × 2048    |
-| 16:9 / 9:16  | 2720 × 1536 / 1536 × 2720 |
-| 3:2 / 2:3    | 2496 × 1664 / 1664 × 2496 |
-| 4:3 / 3:4    | 2368 × 1760 / 1760 × 2368 |
-| 2:1 / 1:2    | 2880 × 1440 / 1440 × 2880 |
-| 3:1 / 1:3    | 3456 × 1152 / 1152 × 3456 |
+Select an output size with `--bucket` and `--aspect_ratio`. The CLI accepts pixel budgets from `1m` through `16m`, including fractional values such as `2.5m` and `12.5m`. Each `m` represents 1024 × 1024 pixels. Start with `4m`. For the aspect ratio, use two positive integers in `W:H` format and a ratio from `1:3` through `3:1`, such as `21:9` or `5:4`. When you supply just one flag, the other defaults to `4m` or `9:16`. The scripts calculate dimensions from the chosen budget and aspect ratio, then round both axes down to multiples of 32. Use a checkpoint that supports the requested output size. The table shows some example sizes.
+
+| Aspect ratio | 1M width × height | 4M width × height | 16M width × height |
+| :----------- | :---------------- | :---------------- | :----------------- |
+| 1:1          | 1024 × 1024             | 2048 × 2048             | 4096 × 4096             |
+| 16:9 / 9:16  | 1344 × 768 / 768 × 1344 | 2720 × 1536 / 1536 × 2720 | 5440 × 3072 / 3072 × 5440 |
+| 3:2 / 2:3    | 1248 × 832 / 832 × 1248 | 2496 × 1664 / 1664 × 2496 | 4992 × 3328 / 3328 × 4992 |
+| 4:3 / 3:4    | 1152 × 864 / 864 × 1152 | 2336 × 1760 / 1760 × 2336 | 4704 × 3520 / 3520 × 4704 |
+| 2:1 / 1:2    | 1440 × 704 / 704 × 1440 | 2880 × 1440 / 1440 × 2880 | 5792 × 2880 / 2880 × 5792 |
+| 3:1 / 1:3    | 1760 × 576 / 576 × 1760 | 3520 × 1152 / 1152 × 3520 | 7072 × 2336 / 2336 × 7072 |
+
+Text-to-image defaults to `4m` at `9:16` (1536 × 2720). For example, `--bucket 8m --aspect_ratio 1:1` selects 2880 × 2880. In JSONL mode, the flags set the size for samples without their own dimensions.
 
 ### Prompt Enhancement for Infographics
 
@@ -205,16 +209,14 @@ python examples/editing/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "Change the jacket of the person on the left to bright yellow." \
   --image examples/editing/data/images/1.webp \
+  --bucket 4m --aspect_ratio 1:1 \
   --cfg_scale 4.0 --img_cfg_scale 1.0 --cfg_norm none \
   --timestep_shift 3.0 --num_steps 50 \
   --output edited.png \
   --profile --compare
 ```
 
-Batched edits from a JSONL file (each line must contain a `prompt` and
-`image` path; `seed` / `type` are optional; `image` can also be a list of
-paths to pass multiple reference images; a per-sample `width` + `height` pair
-overrides the CLI default for that line):
+Batched edits from a JSONL file. Each line needs a `prompt` and an `image` path or list of reference paths. It can also have a `type` label for the output filename. Use `--seed` to set the seed for the run.
 
 ```bash
 python examples/editing/inference.py \
@@ -241,10 +243,13 @@ python examples/editing/inference.py \
   --profile --compare
 ```
 
-Output resolution has two modes:
+The editing script accepts an exact size, a pixel budget and aspect ratio, or a size derived from the input.
 
-- **Auto (default)**: omit `--width / --height` — output tracks the first input via `smart_resize` (aspect ratio preserved, total pixels normalized to `--target_pixels` default `2048 * 2048`, H / W snapped to multiples of 32).
-- **Explicit**: pass `--width W --height H` (both multiples of 32). 2048 × 2048 is a good general-purpose choice.
+- Pass `--width` and `--height` together to reuse an exact output size.
+- Pass `--bucket 4m --aspect_ratio 1:1` for 2048 × 2048 or select another combination from the [resolution table](#supported-resolution-buckets).
+- For auto sizing, `smart_resize` uses the aspect ratio of the first input after any input resizing. It targets `--target_pixels` (default `2048 * 2048`) and aligns the output dimensions to multiples of 32.
+
+A JSONL sample can override the CLI selection with both `width` and `height`, each a multiple of 32.
 
 For best editing quality, provide high-resolution input/reference images when possible.
 Use `--input_max_pixels auto` to keep up to two inputs at 2048 × 2048 and divide that total budget across more inputs.
@@ -263,21 +268,20 @@ See [`editing/data/samples.jsonl`](./editing/data/samples.jsonl) for a tiny star
 `examples/interleave/inference.py` drives `model.interleave_gen`, which produces
 **interleaved text and images in a single response**. The model can emit a
 `<think>...</think>` reasoning block that generates intermediate images, followed
-by a concise final answer. See [`interleave/run.sh`](./interleave/run.sh) for a
-three-mode launcher covering every usage pattern below.
+by a concise final answer. Set `MODEL_PATH` to a local checkpoint path or Hugging Face model ID, then run `bash examples/interleave/run.sh` to launch the examples below. See [`interleave/run.sh`](./interleave/run.sh).
 
-**Output files:** every sample writes `<stem>.txt` (generated text) plus `<stem>_image_<i>.png` for each generated image; `--jsonl` mode also emits a `results.jsonl` manifest.
+Each sample writes its prompt and generated text to `<stem>.txt`, generated images to `<stem>_image_<i>.png`, and copies of any input images to `<stem>_input_<i>.png`. JSONL mode also writes a `results.jsonl` manifest.
 
 Use `--max_images 1` to cap a run at one generated image (default: 10), for example when comparing single-image inference times. A prompt can still return text without an image.
 
-**Resolution:** when input images are provided via `--image` or the JSONL `image` field, the output resolution follows the first input image (snapped to 32-aligned buckets via `smart_resize`), overriding `--resolution` / `--width` / `--height`.
+Use `--width` and `--height` for an exact output size, or use `--bucket` and `--aspect_ratio` to calculate it. With no CLI size options, a sample with input images uses the first image's aspect ratio. The script resizes as needed for an area of 262,144 to 2,097,152 pixels and aligns both dimensions to multiples of 32. Text-only samples fall back to `4m` at `9:16` (1536 × 2720).
 
 ### 1) Single sample, text prompt only
 ```bash
 python examples/interleave/inference.py \
   --model_path sensenova/SenseNova-U1-8B-MoT \
   --prompt "I want to learn how to cook tomato and egg stir-fry. Please give me a beginner-friendly illustrated tutorial." \
-  --resolution "16:9" \
+  --bucket 4m --aspect_ratio 16:9 \
   --output_dir outputs/interleave/text \
   --stem demo_text
 ```
@@ -295,7 +299,7 @@ python examples/interleave/inference.py \
 
 ### 3) Batched samples from JSONL
 
-Each line is one sample:
+Each line is one sample. A `width` and `height` pair overrides the default or CLI size for text-only samples and for image-conditioned samples with a CLI size selection. Use `--seed` to set the seed for the run.
 
 ```json
 {"prompt": "..."}
@@ -306,12 +310,11 @@ Each line is one sample:
 python examples/interleave/inference.py \
     --model_path sensenova/SenseNova-U1-8B-MoT \
     --jsonl examples/interleave/data/samples.jsonl \
-    --resolution "16:9" \
+    --bucket 4m --aspect_ratio 16:9 \
     --output_dir outputs/interleave/jsonl
 ```
 
-See [`interleave/data/samples.jsonl`](./interleave/data/samples.jsonl) for a
-two-sample starter (one text-only, one image-conditioned).
+See [`interleave/data/samples.jsonl`](./interleave/data/samples.jsonl) for a batch with both text-only and image-conditioned samples.
 
 ## Visual Understanding (VQA)
 

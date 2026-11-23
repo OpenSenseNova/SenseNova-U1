@@ -16,7 +16,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(repo_root / "src"))
 
 import sensenova_u1
-from examples.t2i.inference import SenseNovaU1T2I, _warn_if_unsupported
+from examples.t2i.inference import SenseNovaU1T2I
 
 
 def set_random_seeds(seed_value):
@@ -163,7 +163,6 @@ if __name__ == "__main__":
 
     set_random_seeds(args.seed)
     print(f"Processing {len(data)} samples")
-    _warn_if_unsupported(*image_size)
 
     for sample in tqdm(data):
         prompt = sample["prompt"]
