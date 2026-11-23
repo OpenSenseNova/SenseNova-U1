@@ -72,6 +72,10 @@ python examples/t2i/inference.py \
 
 See [installation](docs/installation.md) for environment setup and [examples](examples/README.md) for other tasks. The [U1.5 model guide](docs/u1.5_model.md#8-step-v2-lora) has the 8-step V2 LoRA command; [U1.5 memory and 8-step timing](docs/u1.5_inference.md) records the RTX 5090 runs and H100 allocator-cap tests.
 
+## Benchmarks (U1.6)
+
+<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/cb26a0135173a886b990479072595200ea91f207/u1.6/benchmark/U1.6-Benchmark-en.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/cb26a0135173a886b990479072595200ea91f207/u1.6/benchmark/U1.6-Benchmark-en.png" alt="U1.6 benchmark results" width="90%"></a></p>
+
 ## Benchmarks (U1.5)
 
 These charts are release evaluation records for the U1.5 checkpoint. They are separate from the RTX 5090 and H100 runtime measurements in the [U1.5 inference record](docs/u1.5_inference.md); the [detailed results](docs/assets/benchmarks/u1.5_combined.webp) show the reported benchmark scope.
