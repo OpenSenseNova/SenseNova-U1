@@ -328,7 +328,25 @@ class TransformersCompatibilityTest(unittest.TestCase):
         embedding_name = "inputs_embeds" if "inputs_embeds" in parameters else "input_embeds"
         self.assertIs(kwargs[embedding_name], inputs_embeds)
         self.assertEqual("cache_position" in kwargs, "cache_position" in parameters)
-        self.assertTrue(set(kwargs) <= set(parameters))
+        inspect.signature(create_causal_mask).bind(**kwargs)
+
+    def test_causal_mask_kwargs_forward_the_cache_with_renamed_parameter(self) -> None:
+        def mask_factory(config, inputs_embeds, attention_mask, cache, position_ids=None):
+            return cache
+
+        positions = torch.arange(2)
+        for cache in (None, object()):
+            with self.subTest(has_cache=cache is not None):
+                kwargs = causal_mask_kwargs(
+                    mask_factory,
+                    config=object(),
+                    inputs_embeds=torch.zeros(1, 2, 4),
+                    attention_mask=None,
+                    cache_position=positions,
+                    past_key_values=cache,
+                    position_ids=positions.unsqueeze(0),
+                )
+                self.assertIs(mask_factory(**kwargs), cache)
 
     def test_pretrained_dtype_keyword_uses_public_installed_signature(self) -> None:
         kwargs = pretrained_dtype_kwargs(torch.float32)
