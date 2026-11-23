@@ -20,6 +20,12 @@
 
 SenseNova-U is a family of native multimodal models built on [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify). The same model can understand an image, generate or edit one, and produce responses that alternate between text and images. [U1](https://arxiv.org/abs/2605.12500) introduced this approach; [U1.5](https://arxiv.org/abs/2609.11929) develops it further with an 8B-MoT model, an encoder-free and VAE-free visual path, and spatially coherent image reconstruction.
 
+**U1.6** introduces the following changes:
+
+- **Refined aesthetics.** User evaluations reported a 10% improvement in overall aesthetic quality over U1.5, with richer visual expression in portraits, posters, and illustrations.
+- **Native self-correction.** U1.6 generates an infographic, reviews it against the prompt, and fixes text errors while preserving expressive typography and layout.
+- **Improved text accuracy.** On UltraTextBench's dense infographic tasks, self-correction yielded a 7% average relative improvement over single-pass generation.
+
 **U1.5** focuses on four practical areas:
 
 - **Image generation:** native resolutions up to 4K, with improved composition, local detail, and material rendering.
@@ -38,6 +44,15 @@ This repository contains the inference examples, training code, and documentatio
 - **2026-08-20:** Released [U1.5](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) and the [first 8-step LoRA](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors). U1.5 improves instruction following, text and layout, native 4K generation, and image editing over Preview.
 [Updates older than three months](docs/news.md)
 
+## U1.6 weights
+
+| Weight | Contents |
+| --- | --- |
+| [SenseNova-U1.6-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT/tree/main) | Original sharded BF16 checkpoint and the default model for Quick start |
+| [SenseNova-U1.6-8B-MoT-LoRAs](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/tree/main) | 4-step and 8-step LoRAs for the U1.6 base, with Python and ComfyUI files |
+| [SenseNova-U1.6-8B-MoT-Native](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-Native/tree/main) | Consolidated BF16, FP8 W8A8, and INT8 ConvRot W8A8 conversions |
+| [SenseNova-U1.6-8B-MoT-GGUF](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-GGUF/tree/main) | Q4_0, Q6_K, and Q8_0 conversions |
+
 ## U1.5 weights
 
 Other releases and community integrations are listed in the [model catalog](docs/models.md).
@@ -49,7 +64,7 @@ Other releases and community integrations are listed in the [model catalog](docs
 
 ## Quick start
 
-Use a mostly idle Linux machine with one CUDA GPU. Plan for **24 GB of GPU memory and 64 GB of system RAM**, plus about **35 GB of disk space** for the U1.5 weights. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first; the commands use Python 3.11 and the `balanced` memory mode.
+Use a mostly idle Linux machine with one CUDA GPU. Plan for **24 GB of GPU memory and 64 GB of system RAM**, plus about **35 GB of disk space** for the U1.6 weights. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first; the commands use Python 3.11 and the `balanced` memory mode.
 
 ~~~bash
 git clone --depth 1 https://github.com/OpenSenseNova/SenseNova-U1.git
@@ -57,11 +72,11 @@ cd SenseNova-U1
 uv sync --locked --python 3.11
 source .venv/bin/activate
 
-hf download sensenova/SenseNova-U1.5-8B-MoT \
-  --local-dir ./models/SenseNova-U1.5-8B-MoT
+hf download sensenova/SenseNova-U1.6-8B-MoT \
+  --local-dir ./models/SenseNova-U1.6-8B-MoT
 
 python examples/t2i/inference.py \
-  --model_path ./models/SenseNova-U1.5-8B-MoT \
+  --model_path ./models/SenseNova-U1.6-8B-MoT \
   --prompt "A cinematic mountain lake at sunrise, realistic photography." \
   --width 2048 --height 2048 --num_steps 50 \
   --vram_mode balanced --attn_backend sdpa \
