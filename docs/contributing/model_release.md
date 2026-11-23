@@ -21,6 +21,8 @@ Add `_CN.md` counterparts. A related series can share a pair when the versions u
 
 The original U1 showcase keeps its published `docs/showcases.md` and `docs/showcases_CN.md` paths. Use the versioned filename pattern above for new pages.
 
+GitHub proxies embedded external images through Camo, whose published default file-size limit is 5 MiB. Large images can fail to render even when their direct links open. For large originals, store small WebP previews under `docs/assets/showcases/` and link them to the full-resolution images at a pinned Hugging Face revision. Verify that the previews render in the GitHub PR. [Camo configuration](https://github.com/atmos/camo#configuration)
+
 ## 3. Put supporting material in the right place
 
 - Link to [installation](../installation.md) for the shared Python environment and to [examples](../../examples/README.md) for reusable CLI options. Keep only short commands needed to start each distinct workflow in the model guide.
