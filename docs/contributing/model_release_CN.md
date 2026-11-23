@@ -21,6 +21,8 @@
 
 原版 U1 效果展示沿用已发布的 `docs/showcases.md` 和 `docs/showcases_CN.md` 路径。新增页面仍按上表带版本命名。
 
+GitHub 通过 Camo 代理页面里嵌入的外链图片。Camo 公开的默认单图大小上限是 5 MiB。超限图片的直链即使能打开，页面内也可能显示失败。原图较大时，将轻量 WebP 预览放在 `docs/assets/showcases/`，并从预览链接到 Hugging Face 固定 revision 上的全分辨率原图。在 GitHub PR 中确认预览能正常显示。[Camo 配置](https://github.com/atmos/camo#configuration)
+
 ## 3. 安放其他资料
 
 - Python 环境链接到[安装指南](../installation_CN.md)，通用参数链接到[任务示例](../../examples/README_CN.md)。模型指南只保留该权重不同用法所需的简短命令。
