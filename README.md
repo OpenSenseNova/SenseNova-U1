@@ -50,7 +50,7 @@ Other releases and community integrations are listed in the [model catalog](docs
 
 ## Quick start
 
-Use a mostly idle Linux machine with one CUDA GPU. Based on the U1.5 reference runs, start hardware planning with **24 GB of GPU memory and 64 GB of system RAM**. Allow about **35 GB of disk space** for the U1.6 weights. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first. The commands use Python 3.11 and the `balanced` memory mode.
+Use a mostly idle Linux machine with one CUDA GPU. Plan for **24 GB of GPU memory and 64 GB of system RAM**, plus about **35 GB of disk space** for the U1.6 weights. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first; the commands use Python 3.11 and the `balanced` memory mode.
 
 ~~~bash
 git clone --depth 1 https://github.com/OpenSenseNova/SenseNova-U1.git
@@ -69,9 +69,9 @@ python examples/t2i/inference.py \
   --output output.png
 ~~~
 
-U1.6 uses the same NEO-unify 8B-MoT architecture as U1.5, so the [U1.5 memory and 8-step timing results](docs/u1.5_inference.md) can inform hardware planning. They cover RTX 5090 runs and H100 allocator-cap tests with the U1.5 8-step V2 LoRA. The U1.6 command above uses the base checkpoint at 50 steps. Its memory use and timing need separate measurements.
+`balanced` uses system RAM. Process CPU RSS peaked around 52.2 GiB in the RTX 5090 runs, which is why the setup above plans for 64 GB of system RAM.
 
-See [installation](docs/installation.md) for environment setup, [examples](examples/README.md) for shared CLI options, and the [U1.6 model guide](docs/u1.6_model.md#run-locally) for U1.6 workflows.
+See [installation](docs/installation.md) for environment setup and [examples](examples/README.md) for other tasks. The [U1.5 model guide](docs/u1.5_model.md#8-step-v2-lora) has the 8-step V2 LoRA command; [U1.5 memory and 8-step timing](docs/u1.5_inference.md) records the RTX 5090 runs and H100 allocator-cap tests.
 
 ## Benchmarks (U1.6)
 
