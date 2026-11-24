@@ -31,7 +31,6 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 
 ## 近期更新
 
-- **2026-11-24**：发布 SenseNova-U1.6。SenseNova-U1.6 是兼具美学创造力与原生自修正能力的统一多模态模型，让图像创作兼顾美感与准确性。
 - **2026-11-04**：发布 [U1.5 TailSteer](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-TailSteer) 完整权重，改善连续多轮图像编辑的稳定性。使用现有编辑脚本，将模型路径指向该权重即可。
 - **2026-09-24**：发布 [U1.5 8 步 V2 LoRA](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors)。相比第一版 8 步适配器，V2 改善了色彩平衡与对比度，并减轻过锐化；使用时需搭配 U1.5 基座。
 - **2026-09-11**：发布 [U1.5 技术报告](docs/pdf/SenseNOVA_U1_5.pdf)，介绍模型架构、训练方法和评测结果。
@@ -89,8 +88,6 @@ python examples/t2i/inference.py \
 ## 文档
 
 完整的权重列表和社区版本见[模型目录](docs/models_CN.md)。
-
-U1.6 的文生图、图像编辑和自修正示例见 [U1.6 效果展示](docs/u1.6_showcases_CN.md)。
 
 ### 模型指南与案例
 
