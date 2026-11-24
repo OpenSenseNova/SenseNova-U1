@@ -111,6 +111,10 @@ python examples/t2i/inference.py \
 
 <p align="center"><sub>图中结果使用 U1.6 基座权重。<a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-T2I-HD.png">原尺寸拼图（约 47.5 MiB）</a>和<a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-SC-HD.gif">完整高清自修正 GIF（约 36 MiB）</a>另行提供。</sub></p>
 
+更多结果、提示词、参考图和模型的点评见 [U1.6 效果展示](docs/u1.6_showcases_CN.md)。
+
+**已知问题：** U1.6 生成的人像偶尔会出现肢体比例或姿势不自然的情况。
+
 ## 文档
 
 完整的权重列表和社区版本见[模型目录](docs/models_CN.md)。

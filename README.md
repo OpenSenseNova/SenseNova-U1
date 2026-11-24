@@ -111,6 +111,10 @@ These charts are release evaluation records for the U1.5 checkpoint. They are se
 
 <p align="center"><sub>These results use the U1.6 base checkpoint. The <a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-T2I-HD.png">full-resolution collage (about 47.5 MiB)</a> and <a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-SC-HD.gif">full-resolution self-correction GIF (about 36 MiB)</a> are available separately.</sub></p>
 
+See the [U1.6 showcases](docs/u1.6_showcases.md) for more results, prompts, reference images, and the model's critiques.
+
+**Known issues:** U1.6 can sometimes produce unnatural limb proportions or poses in generated portraits.
+
 ## Documentation
 
 For all checkpoints, adapters, and community releases, see the [model catalog](docs/models.md).
