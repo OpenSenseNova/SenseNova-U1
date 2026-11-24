@@ -2,7 +2,7 @@
 
 <p align="center"><a href="./models.md">English</a> | <strong>简体中文</strong></p>
 
-[SenseNova-U 项目首页](../README_CN.md)介绍模型家族。表中的型号名称在有指南时链接到对应指南，末列提供权重入口。新任务可从 [U1.5 指南](u1.5_model_CN.md)开始，8 步 V2 LoRA 需要搭配 U1.5 基座。
+[SenseNova-U 项目首页](../README_CN.md)介绍模型家族；本目录集中列出已发布权重。表中的型号名称在有指南时链接到对应指南，末列统一提供权重入口。新任务可从 [U1.5 指南](u1.5_model_CN.md)开始。8 步 V2 LoRA 是该基座的适配器，不能替代基座权重。
 
 ## 官方模型权重
 
@@ -10,7 +10,6 @@
 
 | 模型 | 作用 | 仓库状态 | 权重 |
 | --- | --- | --- | --- |
-| [SenseNova-U1.6-8B-MoT](u1.6_model_CN.md) | 原版 U1.6 BF16 分片权重 | 指南 + 案例 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT/tree/8f582699bac7f1e5362df2a776397d0e1a963b6c) |
 | [SenseNova-U1.5-8B-MoT](u1.5_model_CN.md) | U1.5 基座，支持图像生成、编辑、图文交错和视觉理解 | 指南 + 案例；首页主推 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) |
 | SenseNova-U1.5-8B-MoT-TailSteer | U1.5 版本，改善多轮图像编辑稳定性；用法见模型卡 | 仅模型卡 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-TailSteer) |
 | SenseNova-U1.5-8B-MoT-SFT | U1.5 监督微调阶段权重 | 仅模型卡 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-SFT) |
@@ -30,10 +29,6 @@
 
 | 适配器 | 对应基座 | 用途 | 权重 |
 | --- | --- | --- | --- |
-| SenseNova-U1.6-8B-MoT-LoRA-4step-v1.0 | SenseNova-U1.6-8B-MoT | 4 步 Python 适配器 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/blob/3f955cc2e3ed9077f38844ae3b9ec5fedda5d660/SenseNova-U1.6-8B-MoT-LoRA-4step-v1.0.safetensors) |
-| SenseNova-U1.6-8B-MoT-LoRA-4step-v1.0-ComfyUI | SenseNova-U1.6-8B-MoT | 4 步 ComfyUI 适配器 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/blob/3f955cc2e3ed9077f38844ae3b9ec5fedda5d660/SenseNova-U1.6-8B-MoT-LoRA-4step-v1.0-ComfyUI.safetensors) |
-| SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0 | SenseNova-U1.6-8B-MoT | 8 步 Python 适配器 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/blob/3f955cc2e3ed9077f38844ae3b9ec5fedda5d660/SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0.safetensors) |
-| SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0-ComfyUI | SenseNova-U1.6-8B-MoT | 8 步 ComfyUI 适配器 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/blob/3f955cc2e3ed9077f38844ae3b9ec5fedda5d660/SenseNova-U1.6-8B-MoT-LoRA-8step-v1.0-ComfyUI.safetensors) |
 | [SenseNova-U1.5-8B-MoT-LoRA-8step-V2](u1.5_model_CN.md#8-步-v2-lora) | U1.5 | 当前 8 步适配器；相比首版改善色彩平衡与对比度 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors) |
 | SenseNova-U1.5-8B-MoT-LoRA-8step | U1.5 | 该权重的首个 8 步适配器 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors) |
 | SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0 | SenseNova-U1-8B-MoT-Infographic | 信息图 8 步生成 | [Hugging Face](https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-Infographic-LoRA-8step-V1.0.safetensors) |
@@ -42,8 +37,6 @@
 架构细节见 [U1 技术报告](pdf/SenseNOVA_U1.pdf)和[参数说明](parameter_breakdown_CN.md)。
 
 ## U1.6 仓库转换产物
-
-[Native](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-Native/tree/ed98cc5ca5a1891028db2041f665b43b96a43cfa) 和 [GGUF](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-GGUF/tree/78774504dd6316c48ba4704df0ce805684df70eb) 仓库提供由 SenseNova-U1.6-8B-MoT 转换的权重。工作流与本地推理命令见 [U1.6 模型指南](u1.6_model_CN.md)。
 
 仓库中的[量化指南](../tools/quantization/README_CN.md)可以基于匹配的 U1.6
 源模型生成以下转换产物。这些文件是面向运行时的转换结果，不属于新增的官方
@@ -55,7 +48,7 @@
 | Native BF16 | `SenseNova-U1.6-BF16.safetensors` | SenseNova-U1 Python 示例 | 标准 BF16 基线。 |
 | Native FP8 W8A8 | `SenseNova-U1.6-FP8-E4M3FN-W8A8.safetensors` | SenseNova-U1 Python 示例 | 使用原生 FP8 runtime，需要 CUDA 全设备驻留。 |
 | Native INT8 ConvRot W8A8 | `SenseNova-U1.6-INT8-ConvRot-W8A8.safetensors` | SenseNova-U1 Python 示例 | 使用原生 INT8 runtime，需要 CUDA 全设备驻留。 |
-| GGUF Q4/Q6/Q8 | `SenseNova-U1.6-8B-MoT-Q4_0.gguf`、`SenseNova-U1.6-8B-MoT-Q6_K.gguf`、`SenseNova-U1.6-8B-MoT-Q8_0.gguf` | SenseNova-U1 GGUF loader | 六个配置和 tokenizer 文件需要与 GGUF 文件放在同一目录。外部 GGUF 引擎需要单独支持 U1.6 模型结构。 |
+| GGUF Q4/Q6/Q8 | `SenseNova-U1.6-8B-MoT-Q4_0.gguf`、`Q6_K`、`Q8_0` | SenseNova-U1 GGUF loader | 六个配置和 tokenizer 文件需要与 GGUF 文件放在同一目录。外部 GGUF 引擎需要单独支持 U1.6 模型结构。 |
 
 Native FP8 和 INT8 在参考示例中使用 `--model_format fp8` 或
 `--model_format int8-convrot`、`--dtype bfloat16`、`--device cuda` 和
