@@ -91,8 +91,6 @@ See the [U1.5 release evaluations](docs/u1.5_model.md#evaluations-and-runtime).
 
 <p align="center"><sub>These results use the U1.6 base checkpoint. The <a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/fea160e6c6bc5c8819ca0e37a26c3dfd937dfdc6/u1.6/t2i/SenseNova-U1.6-T2I-HD.png">full-resolution collage (about 47.5 MiB)</a> and <a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/7f75db8b7b0591969784e9a965df3a955d9e9d82/u1.6/self-correction/SenseNova-U1.6-SC-HD.webp">full-resolution self-correction WebP (about 33.7 MiB)</a> are available separately. See the <a href="docs/u1.6_showcases.md">U1.6 showcases</a> for more results, prompts, reference images, and the model's critiques.</sub></p>
 
-**Known issues:** U1.6 can sometimes produce unnatural limb proportions or poses in generated portraits.
-
 ## Documentation
 
 For all checkpoints, adapters, and community releases, see the [model catalog](docs/models.md).
