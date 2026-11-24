@@ -74,7 +74,7 @@ See [installation](docs/installation.md) for environment setup and [examples](ex
 
 ## Benchmarks (U1.6)
 
-<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-en.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-en.png" alt="U1.6 benchmark results" width="90%"></a></p>
+<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/cb26a0135173a886b990479072595200ea91f207/u1.6/benchmark/U1.6-Benchmark-en.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/cb26a0135173a886b990479072595200ea91f207/u1.6/benchmark/U1.6-Benchmark-en.png" alt="U1.6 benchmark results" width="90%"></a></p>
 
 ## Benchmarks (U1.5)
 
