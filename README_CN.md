@@ -46,18 +46,11 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 | [SenseNova-U1.6-8B-MoT-Native](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-Native/tree/main) | 合并版 BF16、FP8 W8A8 和 INT8 ConvRot W8A8 转换权重 |
 | [SenseNova-U1.6-8B-MoT-GGUF](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-GGUF/tree/main) | Q4_0、Q6_K 和 Q8_0 转换权重 |
 
-## U1.5 权重
-
 其他发布版本和社区集成见[模型目录](docs/models_CN.md)。
-
-| 权重 | 类型 | 适用任务 | 使用说明 |
-| --- | --- | --- | --- |
-| [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) | 完整权重 | 文生图、图像编辑、图文交错、视觉问答 | [指南](docs/u1.5_model_CN.md) · [案例](docs/u1.5_showcases_CN.md) |
-| [SenseNova-U1.5-8B-MoT-LoRA-8step-V2](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors) | LoRA 适配器；需搭配 U1.5 | 8 步文生图、图像编辑、图文交错 | [LoRA 用法](docs/u1.5_model_CN.md#8-步-v2-lora) |
 
 ## 快速开始
 
-建议用尽量空闲的 Linux 单卡 CUDA 机器，按 **24 GB 显存、64 GB 系统内存**规划，另为 U1.6 权重预留约 **35 GB 磁盘空间**。先安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)；下面的命令使用 Python 3.11 和 `balanced` 显存模式。
+建议使用尽量空闲的 Linux 单卡 CUDA 机器。下面的 `balanced` 配置可按 **24 GB 显存和 64 GB 系统内存**规划，另为 U1.6 权重预留约 **35 GB 磁盘空间**。先安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)。下面的命令使用 Python 3.11。
 
 ~~~bash
 git clone --depth 1 https://github.com/OpenSenseNova/SenseNova-U1.git
@@ -76,13 +69,15 @@ python examples/t2i/inference.py \
   --output output.png
 ~~~
 
-`balanced` 会占用系统内存。RTX 5090 测试中的进程 CPU RSS 峰值约 52.2 GiB，因此上面按 64 GB 系统内存规划。
+U1.5 和 U1.6 使用相同的 NEO-unify 8B-MoT 架构，在相同任务负载、精度和显存模式下，显存和内存需求相当。[U1.5 显存与 8 步耗时](docs/u1.5_inference_CN.md)记录了 RTX 5090 运行和 H100 分配器限额测试。记录中的耗时使用 8 步 V2 LoRA。上面的 U1.6 命令使用基座权重运行 50 步。
 
-环境配置见[安装指南](docs/installation_CN.md)，其他任务的命令见[任务示例](examples/README_CN.md)。8 步 V2 LoRA 的命令见[U1.5 模型指南](docs/u1.5_model_CN.md#8-步-v2-lora)；[U1.5 显存与 8 步耗时](docs/u1.5_inference_CN.md)记录了 RTX 5090 和 H100 分配器限额测试。
+环境配置见[安装指南](docs/installation_CN.md)，通用命令行参数见[任务示例](examples/README_CN.md)，U1.6 的运行方法见 [U1.6 模型指南](docs/u1.6_model_CN.md#本地运行)。
 
 ## 评测 (U1.6)
 
 <p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png" alt="U1.6 评测结果" width="90%"></a></p>
+
+上一版本的结果见 [U1.5 发布评测](docs/u1.5_model_CN.md#评测与运行记录)。
 
 ## 图像样例（U1.6）
 
