@@ -107,7 +107,7 @@ These charts are release evaluation records for the U1.5 checkpoint. They are se
 
 ### Self-correction
 
-<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/fea160e6c6bc5c8819ca0e37a26c3dfd937dfdc6/u1.6/self-correction/SenseNova-U1.6-SC-HD.gif"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/fea160e6c6bc5c8819ca0e37a26c3dfd937dfdc6/u1.6/self-correction/SenseNova-U1.6-SC-preview.gif" alt="SenseNova-U1.6 self-correction before and after" width="100%"></a></p>
+<p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/fea160e6c6bc5c8819ca0e37a26c3dfd937dfdc6/u1.6/self-correction/SenseNova-U1.6-SC.gif"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/891fa45eead98e014227138e2de4d3148bc5565c/u1.6/self-correction/SenseNova-U1.6-SC-preview.webp" alt="SenseNova-U1.6 self-correction before and after" width="100%"></a></p>
 
 <p align="center"><sub>These results use the U1.6 base checkpoint. The <a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/fea160e6c6bc5c8819ca0e37a26c3dfd937dfdc6/u1.6/t2i/SenseNova-U1.6-T2I-HD.png">full-resolution collage (about 47.5 MiB)</a> and <a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/fea160e6c6bc5c8819ca0e37a26c3dfd937dfdc6/u1.6/self-correction/SenseNova-U1.6-SC-HD.gif">full-resolution self-correction GIF (about 36 MiB)</a> are available separately. See the <a href="docs/u1.6_showcases.md">U1.6 showcases</a> for more results, prompts, reference images, and the model's critiques.</sub></p>
 
