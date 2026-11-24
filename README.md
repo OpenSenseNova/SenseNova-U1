@@ -46,18 +46,11 @@ This repository contains the inference examples, training code, and documentatio
 | [SenseNova-U1.6-8B-MoT-Native](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-Native/tree/main) | Consolidated BF16, FP8 W8A8, and INT8 ConvRot W8A8 conversions |
 | [SenseNova-U1.6-8B-MoT-GGUF](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-GGUF/tree/main) | Q4_0, Q6_K, and Q8_0 conversions |
 
-## U1.5 weights
-
 Other releases and community integrations are listed in the [model catalog](docs/models.md).
-
-| Weight | Type | Tasks | Documentation |
-| --- | --- | --- | --- |
-| [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) | Full checkpoint | Image generation, editing, interleaved output, visual Q&A | [Guide](docs/u1.5_model.md) · [Showcase](docs/u1.5_showcases.md) |
-| [SenseNova-U1.5-8B-MoT-LoRA-8step-V2](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors) | LoRA adapter; requires U1.5 | 8-step image generation, editing, interleaved output | [LoRA setup](docs/u1.5_model.md#8-step-v2-lora) |
 
 ## Quick start
 
-Use a mostly idle Linux machine with one CUDA GPU. Plan for **24 GB of GPU memory and 64 GB of system RAM**, plus about **35 GB of disk space** for the U1.6 weights. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first; the commands use Python 3.11 and the `balanced` memory mode.
+Use a mostly idle Linux machine with one CUDA GPU. For the `balanced` setup below, plan for **24 GB of GPU memory and 64 GB of system RAM**. Allow about **35 GB of disk space** for the U1.6 weights. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first. The commands use Python 3.11.
 
 ~~~bash
 git clone --depth 1 https://github.com/OpenSenseNova/SenseNova-U1.git
@@ -76,13 +69,15 @@ python examples/t2i/inference.py \
   --output output.png
 ~~~
 
-`balanced` uses system RAM. Process CPU RSS peaked around 52.2 GiB in the RTX 5090 runs, which is why the setup above plans for 64 GB of system RAM.
+U1.5 and U1.6 share the NEO-unify 8B-MoT architecture and have comparable memory requirements for the same workload, precision, and memory mode. The [U1.5 memory and 8-step timing results](docs/u1.5_inference.md) cover RTX 5090 runs and H100 allocator-cap tests. Those timings use the 8-step V2 LoRA. The U1.6 command above uses the base checkpoint at 50 steps.
 
-See [installation](docs/installation.md) for environment setup and [examples](examples/README.md) for other tasks. The [U1.5 model guide](docs/u1.5_model.md#8-step-v2-lora) has the 8-step V2 LoRA command; [U1.5 memory and 8-step timing](docs/u1.5_inference.md) records the RTX 5090 runs and H100 allocator-cap tests.
+See [installation](docs/installation.md) for environment setup, [examples](examples/README.md) for shared CLI options, and the [U1.6 model guide](docs/u1.6_model.md#run-locally) for U1.6 workflows.
 
 ## Benchmarks (U1.6)
 
 <p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-en.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-en.png" alt="U1.6 benchmark results" width="90%"></a></p>
+
+See the [U1.5 release evaluations](docs/u1.5_model.md#evaluations-and-runtime).
 
 ## Image examples (U1.6)
 
