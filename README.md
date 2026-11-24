@@ -53,14 +53,7 @@ This repository contains the inference examples, training code, and documentatio
 | [SenseNova-U1.6-8B-MoT-Native](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-Native/tree/main) | Consolidated BF16, FP8 W8A8, and INT8 ConvRot W8A8 conversions |
 | [SenseNova-U1.6-8B-MoT-GGUF](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-GGUF/tree/main) | Q4_0, Q6_K, and Q8_0 conversions |
 
-## U1.5 weights
-
 Other releases and community integrations are listed in the [model catalog](docs/models.md).
-
-| Weight | Type | Tasks | Documentation |
-| --- | --- | --- | --- |
-| [SenseNova-U1.5-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT) | Full checkpoint | Image generation, editing, interleaved output, visual Q&A | [Guide](docs/u1.5_model.md) · [Showcase](docs/u1.5_showcases.md) |
-| [SenseNova-U1.5-8B-MoT-LoRA-8step-V2](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors) | LoRA adapter; requires U1.5 | 8-step image generation, editing, interleaved output | [LoRA setup](docs/u1.5_model.md#8-step-v2-lora) |
 
 ## Quick start
 
