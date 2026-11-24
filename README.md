@@ -18,26 +18,19 @@
 
 ## Overview
 
-SenseNova-U is a family of native multimodal models built on [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify). The same model can understand an image, generate or edit one, and produce responses that alternate between text and images. [U1](https://arxiv.org/abs/2605.12500) introduced this approach; [U1.5](https://arxiv.org/abs/2609.11929) develops it further with an 8B-MoT model, an encoder-free and VAE-free visual path, and spatially coherent image reconstruction.
+SenseNova-U is a family of native multimodal models built on [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify). The same model can understand an image, generate or edit one, and produce responses that alternate between text and images. [U1](https://arxiv.org/abs/2605.12500) introduced this approach; [U1.5](https://arxiv.org/abs/2609.11929) develops it further with an 8B-MoT model, an encoder-free and VAE-free visual path, and spatially coherent image reconstruction. Building on U1.5, **U1.6** focuses on aesthetics, creative expression, and native self-correction through interleaved text and image generation.
 
 **U1.6** introduces the following changes:
 
-- **Refined aesthetics.** User evaluations reported a 10% improvement in overall aesthetic quality over U1.5, with richer visual expression in portraits, posters, and illustrations.
-- **Native self-correction.** U1.6 generates an infographic, reviews it against the prompt, and fixes text errors while preserving expressive typography and layout.
-- **Improved text accuracy.** On UltraTextBench's dense infographic tasks, self-correction yielded a 7% average relative improvement over single-pass generation.
+- **Refined aesthetics:** U1.6 focuses on portraits, posters, and illustrations, bringing finer textures, more varied creative ideas, and a more contemporary style. In subjective user evaluations, overall aesthetic quality improved by 10% over U1.5.
+- **Native self-correction:** U1.6 generates an infographic, reviews it against the prompt, and fixes text errors while preserving expressive typography and layout.
+- **Improved text accuracy:** On UltraTextBench's dense infographic tasks, self-correction yielded a 7% average relative improvement over single-pass generation.
 
-**U1.5** focuses on four practical areas:
-
-- **Image generation:** native resolutions up to 4K, with improved composition, local detail, and material rendering.
-- **Text and layout:** clearer Chinese and English text in posters, infographics, and other structured images.
-- **Image editing:** local and multi-reference changes that better preserve subject identity and untouched regions.
-- **Understanding and interleaving:** visual question answering and illustrated responses with text and images in sequence.
-
-This repository contains the inference examples, training code, and documentation for U1 and U1.5. The [U1.5 guide](docs/u1.5_model.md) covers the current checkpoint and its limitations; the [showcases](docs/u1.5_showcases.md) collect generation and editing examples.
+This repository contains the inference examples, training code, and documentation for U1, U1.5, and U1.6. The [U1.6 guide](docs/u1.6_model.md) covers the current checkpoints, workflows, and local setup; the [U1.6 showcases](docs/u1.6_showcases.md) collect text-to-image, image editing, and self-correction examples.
 
 ## News
 
-- **2026-11-24:** Released [SenseNova-U1.6](docs/u1.6_model.md). SenseNova-U1.6 is a unified multimodal model that combines aesthetic creativity with native self-correction, making image creation both visually appealing and accurate.
+- **2026-11-24:** Released [U1.6](docs/u1.6_model.md) and its 4-step and 8-step distilled variants, now officially supported in [ComfyUI](https://huggingface.co/Comfy-Org/SenseNova-U1). U1.6 brings richer visual expression and introduces native self-correction to better match the prompt.
 - **2026-11-04:** Released [U1.5 TailSteer](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-TailSteer), a full checkpoint for more stable multi-turn image editing. Use it with the existing editing script by changing the model path.
 - **2026-09-24:** Released the [U1.5 8-step V2 LoRA](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors). Compared with the first 8-step adapter, it improves color balance and contrast while reducing oversharpening. It runs with the U1.5 base model.
 - **2026-09-11:** Published the [U1.5 technical report](docs/pdf/SenseNOVA_U1_5.pdf), covering the architecture, training approach, and evaluations.
@@ -91,14 +84,6 @@ See [installation](docs/installation.md) for environment setup and [examples](ex
 
 <p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-en.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-en.png" alt="U1.6 benchmark results" width="90%"></a></p>
 
-## Benchmarks (U1.5)
-
-These charts are release evaluation records for the U1.5 checkpoint. They are separate from the RTX 5090 and H100 runtime measurements in the [U1.5 inference record](docs/u1.5_inference.md); the [detailed results](docs/assets/benchmarks/u1.5_combined.webp) show the reported benchmark scope.
-
-<p align="center"><a href="docs/assets/benchmarks/u1.5_radial.webp"><img src="docs/assets/benchmarks/u1.5_radial.webp" alt="U1.5 benchmark overview across image generation and editing tasks" width="90%"></a></p>
-
-<p align="center"><img src="docs/assets/u15_perform_vs_speed_6bench.webp" alt="Average score across six image generation benchmarks versus latency per 2K image for U1.5 and other models" width="90%"></p>
-
 ## Image examples (U1.6)
 
 ### Text-to-image generation
@@ -109,11 +94,7 @@ These charts are release evaluation records for the U1.5 checkpoint. They are se
 
 <p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif" alt="SenseNova-U1.6 self-correction before and after" width="100%"></a></p>
 
-<p align="center"><sub>These results use the U1.6 base checkpoint. The <a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-T2I-HD.png">full-resolution collage (about 47.5 MiB)</a> and <a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-SC-HD.gif">full-resolution self-correction GIF (about 36 MiB)</a> are available separately.</sub></p>
-
-See the [U1.6 showcases](docs/u1.6_showcases.md) for more results, prompts, reference images, and the model's critiques.
-
-**Known issues:** U1.6 can sometimes produce unnatural limb proportions or poses in generated portraits.
+<p align="center"><sub>These results use the U1.6 base checkpoint. The <a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-T2I-HD.png">full-resolution collage (about 47.5 MiB)</a> and <a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-SC-HD.gif">full-resolution self-correction GIF (about 36 MiB)</a> are available separately. See the <a href="docs/u1.6_showcases.md">U1.6 showcases</a> for more results, prompts, reference images, and the model's critiques.</sub></p>
 
 ## Documentation
 

@@ -18,26 +18,19 @@
 
 ## 模型概览
 
-SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify) 的原生多模态模型家族。同一个模型可以理解图像、生成或编辑图像，也可以在回答中交替输出文字和图片。[U1](https://arxiv.org/abs/2605.12500) 首次实现这一方向；[U1.5](https://arxiv.org/abs/2609.11929) 进一步采用 8B-MoT 模型、无需独立视觉编码器和 VAE 的视觉路径，以及具有空间连续性的图像重建方法。
+SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify) 的原生多模态模型家族。同一个模型可以理解图像、生成或编辑图像，也可以在回答中交替输出文字和图片。[U1](https://arxiv.org/abs/2605.12500) 首次实现这一方向；[U1.5](https://arxiv.org/abs/2609.11929) 进一步采用 8B-MoT 模型、无需独立视觉编码器和 VAE 的视觉路径，以及具有空间连续性的图像重建方法。**U1.6** 在 U1.5 的基础上，专注提升美学、创意表现与图文交错的原生自修正能力。
 
 **U1.6** 的新增能力如下：
 
-- **美学表现提升。** 用户评测中，U1.6 的整体美学质量较 U1.5 提升 10%，人像、海报和插画的视觉表现更丰富。
-- **原生自修正。** U1.6 生成信息图后，会对照提示词自主检查并修正文字错误，同时保留富有表现力的字体设计和版式。
-- **更高的文字准确性。** 在 UltraTextBench 的高文字密度信息图任务上，自修正较单次生成平均相对提升 7%。
+- **美学表现提升**：重点提升了人像、海报与插画创作中呈现细腻质感、多元创意和潮流灵感。在用户主观评测中，综合美感较 U1.5 提升 10%。
+- **原生自修正**：U1.6 生成信息图后，会对照提示词自主检查并修正文字错误，同时保留富有表现力的字体设计和版式。
+- **更高的文字准确性**：在 UltraTextBench 的高文字密度信息图任务上，自修正较单次生成平均相对提升 7%。
 
-**U1.5** 重点改善了四类实际任务：
-
-- **图像生成**：支持最高原生 4K 分辨率，改进构图、局部细节和材质表现。
-- **文字与版式**：改善海报、信息图等结构化图像中的中英文文字。
-- **图像编辑**：支持局部修改和多图参考，更好地保留主体身份与未修改区域。
-- **视觉理解与图文交错**：支持图像问答，以及文字和图片交替出现的内容生成。
-
-本仓库提供 U1 和 U1.5 的推理示例、训练代码及文档。[U1.5 指南](docs/u1.5_model_CN.md)介绍当前权重及其限制；[效果展示](docs/u1.5_showcases_CN.md)收录生成和编辑案例。
+本仓库提供 U1、U1.5 和 U1.6 的推理示例、训练代码及文档。[U1.6 指南](docs/u1.6_model_CN.md)介绍当前权重、工作流和本地运行方法；[U1.6 效果展示](docs/u1.6_showcases_CN.md)收录文生图、图像编辑和自修正案例。
 
 ## 近期更新
 
-- **2026-11-24**：发布 [SenseNova-U1.6](docs/u1.6_model_CN.md)。SenseNova-U1.6 是兼具美学创造力与原生自修正能力的统一多模态模型，让图像创作兼顾美感与准确性。
+- **2026-11-24**：发布 [U1.6](docs/u1.6_model_CN.md) 和蒸馏模型(4步/8步)，并正式上线[ComfyUI](https://huggingface.co/Comfy-Org/SenseNova-U1)。U1.6 在提升美学创造力的同时，首次展示了原生自修正能力，让图像创作兼顾美感与准确性。
 - **2026-11-04**：发布 [U1.5 TailSteer](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-TailSteer) 完整权重，改善连续多轮图像编辑的稳定性。使用现有编辑脚本，将模型路径指向该权重即可。
 - **2026-09-24**：发布 [U1.5 8 步 V2 LoRA](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors)。相比第一版 8 步适配器，V2 改善了色彩平衡与对比度，并减轻过锐化；使用时需搭配 U1.5 基座。
 - **2026-09-11**：发布 [U1.5 技术报告](docs/pdf/SenseNOVA_U1_5.pdf)，介绍模型架构、训练方法和评测结果。
@@ -91,14 +84,6 @@ python examples/t2i/inference.py \
 
 <p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png" alt="U1.6 评测结果" width="90%"></a></p>
 
-## 评测（U1.5）
-
-这些图表是 U1.5 权重的发布评测记录，与 [U1.5 推理记录](docs/u1.5_inference_CN.md)中的 RTX 5090 和 H100 运行数据分开；[详细结果](docs/assets/benchmarks/u1.5_combined.webp)列出发布评测的范围。
-
-<p align="center"><a href="docs/assets/benchmarks/u1.5_radial.webp"><img src="docs/assets/benchmarks/u1.5_radial.webp" alt="U1.5 在图像生成与编辑任务上的评测概览" width="90%"></a></p>
-
-<p align="center"><img src="docs/assets/u15_perform_vs_speed_6bench.webp" alt="U1.5 与其他模型的六项图像生成评测平均分及 2K 图像生成耗时" width="90%"></p>
-
 ## 图像样例（U1.6）
 
 ### 文生图
@@ -109,11 +94,7 @@ python examples/t2i/inference.py \
 
 <p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif" alt="SenseNova-U1.6 自修正前后对比" width="100%"></a></p>
 
-<p align="center"><sub>图中结果使用 U1.6 基座权重。<a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-T2I-HD.png">原尺寸拼图（约 47.5 MiB）</a>和<a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-SC-HD.gif">完整高清自修正 GIF（约 36 MiB）</a>另行提供。</sub></p>
-
-更多结果、提示词、参考图和模型的点评见 [U1.6 效果展示](docs/u1.6_showcases_CN.md)。
-
-**已知问题：** U1.6 生成的人像偶尔会出现肢体比例或姿势不自然的情况。
+<p align="center"><sub>图中结果使用 U1.6 基座权重。<a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-T2I-HD.png">原尺寸拼图（约 47.5 MiB）</a>和<a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-SC-HD.gif">完整高清自修正 GIF（约 36 MiB）</a>另行提供。更多结果、提示词、参考图和模型详情请见 <a href="docs/u1.6_showcases_CN.md">U1.6 效果展示</a>。</sub></p>
 
 ## 文档
 
