@@ -22,9 +22,9 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 
 **U1.6** 的新增能力如下：
 
-- **美学表现提升**：重点提升了人像、海报与插画创作中呈现细腻质感、多元创意和潮流灵感。在用户主观评测中，综合美感较 U1.5 提升 10%。
-- **原生自修正**：U1.6 生成信息图后，会对照提示词自主检查并修正文字错误，同时保留富有表现力的字体设计和版式。
-- **更高的文字准确性**：在 UltraTextBench 的高文字密度信息图任务上，自修正较单次生成平均相对提升 7%。
+- **美学表现提升。** 用户评测中，U1.6 的整体美学质量较 U1.5 提升 10%，人像、海报和插画的视觉表现更丰富。
+- **原生自修正。** U1.6 生成信息图后，会对照提示词自主检查并修正文字错误，同时保留富有表现力的字体设计和版式。
+- **更高的文字准确性。** 在 UltraTextBench 的高文字密度信息图任务上，自修正较单次生成平均相对提升 7%。
 
 **U1.5** 重点改善了四类实际任务：
 
@@ -33,7 +33,7 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 - **图像编辑**：支持局部修改和多图参考，更好地保留主体身份与未修改区域。
 - **视觉理解与图文交错**：支持图像问答，以及文字和图片交替出现的内容生成。
 
-本仓库提供 U1、U1.5 和 U1.6 的推理示例、训练代码及文档。[U1.6 指南](docs/u1.6_model_CN.md)介绍当前权重、工作流和本地运行方法；[U1.6 效果展示](docs/u1.6_showcases_CN.md)收录文生图、图像编辑和自修正案例。
+本仓库提供 U1 和 U1.5 的推理示例、训练代码及文档。[U1.5 指南](docs/u1.5_model_CN.md)介绍当前权重及其限制；[效果展示](docs/u1.5_showcases_CN.md)收录生成和编辑案例。
 
 ## 近期更新
 
@@ -111,9 +111,9 @@ python examples/t2i/inference.py \
 
 <p align="center"><sub>图中结果使用 U1.6 基座权重。<a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-T2I-HD.png">原尺寸拼图（约 47.5 MiB）</a>和<a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-SC-HD.gif">完整高清自修正 GIF（约 36 MiB）</a>另行提供。</sub></p>
 
-更多结果、提示词、参考图和模型详情请见 [U1.6 效果展示](docs/u1.6_showcases_CN.md)。
+更多结果、提示词、参考图和模型的点评见 [U1.6 效果展示](docs/u1.6_showcases_CN.md)。
 
-**已知问题：** U1.6 生成人像时，偶尔会出现肢体比例失调或姿势不自然的问题。
+**已知问题：** U1.6 生成的人像偶尔会出现肢体比例或姿势不自然的情况。
 
 ## 文档
 
