@@ -99,11 +99,21 @@ These charts are release evaluation records for the U1.5 checkpoint. They are se
 
 <p align="center"><img src="docs/assets/u15_perform_vs_speed_6bench.webp" alt="Average score across six image generation benchmarks versus latency per 2K image for U1.5 and other models" width="90%"></p>
 
-## Image examples (U1.5)
+## Image examples (U1.6)
 
-<p align="center"><img src="docs/assets/u1.5_teaser2_preview.webp" alt="Preview of U1.5 generation, editing, and multiple-input results" width="100%"></p>
+### Text-to-image generation
 
-<p align="center"><sub>These results use the U1.5 base checkpoint. The <a href="docs/assets/u1.5_teaser2.webp">full-resolution collage (about 45 MiB)</a> is available separately; individual examples and prompts are in the <a href="docs/u1.5_showcases.md">U1.5 showcases</a>.</sub></p>
+<p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/113f7360416b87226fd8d6a0f313f801c2880e23/SenseNova-U1.6-T2I.webp"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/113f7360416b87226fd8d6a0f313f801c2880e23/SenseNova-U1.6-T2I.webp" alt="SenseNova-U1.6 text-to-image examples" width="100%"></a></p>
+
+### Self-correction
+
+<p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif" alt="SenseNova-U1.6 self-correction before and after" width="100%"></a></p>
+
+<p align="center"><sub>These results use the U1.6 base checkpoint. The <a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-T2I-HD.png">full-resolution collage (about 47.5 MiB)</a> and <a href="https://github.com/ttxskk/SenseNova-U1/blob/642a42603dd46e3874975f575f9d16a9fdb4369f/SenseNova-U1.6-SC-HD.gif">full-resolution self-correction GIF (about 36 MiB)</a> are available separately.</sub></p>
+
+See the [U1.6 showcases](docs/u1.6_showcases.md) for more results, prompts, reference images, and the model's critiques.
+
+**Known issues:** U1.6 can sometimes produce unnatural limb proportions or poses in generated portraits.
 
 ## Documentation
 
