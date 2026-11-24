@@ -20,12 +20,6 @@
 
 SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unify) 的原生多模态模型家族。同一个模型可以理解图像、生成或编辑图像，也可以在回答中交替输出文字和图片。[U1](https://arxiv.org/abs/2605.12500) 首次实现这一方向；[U1.5](https://arxiv.org/abs/2609.11929) 进一步采用 8B-MoT 模型、无需独立视觉编码器和 VAE 的视觉路径，以及具有空间连续性的图像重建方法。
 
-**U1.6** 的新增能力如下：
-
-- **美学表现提升。** 用户评测中，U1.6 的整体美学质量较 U1.5 提升 10%，人像、海报和插画的视觉表现更丰富。
-- **原生自修正。** U1.6 生成信息图后，会对照提示词自主检查并修正文字错误，同时保留富有表现力的字体设计和版式。
-- **更高的文字准确性。** 在 UltraTextBench 的高文字密度信息图任务上，自修正较单次生成平均相对提升 7%。
-
 **U1.5** 重点改善了四类实际任务：
 
 - **图像生成**：支持最高原生 4K 分辨率，改进构图、局部细节和材质表现。
@@ -44,15 +38,6 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 - **2026-08-20**：发布 [U1.5](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT)及[首版 8 步 LoRA](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step.safetensors)。相比 Preview，U1.5 在指令遵循、文字与版式、原生 4K 生成和图像编辑上进一步改进。
 [三个月以前的更新](docs/news_CN.md)
 
-## U1.6 权重
-
-| 权重 | 内容 |
-| --- | --- |
-| [SenseNova-U1.6-8B-MoT](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT/tree/main) | 原版 BF16 分片权重，也是快速开始使用的默认模型 |
-| [SenseNova-U1.6-8B-MoT-LoRAs](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-LoRAs/tree/main) | 搭配 U1.6 基座的 4 步和 8 步 LoRA，提供 Python 和 ComfyUI 文件 |
-| [SenseNova-U1.6-8B-MoT-Native](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-Native/tree/main) | 合并版 BF16、FP8 W8A8 和 INT8 ConvRot W8A8 转换权重 |
-| [SenseNova-U1.6-8B-MoT-GGUF](https://huggingface.co/sensenova/SenseNova-U1.6-8B-MoT-GGUF/tree/main) | Q4_0、Q6_K 和 Q8_0 转换权重 |
-
 ## U1.5 权重
 
 其他发布版本和社区集成见[模型目录](docs/models_CN.md)。
@@ -64,7 +49,7 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 
 ## 快速开始
 
-建议用尽量空闲的 Linux 单卡 CUDA 机器，按 **24 GB 显存、64 GB 系统内存**规划，另为 U1.6 权重预留约 **35 GB 磁盘空间**。先安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)；下面的命令使用 Python 3.11 和 `balanced` 显存模式。
+建议用尽量空闲的 Linux 单卡 CUDA 机器，按 **24 GB 显存、64 GB 系统内存**规划，另为 U1.5 权重预留约 **35 GB 磁盘空间**。先安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)；下面的命令使用 Python 3.11 和 `balanced` 显存模式。
 
 ~~~bash
 git clone --depth 1 https://github.com/OpenSenseNova/SenseNova-U1.git
@@ -72,11 +57,11 @@ cd SenseNova-U1
 uv sync --locked --python 3.11
 source .venv/bin/activate
 
-hf download sensenova/SenseNova-U1.6-8B-MoT \
-  --local-dir ./models/SenseNova-U1.6-8B-MoT
+hf download sensenova/SenseNova-U1.5-8B-MoT \
+  --local-dir ./models/SenseNova-U1.5-8B-MoT
 
 python examples/t2i/inference.py \
-  --model_path ./models/SenseNova-U1.6-8B-MoT \
+  --model_path ./models/SenseNova-U1.5-8B-MoT \
   --prompt "A cinematic mountain lake at sunrise, realistic photography." \
   --bucket 4m --aspect_ratio 1:1 --num_steps 50 \
   --vram_mode balanced --attn_backend sdpa \
