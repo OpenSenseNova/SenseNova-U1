@@ -1,6 +1,6 @@
 # Examples
 
-For ComfyUI, see the [official SenseNova-U1.6 templates](comfyui/README.md).
+For ComfyUI, see the [native SenseNova workflow examples](comfyui/README.md).
 
 Reference inference scripts for SenseNova-U1 and its releases. The
 [U1.5 model guide](../docs/u1.5_model.md) contains the shortest commands for
