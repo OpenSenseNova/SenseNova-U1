@@ -22,9 +22,9 @@ SenseNova-U is a family of native multimodal models built on [NEO-unify](https:/
 
 **U1.6** introduces the following changes:
 
-- **Refined aesthetics.** User evaluations reported a 10% improvement in overall aesthetic quality over U1.5, with richer visual expression in portraits, posters, and illustrations.
-- **Native self-correction.** U1.6 generates an infographic, reviews it against the prompt, and fixes text errors while preserving expressive typography and layout.
-- **Improved text accuracy.** On UltraTextBench's dense infographic tasks, self-correction yielded a 7% average relative improvement over single-pass generation.
+- **Refined aesthetics:** U1.6 focuses on portraits, posters, and illustrations, bringing finer textures, more varied creative ideas, and a more contemporary style. In subjective user evaluations, overall aesthetic quality improved by 10% over U1.5.
+- **Native self-correction:** U1.6 generates an infographic, reviews it against the prompt, and fixes text errors while preserving expressive typography and layout.
+- **Improved text accuracy:** On UltraTextBench's dense infographic tasks, self-correction yielded a 7% average relative improvement over single-pass generation.
 
 **U1.5** focuses on four practical areas:
 
@@ -33,7 +33,7 @@ SenseNova-U is a family of native multimodal models built on [NEO-unify](https:/
 - **Image editing:** local and multi-reference changes that better preserve subject identity and untouched regions.
 - **Understanding and interleaving:** visual question answering and illustrated responses with text and images in sequence.
 
-This repository contains the inference examples, training code, and documentation for U1 and U1.5. The [U1.5 guide](docs/u1.5_model.md) covers the current checkpoint and its limitations; the [showcases](docs/u1.5_showcases.md) collect generation and editing examples.
+This repository contains the inference examples, training code, and documentation for U1, U1.5, and U1.6. The [U1.6 guide](docs/u1.6_model.md) covers the current checkpoints, workflows, and local setup; the [U1.6 showcases](docs/u1.6_showcases.md) collect text-to-image, image editing, and self-correction examples.
 
 ## News
 
