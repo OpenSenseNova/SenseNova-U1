@@ -105,8 +105,6 @@ python examples/t2i/inference.py \
 
 <p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/113f7360416b87226fd8d6a0f313f801c2880e23/SenseNova-U1.6-T2I.webp"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/113f7360416b87226fd8d6a0f313f801c2880e23/SenseNova-U1.6-T2I.webp" alt="SenseNova-U1.6 文生图样例" width="100%"></a></p>
 
-<p align="center"><sub>图中结果使用 U1.6 基座权重。<a href="https://github.com/ttxskk/SenseNova-U1/blob/610ed62d04a9bd3032e3073e74550c49298fbd1f/SenseNova-U1.6-T2I_30_7rows_HD.png">原尺寸拼图（约 47.5 MiB）</a>另行提供。</sub></p>
-
 ### 自修正
 
 <p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-SC.gif" alt="SenseNova-U1.6 自修正前后对比" width="100%"></a></p>
