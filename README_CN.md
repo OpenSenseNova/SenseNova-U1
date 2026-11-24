@@ -50,7 +50,7 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 
 ## 快速开始
 
-建议使用尽量空闲的 Linux 单卡 CUDA 机器。下面的 `balanced` 配置可按 **24 GB 显存和 64 GB 系统内存**规划，另为 U1.6 权重预留约 **35 GB 磁盘空间**。先安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)。下面的命令使用 Python 3.11。
+建议用尽量空闲的 Linux 单卡 CUDA 机器。可参考 U1.5 的运行记录，先按 **24 GB 显存和 64 GB 系统内存**规划，另为 U1.6 权重预留约 **35 GB 磁盘空间**。先安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)。下面的命令使用 Python 3.11 和 `balanced` 显存模式。
 
 ~~~bash
 git clone --depth 1 https://github.com/OpenSenseNova/SenseNova-U1.git
@@ -69,7 +69,7 @@ python examples/t2i/inference.py \
   --output output.png
 ~~~
 
-U1.5 和 U1.6 使用相同的 NEO-unify 8B-MoT 架构，在相同任务负载、精度和显存模式下，显存和内存需求相当。[U1.5 显存与 8 步耗时](docs/u1.5_inference_CN.md)记录了 RTX 5090 运行和 H100 分配器限额测试。记录中的耗时使用 8 步 V2 LoRA。上面的 U1.6 命令使用基座权重运行 50 步。
+U1.6 沿用 U1.5 的 NEO-unify 8B-MoT 架构，部署时可参考 [U1.5 显存与 8 步耗时](docs/u1.5_inference_CN.md)。这些数据来自 U1.5 搭配 8 步 V2 LoRA 的 RTX 5090 测试和 H100 分配器限额测试。上面的 U1.6 命令使用基座权重运行 50 步，显存占用和耗时需单独实测。
 
 环境配置见[安装指南](docs/installation_CN.md)，通用命令行参数见[任务示例](examples/README_CN.md)，U1.6 的运行方法见 [U1.6 模型指南](docs/u1.6_model_CN.md#本地运行)。
 
