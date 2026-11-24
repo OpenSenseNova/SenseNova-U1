@@ -30,7 +30,7 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 
 ## 近期更新
 
-- **2026-11-24**：发布 [U1.6](docs/u1.6_model_CN.md)和蒸馏模型(4步/8步)，并正式上线[ComfyUI](https://huggingface.co/Comfy-Org/SenseNova-U1)。相比U1.5，U1.6 在提升美学创造力的同时，首次展示了原生自修正能力，让图像创作兼顾美感与准确性。
+- **2026-11-24**：发布 [U1.6](docs/u1.6_model_CN.md) 和蒸馏模型(4步/8步)，并正式上线[ComfyUI](https://huggingface.co/Comfy-Org/SenseNova-U1)。U1.6 在提升美学创造力的同时，首次展示了原生自修正能力，让图像创作兼顾美感与准确性。
 - **2026-11-04**：发布 [U1.5 TailSteer](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-TailSteer) 完整权重，改善连续多轮图像编辑的稳定性。使用现有编辑脚本，将模型路径指向该权重即可。
 - **2026-09-24**：发布 [U1.5 8 步 V2 LoRA](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors)。相比第一版 8 步适配器，V2 改善了色彩平衡与对比度，并减轻过锐化；使用时需搭配 U1.5 基座。
 - **2026-09-11**：发布 [U1.5 技术报告](docs/pdf/SenseNOVA_U1_5.pdf)，介绍模型架构、训练方法和评测结果。
