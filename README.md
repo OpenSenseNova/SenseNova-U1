@@ -77,6 +77,8 @@ See [installation](docs/installation.md) for environment setup and [examples](ex
 
 <p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-en.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-en.png" alt="U1.6 benchmark results" width="90%"></a></p>
 
+See the [U1.5 release evaluations](docs/u1.5_model.md#evaluations-and-runtime).
+
 ## Image examples (U1.6)
 
 ### Text-to-image generation
