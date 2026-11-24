@@ -26,13 +26,6 @@ SenseNova-U 是基于 [NEO-unify](https://huggingface.co/blog/sensenova/neo-unif
 - **原生自修正**：U1.6 生成信息图后，会对照提示词自主检查并修正文字错误，同时保留富有表现力的字体设计和版式。
 - **更高的文字准确性**：在 UltraTextBench 的高文字密度信息图任务上，自修正较单次生成平均相对提升 7%。
 
-**U1.5** 重点改善了四类实际任务：
-
-- **图像生成**：支持最高原生 4K 分辨率，改进构图、局部细节和材质表现。
-- **文字与版式**：改善海报、信息图等结构化图像中的中英文文字。
-- **图像编辑**：支持局部修改和多图参考，更好地保留主体身份与未修改区域。
-- **视觉理解与图文交错**：支持图像问答，以及文字和图片交替出现的内容生成。
-
 本仓库提供 U1、U1.5 和 U1.6 的推理示例、训练代码及文档。[U1.6 指南](docs/u1.6_model_CN.md)介绍当前权重、工作流和本地运行方法；[U1.6 效果展示](docs/u1.6_showcases_CN.md)收录文生图、图像编辑和自修正案例。
 
 ## 近期更新
@@ -83,14 +76,6 @@ python examples/t2i/inference.py \
 ## 评测 (U1.6)
 
 <p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png" alt="U1.6 评测结果" width="90%"></a></p>
-
-## 评测（U1.5）
-
-这些图表是 U1.5 权重的发布评测记录，与 [U1.5 推理记录](docs/u1.5_inference_CN.md)中的 RTX 5090 和 H100 运行数据分开；[详细结果](docs/assets/benchmarks/u1.5_combined.webp)列出发布评测的范围。
-
-<p align="center"><a href="docs/assets/benchmarks/u1.5_radial.webp"><img src="docs/assets/benchmarks/u1.5_radial.webp" alt="U1.5 在图像生成与编辑任务上的评测概览" width="90%"></a></p>
-
-<p align="center"><img src="docs/assets/u15_perform_vs_speed_6bench.webp" alt="U1.5 与其他模型的六项图像生成评测平均分及 2K 图像生成耗时" width="90%"></p>
 
 ## 图像样例（U1.6）
 
