@@ -30,7 +30,7 @@ This repository contains the inference examples, training code, and documentatio
 
 ## News
 
-- **2026-11-24:** Released [U1.6](docs/u1.6_model.md) and its 4-step and 8-step distilled variants, now officially supported in [ComfyUI](https://huggingface.co/Comfy-Org/SenseNova-U1). U1.6 brings richer visual expression and introduces native self-correction to better match the prompt.
+- **2026-11-24:** Released [U1.6](docs/u1.6_model.md) and its 4-step and 8-step distilled variants, now officially supported in [ComfyUI](https://huggingface.co/Comfy-Org/SenseNova-U1). Building on U1.5, U1.6 brings richer visual expression and introduces native self-correction to better match the prompt.
 - **2026-11-04:** Released [U1.5 TailSteer](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-TailSteer), a full checkpoint for more stable multi-turn image editing. Use it with the existing editing script by changing the model path.
 - **2026-09-24:** Released the [U1.5 8-step V2 LoRA](https://huggingface.co/sensenova/SenseNova-U1.5-8B-MoT-LoRAs/blob/main/SenseNova-U1.5-8B-MoT-LoRA-8step-V2.safetensors). Compared with the first 8-step adapter, it improves color balance and contrast while reducing oversharpening. It runs with the U1.5 base model.
 - **2026-09-11:** Published the [U1.5 technical report](docs/pdf/SenseNOVA_U1_5.pdf), covering the architecture, training approach, and evaluations.
