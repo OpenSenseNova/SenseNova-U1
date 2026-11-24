@@ -55,7 +55,6 @@ htmlcov/
 *.ckpt
 checkpoints/
 outputs/
-/.cache/sensenova-u-showcases/
 wandb/
 logs/
 output.png
