@@ -77,6 +77,8 @@ python examples/t2i/inference.py \
 
 <p align="center"><a href="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png"><img src="https://huggingface.co/datasets/sensenova/SenseNova-U-showcases/resolve/0957bb9307c6c788412ba9395c43d19db92dc8c4/u1.6/benchmark/U1.6-Benchmark-zh.png" alt="U1.6 评测结果" width="90%"></a></p>
 
+上一版本的结果见 [U1.5 发布评测](docs/u1.5_model_CN.md#评测与运行记录)。
+
 ## 图像样例（U1.6）
 
 ### 文生图
