@@ -103,7 +103,7 @@ python examples/t2i/inference.py \
 
 ### 文生图
 
-<p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-T2I.webp"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/690ebc95fc1254ec6c6933e9d00d7ed0d61df10a/SenseNova-U1.6-T2I.webp" alt="SenseNova-U1.6 文生图样例" width="100%"></a></p>
+<p align="center"><a href="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/dc9bc2488990742f03483734976ab496b603816b/SenseNova-U1.6-T2I.webp"><img src="https://raw.githubusercontent.com/ttxskk/SenseNova-U1/dc9bc2488990742f03483734976ab496b603816b/SenseNova-U1.6-T2I.webp" alt="SenseNova-U1.6 文生图样例" width="100%"></a></p>
 
 ### 自修正
 
